@@ -74,19 +74,26 @@
         }
 
     </style>
+    <script src="index.js"></script>
     <script>
-        window.onload = function() {
-            // README: Change this values to change the look and layout of the page
-            let styleVariables = {
-                selectedColor: 'rgb(30, 77, 43)', //CSU Green
-                //selectedColor: 'rgb(202, 26, 58)', //Valentine Red
-                selectedTextColor: 'white',
-                unselectedColor: 'white',
-                unselectedTextColor: 'black',
-                lastNumberDir: "top", // 'top' or 'bottom'
-                numberHistoryDir: 'right', // 'right' or 'left'
-            };
+        // README: Change this values to change the look and layout of the page
+        let styleVariables = {
+            selectedColor: localStorage.getItem('select-tab-color'), //CSU Green
+            selectedTextColor: localStorage.getItem('select-tab-text-color'),
+            unselectedColor: localStorage.getItem('unselect-tab-color'),
+            unselectedTextColor: localStorage.getItem('unselect-tab-text-color'),
+            lastNumberDir: localStorage.getItem('last-number-dir'), // 'top' or 'bottom'
+            numberHistoryDir: localStorage.getItem('number-history-dir'), // 'right' or 'left'
+        };
 
+        function loadCSSSettings() {
+            document.documentElement.style.setProperty('--main-bg-color', localStorage.getItem('main-bg-color'));
+            document.documentElement.style.setProperty('--main-font-color', localStorage.getItem('main-font-color'));
+        }
+
+        window.onload = function() {
+            setDefaultSettings(false);
+            loadCSSSettings();
             //Don't Change any code below this line
             var clickedNumbersHistory = []; // Array to store the history of clicked numbers
 
@@ -145,6 +152,15 @@
             }
             buttonDiv.appendChild(saveButton);
 
+            // Create end games button
+            var endNight = document.createElement('button');
+            endNight.innerHTML = 'End The Night';
+            endNight.onclick = function() {
+                window.location.href = 'stats.html';
+                sessionStorage.setItem('clickedNumbersHistory', JSON.stringify(clickedNumbersHistory));
+                clickedNumbersHistory = [];
+            }
+            buttonDiv.appendChild(endNight);
 
             // Create paragraph to display the last clicked number
             var lastNumber = document.createElement('p');
@@ -276,4 +292,5 @@
     </script>
 </head>
 <body>
+    <a href="settings.html">Settings</a>
 </body>
