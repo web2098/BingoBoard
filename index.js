@@ -13,4 +13,5 @@ function setDefaultSettings(force) {
     setDefaultItem('unselect-tab-text-color', '#000000', force);
     setDefaultItem('last-number-dir', 'top', force);
     setDefaultItem('number-history-dir', 'right', force);
+    setDefaultItem('number-history-on', 'true', force);
 }

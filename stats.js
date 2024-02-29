@@ -116,7 +116,7 @@ window.onload = function() {
     sortable2.sort(function(a, b) {
         return compareStrings(a[0], b[0])
     });
-    //Create a bar graph for the top 10 allGraph where x is the number and y is the frequency
+    //Create a bar graph for the all elements allGraph where x is the number and y is the frequency
     var ctx2 = document.getElementById('allGraph').getContext('2d');
     var allGraph = new Chart(ctx2, {
         type: 'bar',
@@ -156,4 +156,26 @@ window.onload = function() {
             }
         }
     });
+
+    // Create save button
+    var saveButton = document.createElement('button');
+    saveButton.innerHTML = 'Save Games';
+    saveButton.onclick = function() {
+        // Create a Blob with the data
+        var blob = new Blob([datastr], {type: 'text/plain'});
+
+        // Create a link for the Blob
+        var url = URL.createObjectURL(blob);
+
+        // Create a download link
+        var downloadLink = document.createElement('a');
+        downloadLink.download = 'clickedNumbersHistory.txt';
+        downloadLink.href = url;
+
+        // Trigger the download
+        downloadLink.click();
+    }
+    //center button increase size to 50px and add padding to to the top of 10px
+    saveButton.style = 'display: block; margin: auto; font-size: 40px; margin-top: 30px;';
+    document.body.appendChild(saveButton);
 };
