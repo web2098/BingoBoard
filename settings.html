@@ -45,6 +45,21 @@
                 }
             ];
 
+            if( localStorage.getItem('last-number-on') === "true" ){
+                document.getElementById('last-number-enabled').checked = true;
+            }
+            else
+            {
+                document.getElementById('last-number-enabled').checked = false;
+            }
+            if( localStorage.getItem('number-history-on') === "true" ){
+                document.getElementById('history-enabled').checked = true;
+            }
+            else
+            {
+                document.getElementById('history-enabled').checked = false;
+            }
+
             for (var i = 0; i < colorPickers.length; i++) {
                 var colorPickerLabel = document.createElement('label');
                 colorPickerLabel.setAttribute('for', colorPickers[i].key);
@@ -81,6 +96,13 @@
                 var lastDirection = document.getElementById('history-direction').value;
                 localStorage.setItem('number-history-dir', lastDirection);
 
+                var lastEnabled = document.getElementById('last-number-enabled').checked;
+                localStorage.setItem('last-number-on', lastEnabled);
+                var lastEnabled = document.getElementById('history-enabled').checked;
+                localStorage.setItem('number-history-on', lastEnabled);
+
+
+
                 var colorPickers = document.getElementsByTagName('input');
 
                 for (var i = 0; i < colorPickers.length; i++) {
@@ -102,6 +124,7 @@
         <h1>Settings</h1>
         <p>Change your settings here.</p>
         <div class="row" id="lnpdir">
+            <input type="checkbox" id="last-number-enabled" checked="true">
             <label for="last-direction">Last Number Played Location:</label>
             <select id="last-direction">
                 <option value="top">Top</option>
@@ -109,6 +132,7 @@
             </select>
         </div>
         <div class="row" id="nhdir">
+            <input type="checkbox" id="history-enabled" checked="true">
             <label for="history-direction">Number History Location:</label>
             <select id="history-direction">
                 <option value="right">Right</option>
