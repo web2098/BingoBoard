@@ -137,9 +137,15 @@
             var endNight = document.createElement('button');
             endNight.innerHTML = 'End The Night';
             endNight.onclick = function() {
-                window.location.href = 'stats.html';
+                if (clickedNumbers.length > 0) {
+                    // Add the array to the history
+                    clickedNumbersHistory.push([...clickedNumbers]);
+                    // Clear the array
+                    clickedNumbers = [];
+                }
                 sessionStorage.setItem('clickedNumbersHistory', JSON.stringify(clickedNumbersHistory));
                 clickedNumbersHistory = [];
+                window.location.href = 'stats.html';
             }
             buttonDiv.appendChild(endNight);
 
