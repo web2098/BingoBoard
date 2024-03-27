@@ -7,30 +7,31 @@
             display: grid;
             grid-template-rows: auto auto auto auto; /* Creates three rows */
             grid-template-columns: 1fr 1fr 1fr; /* Creates two columns */
-            background-color: brown;
         }
         #button_container {
             display: flex;
             justify-content: space-between;
             grid-row:4;
             grid-column: 1 / span 3;
-            background-color: coral;
         }
-        
+
         #back_button {
             margin-left: 10px;
             font-size: 40px;
         }
-        
+
         #next_button {
             margin-right: 10px;
+            font-size: 40px;
+        }
+
+        #play_game {
             font-size: 40px;
         }
 
         #welcome_view{
             grid-column: 3; /* Places these divs in the first column */
             grid-row: 1 / span 2;
-            background-color: red;
             display: flex; /* Enable Flexbox */
             flex-direction: column;
             justify-content: space-between;
@@ -42,19 +43,20 @@
             margin-top: 0;
         }
         #game_rules{
-            font-size: 3vw; /* Adjust as needed */
-            margin-bottom: 0;
+            font-size: 2.0vw; /* Adjust as needed */
+            margin-bottom: 14vh;
             margin-top: 2vh;
         }
         #free_space_message{
+            grid-column: 2; /* Places these divs in the first column */
+            grid-row: 1 / span 2;
             font-size: 2vw; /* Adjust as needed */
             margin-bottom: 0;
             margin-top: 2vh;
         }
         #game_name{
-            grid-column: 1 / span 2; /* Places these divs in the first column */
+            grid-column: 1 / span 1; /* Places these divs in the first column */
             grid-row: 1;
-            background-color: aqua;
             display: flex; /* Enable Flexbox */
             justify-content: center; /* Center horizontally */
             align-items: center; /* Center vertically */
@@ -66,16 +68,19 @@
         #full_view{
             grid-column: 1 / span 2; /* Places these divs in the first column */
             grid-row: 2;
-            background-color: blue;
             display: flex; /* Enable Flexbox */
             justify-content: center; /* Center horizontally */
             align-items: center; /* Center vertically */
-            min-height: 70vh;
-            max-height: 70vh;
+            min-height: 68vh;
+            max-height: 68vh;
+            margin-top: -20px;
         }
         #full_table td{
+            min-width:  10vw;
+            max-width:  10vw;
+            min-height: 10vw;
+            max-height: 10vw;
             font-size: 10vh; /* Adjust as needed */
-            padding: 0 2vw; /* Adjust as needed */
             border: 1px solid black; /* Adjust as needed */
         }
         /* Games require pattern on both boards */
@@ -84,328 +89,85 @@
         }
         .full_table_multi td{
             font-size: 6vh; /* Adjust as needed */
-            padding: 0 2vw; /* Adjust as needed */
+            min-width:  5vw;
+            max-width:  5vw;
+            min-height: 5vw;
+            max-height: 5vw;
             border: 1px solid black; /* Adjust as needed */
         }
 
         #games_preview{
+            display: grid;
+            grid-template-rows: auto; /* Creates three rows */
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr; /* Creates two columns */
             grid-column: 1 / span 3; /* Places these divs in the second column */
             grid-row: 3;
-            background-color: green;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: center; /* Horizontally center the tables */
         }
         #games_preview table {
-            margin-right: 5vw; /* Adjust as needed */
+            margin-left: 1vw; /* Adjust as needed */
+            margin-right: 1vw; /* Adjust as needed */
         }
-        
+
         #preview_table td{
             border: 1px solid black; /* Adjust as needed */
-            padding: 0 1vw; /* Adjust as needed */
-        }
-        
-    </style>
-    <script>
-        function bingo(){
-            return {
-                "name": "Normal Bingo",
-                "board_count": 1,
-                "board": [
-                    [0,0],[1,1],[2,2],[3,3],[4,4]
-                ],
-                "free_space_dynamic": true,
-                "free_off_board": [
-                    [0, 0], [0,1],[0,2],[0,3],[0,4]
-                ],
-                "transitional": false,
-                "rules": "Must get 5 in a row"
-            };
-        }
-        function tinyX(){
-            return {
-                "name": "Tiny X",
-                "board_count": 1,
-                "board": [
-                    [0,0],[0,2],[1,1],[2,0],[2,2]
-                ],
-                "free_space_dynamic": false,
-                "free_space_on": true,
-                "transitional": false,
-                "rules": "Must get the tiny x pattern any where on the board"
-            };
-        }
-        function EightCorners(){
-            return {
-                "name": "Eight Corners",
-                "board_count": 2,
-                "board": [
-                    [
-                        [0,0],[4,4],[0,4],[4,0]
-                    ],
-                    [
-                        [0,0],[4,4],[0,4],[4,0]
-                    ]
-                ],
-                "free_space_dynamic": false,
-                "free_space_on": false,
-                "transitional": false,
-                "rules": "Must get all 4 corners on BOTH boards"
-            };
-        }
-        function FourCorners(){
-            return {
-                "name": "Four Corners",
-                "board_count": 1,
-                "board":
-                [
-                    [0,0],[4,4],[0,4],[4,0]
-                ],
-                "free_space_dynamic": false,
-                "free_space_on": false,
-                "transitional": false,
-                "rules": "Must get all 4 corners on BOTH boards"
-            };
-        }
-        
-        function RailRoadTracks(){
-            return {
-                "name": "Railroad Tracks",
-                "board": 
-                [
-                    [0,1],[1,1],[2,1],[3,1],[4,1], // I Row
-                    [1,2],[3,2],//N Row
-                    [0,3],[1,3],[2,3],[3,3],[4,3] // 0 Row
-                ],
-                "free_space_dynamic": false,
-                "free_space_on": false,
-                "transitional": false,
-                "rules": "Must get exact pattern"
-            };
-        }
-        function InsideCircle(){
-            return {
-                "name": "Inside Circle",
-                "board": 
-                [
-                    [1,1],[1,2],[1,3], // top Row
-                    [2,1],[2,3],//middle
-                    [3,1],[3,2],[3,3] // bottom Row
-                ],
-                "free_space_dynamic": false,
-                "free_space_on": false,
-                "transitional": false,
-                "rules": "Must get exact pattern"
-            };
-        }
-        function OutsideCircle(){
-            return {
-                "name": "Outside Circle",
-                "board": 
-                [
-                    [0,0],[0,1],[0,2],[0,3],[0,4], // top Row
-                    [1,0],[1,4],
-                    [2,0],[2,4],
-                    [3,0],[3,4],
-                    [4,0],[4,1],[4,2],[4,3],[4,4] // bottom Row
-                ],
-                "free_space_dynamic": false,
-                "free_space_on": false,
-                "transitional": false,
-                "rules": "Must get exact pattern"
-            };
-        }
-        function PostageStamp(){
-            return {
-                "name": "Postage Stamp",
-                "board": 
-                [
-                    [0,0],[0,1],[0,3],[0,4], // top Row
-                    [1,0],[1,1],[1,3],[1,4],
-                    [3,0],[3,1],[3,3],[3,4],
-                    [4,0],[4,1],[4,3],[4,4],
-                ],
-                "free_space_dynamic": false,
-                "free_space_on": false,
-                "transitional": false,
-                "rules": "Must get exact pattern"
-            };
-        }
-        function TheGoat(){
-            return {
-                "name": "The GOAT",
-                "board": 
-                [
-                    [
-                        [0,0],[0,1],[0,2],[0,3], // top Row
-                        [1,0],
-                        [2,0],[2,2],[2,3],
-                        [3,0],[3,4]
-                        [4,0],[4,1],[4,2],[4,3]
-                    ],
-                    [
-                        [0,1],[0,2],[0,3],[0,4], // top Row
-                        [1,1],
-                        [2,1],[2,3],[2,4],
-                        [3,1],[3,4]
-                        [4,1],[4,2],[4,3],[4,4]
-                    ]
-                ],
-                "free_space_dynamic": true,
-                "free_space_on": true,
-                "transitional": false,
-                "rules": "Must get exact pattern, may shift 1 to right"
-            };
-        }
-        function games(){
-            return [
-                bingo(),
-                tinyX(),
-                EightCorners(),
-                FourCorners(),
-                RailRoadTracks(),
-                InsideCircle(),
-                OutsideCircle(),
-                PostageStamp(),
-                TheGoat()
-            ]
+
+            min-width:  1vw;
+            max-width:  1vw;
+            min-height: 1vw;
+            max-height: 1vw;
+            font-size: 1.7vh; /* Adjust as needed */
         }
 
+    </style>
+    <script src="games.js"></script>
+    <script src="utilities.js"></script>
+    <script>
+        var selected_game = null;
         var current_game = 0;
         var preview_index = 0;
-        var free_space_on = true;
-        const bingo_word = 'bingo';
 
-
-        function create_table( parent, name , game, free_font_size = '3vh' )
+        function hide_element_by_id(board_name)
         {
-            var table = parent.createElement('table');
-            table.id = name;
-            
-            // Create 5 rows
-            for (var i = 0; i < 5; i++) {
-                var tr = parent.createElement('tr');
-
-                // Create 5 columns
-                for (var j = 0; j < 5; j++) {
-                    var td = parent.createElement('td');
-
-                    // Fill the cell with the corresponding character from the word
-                    td.textContent = bingo_word[j].toUpperCase();
-                    if( i == 2 && j == 2 ){
-                        td.textContent = "FREE";
-                        td.style.fontSize = free_font_size;
-                    }
-                    td.style.textAlign="center";
-
-                    if( game_contains_point( game, i, j ) )
-                    {
-                        td.style.backgroundColor = "red";
-                    }
-
-                    // Add the cell to the row
-                    tr.appendChild(td);
-                }
-
-                // Add the row to the table
-                table.appendChild(tr);
-            }
-            return table;
-        }
-
-        function game_contains_point( game, x, y, board_num = 0 )
-        {
-            var board = free_space_on ? game.board : game.free_off_board;
-            if (!game.free_space_dynamic)
-            {
-                board = game.board;
-            }
-
-            if (game.board_count > 1)
-            {
-                board = board[board_num];
-            }
-
-            for( var i = 0; i < board.length; i++ ){
-                if( board[i][0] == x && board[i][1] == y ){
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        function update_main_board_num(active_game, board_name, board_num) 
-        {
-            console.log(`Updating ${board_name}`);
-            var table = document.getElementById(board_name);
-            for (var i = 0; i < 5; i++) {
-                for (var j = 0; j < 5; j++) {
-                    var td = table.rows[i].cells[j];
-                    if( i == 2 && j == 2 ){
-                        td.textContent = "FREE";
-                        td.style.fontSize = '3vh';
-                    }
-                    else{
-                        td.textContent = bingo_word[j].toUpperCase();
-                    }
-                    if( game_contains_point( active_game, i, j, board_num ) )
-                    {
-                        console.log(`Setting ${i},${j} to red`)
-                        td.style.backgroundColor = "red";
-                    }
-                    else{
-                        td.style.backgroundColor = "white";
-                    }
-                }
-            }
-
-        }
-        function hide_board(board_name)
-        {
-            console.log(`Hiding ${board_name}`);
             var table = document.getElementById(board_name);
             table.style.display = 'none';
         }
-        function show_board(board_name)
+        function show_board_by_id(board_name)
         {
-            console.log(`Showing ${board_name}`);
             var table = document.getElementById(board_name);
             table.style.display = 'block';
         }
-        function update_main_board() 
+        function update_main_board()
         {
             //TODO Support multi board game
-            console.log(`Updating main board ${current_game}`);
-            var active_game = games()[current_game];
-            console.log(`Updating main board for ${active_game.name}`);
+            var active_game = selected_game;
+            if( active_game.transitional )
+            {
+                show_board_by_id('transition_arrow');
+            }
+            else
+            {
+                hide_element_by_id('transition_arrow');
+            }
             if( active_game.board_count == 2 )
             {
                 console.log(`Double board game`);
-                hide_board('full_table');
-                show_board('full_table_0');
-                show_board('full_table_1');
+                hide_element_by_id('full_table');
+                show_board_by_id('full_table_0');
+                show_board_by_id('full_table_1');
                 update_main_board_num(active_game, 'full_table_0', 0);
                 update_main_board_num(active_game, 'full_table_1', 1);
             }
             else
             {
                 console.log(`Single board game`);
-                hide_board('full_table_0');
-                hide_board('full_table_1');
-                show_board('full_table');
+                hide_element_by_id('full_table_0');
+                hide_element_by_id('full_table_1');
+                show_board_by_id('full_table');
                 update_main_board_num(active_game, 'full_table', 0);
             }
             var free_space_message = document.getElementById('free_space_message');
+            free_space_message.innerHTML = active_game.free_space_on ? 'Free space is ON' : 'Free space is OFF';
 
-            if(active_game.free_space_dynamic)
-            {
-                free_space_message.innerHTML = free_space_on ? 'Free space is ON' : 'Free space is OFF';
-            }
-            else
-            {
-                free_space_message.innerHTML = active_game.free_space_on ? 'Free space is ON' : 'Free space is OFF';
-            }
             var rules = document.getElementById('game_rules');
             rules.innerHTML = active_game.rules;
             var game_name = document.getElementById('game_name');
@@ -435,10 +197,12 @@
                         }
                         if( game_contains_point( active_games[k], i, j, 0 ) )
                         {
-                            td.style.backgroundColor = "red";
+                            td.style.backgroundColor = getItemWithDefault('select-tab-color');
+                            td.style.color = getItemWithDefault('select-tab-text-color');
                         }
                         else{
-                            td.style.backgroundColor = "white";
+                            td.style.backgroundColor = getItemWithDefault('unselect-tab-color');
+                            td.style.color = getItemWithDefault('unselect-tab-text-color');
                         }
                     }
                 }
@@ -452,12 +216,12 @@
             var allGames = games();
             var gameCount = allGames.length;
             var selectedGames = [];
-        
+
             for (var i = 0; i < 5; i++) {
                 var gameIndex = (index + i) % gameCount;
                 selectedGames.push(allGames[gameIndex]);
             }
-        
+
             return selectedGames;
         }
 
@@ -473,11 +237,16 @@
                 var div = document.createElement('div');
                 var table = create_table( document, 'preview_table', game_s[k], '10px' );
 
+
                 var game_name_label = document.createElement('p');
                 game_name_label.id = 'game_preview_name';
                 game_name_label.innerHTML = game.name;
+                game_name_label.style.textAlign = 'center';
                 // Add the table to the body of the document
                 div.appendChild(table);
+                div.style.display = "flex";
+                div.style.flexDirection = "column";
+                div.style.justifyContent = "center";
                 div.appendChild(game_name_label);
                 games_preview.appendChild(div);
 
@@ -490,6 +259,7 @@
                     var game_num = event.currentTarget.getAttribute('data-game');
                     current_game = game_num;
                     console.log('Table clicked ' + game_num);
+                    selected_game = game_s[game_num];
                     update_main_board();
                 });
             }
@@ -502,10 +272,8 @@
                 // This function will be called when the table is clicked
                 // event.target refers to the clicked cell
                 //get data-game for selected table
-                var game = game_s[current_game];
-                console.log('Checking if game can have free space off ' + game.free_space_dynamic + ' free_space_on ' + free_space_on);
-                if (game.free_space_dynamic){
-                    free_space_on=!free_space_on;
+                if (selected_game.free_space_dynamic){
+                    selected_game.free_space_on=!selected_game.free_space_on;
                 }
                 update_main_board();
             });
@@ -518,25 +286,28 @@
                 // This function will be called when the table is clicked
                 // event.target refers to the clicked cell
                 //get data-game for selected table
-                var game = game_s[current_game];
-                console.log('Checking if game can have free space off ' + game.free_space_dynamic + ' free_space_on ' + free_space_on);
-                if (game.free_space_dynamic){
-                    free_space_on=!free_space_on;
+                if (selected_game.free_space_dynamic){
+                    selected_game.free_space_on=!selected_game.free_space_on;
                 }
                 update_main_board();
             });
             table1.classList.add('full_table_multi');
             full_view.appendChild(table1);
+
+            var arrow = document.createElement('p');
+            arrow.id = 'transition_arrow';
+            arrow.innerHTML = '&#x27A7;';
+            arrow.style.fontSize = '10vh';
+            full_view.appendChild(arrow);
+
             //Now add two more tables for double table gamess
             var table2 = create_table( document, 'full_table_1', game_s[current_game] );
             table2.addEventListener('click', function(event) {
                 // This function will be called when the table is clicked
                 // event.target refers to the clicked cell
                 //get data-game for selected table
-                var game = game_s[current_game];
-                console.log('Checking if game can have free space off ' + game.free_space_dynamic + ' free_space_on ' + free_space_on);
-                if (game.free_space_dynamic){
-                    free_space_on=!free_space_on;
+                if (selected_game.free_space_dynamic){
+                    selected_game.free_space_on=!selected_game.free_space_on;
                 }
                 update_main_board();
             });
@@ -547,13 +318,14 @@
                 table1.style.display = 'none';
                 table2.style.display = 'none';
             }
-            
+
             var game_name = document.getElementById('game_name');
             var game_name_label = document.createElement('p');
             game_name_label.id = 'game_name';
             game_name_label.innerHTML = game_s[current_game].name;
             game_name.appendChild(game_name_label);
 
+            selected_game = game_s[current_game];
             update_main_board()
 
             var back_button = document.getElementById('back_button');
@@ -561,32 +333,41 @@
             back_button.addEventListener('click', function(){
                 if( preview_index === 0 )
                 {
-                    preview_index = 6;
+                    preview_index = games().length;
                 }
-                preview_index = ( preview_index - 1 ) % 5;
+                preview_index = ( preview_index - 1 ) % games().length;
                 update_preview();
             });
             var nexut_button = document.getElementById('nexut_button');
             next_button.addEventListener('click', function(){
-                preview_index = ( preview_index + 1 ) % 5;
+                preview_index = ( preview_index + 1 ) % games().length;
                 update_preview();
+            });
+            var play_game = document.getElementById('play_game');
+            play_game.addEventListener('click', function(){
+                setTemporaryItem('selected_game', JSON.stringify(selected_game));
+                window.location.href = 'board.html';
             });
         }
     </script>
 </head>
 <body>
     <body>
+        <body>
+            <a href="settings.html">Settings</a>
+        </body>
         <div class="grid-container">
             <div id="game_name"></div>
+            <p id="free_space_message">Free space is OFF</p>
              <div id="welcome_view">
                 <p id="welcome_message">BINGO FREE TO PLAY! 2 CARDS PER PERSON START TIME - 6:30<br> Bingo Word: BAHHH! </p>
                 <p id="game_rules">Rules of the game....</p>
-                <p id="free_space_message">Free space is OFF</p>
             </div>
             <div id="full_view"></div>
             <div id="games_preview"></div>
             <div id="button_container">
                 <button id="back_button">Back</button>
+                <button id="play_game">Play</button>
                 <button id="next_button">Next</button>
             </div>
         </div>
