@@ -204,7 +204,6 @@
         var current_game = undefined;
         var free_space_on = true;
         var clickedNumbers = []; // Array to store the clicked numbers
-        var clickedNumbersHistory = []; // Array to store the history of clicked numbers
 
         function saveCurrentGame()
         {
@@ -505,6 +504,8 @@
             endNight.onclick = function() {
                 if (clickedNumbers.length > 0) {
                     saveCurrentGame();
+                    // Clear the array
+                    clickedNumbers = [];
                 }
                 var cells = document.getElementsByTagName('td');
                 for (var i = 0; i < cells.length; i++) {
