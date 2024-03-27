@@ -6,7 +6,11 @@ window.onload = function() {
         console.log(typeof game_history);
         data = []
         for( var i = 0; i < game_history.length; i++){
-            console.log(game_history[i].game.name);
+            if( game_history[i].game )
+            {
+                console.log(game_history[i].game.name);
+            }
+
             data.push( game_history[i].numbers );
         }
         console.log(data);
@@ -185,8 +189,14 @@ window.onload = function() {
         saveButton.onclick = function() {
             var save_data = []
             for( var i = 0; i < game_history.length; i++){
+                var name = 'unknown';
+
+                if( game_history[i].game ){
+                    name = game_history[i].game.name;
+                }
+
                 save_data.push( {
-                    name : game_history[i].game.name,
+                    name : name,
                     numbers : game_history[i].numbers
                 });
             }
