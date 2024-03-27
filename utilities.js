@@ -15,7 +15,7 @@ function setDefaultSettings(force) {
     setDefaultItem('number-history-dir', 'right', force);
     setDefaultItem('last-number-on', 'true', force);
     setDefaultItem('number-history-on', 'true', force);
-    setDefaultItem('home-page', 'select_game', force);
+    setDefaultItem('home-page', 'board', force);
 }
 
 
