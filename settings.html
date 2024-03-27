@@ -118,11 +118,11 @@
                     console.log('Setting', colorPickers[i].id, 'to', colorPickers[i].value);
                     localStorage.setItem(colorPickers[i].id, colorPickers[i].value);
                 }
-                window.history.back();
+                window.location.href = localStorage.getItem('home-page')
             });
             document.getElementById('resetButton').addEventListener('click', function() {
                 setDefaultSettings(true)
-                window.history.back();
+                window.location.href = localStorage.getItem('home-page')
             });
         }
     </script>
