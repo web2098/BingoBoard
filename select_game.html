@@ -1,0 +1,375 @@
+<head>
+    <style>
+        table {
+            user-select: none;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-rows: auto auto auto auto; /* Creates three rows */
+            grid-template-columns: 1fr 1fr 1fr; /* Creates two columns */
+        }
+        #button_container {
+            display: flex;
+            justify-content: space-between;
+            grid-row:4;
+            grid-column: 1 / span 3;
+        }
+
+        #back_button {
+            margin-left: 10px;
+            font-size: 40px;
+        }
+
+        #next_button {
+            margin-right: 10px;
+            font-size: 40px;
+        }
+
+        #play_game {
+            font-size: 40px;
+        }
+
+        #welcome_view{
+            grid-column: 3; /* Places these divs in the first column */
+            grid-row: 1 / span 2;
+            display: flex; /* Enable Flexbox */
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center; /* Add this line */
+        }
+        #welcome_message{
+            font-size: 3vw; /* Adjust as needed */
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+        #game_rules{
+            font-size: 2.0vw; /* Adjust as needed */
+            margin-bottom: 14vh;
+            margin-top: 2vh;
+        }
+        #free_space_message{
+            grid-column: 2; /* Places these divs in the first column */
+            grid-row: 1 / span 2;
+            font-size: 2vw; /* Adjust as needed */
+            margin-bottom: 0;
+            margin-top: 2vh;
+        }
+        #game_name{
+            grid-column: 1 / span 1; /* Places these divs in the first column */
+            grid-row: 1;
+            display: flex; /* Enable Flexbox */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            font-size: 3vw; /* Adjust as needed */
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+
+        #full_view{
+            grid-column: 1 / span 2; /* Places these divs in the first column */
+            grid-row: 2;
+            display: flex; /* Enable Flexbox */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            min-height: 68vh;
+            max-height: 68vh;
+            margin-top: -20px;
+        }
+        #full_table td{
+            min-width:  10vw;
+            max-width:  10vw;
+            min-height: 10vw;
+            max-height: 10vw;
+            font-size: 10vh; /* Adjust as needed */
+            border: 1px solid black; /* Adjust as needed */
+        }
+        /* Games require pattern on both boards */
+        .full_table_multi{
+            margin-left: 20px;
+        }
+        .full_table_multi td{
+            font-size: 6vh; /* Adjust as needed */
+            min-width:  5vw;
+            max-width:  5vw;
+            min-height: 5vw;
+            max-height: 5vw;
+            border: 1px solid black; /* Adjust as needed */
+        }
+
+        #games_preview{
+            display: grid;
+            grid-template-rows: auto; /* Creates three rows */
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr; /* Creates two columns */
+            grid-column: 1 / span 3; /* Places these divs in the second column */
+            grid-row: 3;
+        }
+        #games_preview table {
+            margin-left: 1vw; /* Adjust as needed */
+            margin-right: 1vw; /* Adjust as needed */
+        }
+
+        #preview_table td{
+            border: 1px solid black; /* Adjust as needed */
+
+            min-width:  1vw;
+            max-width:  1vw;
+            min-height: 1vw;
+            max-height: 1vw;
+            font-size: 1.7vh; /* Adjust as needed */
+        }
+
+    </style>
+    <script src="games.js"></script>
+    <script src="utilities.js"></script>
+    <script>
+        var selected_game = null;
+        var current_game = 0;
+        var preview_index = 0;
+
+        function hide_element_by_id(board_name)
+        {
+            var table = document.getElementById(board_name);
+            table.style.display = 'none';
+        }
+        function show_board_by_id(board_name)
+        {
+            var table = document.getElementById(board_name);
+            table.style.display = 'block';
+        }
+        function update_main_board()
+        {
+            //TODO Support multi board game
+            var active_game = selected_game;
+            if( active_game.transitional )
+            {
+                show_board_by_id('transition_arrow');
+            }
+            else
+            {
+                hide_element_by_id('transition_arrow');
+            }
+            if( active_game.board_count == 2 )
+            {
+                console.log(`Double board game`);
+                hide_element_by_id('full_table');
+                show_board_by_id('full_table_0');
+                show_board_by_id('full_table_1');
+                update_main_board_num(active_game, 'full_table_0', 0);
+                update_main_board_num(active_game, 'full_table_1', 1);
+            }
+            else
+            {
+                console.log(`Single board game`);
+                hide_element_by_id('full_table_0');
+                hide_element_by_id('full_table_1');
+                show_board_by_id('full_table');
+                update_main_board_num(active_game, 'full_table', 0);
+            }
+            var free_space_message = document.getElementById('free_space_message');
+            free_space_message.innerHTML = active_game.free_space_on ? 'Free space is ON' : 'Free space is OFF';
+
+            var rules = document.getElementById('game_rules');
+            rules.innerHTML = active_game.rules;
+            var game_name = document.getElementById('game_name');
+            game_name.innerHTML = active_game.name;
+        }
+
+        function update_preview()
+        {
+            var games_preview = document.getElementById('games_preview');
+            var tables = games_preview.querySelectorAll('table');
+            var labels = games_preview.querySelectorAll('p');
+            console.log(`tables ${tables.length}`);
+            console.log(`labels ${tables.length}`);
+            var active_games = getFiveGames(preview_index);
+            for( var k = 0; k < tables.length; ++k )
+            {
+                var table = tables[k]
+                for (var i = 0; i < 5; i++) {
+                    for (var j = 0; j < 5; j++) {
+                        var td = table.rows[i].cells[j];
+                        if( i == 2 && j == 2 ){
+                            td.textContent = "FREE";
+                            td.style.fontSize = '10px';
+                        }
+                        else{
+                            td.textContent = bingo_word[j].toUpperCase();
+                        }
+                        if( game_contains_point( active_games[k], i, j, 0 ) )
+                        {
+                            td.style.backgroundColor = getItemWithDefault('select-tab-color');
+                            td.style.color = getItemWithDefault('select-tab-text-color');
+                        }
+                        else{
+                            td.style.backgroundColor = getItemWithDefault('unselect-tab-color');
+                            td.style.color = getItemWithDefault('unselect-tab-text-color');
+                        }
+                    }
+                }
+                var index =( k + preview_index ) % games().length;
+                table.setAttribute('data-game', index)
+                labels[k].innerHTML = active_games[k].name;
+            }
+        }
+
+        function getFiveGames(index) {
+            var allGames = games();
+            var gameCount = allGames.length;
+            var selectedGames = [];
+
+            for (var i = 0; i < 5; i++) {
+                var gameIndex = (index + i) % gameCount;
+                selectedGames.push(allGames[gameIndex]);
+            }
+
+            return selectedGames;
+        }
+
+        window.onload = function() {
+
+            var game_s = games();
+            var games_preview = document.getElementById('games_preview');
+
+            var preview_games = getFiveGames(preview_index)
+            // Define the word
+            for( var k = 0; k < preview_games.length; k++){
+                var game = game_s[k];
+                var div = document.createElement('div');
+                var table = create_table( document, 'preview_table', game_s[k], '10px' );
+
+
+                var game_name_label = document.createElement('p');
+                game_name_label.id = 'game_preview_name';
+                game_name_label.innerHTML = game.name;
+                game_name_label.style.textAlign = 'center';
+                // Add the table to the body of the document
+                div.appendChild(table);
+                div.style.display = "flex";
+                div.style.flexDirection = "column";
+                div.style.justifyContent = "center";
+                div.appendChild(game_name_label);
+                games_preview.appendChild(div);
+
+                table.setAttribute('data-game', k);
+                // Add click event listener to the table
+                table.addEventListener('click', function(event) {
+                    // This function will be called when the table is clicked
+                    // event.target refers to the clicked cell
+                    //get data-game for selected table
+                    var game_num = event.currentTarget.getAttribute('data-game');
+                    current_game = game_num;
+                    console.log('Table clicked ' + game_num);
+                    selected_game = game_s[game_num];
+                    update_main_board();
+                });
+            }
+
+
+            var full_table_name = game_s[current_game].board_count == 2 ? 'full_table_0' : 'full_table';
+            var full_view = document.getElementById('full_view');
+            var table = create_table( document, 'full_table', game_s[current_game] );
+            table.addEventListener('click', function(event) {
+                // This function will be called when the table is clicked
+                // event.target refers to the clicked cell
+                //get data-game for selected table
+                if (selected_game.free_space_dynamic){
+                    selected_game.free_space_on=!selected_game.free_space_on;
+                }
+                update_main_board();
+            });
+            // Add the table to the body of the document
+            full_view.appendChild(table);
+
+            //Now add two more tables for double table gamess
+            var table1 = create_table( document, 'full_table_0', game_s[current_game] );
+            table1.addEventListener('click', function(event) {
+                // This function will be called when the table is clicked
+                // event.target refers to the clicked cell
+                //get data-game for selected table
+                if (selected_game.free_space_dynamic){
+                    selected_game.free_space_on=!selected_game.free_space_on;
+                }
+                update_main_board();
+            });
+            table1.classList.add('full_table_multi');
+            full_view.appendChild(table1);
+
+            var arrow = document.createElement('p');
+            arrow.id = 'transition_arrow';
+            arrow.innerHTML = '&#x27A7;';
+            arrow.style.fontSize = '10vh';
+            full_view.appendChild(arrow);
+
+            //Now add two more tables for double table gamess
+            var table2 = create_table( document, 'full_table_1', game_s[current_game] );
+            table2.addEventListener('click', function(event) {
+                // This function will be called when the table is clicked
+                // event.target refers to the clicked cell
+                //get data-game for selected table
+                if (selected_game.free_space_dynamic){
+                    selected_game.free_space_on=!selected_game.free_space_on;
+                }
+                update_main_board();
+            });
+            table2.classList.add('full_table_multi');
+            full_view.appendChild(table2);
+            if( game_s[current_game].board_count != 2 )
+            {
+                table1.style.display = 'none';
+                table2.style.display = 'none';
+            }
+
+            var game_name = document.getElementById('game_name');
+            var game_name_label = document.createElement('p');
+            game_name_label.id = 'game_name';
+            game_name_label.innerHTML = game_s[current_game].name;
+            game_name.appendChild(game_name_label);
+
+            selected_game = game_s[current_game];
+            update_main_board()
+
+            var back_button = document.getElementById('back_button');
+            //listen for clicks on back button
+            back_button.addEventListener('click', function(){
+                if( preview_index === 0 )
+                {
+                    preview_index = games().length;
+                }
+                preview_index = ( preview_index - 1 ) % games().length;
+                update_preview();
+            });
+            var nexut_button = document.getElementById('nexut_button');
+            next_button.addEventListener('click', function(){
+                preview_index = ( preview_index + 1 ) % games().length;
+                update_preview();
+            });
+            var play_game = document.getElementById('play_game');
+            play_game.addEventListener('click', function(){
+                setTemporaryItem('selected_game', JSON.stringify(selected_game));
+                window.location.href = 'board.html';
+            });
+        }
+    </script>
+</head>
+<body>
+    <body>
+        <body>
+            <a href="settings.html">Settings</a>
+        </body>
+        <div class="grid-container">
+            <div id="game_name"></div>
+            <p id="free_space_message">Free space is OFF</p>
+             <div id="welcome_view">
+                <p id="welcome_message">BINGO FREE TO PLAY! 2 CARDS PER PERSON START TIME - 6:30<br> Bingo Word: BAHHH! </p>
+                <p id="game_rules">Rules of the game....</p>
+            </div>
+            <div id="full_view"></div>
+            <div id="games_preview"></div>
+            <div id="button_container">
+                <button id="back_button">Back</button>
+                <button id="play_game">Play</button>
+                <button id="next_button">Next</button>
+            </div>
+        </div>
+    </body>
+</body>

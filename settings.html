@@ -14,7 +14,7 @@
             margin-bottom: 10px;
         }
     </style>
-    <script src="index.js"></script>
+    <script src="utilities.js"></script>
     <script>
 
         window.onload = function() {
@@ -52,6 +52,9 @@
             {
                 document.getElementById('last-number-enabled').checked = false;
             }
+            var lastDir = localStorage.getItem('last-number-dir');
+            document.getElementById('last-direction').value = lastDir;
+
             if( localStorage.getItem('number-history-on') === "true" ){
                 document.getElementById('history-enabled').checked = true;
             }
@@ -59,6 +62,11 @@
             {
                 document.getElementById('history-enabled').checked = false;
             }
+            var historyDir = localStorage.getItem('number-history-dir');
+            document.getElementById('history-direction').value = historyDir;
+
+            var defaultPage = localStorage.getItem('home-page');
+            document.getElementById('default-page').value = defaultPage;
 
             for (var i = 0; i < colorPickers.length; i++) {
                 var colorPickerLabel = document.createElement('label');
@@ -101,7 +109,8 @@
                 var lastEnabled = document.getElementById('history-enabled').checked;
                 localStorage.setItem('number-history-on', lastEnabled);
 
-
+                var defaultPage = document.getElementById('default-page').value;
+                localStorage.setItem('home-page', defaultPage);
 
                 var colorPickers = document.getElementsByTagName('input');
 
@@ -109,11 +118,11 @@
                     console.log('Setting', colorPickers[i].id, 'to', colorPickers[i].value);
                     localStorage.setItem(colorPickers[i].id, colorPickers[i].value);
                 }
-                window.location.href = 'index.html';
+                window.history.back();
             });
             document.getElementById('resetButton').addEventListener('click', function() {
                 setDefaultSettings(true)
-                window.location.href = 'index.html';
+                window.history.back();
             });
         }
     </script>
@@ -123,6 +132,11 @@
     <div class="container">
         <h1>Settings</h1>
         <p>Change your settings here.</p>
+        <label for="default-page">Default Page:</label>
+        <select id="default-page">
+            <option value="select_game">Select Game</option>
+            <option value="board">Board</option>
+        </select>
         <div class="row" id="lnpdir">
             <input type="checkbox" id="last-number-enabled" checked="true">
             <label for="last-direction">Last Number Played Location:</label>

@@ -15,4 +15,26 @@ function setDefaultSettings(force) {
     setDefaultItem('number-history-dir', 'right', force);
     setDefaultItem('last-number-on', 'true', force);
     setDefaultItem('number-history-on', 'true', force);
+    setDefaultItem('home-page', 'select_game', force);
+}
+
+
+function getItemWithDefault( item, force ){
+    setDefaultSettings(force);
+    return localStorage.getItem(item);
+}
+
+function getRandomColor() {
+    var r = Math.floor(Math.random() * 256); // Random between 0-255
+    var g = Math.floor(Math.random() * 256); // Random between 0-255
+    var b = Math.floor(Math.random() * 256); // Random between 0-255
+    return 'rgb(' + r + ',' + g + ',' + b + ')'; // Collect all to a rgb string
+}
+
+function setTemporaryItem(key, value) {
+    sessionStorage.setItem(key, value);
+}
+
+function getTemporaryItem(key) {
+    return sessionStorage.getItem(key);
 }
