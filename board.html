@@ -506,7 +506,19 @@
                 if (clickedNumbers.length > 0) {
                     saveCurrentGame();
                 }
-                clickedNumbersHistory = [];
+                var cells = document.getElementsByTagName('td');
+                for (var i = 0; i < cells.length; i++) {
+                    cells[i].style.backgroundColor = '';
+                    cells[i].style.color = 'black';
+                }
+                if( current_game )
+                {
+                    update_main_board_num(current_game, 'preview_board', 0, '10px');
+                }
+
+                // Reset the last number text
+                document.getElementById('lastNumber').innerHTML = "Waiting for first number";
+                clickedNumbersTable.innerHTML = "";
                 window.location.href = 'stats.html';
             }
             footerDiv.appendChild(endNight);
