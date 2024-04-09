@@ -9,6 +9,7 @@ function bingo(){
             [0,0],[1,1],[2,2],[3,3],[4,4]
         ],
         "free_space_dynamic": true,
+        "free_space_on": true,
         "free_off_board": [
             [0, 0], [0,1],[0,2],[0,3],[0,4]
         ],
@@ -21,13 +22,14 @@ function DoubleBingo(){
         "name": "Double Bingo",
         "board_count": 1,
         "board": [
-            [0, 0],[0,1],[0,2],[0,3],[0,4],
-            [0,3],[1,3],[2,3],[3,3],[4,3]
-        ],
-        "free_space_dynamic": true,
-        "free_off_board": [
             [0, 2],[1,2],[2,2],[3,2],[4,2],
             [0, 0],[1,1],[2,2],[3,3],[4,4]
+        ],
+        "free_space_dynamic": true,
+        "free_space_on": true,
+        "free_off_board": [
+            [0, 0],[0,1],[0,2],[0,3],[0,4],
+            [0,3],[1,3],[2,3],[3,3],[4,3]
         ],
         "transitional": false,
         "rules": "On a single board must get 2 Bingos"
