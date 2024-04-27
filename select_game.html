@@ -335,6 +335,10 @@
                 var game_name_label = document.createElement('p');
                 game_name_label.id = 'game_preview_name';
                 game_name_label.innerHTML = game.name;
+                game_name_label.style.display = 'flex';
+                game_name_label.style.justifyContent = 'center';
+                game_name_label.style.alignItems = 'center';
+                
                 div.style.display = "flex";
                 div.style.flexDirection = "column";
                 div.appendChild(game_name_label);
