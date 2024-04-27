@@ -415,6 +415,7 @@ function create_table( parent, name , game, free_font_size = '3vh', board_num = 
 {
     var table = parent.createElement('table');
     table.id = name;
+    table.className = name;
 
     // Create 5 rows
     for (var i = 0; i < 5; i++) {
@@ -423,6 +424,7 @@ function create_table( parent, name , game, free_font_size = '3vh', board_num = 
         // Create 5 columns
         for (var j = 0; j < 5; j++) {
             var td = parent.createElement('td');
+            td.className = "game_cell"
 
             // Fill the cell with the corresponding character from the word
             td.textContent = bingo_word[j].toUpperCase();

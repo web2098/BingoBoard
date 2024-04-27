@@ -96,18 +96,6 @@
             border: 1px solid black; /* Adjust as needed */
         }
 
-        #games_preview{
-            display: grid;
-            grid-template-rows: auto; /* Creates three rows */
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr; /* Creates two columns */
-            grid-column: 1 / span 3; /* Places these divs in the second column */
-            grid-row: 3;
-        }
-        #games_preview table {
-            margin-left: 1vw; /* Adjust as needed */
-            margin-right: 1vw; /* Adjust as needed */
-        }
-
         #preview_table td{
             border: 1px solid black; /* Adjust as needed */
 
@@ -117,14 +105,26 @@
             max-height: 1vw;
             font-size: 1.7vh; /* Adjust as needed */
         }
+        .swiper-container {
+            display: grid;
+            grid-template-rows: auto; /* Creates three rows */
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr; /* Creates two columns */
+            grid-column: 1 / span 3; /* Places these divs in the second column */
+            grid-row: 3;
+        }
+        body {
+            overflow-x: hidden;
+        }
 
     </style>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="games.js"></script>
     <script src="utilities.js"></script>
     <script>
         var selected_game = null;
         var current_game = 0;
-        var preview_index = 0;
+        //var preview_index = 0;
 
         function hide_element_by_id(board_name)
         {
@@ -174,57 +174,6 @@
             game_name.innerHTML = active_game.name;
         }
 
-        function update_preview()
-        {
-            var games_preview = document.getElementById('games_preview');
-            var tables = games_preview.querySelectorAll('table');
-            var labels = games_preview.querySelectorAll('p');
-            console.log(`tables ${tables.length}`);
-            console.log(`labels ${tables.length}`);
-            var active_games = getFiveGames(preview_index);
-            for( var k = 0; k < tables.length; ++k )
-            {
-                var table = tables[k]
-                for (var i = 0; i < 5; i++) {
-                    for (var j = 0; j < 5; j++) {
-                        var td = table.rows[i].cells[j];
-                        if( i == 2 && j == 2 ){
-                            td.textContent = "FREE";
-                            td.style.fontSize = '10px';
-                        }
-                        else{
-                            td.textContent = bingo_word[j].toUpperCase();
-                        }
-                        if( game_contains_point( active_games[k], i, j, 0 ) )
-                        {
-                            td.style.backgroundColor = getItemWithDefault('select-tab-color');
-                            td.style.color = getItemWithDefault('select-tab-text-color');
-                        }
-                        else{
-                            td.style.backgroundColor = getItemWithDefault('unselect-tab-color');
-                            td.style.color = getItemWithDefault('unselect-tab-text-color');
-                        }
-                    }
-                }
-                var index =( k + preview_index ) % games().length;
-                table.setAttribute('data-game', active_games[k].name);
-                labels[k].innerHTML = active_games[k].name;
-            }
-        }
-
-        function getFiveGames(index) {
-            var allGames = games();
-            var gameCount = allGames.length;
-            var selectedGames = [];
-
-            for (var i = 0; i < 5; i++) {
-                var gameIndex = (index + i) % gameCount;
-                selectedGames.push(allGames[gameIndex]);
-            }
-
-            return selectedGames;
-        }
-
         function find_game(name){
             var game_s = games();
             for( var i = 0; i < game_s.length; i++ ){
@@ -235,7 +184,45 @@
             return current_game;
         }
 
+        function adjustTableFont( tableId )
+        {
+            var table = document.getElementById(tableId);
+            var cells = table.querySelectorAll('td');
+            console.log(cells.length);
+            var fontSize = adjustFontSizeToCell( cells[0] );
+            cells.forEach(function(cell) {
+                if( cell.innerHTML != 'FREE')
+                    cell.style.fontSize = fontSize + "px";
+            });
+        }
+        function adjustPreviewTables()
+        {
+            var tables = document.getElementsByClassName('preview_table');
+            var cells = tables[0].querySelectorAll('td');
+            var fontSize = adjustFontSizeToCell( cells[0] );
+            for( var i = 0; i < tables.length; ++i )
+            {
+                var cells = tables[i].querySelectorAll('td');
+                cells.forEach(function(cell) {
+                    if( cell.innerHTML != 'FREE')
+                        cell.style.fontSize = fontSize + "px";
+                });
+            }
+
+        }
+
+        function adjustFontSizeToCell(element) {
+            var fontSize = parseFloat(window.getComputedStyle(element, null).getPropertyValue('font-size'));
+            // While the element's scrollWidth > its visible width or the element's scrollHeight > its visible height
+            while (element.scrollWidth > element.offsetWidth || element.scrollHeight > element.offsetHeight) {
+                fontSize--; // Reduce the font size
+                element.style.fontSize = fontSize + "px"; // Apply the new font size
+            }
+            return fontSize;
+        }
+
         window.onload = function() {
+            //adjustFontSizeToCell('game_cell');
             current_game = parseInt(getTemporaryItem('selected_game_index')) || 0;
             preview_index = parseInt(getTemporaryItem('selected_preview_index')) || 0;
             console.log(preview_index);
@@ -243,39 +230,6 @@
             var games_preview = document.getElementById('games_preview');
 
             var game_s = games();
-            var preview_games = getFiveGames(preview_index)
-            // Define the word
-            for( var k = 0; k < preview_games.length; k++){
-                var game = preview_games[k];
-                var div = document.createElement('div');
-                var table = create_table( document, 'preview_table', preview_games[k], '10px' );
-
-
-                var game_name_label = document.createElement('p');
-                game_name_label.id = 'game_preview_name';
-                game_name_label.innerHTML = game.name;
-                game_name_label.style.textAlign = 'center';
-                // Add the table to the body of the document
-                div.appendChild(table);
-                div.style.display = "flex";
-                div.style.flexDirection = "column";
-                div.style.justifyContent = "center";
-                div.appendChild(game_name_label);
-                games_preview.appendChild(div);
-
-                table.setAttribute('data-game', game.name);
-                // Add click event listener to the table
-                table.addEventListener('click', function(event) {
-                    // This function will be called when the table is clicked
-                    // event.target refers to the clicked cell
-                    //get data-game for selected table
-                    var game_name = event.currentTarget.getAttribute('data-game');
-                    current_game = find_game(game_name);
-                    console.log('Table clicked ' + current_game);
-                    selected_game = game_s[current_game];
-                    update_main_board();
-                });
-            }
 
             var full_table_name = game_s[current_game].board_count == 2 ? 'full_table_0' : 'full_table';
             var full_view = document.getElementById('full_view');
@@ -340,21 +294,6 @@
             selected_game = game_s[current_game];
             update_main_board()
 
-            var back_button = document.getElementById('back_button');
-            //listen for clicks on back button
-            back_button.addEventListener('click', function(){
-                if( preview_index === 0 )
-                {
-                    preview_index = games().length;
-                }
-                preview_index = ( preview_index - 1 ) % games().length;
-                update_preview();
-            });
-            var nexut_button = document.getElementById('next_button');
-            next_button.addEventListener('click', function(){
-                preview_index = ( preview_index + 1 ) % games().length;
-                update_preview();
-            });
             var play_game = document.getElementById('play_game');
             play_game.addEventListener('click', function(){
                 console.log(preview_index);
@@ -363,7 +302,77 @@
                 setTemporaryItem('selected_preview_index', preview_index);
                 window.location.href = 'board.html';
             });
+
+            adjustTableFont("full_table");
+            adjustTableFont("full_table_0");
+            adjustTableFont("full_table_1")
+            adjustPreviewTables();
         }
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var swiper = new Swiper('.swiper-container', {
+                slidesPerView: 5,
+                spaceBetween: 10,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                loop: true,
+            });
+            
+            var game_s = games();
+            // Define the word
+            for( var k = 0; k < game_s.length; k++){
+                var game = game_s[k];
+                var div = document.createElement('div');
+
+                var table = create_table( document, 'preview_table', game_s[k], '10px' );
+                div.appendChild(table);
+
+                var game_name_label = document.createElement('p');
+                game_name_label.id = 'game_preview_name';
+                game_name_label.innerHTML = game.name;
+                game_name_label.style.display = 'flex';
+                game_name_label.style.justifyContent = 'center';
+                game_name_label.style.alignItems = 'center';
+                
+                div.style.display = "flex";
+                div.style.flexDirection = "column";
+                div.appendChild(game_name_label);
+
+                table.setAttribute('data-game', game.name);
+                // Add click event listener to the table
+                table.addEventListener('click', function(event) {
+                    // This function will be called when the table is clicked
+                    // event.target refers to the clicked cell
+                    //get data-game for selected table
+                    var game_name = event.currentTarget.getAttribute('data-game');
+                    current_game = find_game(game_name);
+                    console.log('Table clicked ' + current_game);
+                    selected_game = game_s[current_game];
+                    update_main_board();
+                });
+                div.className = 'swiper-slide';
+                document.querySelector('.swiper-wrapper').appendChild(div);
+            }
+        
+
+            swiper.update();
+            
+            var back_button = document.getElementById('back_button');
+            //listen for clicks on back button
+            back_button.addEventListener('click', function(){
+                swiper.slidePrev();
+            });
+            var nexut_button = document.getElementById('next_button');
+            next_button.addEventListener('click', function(){
+                swiper.slideNext();
+            });
+
+        });
     </script>
 </head>
 <body>
@@ -379,12 +388,17 @@
                 <p id="game_rules">Rules of the game....</p>
             </div>
             <div id="full_view"></div>
-            <div id="games_preview"></div>
-            <div id="button_container">
-                <button id="back_button">Back</button>
-                <button id="play_game">Play</button>
-                <button id="next_button">Next</button>
+        </div>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                <!-- ... -->
             </div>
+        </div>
+        <div id="button_container">
+            <button id="back_button">Back</button>
+            <button id="play_game">Play</button>
+            <button id="next_button">Next</button>
         </div>
     </body>
 </body>
