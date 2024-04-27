@@ -307,6 +307,9 @@
             adjustTableFont("full_table_0");
             adjustTableFont("full_table_1")
             adjustPreviewTables();
+
+            var welcome_message = document.getElementById('welcome_message');
+            welcome_message.innerHTML = getItemWithDefault('welcome-message')
         }
         document.addEventListener('DOMContentLoaded', (event) => {
             var swiper = new Swiper('.swiper-container', {
@@ -384,7 +387,7 @@
             <div id="game_name"></div>
             <p id="free_space_message">Free space is OFF</p>
              <div id="welcome_view">
-                <p id="welcome_message">BINGO FREE TO PLAY! 2 CARDS PER PERSON START TIME - 6:30<br> Bingo Word: BAHHH! </p>
+                <p id="welcome_message"></p>
                 <p id="game_rules">Rules of the game....</p>
             </div>
             <div id="full_view"></div>

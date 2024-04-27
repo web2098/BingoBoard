@@ -1,6 +1,14 @@
 <head>
 
     <style>
+        #body_div {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        #quick_settings, #customizations {
+            width: 50%;
+        }
         #lnpdir {
             display: flex;
             justify-content: space-between;
@@ -68,6 +76,9 @@
             var defaultPage = localStorage.getItem('home-page');
             document.getElementById('default-page').value = defaultPage;
 
+            var welcomeMesg = localStorage.getItem('welcome-message');
+            document.getElementById('welcome_message_edit').value = welcomeMesg;
+
             for (var i = 0; i < colorPickers.length; i++) {
                 var colorPickerLabel = document.createElement('label');
                 colorPickerLabel.setAttribute('for', colorPickers[i].key);
@@ -112,6 +123,9 @@
                 var defaultPage = document.getElementById('default-page').value;
                 localStorage.setItem('home-page', defaultPage);
 
+                var welcomeMesg = document.getElementById('welcome_message_edit').value;
+                localStorage.setItem('welcome-message', welcomeMesg);
+
                 var colorPickers = document.getElementsByTagName('input');
 
                 for (var i = 0; i < colorPickers.length; i++) {
@@ -129,31 +143,40 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Settings</h1>
-        <p>Change your settings here.</p>
-        <label for="default-page">Default Page:</label>
-        <select id="default-page">
-            <option value="select_game">Select Game</option>
-            <option value="board">Board</option>
-        </select>
-        <div class="row" id="lnpdir">
-            <input type="checkbox" id="last-number-enabled" checked="true">
-            <label for="last-direction">Last Number Played Location:</label>
-            <select id="last-direction">
-                <option value="top">Top</option>
-                <option value="bottom">Bottom</option>
+    <div id="body_div">
+        <div class="container" id="quick_settings">
+            <h1>Settings</h1>
+            <p>Change your settings here.</p>
+            <label for="default-page">Default Page:</label>
+            <select id="default-page">
+                <option value="select_game">Select Game</option>
+                <option value="board">Board</option>
             </select>
+            <div class="row" id="lnpdir">
+                <input type="checkbox" id="last-number-enabled" checked="true">
+                <label for="last-direction">Last Number Played Location:</label>
+                <select id="last-direction">
+                    <option value="top">Top</option>
+                    <option value="bottom">Bottom</option>
+                </select>
+            </div>
+            <div class="row" id="nhdir">
+                <input type="checkbox" id="history-enabled" checked="true">
+                <label for="history-direction">Number History Location:</label>
+                <select id="history-direction">
+                    <option value="right">Right</option>
+                    <option value="left">Left</option>
+                </select>
+            </div>
         </div>
-        <div class="row" id="nhdir">
-            <input type="checkbox" id="history-enabled" checked="true">
-            <label for="history-direction">Number History Location:</label>
-            <select id="history-direction">
-                <option value="right">Right</option>
-                <option value="left">Left</option>
-            </select>
+        <div id="customizations">
+            <div style="display: flex; flex-direction: column;">
+                <label for="welcome_message_edit">Welcome Message (HTML)</label>    
+                <textarea id="welcome_message_edit" rows="4" cols="50"></textarea>
+            </div>
         </div>
     </div>
+    
     <button id="applyButton">Apply</button>
     <button id="resetButton">Reset To Default</button>
 </body>
