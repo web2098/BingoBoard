@@ -361,6 +361,18 @@
                 div.hidden = true;
             });
             large_preview_div.hidden = true;
+
+
+            document.addEventListener('click', function(event) {
+                var large_preview_div = document.getElementById('large_preview_div');
+                if( !large_preview_div.hidden ){
+                    var specificElement = document.getElementById('large_free_space_label');
+                    if (event.target !== specificElement) {
+                        large_preview_div.hidden = true;
+                        event.stopPropagation();
+                    }
+                }
+            }, true);
         }
 
         function updatePreviewBoards()
@@ -538,7 +550,6 @@
                         var letter = lettersTable.children[rowIndex].firstChild.innerHTML;
                         var number = letter + this.innerHTML;
                         var index = clickedNumbers.indexOf(number);
-                        console.log(this.style.backgroundColor)
                         if (index > -1) {
                             this.style.backgroundColor = styleVariables.unselectedColor;
                             this.style.color = styleVariables.unselectedTextColor;
