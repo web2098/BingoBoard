@@ -191,7 +191,7 @@ function XMas(){
 }
 function LargeX(){
     return {
-        "name": "X Marks the spot",
+        "name": "X Marks the Spot",
         "board_count": 1,
         "board": [
             [0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]
