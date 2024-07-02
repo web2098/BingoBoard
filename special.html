@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Animation</title>
+<style>
+  body {
+    overflow: hidden;
+    height: 100vh; /* Full height of the viewport */
+    width: 100vw; /* Full width of the viewport */
+    margin: 0; /* Remove default margin */
+    position: relative; /* For absolute positioning of child elements */
+  }
+  .animated-text {
+    position: absolute;
+    bottom: 80%;
+    left: 30%; /* Start from the bottom left */
+    font-size: 6rem;
+    animation: fadeIn 4s ease-in-out forwards;
+  }
+  .animated-text-2 {
+    position: absolute;
+    bottom: 60%;
+    left: 45%; /* Start from the bottom left */
+    font-size: 6rem;
+    animation: fadeIn 4s ease-in-out forwards;
+    animation-delay: 2s;
+    opacity: 0;
+  }
+  @keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+    }
+  .rotated-image-left {
+    position: absolute;
+    bottom: 0%;
+    left: 0%;
+    transform: rotate(-45deg);
+  }
+  .rotated-image-right {
+    position: absolute;
+    bottom: 0%; /* Adjusted to a smaller negative value */
+    right: 0%;
+    transform: rotate(45deg) scaleX(-1);
+  }
+  .rotated-image-tleft {
+    position: absolute;
+    bottom: 85%; /* Adjusted to a smaller negative value */
+    left: 1%;
+    transform: rotate(45deg);
+  }
+  .rotated-image-tright {
+    position: absolute;
+    bottom: 85; /* Adjusted to a smaller negative value */
+    right: 1%;
+    transform: rotate(-45deg) scaleX(-1);
+  }
+  .normal-text {
+    position: absolute;
+    bottom: 40%;
+    left: 30%; /* Start from the bottom left */
+    font-size: 6rem;
+    animation: fadeIn 4s ease-in-out forwards;
+    animation-delay: 4s;
+    opacity: 0;
+  }
+  #onward{
+    position: absolute;
+    bottom: 10%;
+    left: 45%;
+    font-size: 2rem;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    animation: fadeIn 4s ease-in-out forwards;
+    animation-delay: 6s;
+    opacity: 0;
+  }
+</style>
+</head>
+    <body>
+        <div class="animated-text">BAAAAAAAAAHHHHHHH</div>
+        <div class="animated-text-2">BYE!!!!!!!!!!!!</div>
+        <div class="normal-text">Thanks Derek for all the bingo!</div>
+        <img src="goat.png" class="rotated-image-left" alt="Gilded Goat Goat">
+        <img src="goat.png" class="rotated-image-right" alt="Gilded Goat Goat">
+        <img src="goat.png" class="rotated-image-tleft" alt="Gilded Goat Goat">
+        <img src="goat.png" class="rotated-image-tright" alt="Gilded Goat Goat">
+        <button id="onward" onclick="window.location.href='board.html'">To the finale</button>
+    </body>
+</html>

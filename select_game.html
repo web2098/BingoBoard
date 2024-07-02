@@ -300,7 +300,14 @@
                 setTemporaryItem('selected_game', JSON.stringify(selected_game));
                 setTemporaryItem('selected_game_index', current_game);
                 setTemporaryItem('selected_preview_index', preview_index);
-                window.location.href = 'board.html';
+
+                // Check if boards name is of blackout surivior if so go to special page
+                console.log(selected_game.name);
+                if (selected_game.name == 'Black Out Survivor'){
+                    window.location.href = 'special.html';
+                } else {
+                    window.location.href = 'board.html';
+                }
             });
 
             adjustTableFont("full_table");
@@ -325,7 +332,7 @@
                 },
                 loop: true,
             });
-            
+
             var game_s = games();
             // Define the word
             for( var k = 0; k < game_s.length; k++){
@@ -341,7 +348,7 @@
                 game_name_label.style.display = 'flex';
                 game_name_label.style.justifyContent = 'center';
                 game_name_label.style.alignItems = 'center';
-                
+
                 div.style.display = "flex";
                 div.style.flexDirection = "column";
                 div.appendChild(game_name_label);
@@ -361,10 +368,10 @@
                 div.className = 'swiper-slide';
                 document.querySelector('.swiper-wrapper').appendChild(div);
             }
-        
+
 
             swiper.update();
-            
+
             var back_button = document.getElementById('back_button');
             //listen for clicks on back button
             back_button.addEventListener('click', function(){
