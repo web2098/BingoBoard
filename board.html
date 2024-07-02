@@ -92,14 +92,22 @@
         }
 
         #headerTextDiv {
+            padding: 0;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             /*background-color: orange; /* The Color*/
             min-width: 60vw;
-            max-width: 60vw;
+            max-width: 80vw;
             max-height: 18vh;
             min-height: 18vh;
+        }
+        #numberRatioDiv{
+            padding: 0;
+            user-select: none;
+            font-size: 20;  /*adjust as needed */
+            font-weight: bold; /* makes the text bold */
+            text-align: right; /* centers the text */
         }
         #preview_div{
             display:flex;
@@ -522,6 +530,8 @@
 
             headerDiv.appendChild(headerTextDiv);
 
+
+
             return headerDiv;
         }
 
@@ -598,6 +608,9 @@
                         } else {
                             document.getElementById('lastNumber').innerHTML = "Waiting for first number";
                         }
+
+                        var numberRatio = document.getElementById('numberRatio');
+                        numberRatio.innerHTML = clickedNumbers.length + "/75" + "(" + (75 - clickedNumbers.length) + " left)";
                     }
                     tr.appendChild(td);
                 }
@@ -621,6 +634,17 @@
             // Create a container for the clicked numbers
             var clickedNumbersDiv = document.createElement('div');
             clickedNumbersDiv.id = 'clickedNumbersDiv';
+
+            var numberRatioDiv = document.createElement('div');
+            numberRatioDiv.id = 'numberRatioDiv';
+            var numberRatio = document.createElement('p');
+            numberRatio.innerHTML = '0/75 (75 left)';
+            numberRatio.id = 'numberRatio';
+            numberRatioDiv.appendChild(numberRatio);
+
+            clickedNumbersDiv.appendChild(numberRatioDiv);
+
+
             // Create paragraph to display the last clicked number
             var lastNumberCalled = document.createElement('p');
             lastNumberCalled.id = 'lastNumberCalled';
