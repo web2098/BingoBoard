@@ -17,8 +17,19 @@
     bottom: 80%;
     left: 20%; /* Start from the bottom left */
     font-size: 6rem;
-    animation: fadeIn 4s ease-in-out forwards;
+    animation: fadeInMove 4s ease-in-out forwards;
+    color: black;
   }
+  @keyframes fadeInMove {
+    from {
+        opacity: 0;
+        bottom: 50%;
+    }
+    to {
+        opacity: 1;
+        bottom: 80%;
+    }
+    }
   .animated-text-2 {
     position: absolute;
     bottom: 60%;
@@ -27,6 +38,7 @@
     animation: fadeIn 4s ease-in-out forwards;
     animation-delay: 2s;
     opacity: 0;
+    color: black;
   }
   @keyframes fadeIn {
     from {
@@ -68,6 +80,7 @@
     animation: fadeIn 4s ease-in-out forwards;
     animation-delay: 4s;
     opacity: 0;
+    color: black;
   }
   #onward{
     position: absolute;
@@ -84,9 +97,25 @@
     animation-delay: 6s;
     opacity: 0;
   }
+  #goat_back{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: .5;
+    animation: fadeout 10s ease-in-out forwards;
+  }
+  @keyframes fadeout {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: .3;
+    }
+    }
 </style>
 </head>
     <body>
+        <img src="goatyell.jpg" id="goat_back">
         <div class="animated-text">BAAAAAAAAAHHHHHHH</div>
         <div class="animated-text-2">BYE!!!!!!!!!!!!</div>
         <div class="normal-text">Thanks Derek for all the bingo!</div>
