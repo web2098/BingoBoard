@@ -14,19 +14,19 @@
   }
   .animated-text {
     position: absolute;
-    bottom: 80%;
+    bottom: 55%;
     left: 20%; /* Start from the bottom left */
     font-size: 6rem;
     animation: fadeInMove 4s ease-in-out forwards;
+    animation-delay: 1s;
     color: black;
+    opacity: 1
   }
   @keyframes fadeInMove {
     from {
-        opacity: 0;
-        bottom: 50%;
+        bottom: 55%;
     }
     to {
-        opacity: 1;
         bottom: 80%;
     }
     }
