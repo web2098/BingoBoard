@@ -32,7 +32,7 @@ function DoubleBingo(){
             [0,3],[1,3],[2,3],[3,3],[4,3]
         ],
         "transitional": false,
-        "rules": "Variant 1: On a single board must get 2 Bingos\nVariant 2: Get 1 bingo on both boards\nVariant 3: Either variant wins!"
+        "rules": "Variant 1: Get 2 bingos on only 1 board<br>Variant 2: Get 1 bingo on both boards<br>Variant 3: Either variant wins!"
     };
 }
 function tinyX(){
