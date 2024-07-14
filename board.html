@@ -584,17 +584,13 @@
 
                             clickedNumbersTable.insertBefore(tr, clickedNumbersTable.firstChild);
 
-                            if (this.innerHTML == "25"){
-                                document.getElementById('extraInfo').innerHTML = "Beep Beep";
-                            }
-                            else if (this.innerHTML == "69"){
-                                document.getElementById('extraInfo').innerHTML = "Oooooooo";
-                            }
-                            else if (this.innerHTML == "11"){
-                                document.getElementById('extraInfo').innerHTML = "B11! B! B! 11!";
-                            }
-                            else if (this.innerHTML == "44"){
-                                document.getElementById('extraInfo').innerHTML = "Lucky!";
+
+                            const specialNumbers = JSON.parse(getItemWithDefault('special-numbers'));
+                            console.log(specialNumbers);
+                            console.log(this.innerHTML);
+                            if (specialNumbers && this.innerHTML in specialNumbers) {
+                                console.log("Special Number!");
+                                document.getElementById('extraInfo').innerHTML = specialNumbers[this.innerHTML];
                             }
                             else{
                                 document.getElementById('extraInfo').innerHTML = " ";

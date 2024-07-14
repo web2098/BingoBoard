@@ -4,6 +4,16 @@ function setDefaultItem(key, value, force) {
         localStorage.setItem(key, value);
     }
 }
+
+function defaultSpecialNumbers() {
+    return {
+        11: 'B11! B! B! 11!',
+        25: 'Beep Beep',
+        69: 'Oooooooooh'
+    }
+}
+
+
 function setDefaultSettings(force) {
     setDefaultItem('main-bg-color', '#FFFFFF', force);
     setDefaultItem('main-font-color', '#000000', force);
@@ -17,6 +27,7 @@ function setDefaultSettings(force) {
     setDefaultItem('number-history-on', 'true', force);
     setDefaultItem('home-page', 'board', force);
     setDefaultItem('welcome-message', 'BINGO FREE TO PLAY! 2 CARDS PER PERSON START TIME - 6:30<br> Bingo Word: BAHHH!', force);
+    setDefaultItem('special-numbers', JSON.stringify(defaultSpecialNumbers()), force);
 }
 
 
