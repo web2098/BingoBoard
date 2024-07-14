@@ -5,7 +5,7 @@
             display: flex;
             justify-content: space-between;
         }
-        
+
         #quick_settings, #customizations {
             width: 50%;
         }
@@ -26,6 +26,48 @@
     <script>
 
         window.onload = function() {
+
+            const selectElement = document.getElementById('special_numbers');
+            selectElement.onchange = function() {
+                const specialNumbers = JSON.parse(getItemWithDefault('special-numbers'));
+                console.log(specialNumbers);
+                if ( specialNumbers && `${selectElement.value}` in specialNumbers ) {
+                    document.getElementById('special_number_text').value = specialNumbers[`${selectElement.value}`];
+                }
+            }
+            const bingoLetters = ['B', 'I', 'N', 'G', 'O'];
+            for (let i = 1; i <= 75; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                //divide i by 15 and convert to int to get the bingo letter
+                letterIndex = Math.floor((i-1)/15);
+                option.textContent = bingoLetters[letterIndex] + i;
+                selectElement.appendChild(option);
+            }
+            const specialNumbers = JSON.parse(getItemWithDefault('special-numbers'));
+            console.log(specialNumbers);
+            if ( specialNumbers && '1' in specialNumbers ) {
+                document.getElementById('special_number_text').value = specialNumbers['1'];
+            }
+            const selectElementText = document.getElementById('special_number_text');
+            selectElementText.onchange = function() {
+                const specialNumbers = JSON.parse(getItemWithDefault('special-numbers'));
+                console.log(selectElement.value);
+                if ( specialNumbers ) {
+                    if (document.getElementById('special_number_text').value.length === 0)
+                    {
+                        delete specialNumbers[`${selectElement.value}`];
+                    }
+                    else
+                    {
+                        specialNumbers[`${selectElement.value}`] = document.getElementById('special_number_text').value;
+                    }
+                }
+                console.log(`Updating special numbers ${specialNumbers}`)
+                console.log(specialNumbers);
+                localStorage.setItem('special-numbers', JSON.stringify(specialNumbers));
+            }
+
             var colorPickers = [
                 {
                     id: "Main Background Color",
@@ -171,12 +213,19 @@
         </div>
         <div id="customizations">
             <div style="display: flex; flex-direction: column;">
-                <label for="welcome_message_edit">Welcome Message (HTML)</label>    
+                <label for="welcome_message_edit">Welcome Message (HTML)</label>
                 <textarea id="welcome_message_edit" rows="4" cols="50"></textarea>
+            </div>
+
+            <div style="display: flex; flex-direction: column;">
+                <h2>Special Numbers</h2>
+                <select id="special_numbers">
+                </select>
+                <textarea id="special_number_text" rows="4" cols="50"></textarea>
             </div>
         </div>
     </div>
-    
+
     <button id="applyButton">Apply</button>
     <button id="resetButton">Reset To Default</button>
 </body>
