@@ -1,0 +1,182 @@
+<head>
+
+    <style>
+        #body_div {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        #quick_settings, #customizations {
+            width: 50%;
+        }
+        #lnpdir {
+            display: flex;
+            justify-content: space-between;
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+        #nhdir {
+            display: flex;
+            justify-content: space-between;
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="utilities.js"></script>
+    <script>
+
+        window.onload = function() {
+            var colorPickers = [
+                {
+                    id: "Main Background Color",
+                    key: "main-bg-color"
+                },
+                {
+                    id: "Main Text Color",
+                    key: "main-font-color",
+                },
+                {
+                    id: "Selected Number Background Color",
+                    key: 'select-tab-color'
+                },
+                {
+                    id: 'Selected Number Text Color',
+                    key: 'select-tab-text-color'
+                },
+                {
+                    id: "Default Number Background Color",
+                    key: 'unselect-tab-color'
+                },
+                {
+                    id: 'Default Number Text Color',
+                    key: 'unselect-tab-text-color'
+                }
+            ];
+
+            if( localStorage.getItem('last-number-on') === "true" ){
+                document.getElementById('last-number-enabled').checked = true;
+            }
+            else
+            {
+                document.getElementById('last-number-enabled').checked = false;
+            }
+            var lastDir = localStorage.getItem('last-number-dir');
+            document.getElementById('last-direction').value = lastDir;
+
+            if( localStorage.getItem('number-history-on') === "true" ){
+                document.getElementById('history-enabled').checked = true;
+            }
+            else
+            {
+                document.getElementById('history-enabled').checked = false;
+            }
+            var historyDir = localStorage.getItem('number-history-dir');
+            document.getElementById('history-direction').value = historyDir;
+
+            var defaultPage = localStorage.getItem('home-page');
+            document.getElementById('default-page').value = defaultPage;
+
+            var welcomeMesg = localStorage.getItem('welcome-message');
+            document.getElementById('welcome_message_edit').value = welcomeMesg;
+
+            for (var i = 0; i < colorPickers.length; i++) {
+                var colorPickerLabel = document.createElement('label');
+                colorPickerLabel.setAttribute('for', colorPickers[i].key);
+                colorPickerLabel.textContent = colorPickers[i].id;
+
+                var colorPicker = document.createElement('input');
+                colorPicker.setAttribute('type', 'color');
+                colorPicker.setAttribute('id', colorPickers[i].key);
+                colorPicker.setAttribute('name', colorPickers[i].key);
+                colorPicker.setAttribute('value', localStorage.getItem(colorPickers[i].key));
+                //console.log('Creating picker for:', colorPickers[i].key);
+                //console.log('Value:', localStorage.getItem(colorPickers[i].key));
+
+                // Create a new row
+                var newRow = document.createElement('div');
+                newRow.classList.add('row', 'color-picker-row'); // Add 'color-picker-row' class
+                newRow.style.display = 'flex'; // Set this div to be a flex container
+                newRow.style.maxWidth = '300px'; // Set the max width of the row
+                newRow.style.marginBottom = '10px';
+                newRow.style.justifyContent = 'space-between'; // Push the label to the left and the color picker to the right
+
+                // Append label and color picker to the new row
+                newRow.appendChild(colorPickerLabel);
+                newRow.appendChild(colorPicker);
+
+                // Append the new row to the container
+                var container = document.getElementsByClassName('container')[0];
+                container.appendChild(newRow);
+            }
+
+            document.getElementById('applyButton').addEventListener('click', function() {
+                var lastDirection = document.getElementById('last-direction').value;
+                localStorage.setItem('last-number-dir', lastDirection);
+                var lastDirection = document.getElementById('history-direction').value;
+                localStorage.setItem('number-history-dir', lastDirection);
+
+                var lastEnabled = document.getElementById('last-number-enabled').checked;
+                localStorage.setItem('last-number-on', lastEnabled);
+                var lastEnabled = document.getElementById('history-enabled').checked;
+                localStorage.setItem('number-history-on', lastEnabled);
+
+                var defaultPage = document.getElementById('default-page').value;
+                localStorage.setItem('home-page', defaultPage);
+
+                var welcomeMesg = document.getElementById('welcome_message_edit').value;
+                localStorage.setItem('welcome-message', welcomeMesg);
+
+                var colorPickers = document.getElementsByTagName('input');
+
+                for (var i = 0; i < colorPickers.length; i++) {
+                    console.log('Setting', colorPickers[i].id, 'to', colorPickers[i].value);
+                    localStorage.setItem(colorPickers[i].id, colorPickers[i].value);
+                }
+                window.location.href = localStorage.getItem('home-page')
+            });
+            document.getElementById('resetButton').addEventListener('click', function() {
+                setDefaultSettings(true)
+                window.location.href = localStorage.getItem('home-page')
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div id="body_div">
+        <div class="container" id="quick_settings">
+            <h1>Settings</h1>
+            <p>Change your settings here.</p>
+            <label for="default-page">Default Page:</label>
+            <select id="default-page">
+                <option value="select_game">Select Game</option>
+                <option value="board">Board</option>
+            </select>
+            <div class="row" id="lnpdir">
+                <input type="checkbox" id="last-number-enabled" checked="true">
+                <label for="last-direction">Last Number Played Location:</label>
+                <select id="last-direction">
+                    <option value="top">Top</option>
+                    <option value="bottom">Bottom</option>
+                </select>
+            </div>
+            <div class="row" id="nhdir">
+                <input type="checkbox" id="history-enabled" checked="true">
+                <label for="history-direction">Number History Location:</label>
+                <select id="history-direction">
+                    <option value="right">Right</option>
+                    <option value="left">Left</option>
+                </select>
+            </div>
+        </div>
+        <div id="customizations">
+            <div style="display: flex; flex-direction: column;">
+                <label for="welcome_message_edit">Welcome Message (HTML)</label>    
+                <textarea id="welcome_message_edit" rows="4" cols="50"></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <button id="applyButton">Apply</button>
+    <button id="resetButton">Reset To Default</button>
+</body>
