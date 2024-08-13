@@ -3,7 +3,7 @@ const bingo_word = 'bingo';
 
 function bingo(){
     return {
-        "name": "Normal Bingo",
+        "name": "Bingo",
         "board_count": 1,
         "board": [
             [0,0],[1,1],[2,2],[3,3],[4,4]
@@ -14,7 +14,8 @@ function bingo(){
             [0, 0], [0,1],[0,2],[0,3],[0,4]
         ],
         "transitional": false,
-        "rules": "Must get 5 in a row, column, or diagonal"
+        "rules": "Must get 5 in a row, column, or diagonal",
+        "length": 1
     };
 }
 function DoubleBingo(){
@@ -32,7 +33,8 @@ function DoubleBingo(){
             [0,3],[1,3],[2,3],[3,3],[4,3]
         ],
         "transitional": false,
-        "rules": "Variant 1: Get 2 bingos on only 1 board<br>Variant 2: Get 1 bingo on both boards<br>Variant 3: Either variant wins!"
+        "rules": "Variant 1: Get 2 bingos on only 1 board<br>Variant 2: Get 1 bingo on both boards<br>Variant 3: Either variant wins!",
+        "length": 2
     };
 }
 function tinyX(){
@@ -45,7 +47,8 @@ function tinyX(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must get the tiny x pattern any where on the board"
+        "rules": "Must get the tiny x pattern any where on the board",
+        "length": 1
     };
 }
 function EightCorners(){
@@ -63,7 +66,8 @@ function EightCorners(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
-        "rules": "Must match all 4 corners on BOTH boards"
+        "rules": "Must match all 4 corners on BOTH boards",
+        "length": 1
     };
 }
 function FourCorners(){
@@ -77,7 +81,8 @@ function FourCorners(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
-        "rules": "Must match all 4 corners on ONE boards"
+        "rules": "Must match all 4 corners on ONE boards",
+        "length": 1
     };
 }
 
@@ -93,7 +98,8 @@ function RailRoadTracks(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 3
     };
 }
 function InsideCircle(){
@@ -108,7 +114,8 @@ function InsideCircle(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 2
     };
 }
 function OutsideCircle(){
@@ -125,7 +132,8 @@ function OutsideCircle(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 3
     };
 }
 function PostageStamp(){
@@ -141,7 +149,8 @@ function PostageStamp(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 3
     };
 }
 function TheGoat(){
@@ -168,7 +177,8 @@ function TheGoat(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must match ONE of the two boards"
+        "rules": "Must match ONE of the two boards",
+        "length": 3
     };
 }
 function XMas(){
@@ -186,7 +196,8 @@ function XMas(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 3
     };
 }
 function LargeX(){
@@ -199,7 +210,8 @@ function LargeX(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 2
     };
 }
 function CandyCane(){
@@ -212,7 +224,8 @@ function CandyCane(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 3
     };
 }
 function TicTacToe(){
@@ -229,7 +242,8 @@ function TicTacToe(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 3
     };
 }
 function BlackOut(){
@@ -246,7 +260,8 @@ function BlackOut(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Fill out the entire board!"
+        "rules": "Fill out the entire board!",
+        "length": 3
     };
 }
 function Survivor(){
@@ -258,7 +273,8 @@ function Survivor(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Stand up with both boards up. If a number on a board gets called flip the board. If both boards are flipped sit down. Last person standing wins!"
+        "rules": "Stand up with both boards up. If a number on a board gets called flip the board. If both boards are flipped sit down. Last person standing wins!",
+        "length": 1
     };
 }
 function Arrow(){
@@ -275,7 +291,8 @@ function Arrow(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 3
     };
 }
 function Diamond(){
@@ -292,7 +309,8 @@ function Diamond(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 2
     };
 }
 function TheT(){
@@ -309,7 +327,8 @@ function TheT(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 3
     };
 }
 function TheZ(){
@@ -326,7 +345,8 @@ function TheZ(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 3
     };
 }
 function Lucky7(){
@@ -343,7 +363,8 @@ function Lucky7(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 3
     };
 }
 function ValentinesDay(){
@@ -360,7 +381,8 @@ function ValentinesDay(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
-        "rules": "Must match exact pattern"
+        "rules": "Must match exact pattern",
+        "length": 3
     };
 }
 function BlackOutSurvivor(){
@@ -380,11 +402,12 @@ function BlackOutSurvivor(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": true,
-        "rules": "Be the last person standing, or fill out the entire board!"
+        "rules": "Be the last person standing, or fill out the entire board!",
+        "length": 3
     };
 }
 function games(){
-    return [
+    return applyOrder([
         bingo(),
         DoubleBingo(),
         tinyX(),
@@ -408,7 +431,28 @@ function games(){
         TheZ(),
         Lucky7(),
         ValentinesDay()
-    ]
+    ])
+}
+
+function applyOrder( games ){
+    var order = getItemWithDefault('game-order');
+    if (order == 'random')
+    {
+        return games.sort(() => Math.random() - 0.5);
+    }
+    else if (order == 'alphabetical')
+    {
+        return games.sort((a, b) => (a.name > b.name) ? 1 : -1);
+    }
+    else if (order == 'length')
+    {
+        order = games.sort((a, b) => (a.name > b.name) ? -1 : 1);
+        order = order.sort((a, b) => (a.length > b.length) ? 1 : -1);
+        //For each level 1,2,3 reverse the order of the games
+        return order;
+    }
+    //TODO Additional sorting pushing favorites to the top, requires loading favorites from local storage
+    return games;
 }
 
 function create_table( parent, name , game, free_font_size = '3vh', board_num = 0 )

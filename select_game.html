@@ -325,7 +325,19 @@
                 },
                 loop: true,
             });
-            
+
+            function getLength( length )
+            {
+                if( length == 1 )
+                { return "Fast";}
+                else if( length == 2 )
+                { return "Medium";}
+                else if( length == 3 )
+                { return "Long";}
+                else
+                { return "Unknown";}
+            }
+
             var game_s = games();
             // Define the word
             for( var k = 0; k < game_s.length; k++){
@@ -337,11 +349,11 @@
 
                 var game_name_label = document.createElement('p');
                 game_name_label.id = 'game_preview_name';
-                game_name_label.innerHTML = game.name;
+                game_name_label.innerHTML = game.name + ' [' + getLength(game.length) + ']';
                 game_name_label.style.display = 'flex';
                 game_name_label.style.justifyContent = 'center';
                 game_name_label.style.alignItems = 'center';
-                
+
                 div.style.display = "flex";
                 div.style.flexDirection = "column";
                 div.appendChild(game_name_label);
@@ -361,10 +373,10 @@
                 div.className = 'swiper-slide';
                 document.querySelector('.swiper-wrapper').appendChild(div);
             }
-        
+
 
             swiper.update();
-            
+
             var back_button = document.getElementById('back_button');
             //listen for clicks on back button
             back_button.addEventListener('click', function(){
