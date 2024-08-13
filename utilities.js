@@ -25,7 +25,8 @@ function setDefaultSettings(force) {
     setDefaultItem('number-history-dir', 'right', force);
     setDefaultItem('last-number-on', 'true', force);
     setDefaultItem('number-history-on', 'true', force);
-    setDefaultItem('home-page', 'board', force);
+    setDefaultItem('home-page', 'select_game', force);
+    setDefaultItem('game-order', 'default', force);
     setDefaultItem('welcome-message', 'BINGO FREE TO PLAY! 2 CARDS PER PERSON START TIME - 6:30<br> Bingo Word: BAHHH!', force);
     setDefaultItem('special-numbers', JSON.stringify(defaultSpecialNumbers()), force);
 }

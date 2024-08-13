@@ -118,6 +118,9 @@
             var defaultPage = localStorage.getItem('home-page');
             document.getElementById('default-page').value = defaultPage;
 
+            var gameOrder = localStorage.getItem('game-order');
+            document.getElementById('game-order').value = gameOrder;
+
             var welcomeMesg = localStorage.getItem('welcome-message');
             document.getElementById('welcome_message_edit').value = welcomeMesg;
 
@@ -165,6 +168,9 @@
                 var defaultPage = document.getElementById('default-page').value;
                 localStorage.setItem('home-page', defaultPage);
 
+                var gameOrder = document.getElementById('game-order').value;
+                localStorage.setItem('game-order', gameOrder);
+
                 var welcomeMesg = document.getElementById('welcome_message_edit').value;
                 localStorage.setItem('welcome-message', welcomeMesg);
 
@@ -189,11 +195,22 @@
         <div class="container" id="quick_settings">
             <h1>Settings</h1>
             <p>Change your settings here.</p>
-            <label for="default-page">Default Page:</label>
-            <select id="default-page">
-                <option value="select_game">Select Game</option>
-                <option value="board">Board</option>
-            </select>
+            <div class="row" id="lnpdir">
+                <label for="default-page">Default Page:</label>
+                <select id="default-page">
+                    <option value="select_game">Select Game</option>
+                    <option value="board">Board</option>
+                </select>
+            </div>
+            <div class="row" id="lnpdir">
+                <label for="game-order">Game Order:</label>
+                <select id="game-order">
+                    <option value="default">Default</option>
+                    <option value="length">Length</option>
+                    <option value="alphabetical">Alphabetical</option>
+                    <option value="random">Random</option>
+                </select>
+            </div>
             <div class="row" id="lnpdir">
                 <input type="checkbox" id="last-number-enabled" checked="true">
                 <label for="last-direction">Last Number Played Location:</label>
