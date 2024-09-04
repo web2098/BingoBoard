@@ -406,8 +406,9 @@ function BlackOutSurvivor(){
         "length": 3
     };
 }
-function games(){
-    return applyOrder([
+function gameList()
+{
+    return [
         bingo(),
         DoubleBingo(),
         tinyX(),
@@ -431,7 +432,11 @@ function games(){
         TheZ(),
         Lucky7(),
         ValentinesDay()
-    ])
+    ]
+}
+
+function games(){
+    return applyOrder(gameList());
 }
 
 function applyOrder( games ){
@@ -543,4 +548,97 @@ function update_main_board_num(active_game, board_name, board_num, free_size='3v
             }
         }
     }
+}
+
+function generateRandomGame()
+{
+    // Generate a random number between 5 and 75 for numbers to call
+    var numbersToCall = Math.floor(Math.random() * 71) + 5;
+    var numbersCalled = [];
+    // Pick Random numbers between 1 and 75 for the numbers to call and store them in an array, no duplicates
+    for (var i = 0; i < numbersToCall; i++) {
+        var number = Math.floor(Math.random() * 75) + 1;
+        if (numbersCalled.indexOf(number) === -1) {
+            numbersCalled.push(number);
+        } else {
+            i--;
+        }
+    }
+
+    //For each number in numbers called add to numbers list where each numbers is prefixed with a letter, 1-15 = B, 16-30 = I, 31-45 = N, 46-60 = G, 61-75 = O
+    var numbers = [];
+    for (var i = 0; i < numbersCalled.length; i++) {
+        var number = numbersCalled[i];
+        if (number <= 15) {
+            numbers.push('B' + number);
+        } else if (number <= 30) {
+            numbers.push('I' + number);
+        } else if (number <= 45) {
+            numbers.push('N' + number);
+        } else if (number <= 60) {
+            numbers.push('G' + number);
+        } else {
+            numbers.push('O' + number);
+        }
+    }
+
+    // Pick a random game from the list of games
+    var games = gameList();
+    var game = games[Math.floor(Math.random() * games.length)];
+
+
+    game = {
+        game: game,
+        numbers: numbers,
+        //Generate a time from 5 minutes to 30 minutes for the game
+        duration: (Math.floor(Math.random() * 26) + 5) * 60000,
+        number_times: []
+    }
+
+    return game
+}
+
+function generateRandomGameHistory()
+{
+    //Generate a random number of games between 5 and 12
+    var games = [];
+    var numGames = Math.floor(Math.random() * 8) + 5;
+    for (var i = 0; i < numGames; i++) {
+        var game = generateRandomGame();
+        //Check if game.name is in the games list and if not add the game to the list
+        var found = false;
+        for (var j = 0; j < games.length; j++) {
+            if (games[j].game.name == game.game.name) {
+                found = true;
+            }
+        }
+        if (!found) {
+            games.push(game);
+        }
+        else {
+            i--;
+        }
+    }
+
+    //Check if 'Black Out Survivor' is in the games list and if not add a game with Black Out Survivor as its name and a list of all numbers between 1-75
+    var found = false;
+    for (var i = 0; i < games.length; i++) {
+        if (games[i].game.name === 'Black Out Survivor') {
+            found = true;
+        }
+    }
+    if (!found) {
+        var numbers = [];
+        var letters = ['B', 'I', 'N', 'G', 'O'];
+        for (var i = 1; i <= 75; i++) {
+            numbers.push(letters[Math.floor((i-1) / 15)] + i);
+        }
+        games.push({
+            game: BlackOutSurvivor(),
+            numbers: numbers,
+            duration: 30* 60000,
+        });
+    }
+
+    return games;
 }
