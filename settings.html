@@ -25,6 +25,7 @@
     <script src="utilities.js"></script>
     <script>
 
+
         window.onload = function() {
 
             const selectElement = document.getElementById('special_numbers');
@@ -186,6 +187,9 @@
                 setDefaultSettings(true)
                 window.location.href = localStorage.getItem('home-page')
             });
+            document.getElementById('resetFameButton').addEventListener('click', function() {
+                localStorage.removeItem('hallOfFame');
+            });
         }
     </script>
 </head>
@@ -245,4 +249,5 @@
 
     <button id="applyButton">Apply</button>
     <button id="resetButton">Reset To Default</button>
+    <button id="resetFameButton">Reset Hall of Fame</button>
 </body>

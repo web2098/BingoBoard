@@ -286,12 +286,17 @@
         var current_game = undefined;
         var free_space_on = true;
         var clickedNumbers = []; // Array to store the clicked numbers
+        var numberTimes = []
+
+        var start_time = new Date().getTime();
 
         function saveCurrentGame()
         {
             game = {
                 game: current_game,
-                numbers: clickedNumbers
+                numbers: clickedNumbers,
+                duration: new Date().getTime() - start_time,
+                number_times: numberTimes // TODO add number times
             };
             var game_history = getTemporaryItem('game_history');
             if( game_history == null ){
@@ -310,6 +315,7 @@
                 saveCurrentGame();
                 // Clear the array
                 clickedNumbers = [];
+                numberTimes = [];
             }
 
             if( getItemWithDefault('home-page') == 'select_game'){
@@ -340,7 +346,6 @@
             {
                 free_space_on = current_game.free_space_on
             }
-
 
             loadCSSSettings();
 
@@ -567,6 +572,7 @@
                             var index = clickedNumbers.indexOf(number);
                             if (index > -1) {
                                 clickedNumbers.splice(index, 1);
+                                numberTimes.splice(index, 1);
                                 clickedNumbersTable.removeChild(clickedNumbersTable.children[index]);
                             }
 
@@ -576,6 +582,7 @@
                             this.style.color = styleVariables.selectedTextColor;
                             // Add the number to the array
                             clickedNumbers.unshift(number);
+                            numberTimes.unshift(new Date().getTime() - start_time);
 
                             var tr = document.createElement('tr');
                             var td = document.createElement('td');
