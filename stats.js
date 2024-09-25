@@ -13,7 +13,8 @@ function getGameHistory()
     function getQueryParams() {
         const params = new URLSearchParams(window.location.search);
         return {
-            random: params.get('random')
+            random: params.get('random'),
+            data: params.get('data')
         };
     }
 
@@ -24,17 +25,36 @@ function getGameHistory()
     if (queryParams.random === 'true') {
         data =  generateRandomData();
         sessionStorage.setItem('game_history', JSON.stringify(data));
+    } else if (queryParams.data) {
+        console.log("Data supplied in query parameters");
+        inData = queryParams.data;
+        // url decode the data
+        inData = atob(inData);
+        inData = decodeURIComponent(inData);
+        inData = JSON.parse(inData);
+        data = [];
+        for (var i = 0; i < inData.length; i++) {
+            game_data = {
+                game: {
+                    name: inData[i].name
+                },
+                numbers: inData[i].numbers,
+                number_times: inData[i].number_times
+            };
+            data.push(game_data);
+        }
+        console.log(data);
+        sessionStorage.setItem('game_history', JSON.stringify(data));
     }
     return JSON.parse(sessionStorage.getItem('game_history'));
 
 }
 
-function parseStatsInfo(game_history, filterGame)
+function parseStatsInfo(game_history, filterGames)
 {
     data = []
-
     for( var i = 0; i < game_history.length; i++){
-        if( game_history[i].game && ( filterGame === undefined || game_history[i].game.name != filterGame) ){
+        if( game_history[i].game && ( filterGames === undefined || !filterGames.includes(game_history[i].game.name)) ){
             data.push( game_history[i].numbers );
         }
     }
@@ -337,7 +357,7 @@ window.onload = function() {
 
     if( game_history ){
         var data = parseStatsInfo(game_history, undefined);
-        var data_withoutblackout = parseStatsInfo(game_history, 'Black Out Survivor');
+        var data_withoutblackout = parseStatsInfo(game_history, ['Black Out Survivor', 'Blackout']);
 
         var gamesPlayed = document.getElementById('gamesPlayed');
         gamesPlayed.innerHTML = `All Game Stats: ${data.length}`;
@@ -366,7 +386,8 @@ window.onload = function() {
                 save_data.push( {
                     name : name,
                     numbers : game_history[i].numbers,
-                    number_times: game_history[i].number_times
+                    number_times: game_history[i].number_times,
+                    duration: game_history[i].duration
                 });
             }
 
