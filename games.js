@@ -33,6 +33,7 @@ function DoubleBingo(){
             [0,3],[1,3],[2,3],[3,3],[4,3]
         ],
         "transitional": false,
+        "optional": false,
         "rules": "Variant 1: Get 2 bingos on only 1 board<br>Variant 2: Get 1 bingo on both boards<br>Variant 3: Either variant wins!",
         "length": 2
     };
@@ -47,6 +48,7 @@ function tinyX(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Must get the tiny x pattern any where on the board",
         "length": 1
     };
@@ -66,6 +68,7 @@ function EightCorners(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
+        "optional": false,
         "rules": "Must match all 4 corners on BOTH boards",
         "length": 1
     };
@@ -81,6 +84,7 @@ function FourCorners(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
+        "optional": false,
         "rules": "Must match all 4 corners on ONE boards",
         "length": 1
     };
@@ -98,6 +102,7 @@ function RailRoadTracks(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 3
     };
@@ -114,6 +119,7 @@ function InsideCircle(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 2
     };
@@ -132,6 +138,7 @@ function OutsideCircle(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 3
     };
@@ -149,6 +156,7 @@ function PostageStamp(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 3
     };
@@ -177,6 +185,7 @@ function TheGoat(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": true,
         "rules": "Must match ONE of the two boards",
         "length": 3
     };
@@ -196,6 +205,7 @@ function XMas(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 3
     };
@@ -210,6 +220,7 @@ function LargeX(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 2
     };
@@ -224,6 +235,7 @@ function CandyCane(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 3
     };
@@ -242,6 +254,7 @@ function TicTacToe(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 3
     };
@@ -260,6 +273,7 @@ function BlackOut(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Fill out the entire board!",
         "length": 3
     };
@@ -273,6 +287,7 @@ function Survivor(){
         "free_space_dynamic": false,
         "free_space_on": false,
         "transitional": false,
+        "optional": false,
         "rules": "Stand up with both boards up. If a number on a board gets called flip the board. If both boards are flipped sit down. Last person standing wins!",
         "length": 1
     };
@@ -291,6 +306,7 @@ function Arrow(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 3
     };
@@ -309,6 +325,7 @@ function Diamond(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 2
     };
@@ -327,6 +344,7 @@ function TheT(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 3
     };
@@ -345,6 +363,7 @@ function TheZ(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 3
     };
@@ -363,6 +382,7 @@ function Lucky7(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 3
     };
@@ -381,6 +401,7 @@ function ValentinesDay(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": false,
+        "optional": false,
         "rules": "Must match exact pattern",
         "length": 3
     };
@@ -402,6 +423,7 @@ function BlackOutSurvivor(){
         "free_space_dynamic": false,
         "free_space_on": true,
         "transitional": true,
+        "optional": false,
         "rules": "Be the last person standing, or fill out the entire board!",
         "length": 3
     };

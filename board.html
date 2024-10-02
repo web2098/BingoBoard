@@ -70,6 +70,13 @@
             font-size: 50px; /* adjust as needed */
             user-select: none;
         }
+        #large_optional_slash{
+            margin: 0;
+            font-size: 15px; /* adjust as needed */
+            user-select: none;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
 
         #large_free_space_label{
             margin: 0;
@@ -137,6 +144,11 @@
             max-height: 30px;
         }
         #transition_arrow{
+            margin: 0;
+            font-size: var(--header-details-font-size); /* adjust as needed */
+            user-select: none;
+        }
+        #optional_slash{
             margin: 0;
             font-size: var(--header-details-font-size); /* adjust as needed */
             user-select: none;
@@ -416,6 +428,11 @@
                 arrow.id = 'large_transition_arrow';
                 arrow.innerHTML = '&#x27A7;';
 
+                var slash = document.createElement('p');
+                slash.className = "multi_table_operator";
+                slash.id = 'large_optional_slash';
+                slash.innerHTML = '&#x2215;';
+                slash.style.fontSize = '10vh';
 
                 var table2 = create_table(document, 'large_preview_board_2', current_game, '50px', board_num = 1 );
 
@@ -435,6 +452,9 @@
                 preview_table_div.style['justify-content'] = 'center';
                 if( current_game.transitional ){
                     preview_table_div.appendChild(arrow);
+                }
+                if( current_game.optional ){
+                    preview_table_div.appendChild(slash);
                 }
                 if( current_game.board_count > 1 ){
                     preview_table_div.appendChild(table2);
@@ -475,6 +495,11 @@
                 arrow.id = 'transition_arrow';
                 arrow.innerHTML = '&#x27A7;';
 
+                var slash = document.createElement('p');
+                slash.className = "multi_table_operator";
+                slash.id = 'optional_slash';
+                slash.innerHTML = '&#x2215;';
+                slash.style.fontSize = '2vh';
 
                 var table2 = create_table(document, 'preview_board_2', current_game, '10px', board_num = 1 );
 
@@ -494,6 +519,9 @@
                 preview_table_div.style['justify-content'] = 'center';
                 if( current_game.transitional ){
                     preview_table_div.appendChild(arrow);
+                }
+                if( current_game.optional ) {
+                    preview_table_div.appendChild(slash);
                 }
                 if( current_game.board_count > 1 ){
                     preview_table_div.appendChild(table2);
