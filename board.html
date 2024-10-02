@@ -1,0 +1,714 @@
+<head>
+    <style>
+        :root {
+            --main-bg-color: #FFFFFF;
+            --main-font-color: #000000;
+            --item-font-size: 45px;
+            --header-font-size: 45px;
+            --header-details-font-size: 25px;
+            --last-numbers-font-size: 25px;
+            --button-margin-top:30px;
+            --button-font-size: 25px;
+        }
+
+        #page_div {
+            position: absolute;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        #large_preview_div {
+            position: absolute;
+            z-index: 2;
+            background-color: white;
+            margin-left: 5%;
+            margin-top: 12%;
+            width: 90%;
+            height: 60%;
+            border: 4px solid black;
+        }
+        #large_in_view_div{
+            width: 100%;
+            height: 100%;
+        }
+        #large_game_preview_name{
+            width: 100%;
+            font-size: 50px;
+            font-weight: bold;
+            text-align: center;
+            margin:0;
+            user-select: none;
+        }
+        #large_preview_table_div{
+            display:flex;
+            align-items: center;
+            margin-left: 5%;
+            min-width: 90%;
+            max-width: 90%;
+            min-height: 75%;
+            max-height: 75%;
+        }
+        #large_preview_board td{
+            border: 1px solid black;
+            min-width:  200px;
+            max-width:  200px;
+            min-height: 200px;
+            max-height: 200px;
+            font-size: 50px;
+        }
+        #large_preview_board_2 td{
+            border: 1px solid black;
+            min-width:  200px;
+            max-width:  200px;
+            min-height: 200px;
+            max-height: 200px;
+            font-size: 50px;
+        }
+        #large_transition_arrow{
+            margin: 0;
+            font-size: 50px; /* adjust as needed */
+            user-select: none;
+        }
+
+        #large_free_space_label{
+            margin: 0;
+            font-weight: bold; /* makes the text bold */
+            text-align: center;
+            font-size: 50px;
+            user-select: none;
+            text-decoration: underline;
+        }
+
+        table {
+            user-select: none;
+        }
+        #headerDiv {
+            display: flex;
+            justify-content: center;
+            min-width: 100%;
+            max-width: 100%;
+            /*background-color: red; /* The Color*/
+        }
+
+        #headerTextDiv {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            /*background-color: orange; /* The Color*/
+            min-width: 60vw;
+            max-width: 80vw;
+            max-height: 18vh;
+            min-height: 18vh;
+        }
+        #numberRatioDiv{
+            padding: 0;
+            user-select: none;
+            font-size: 20;  /*adjust as needed */
+            font-weight: bold; /* makes the text bold */
+            text-align: right; /* centers the text */
+        }
+        #preview_div{
+            display:flex;
+            flex-direction: column;
+            /*background-color: yellow; /* The Color*/
+            min-width: 15%;
+            max-width: 15%;
+            max-height: 18vh;
+            min-height: 18vh;
+            row-gap: 0px;
+        }
+        #preview_table_div{
+            display:flex;
+            align-items: center;
+            min-width: 100%;
+            max-width: 100%;
+            min-height: 75%;
+            max-height: 75%;
+        }
+        #preview_board {
+        }
+        #preview_board td{
+            border: 1px solid black;
+            min-width: 30px;
+            max-width:  30px;
+            min-height: 30px;
+            max-height: 30px;
+        }
+        #transition_arrow{
+            margin: 0;
+            font-size: var(--header-details-font-size); /* adjust as needed */
+            user-select: none;
+        }
+        #preview_board_2 {
+        }
+        #preview_board_2 td{
+            border: 1px solid black;
+            min-width: 30px;
+            max-width: 30px;
+            min-height: 30px;
+            max-height: 30px;
+        }
+        #game_preview_name{
+            margin: 0;
+            font-weight: bold; /* makes the text bold */
+            text-align: center;
+        }
+        #free_space_label{
+            margin: 0;
+            font-weight: bold; /* makes the text bold */
+            text-align: center;
+            user-select: none;
+            text-decoration: underline;
+        }
+        #lastNumber{
+            /*background-color: blue; /* The Color*/
+
+            user-select: none;
+            font-size: var(--header-font-size);  /*adjust as needed */
+            font-weight: bold; /* makes the text bold */
+            text-align: center; /* centers the text */
+            margin: 0;
+            margin-left: -20%;
+        }
+        #extraInfo{
+            /*background-color: green; /* The Color*/
+            margin: 0;
+            margin-left: -20%;
+            font-size: var(--header-details-font-size); /* adjust as needed */
+            font-weight: bold; /* makes the text bold */
+            text-align: center; /* centers the text */
+        }
+
+        #centerDiv {
+            display: flex;
+            /*background-color: aquamarine; /* The Color*/
+
+            min-width: 100%;
+            max-width: 100%;
+            max-height: 68vh; /* Adjust this value as needed */
+            min-height: 68vh;
+        }
+
+        #tablesContainer {
+            display: flex;
+            justify-content: center;
+            min-width: 90%;
+            max-width: 90%;
+            max-height: 100%; /* Adjust this value as needed */
+            min-height: 100%;
+            /*background-color: yellowgreen; /* The Color*/
+        }
+        #lettersTable td{
+            border: none;
+            color: var(--main-font-color);
+            min-width: 5vw; /* minimum width */
+
+            font-size: var(--item-font-size); /* adjust as needed */
+            font-weight: bold; /* makes the text bold */
+            text-align: center; /* to center the content */
+        }
+        #numbersTable td {
+            border: 2px solid black;
+            min-width:  5vw; /* minimum width */
+            max-width:  5vw;
+
+            font-size: var(--item-font-size); /* adjust as needed */
+            font-weight: bold; /* makes the text bold */
+            text-align: center; /* to center the content */
+        }
+        #clickedNumbersDiv {
+            min-width:  10%; /* minimum width */
+            max-width:  10%;
+            min-height: 100%;
+            max-height: 100%;
+            margin-left: -20px;
+            /*background-color: chocolate; /* The Color*/
+            overflow-y: auto;
+            overflow-y: scroll;
+        }
+        #lastNumberCalled {
+            user-select: none;
+            font-size: var(--last-numbers-font-size); /* adjust as needed */
+            text-align: center; /* centers the text */
+            text-decoration: underline;
+            min-width: 100%;
+            max-width: 100%;
+            color: var(--main-font-color);
+        }
+        #clickedNumbersTable {
+            display: flex;
+            flex-direction: column;
+            max-height: 90%; /* adjust as needed */
+            min-height: 90%; /* adjust as needed */
+        }
+        #clickedNumbersTable td{
+            font-size: var(--last-numbers-font-size); /* adjust as needed */
+            border: none;
+            color: var(--main-font-color);
+        }
+        #footerDiv {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 50%; /* adjust as needed */
+            margin-left: 25%;
+            margin-top: var(--button-margin-top); /* adjust as needed */
+            /*background-color: brown; /* The Color*/
+        }
+        button {
+            font-size: var(--button-font-size); /* adjust as needed */
+        }
+
+    </style>
+    <script src="utilities.js"></script>
+    <script src="games.js"></script>
+    <script>
+        // README: Change this values to change the look and layout of the page
+        let styleVariables = {
+            selectedColor: localStorage.getItem('select-tab-color'), //CSU Green
+            selectedTextColor: localStorage.getItem('select-tab-text-color'),
+            unselectedColor: localStorage.getItem('unselect-tab-color'),
+            unselectedTextColor: localStorage.getItem('unselect-tab-text-color'),
+            lastNumberDir: localStorage.getItem('last-number-dir'), // 'top' or 'bottom'
+            numberHistoryDir: localStorage.getItem('number-history-dir'), // 'right' or 'left'
+            numberHistoryOn: localStorage.getItem('number-history-on'), // 'true' or 'false'
+            lastDirectionOn: localStorage.getItem('last-number-on') // 'true' or 'false'
+        };
+
+        function loadCSSSettings() {
+            document.documentElement.style.setProperty('--main-bg-color', localStorage.getItem('main-bg-color'));
+            document.documentElement.style.setProperty('--main-font-color', localStorage.getItem('main-font-color'));
+            document.documentElement.style.setProperty('--item-font-size', localStorage.getItem('item-font-size'));
+        }
+
+        var current_game = undefined;
+        var free_space_on = true;
+        var clickedNumbers = []; // Array to store the clicked numbers
+        var numberTimes = []
+
+        var start_time = new Date().getTime();
+
+        function saveCurrentGame()
+        {
+            game = {
+                game: current_game,
+                numbers: clickedNumbers,
+                duration: new Date().getTime() - start_time,
+                number_times: numberTimes // TODO add number times
+            };
+            var game_history = getTemporaryItem('game_history');
+            if( game_history == null ){
+                game_history = [];
+            }
+            else{
+                game_history = JSON.parse(game_history);
+            }
+            game_history.push(game);
+            setTemporaryItem('game_history', JSON.stringify(game_history));
+        }
+
+        function onReset()
+        {
+            if (clickedNumbers.length > 0) {
+                saveCurrentGame();
+                // Clear the array
+                clickedNumbers = [];
+                numberTimes = [];
+            }
+
+            if( getItemWithDefault('home-page') == 'select_game'){
+                window.location.href = 'select_game.html';
+            }
+            else
+            {
+                var cells = document.getElementsByTagName('td');
+                for (var i = 0; i < cells.length; i++) {
+                    cells[i].style.backgroundColor = '';
+                    cells[i].style.color = 'black';
+                }
+                if( current_game )
+                {
+                    update_main_board_num(current_game, 'preview_board', 0, '10px');
+                }
+
+                // Reset the last number text
+                document.getElementById('lastNumber').innerHTML = "Waiting for first number";
+                clickedNumbersTable.innerHTML = "";
+            }
+
+        }
+
+        window.onload = function() {
+            current_game = JSON.parse(getTemporaryItem('selected_game'))
+            if( current_game )
+            {
+                free_space_on = current_game.free_space_on
+            }
+
+            loadCSSSettings();
+
+            var page_div = document.getElementById('page_div');
+            var header_div = createHeaderDiv();
+            var center_div = createCenterDiv();
+            var footer_div = createFooterDiv();
+
+            var layout = [header_div, center_div];
+            if( styleVariables.lastNumberDir === "top"){
+                for (var i = 0; i < layout.length; i++) {
+                    page_div.appendChild(layout[i]);
+                }
+            } else {
+                for (var i = layout.length - 1; i >= 0; i--) {
+                    page_div.appendChild(layout[i]);
+                }
+            }
+
+            page_div.appendChild(footer_div);
+
+            var large_preview_div = document.getElementById('large_preview_div');
+            large_preview_div.appendChild(createPreviewTable());
+            large_preview_div.addEventListener('click', function(event) {
+                var div = document.getElementById('large_preview_div');
+                div.hidden = true;
+            });
+            large_preview_div.hidden = true;
+
+
+            document.addEventListener('click', function(event) {
+                var large_preview_div = document.getElementById('large_preview_div');
+                if( !large_preview_div.hidden ){
+                    var specificElement = document.getElementById('large_free_space_label');
+                    if (event.target !== specificElement) {
+                        large_preview_div.hidden = true;
+                        event.stopPropagation();
+                    }
+                }
+            }, true);
+        }
+
+        function updatePreviewBoards()
+        {
+            if (current_game.free_space_dynamic){
+                    current_game.free_space_on=!current_game.free_space_on;
+            }
+            update_main_board_num(current_game, 'preview_board', 0, '10px');
+            var free_space_label = document.getElementById('free_space_label');
+            free_space_label.innerHTML = 'Free Space is ' + (current_game.free_space_on ? 'On' : 'Off');
+
+            update_main_board_num(current_game, 'large_preview_board', 0, '50px');
+            var large_free_space_label = document.getElementById('large_free_space_label');
+            large_free_space_label.innerHTML = 'Free Space is ' + (current_game.free_space_on ? 'On' : 'Off');
+        }
+
+        function createPreviewTable()
+        {
+            var inDiv = document.createElement('div');
+            inDiv.id = 'large_in_view_div';
+            if( current_game )
+            {
+                var preview_table_div = document.createElement('div');
+                preview_table_div.id = 'large_preview_table_div';
+                var table = create_table(document, 'large_preview_board', current_game, '50px' );
+
+                var arrow = document.createElement('p');
+                arrow.id = 'large_transition_arrow';
+                arrow.innerHTML = '&#x27A7;';
+
+
+                var table2 = create_table(document, 'large_preview_board_2', current_game, '50px', board_num = 1 );
+
+                var game_name_label = document.createElement('p');
+                game_name_label.id = 'large_game_preview_name';
+                game_name_label.innerHTML = current_game.name;
+
+                var free_space_label = document.createElement('p');
+                free_space_label.id = 'large_free_space_label';
+                free_space_label.innerHTML = 'Free Space is ' + (current_game.free_space_on ? 'On' : 'Off');
+                free_space_label.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    updatePreviewBoards();
+                });
+
+                preview_table_div.appendChild(table);
+                preview_table_div.style['justify-content'] = 'center';
+                if( current_game.transitional ){
+                    preview_table_div.appendChild(arrow);
+                }
+                if( current_game.board_count > 1 ){
+                    preview_table_div.appendChild(table2);
+                    preview_table_div.style['justify-content'] = 'space-between';
+                }
+                inDiv.appendChild(game_name_label);
+                inDiv.appendChild(preview_table_div);
+                inDiv.appendChild(free_space_label);
+            }
+            return inDiv;
+        }
+
+        function createHeaderDiv()
+        {
+            var headerDiv = document.createElement('div');
+            headerDiv.id = 'headerDiv';
+
+            if( styleVariables.lastDirectionOn === "false" ) {
+                return headerDiv;
+            }
+
+
+
+            if( current_game )
+            {
+                var preview = document.createElement('div');
+                preview.id = 'preview_div';
+                preview.addEventListener('click', function(event) {
+                    var div = document.getElementById('large_preview_div');
+                    div.hidden = !div.hidden;
+                });
+
+                var preview_table_div = document.createElement('div');
+                preview_table_div.id = 'preview_table_div';
+                var table = create_table(document, 'preview_board', current_game, '10px' );
+
+                var arrow = document.createElement('p');
+                arrow.id = 'transition_arrow';
+                arrow.innerHTML = '&#x27A7;';
+
+
+                var table2 = create_table(document, 'preview_board_2', current_game, '10px', board_num = 1 );
+
+                var game_name_label = document.createElement('p');
+                game_name_label.id = 'game_preview_name';
+                game_name_label.innerHTML = current_game.name;
+
+                var free_space_label = document.createElement('p');
+                free_space_label.id = 'free_space_label';
+                free_space_label.innerHTML = 'Free Space is ' + (current_game.free_space_on ? 'On' : 'Off');
+                free_space_label.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    updatePreviewBoards();
+                });
+
+                preview_table_div.appendChild(table);
+                preview_table_div.style['justify-content'] = 'center';
+                if( current_game.transitional ){
+                    preview_table_div.appendChild(arrow);
+                }
+                if( current_game.board_count > 1 ){
+                    preview_table_div.appendChild(table2);
+                    preview_table_div.style['justify-content'] = 'space-between';
+                }
+                preview.appendChild(game_name_label);
+                preview.appendChild(preview_table_div);
+                preview.appendChild(free_space_label);
+                headerDiv.appendChild(preview);
+            }
+
+
+            var lastNumber = document.createElement('p');
+            lastNumber.id = 'lastNumber';
+            lastNumber.innerHTML = "Waiting for first number";
+            // Create paragraph to display the last clicked number
+            var extraInfo = document.createElement('p');
+            extraInfo.id = 'extraInfo';
+            extraInfo.innerHTML = "";
+
+            var headerTextDiv = document.createElement('div');
+            headerTextDiv.id = 'headerTextDiv';
+
+            var items = [
+                lastNumber,
+                extraInfo
+            ]
+
+            if( styleVariables.lastNumberDir === "top" ) {
+                for (var i = 0; i < items.length; i++) {
+                    headerTextDiv.appendChild(items[i]);
+                }
+            }
+            else {
+                for (var i = items.length - 1; i >= 0; i--) {
+                    headerTextDiv.appendChild(items[i]);
+                }
+            }
+
+            headerDiv.appendChild(headerTextDiv);
+
+
+
+            return headerDiv;
+        }
+
+        function createCenterDiv()
+        {
+            var centerDiv = document.createElement('div');
+            centerDiv.id = 'centerDiv';
+
+            // Create a container for the tables
+            var tablesContainer = document.createElement('div');
+            tablesContainer.id = 'tablesContainer';
+
+            //Create Table
+            var table = document.createElement('table');
+            table.id = 'numbersTable';
+            var counter = 1;
+            for (var i = 0; i < 5; i++) {
+                var tr = document.createElement('tr');
+                for (var j = 0; j < 15; j++) {
+                    var td = document.createElement('td');
+                    td.innerHTML = counter++;
+                    td.style.backgroundColor = styleVariables.unselectedColor;
+                    td.style.color = styleVariables.unselectedTextColor;
+                    td.onclick = function() {
+                        var rowIndex = Array.prototype.indexOf.call(this.parentNode.parentNode.children, this.parentNode);
+                        var letter = lettersTable.children[rowIndex].firstChild.innerHTML;
+                        var number = letter + this.innerHTML;
+                        var index = clickedNumbers.indexOf(number);
+                        if (index > -1) {
+                            this.style.backgroundColor = styleVariables.unselectedColor;
+                            this.style.color = styleVariables.unselectedTextColor;
+                            // Remove the number from the array
+                            var index = clickedNumbers.indexOf(number);
+                            if (index > -1) {
+                                clickedNumbers.splice(index, 1);
+                                numberTimes.splice(index, 1);
+                                clickedNumbersTable.removeChild(clickedNumbersTable.children[index]);
+                            }
+
+                            document.getElementById('extraInfo').innerHTML = " ";
+                        } else {
+                            this.style.backgroundColor = styleVariables.selectedColor;
+                            this.style.color = styleVariables.selectedTextColor;
+                            // Add the number to the array
+                            clickedNumbers.unshift(number);
+                            numberTimes.unshift(new Date().getTime() - start_time);
+
+                            var tr = document.createElement('tr');
+                            var td = document.createElement('td');
+                            td.innerHTML = number;
+                            tr.appendChild(td);
+
+                            clickedNumbersTable.insertBefore(tr, clickedNumbersTable.firstChild);
+
+
+                            const specialNumbers = JSON.parse(getItemWithDefault('special-numbers'));
+                            console.log(specialNumbers);
+                            console.log(this.innerHTML);
+                            if (specialNumbers && this.innerHTML in specialNumbers) {
+                                console.log("Special Number!");
+                                document.getElementById('extraInfo').innerHTML = specialNumbers[this.innerHTML];
+                            }
+                            else{
+                                document.getElementById('extraInfo').innerHTML = " ";
+                            }
+                        }
+
+
+                        // Update the last number text
+                        if (clickedNumbers.length > 0) {
+                            document.getElementById('lastNumber').innerHTML = "The last number was " + clickedNumbers[0];
+                        } else {
+                            document.getElementById('lastNumber').innerHTML = "Waiting for first number";
+                        }
+
+                        var numberRatio = document.getElementById('numberRatio');
+                        numberRatio.innerHTML = clickedNumbers.length + "/75" + "(" + (75 - clickedNumbers.length) + " left)";
+                    }
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+
+            var letters = ['B', 'I', 'N', 'G', 'O'];
+            // Create a table for the letters
+            var lettersTable = document.createElement('table');
+            lettersTable.id = 'lettersTable';
+            for (var i = 0; i < 5; i++) {
+                var tr = document.createElement('tr');
+                var td = document.createElement('td');
+                td.innerHTML = letters[i];
+                tr.appendChild(td);
+                lettersTable.appendChild(tr);
+            }
+            tablesContainer.appendChild(lettersTable);
+            tablesContainer.appendChild(table);
+
+            // Create a container for the clicked numbers
+            var clickedNumbersDiv = document.createElement('div');
+            clickedNumbersDiv.id = 'clickedNumbersDiv';
+
+            var numberRatioDiv = document.createElement('div');
+            numberRatioDiv.id = 'numberRatioDiv';
+            var numberRatio = document.createElement('p');
+            numberRatio.innerHTML = '0/75 (75 left)';
+            numberRatio.id = 'numberRatio';
+            numberRatioDiv.appendChild(numberRatio);
+
+            clickedNumbersDiv.appendChild(numberRatioDiv);
+
+
+            // Create paragraph to display the last clicked number
+            var lastNumberCalled = document.createElement('p');
+            lastNumberCalled.id = 'lastNumberCalled';
+            lastNumberCalled.innerHTML = "Called Numbers";
+            clickedNumbersDiv.appendChild(lastNumberCalled);
+            // Create a table for the clicked numbers
+            var clickedNumbersTable = document.createElement('table');
+            clickedNumbersTable.id = 'clickedNumbersTable';
+            clickedNumbersDiv.appendChild(clickedNumbersTable);
+
+            centerDiv.appendChild(tablesContainer);
+            centerDiv.append(clickedNumbersDiv);
+
+            return centerDiv;
+
+        }
+        function createFooterDiv()
+        {
+            var footerDiv = document.createElement('div');
+            footerDiv.id = 'footerDiv';
+
+            // Create reset button
+            var resetButton = document.createElement('button');
+            resetButton.innerHTML = 'Select Board/End Game';
+            resetButton.onclick = onReset;
+            footerDiv.appendChild(resetButton);
+
+            // Create end games button
+            var endNight = document.createElement('button');
+            endNight.innerHTML = 'End The Night';
+            endNight.onclick = function() {
+                if (clickedNumbers.length > 0) {
+                    saveCurrentGame();
+                    // Clear the array
+                    clickedNumbers = [];
+                }
+                var cells = document.getElementsByTagName('td');
+                for (var i = 0; i < cells.length; i++) {
+                    cells[i].style.backgroundColor = '';
+                    cells[i].style.color = 'black';
+                }
+                if( current_game )
+                {
+                    update_main_board_num(current_game, 'preview_board', 0, '10px');
+                }
+
+                // Reset the last number text
+                document.getElementById('lastNumber').innerHTML = "Waiting for first number";
+                clickedNumbersTable.innerHTML = "";
+                window.location.href = 'stats.html';
+            }
+            footerDiv.appendChild(endNight);
+
+            return footerDiv;
+        }
+
+    </script>
+</head>
+<body>
+    <div id="page_div">
+        <a href="settings.html">Settings</a>
+    </div>
+    <div id="large_preview_div"></div>
+</body>
