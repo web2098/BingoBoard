@@ -23,23 +23,23 @@ function getGameHistory()
 
     // Check if the 'random' parameter is true
     if (queryParams.random === 'true') {
-        data =  generateRandomData();
+        const data =  generateRandomData();
         sessionStorage.setItem('game_history', JSON.stringify(data));
     } else if (queryParams.data) {
         console.log("Data supplied in query parameters");
-        inData = queryParams.data;
+        let inData = queryParams.data;
         // url decode the data
         inData = atob(inData);
         inData = decodeURIComponent(inData);
         inData = JSON.parse(inData);
-        data = [];
-        for (var i = 0; i < inData.length; i++) {
-            game_data = {
+        let data = [];
+        for (const element of inData) {
+            const game_data = {
                 game: {
-                    name: inData[i].name
+                    name: element.name
                 },
-                numbers: inData[i].numbers,
-                number_times: inData[i].number_times
+                numbers: element.numbers,
+                number_times: element.number_times
             };
             data.push(game_data);
         }
@@ -52,10 +52,10 @@ function getGameHistory()
 
 function parseStatsInfo(game_history, filterGames)
 {
-    data = []
-    for( var i = 0; i < game_history.length; i++){
-        if( game_history[i].game && ( filterGames === undefined || !filterGames.includes(game_history[i].game.name)) ){
-            data.push( game_history[i].numbers );
+    let data = []
+    for(const element of game_history){
+        if( element.game && ( filterGames === undefined || !filterGames.includes(element.game.name)) ){
+            data.push( element.numbers );
         }
     }
 
@@ -64,12 +64,12 @@ function parseStatsInfo(game_history, filterGames)
 
 function statsFromData(data)
 {
-    var stats = {};
-    for (var i = 0; i < data.length; i++) {
-        var game = data[i];
+    let stats = {};
+    for (const element of data) {
+        const game = element;
         console.log(game)
-        for (var j = 0; j < game.length; j++) {
-            var number = game[j];
+        for (const element of game) {
+            const number = element;
             if (stats[number]) {
                 stats[number]++;
             } else {
@@ -81,37 +81,69 @@ function statsFromData(data)
     return stats;
 }
 
+function populateTotalHistory(stats)
+{
+    console.log('Populating Total History');
+    let full_game_history = localStorage.getItem('full_game_history');
+    console.log(full_game_history);
+    if( full_game_history ){
+        full_game_history = JSON.parse(full_game_history);
+    }
+    else{
+        full_game_history = {
+            numbers: {},
+            updated: null
+        };
+    }
+
+    let today = new Date().toLocaleDateString();
+    //if the today is newer than the last update or the last update is null
+    if( full_game_history["updated"] === null || today > full_game_history["updated"]){
+        for( const number in stats ){
+            if( full_game_history["numbers"][number] ){
+                full_game_history["numbers"][number] += stats[number];
+            }
+            else{
+                full_game_history["numbers"][number] = stats[number];
+            }
+        }
+        full_game_history["updated"] = new Date().toLocaleDateString();
+        console.log(full_game_history);
+        localStorage.setItem('full_game_history', JSON.stringify(full_game_history));
+    }
+}
+
 function fillStatsInfo(stats, suffix)
 {
-    var sortable = [];
-    for (var number in stats) {
+    let sortable = [];
+    for (let number in stats) {
         sortable.push([number, stats[number]]);
     }
     sortable.sort(function(a, b) {
         return b[1] - a[1];
     });
-    var top10 = sortable.slice(0, 10);
-    var top10Numbers = document.getElementById('topTenNumbers'+suffix);
+    let top10 = sortable.slice(0, 10);
+    let top10Numbers = document.getElementById('topTenNumbers'+suffix);
     top10Numbers.innerHTML = 'Top 10 Numbers: ' + top10.map(function(a) {
         return `${a[0]}(${a[1]})`;
     }).join(', ');
 
 
-    var bottom10 = sortable.slice(-10);
-    var bottom10Numbers = document.getElementById('bottomTenNumbers'+suffix);
+    let bottom10 = sortable.slice(-10);
+    let bottom10Numbers = document.getElementById('bottomTenNumbers'+suffix);
     bottom10Numbers.innerHTML = 'Bottom 10 Numbers: ' + bottom10.map(function(a) {
         return `${a[0]}(${a[1]})`;
     }).join(', ');
 
-    letters = { 0: 'B', 1: 'I', 2: 'N', 3: 'G', 4: 'O'}
-    var notCalled = [];
-    for (var i = 1; i <= 75; i++) {
-        letter = letters[Math.floor((i-1) / 15)];
+    const letters = { 0: 'B', 1: 'I', 2: 'N', 3: 'G', 4: 'O'}
+    let notCalled = [];
+    for (let i = 1; i <= 75; i++) {
+        let letter = letters[Math.floor((i-1) / 15)];
         if (!stats[letter + i]) {
             notCalled.push(letter + i);
         }
     }
-    var notCalledNumbers = document.getElementById('notCalledNumbers'+suffix);
+    let notCalledNumbers = document.getElementById('notCalledNumbers'+suffix);
     if (notCalled.length > 0)
     {
         notCalledNumbers.innerHTML = 'Numbers not called: ' + notCalled.join(', ');
@@ -135,43 +167,38 @@ function generateHeatMap(stats)
         lastDirectionOn: localStorage.getItem('last-number-on') // 'true' or 'false'
     };
 
-    percents = []
     // Loop over numbers in stats and fine the highest one
-    largest = 0;
-    largest_number = 0;
-    for (var number in stats) {
+    let largest = 0;
+    for (let number in stats) {
         if (stats[number] > largest) {
             largest = stats[number];
-            largest_number = number;
         }
     }
 
     //Create Table
-    var letters = ['B', 'I', 'N', 'G', 'O'];
-    var table = document.createElement('table');
+    const letters = ['B', 'I', 'N', 'G', 'O'];
+    let table = document.createElement('table');
     table.id = 'numbersTable';
-    var counter = 1;
-    for (var i = 0; i < 5; i++) {
-        var tr = document.createElement('tr');
-        for (var j = 0; j < 15; j++) {
-            var id = letters[i] + counter;
-            var td = document.createElement('td');
+    let counter = 1;
+    for (let i = 0; i < 5; i++) {
+        let tr = document.createElement('tr');
+        for (let j = 0; j < 15; j++) {
+            let id = letters[i] + counter;
+            let td = document.createElement('td');
             td.innerHTML = counter;
             td.style.backgroundColor = styleVariables.unselectedColor;
             td.style.color = styleVariables.unselectedTextColor;
 
 
-            var overlay = document.createElement('div');
+            let overlay = document.createElement('div');
             overlay.className = 'fill-overlay';
             overlay.textContent = counter++;
             td.appendChild(overlay);
 
             // Get the percentage value from the data attribute
+            let percentage = 0;
             if ( id in stats ){
-                var percentage = stats[id] / largest * 100;
-            }
-            else{
-                var percentage = 0;
+                percentage = stats[id] / largest * 100;
             }
 
             // Set the height of the overlay based on the percentage
@@ -183,7 +210,7 @@ function generateHeatMap(stats)
         }
         table.appendChild(tr);
     }
-    var div = document.getElementById('heat_map');
+    let div = document.getElementById('heat_map');
     div.appendChild(table);
 }
 function millisecondsToMinutes(milliseconds) {
@@ -192,7 +219,7 @@ function millisecondsToMinutes(milliseconds) {
 
 function getHallOfFameRecord(game, score, fastest)
 {
-    var hallOfFame = JSON.parse(localStorage.getItem('hallOfFame'));
+    let hallOfFame = JSON.parse(localStorage.getItem('hallOfFame'));
     if (!hallOfFame) {
         hallOfFame = {};
     }
@@ -205,20 +232,23 @@ function getHallOfFameRecord(game, score, fastest)
         };
     }
 
+    let record = {};
     if( fastest )
     {
-        var current = hallOfFame[game]['Fastest'];
+        let current = hallOfFame[game]['Fastest'];
         if( score < current ){
             hallOfFame[game]['Fastest'] = score;
             //Store the state without time
 
             hallOfFame[game]['Fastest_Date'] = new Date().toLocaleDateString();
         }
-        record =  hallOfFame[game]['Fastest'] + ' on ' + hallOfFame[game]['Fastest_Date'];
+        record = hallOfFame[game]['Fastest'] + ' on ' + hallOfFame[game]['Fastest_Date'];
     }
     else
     {
-        var current = hallOfFame[game]['Slowest'];
+        let current = hallOfFame[game]['Slowest'];
+        console.log('Current: ' + current);
+        console.log('Score: ' + score);
         if( score > current ){
             hallOfFame[game]['Slowest'] = score;
             hallOfFame[game]['Slowest_Date'] = new Date().toLocaleDateString();
@@ -230,12 +260,46 @@ function getHallOfFameRecord(game, score, fastest)
     return record;
 }
 
-function calculateMath(duration, numbers, called)
+function getTimeBetweenNumbers(numbers)
+{
+    let timeBetweenNumbers = [];
+    for (let i = 1; i < numbers.length; i++) {
+        timeBetweenNumbers.push( numbers[i - 1] - numbers[i]);
+    }
+    return timeBetweenNumbers;
+}
+
+function calculateRealMath( timeBetweenNumbers )
+{
+    console.log('Time Between Numbers: ' + timeBetweenNumbers.length);
+    const mean = timeBetweenNumbers.reduce((a, b) => a + b, 0) / timeBetweenNumbers.length;
+    console.log('Mean: ' + mean);
+    const stdDev = Math.sqrt(timeBetweenNumbers.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) / (timeBetweenNumbers.length-1));
+    console.log('Standard Deviation: ' + stdDev);
+
+    const median = timeBetweenNumbers.sort((a, b) => a - b)[Math.floor(timeBetweenNumbers.length / 2)];
+    console.log('Median: ' + median);
+
+    const threshold = median + ( 2 * stdDev );
+    console.log('Threshold: ' + threshold);
+
+    const outliers = timeBetweenNumbers.filter(x => x > threshold);
+    console.log('Outliers: ' + outliers);
+
+    //Order outlies smallest to largest
+    outliers.sort((a, b) => a - b);
+    console.log('Outliers: ' + outliers);
+
+    //Return the lowest outlier
+    return outliers[0];
+}
+
+function determineWinners(game_name, duration, numbers, winThreshold, called)
 {
     console.log('Calculating math');
     console.log('Duration: ' + duration);
     console.log('Numbers: ' + numbers);
-    var numbersPerSecond = called.length / (duration / 1000);
+    const numbersPerSecond = called.length / (duration / 1000);
 
     if( numbers === undefined || numbers.length === 0)
         return {
@@ -243,35 +307,26 @@ function calculateMath(duration, numbers, called)
             winners: [called.length]
         };
 
-    var timeBetweenNumbers = [];
-    for (var i = 1; i < numbers.length; i++) {
-        timeBetweenNumbers.push( numbers[i - 1] - numbers[i]);
-    }
+    const timeBetweenNumbers = getTimeBetweenNumbers(numbers);
     console.log('Time between numbers: ' + timeBetweenNumbers);
-    var originalTimeBetweenNumbers = timeBetweenNumbers.slice();
 
-    var mean = timeBetweenNumbers.reduce((a, b) => a + b, 0) / timeBetweenNumbers.length;
-    console.log('Mean: ' + mean);
-    var stdDev = Math.sqrt(timeBetweenNumbers.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) / (timeBetweenNumbers.length-1));
-    console.log('Standard Deviation: ' + stdDev);
-
-    var median = timeBetweenNumbers.sort((a, b) => a - b)[Math.floor(timeBetweenNumbers.length / 2)];
-    console.log('Median: ' + median);
-
-    var threshold = median + ( 2 * stdDev );
-    console.log('Threshold: ' + threshold);
-
-    var outliers = timeBetweenNumbers.filter(x => x > threshold);
+    const outliers = timeBetweenNumbers.filter(x => x > winThreshold);
     console.log('Outliers: ' + outliers);
 
-    var outlierIndicies = [];
-    for (var i = 0; i < outliers.length; i++) {
-        outlierIndicies.push(numbers.length - (originalTimeBetweenNumbers.indexOf(outliers[i])+1));
+    let outlierIndicies = [];
+    for (const element of outliers) {
+        outlierIndicies.push(numbers.length - (timeBetweenNumbers.indexOf(element)+1));
     }
     console.log('Outlier Indicies: ' + outlierIndicies);
 
     outlierIndicies = outlierIndicies.reverse();
     outlierIndicies.push(numbers.length);
+
+    if ( game_name.toLowerCase() === 'survivor')
+    {
+        outlierIndicies = [outlierIndicies[outlierIndicies.length-1]];
+    }
+
 
     return {
         numbersPerSecond: numbersPerSecond,
@@ -279,16 +334,16 @@ function calculateMath(duration, numbers, called)
     };
 }
 
-function createGameInfoTable()
+function createGameInfoTable(game_history)
 {
-    var div = document.getElementById('game_info');
+    let div = document.getElementById('game_info');
     //Create a table that looks like:
     //| Game | Time | Numbers To First Winner | Numbers To Second Winner | Fastest Win | Slowest Win
 
-    var table = document.createElement('table');
+    let table = document.createElement('table');
     //Add a header to the table
-    var tr = document.createElement('tr');
-    var th = document.createElement('th');
+    let tr = document.createElement('tr');
+    let th = document.createElement('th');
     th.innerHTML = 'Game';
     tr.appendChild(th);
 
@@ -314,18 +369,24 @@ function createGameInfoTable()
 
     table.appendChild(tr);
 
+    let timeBetweenNumbers = [];
+    for(const element of game_history){
+        timeBetweenNumbers = timeBetweenNumbers.concat(getTimeBetweenNumbers(element.number_times));
+    }
+    console.log("Total Time Between Numbers: " + timeBetweenNumbers);
+    const winThreshold = calculateRealMath(timeBetweenNumbers);
 
-    for( var i = 0; i < game_history.length; i++){
+    for(const element of game_history){
+        console.log(element.game.name);
+        const result = determineWinners( element.game.name, element.duration, element.number_times, winThreshold, element.numbers );
 
-        var result = calculateMath( game_history[i].duration, game_history[i].number_times, game_history[i].numbers );
-
-        var tr = document.createElement('tr');
-        var td = document.createElement('td');
-        td.innerHTML = game_history[i].game.name;
+        const tr = document.createElement('tr');
+        let td = document.createElement('td');
+        td.innerHTML = element.game.name;
         tr.appendChild(td);
 
         td = document.createElement('td');
-        td.innerHTML = millisecondsToMinutes(game_history[i].duration).toFixed(1) + ' minutes';
+        td.innerHTML = millisecondsToMinutes(element.duration).toFixed(1) + ' minutes';
         tr.appendChild(td);
 
         td = document.createElement('td');
@@ -338,11 +399,11 @@ function createGameInfoTable()
 
 
         td = document.createElement('td');
-        td.innerHTML = getHallOfFameRecord(game_history[i].game.name, result.winners[0], true);
+        td.innerHTML = getHallOfFameRecord(element.game.name, result.winners[0], true);
         tr.appendChild(td);
 
         td = document.createElement('td');
-        td.innerHTML = getHallOfFameRecord(game_history[i].game.name, result.winners[-1], false);
+        td.innerHTML = getHallOfFameRecord(element.game.name, result.winners[result.winners.length-1], false);
         tr.appendChild(td);
 
         table.appendChild(tr);
@@ -353,17 +414,19 @@ function createGameInfoTable()
 }
 
 window.onload = function() {
-    game_history = getGameHistory();
+    let game_history = getGameHistory();
 
     if( game_history ){
-        var data = parseStatsInfo(game_history, undefined);
-        var data_withoutblackout = parseStatsInfo(game_history, ['Black Out Survivor', 'Blackout']);
+        let data = parseStatsInfo(game_history, undefined);
+        let data_withoutblackout = parseStatsInfo(game_history, ['Black Out Survivor', 'Blackout']);
 
-        var gamesPlayed = document.getElementById('gamesPlayed');
+        let gamesPlayed = document.getElementById('gamesPlayed');
         gamesPlayed.innerHTML = `All Game Stats: ${data.length}`;
         fillStatsInfo(statsFromData(data), '')
 
-        var gamesPlayed = document.getElementById('gamesPlayed_filtered');
+        populateTotalHistory(statsFromData(data));
+
+        gamesPlayed = document.getElementById('gamesPlayed_filtered');
         gamesPlayed.innerHTML = `Game Stats Without blackout: ${data_withoutblackout.length}`;
         fillStatsInfo(statsFromData(data_withoutblackout), '_withoutBlackout');
         generateHeatMap(statsFromData(data_withoutblackout));
@@ -372,33 +435,40 @@ window.onload = function() {
         createGameInfoTable(game_history);
 
         // Create save button
-        var saveButton = document.createElement('button');
+        let saveButton = document.createElement('button');
         saveButton.innerHTML = 'Save Games';
         saveButton.onclick = function() {
-            var save_data = []
-            for( var i = 0; i < game_history.length; i++){
-                var name = 'unknown';
+            let save_data = []
+            for(const element of game_history){
+                let name = 'unknown';
+                let free = true;
 
-                if( game_history[i].game ){
-                    name = game_history[i].game.name;
+                if( element.game ){
+                    name = element.game.name;
+                }
+
+                if( element.game.free_space_on === false ){
+                    free = false;
                 }
 
                 save_data.push( {
                     name : name,
-                    numbers : game_history[i].numbers,
-                    number_times: game_history[i].number_times,
-                    duration: game_history[i].duration
+                    free: free,
+                    numbers : element.numbers,
+                    number_times: element.number_times,
+                    duration: element.duration,
+                    created: new Date().toLocaleDateString()
                 });
             }
 
             // Create a Blob with the data
-            var blob = new Blob([JSON.stringify(save_data)], {type: 'text/plain'});
+            let blob = new Blob([JSON.stringify(save_data)], {type: 'text/plain'});
 
             // Create a link for the Blob
-            var url = URL.createObjectURL(blob);
+            let url = URL.createObjectURL(blob);
 
             // Create a download link
-            var downloadLink = document.createElement('a');
+            let downloadLink = document.createElement('a');
             downloadLink.download = 'clickedNumbersHistory.txt';
             downloadLink.href = url;
 
@@ -410,7 +480,7 @@ window.onload = function() {
         document.body.appendChild(saveButton);
     }
     //center button increase size to 50px and add padding to to the top of 10px
-    var back = document.createElement('button');
+    const back = document.createElement('button');
     back.innerHTML = 'Back';
     back.onclick = function() {
         sessionStorage.removeItem('game_history');
