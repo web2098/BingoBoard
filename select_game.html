@@ -65,6 +65,9 @@
             margin-top: 0;
         }
 
+        .multi_table_operator{
+            margin-left: 15px;
+        }
         #full_view{
             grid-column: 1 / span 2; /* Places these divs in the first column */
             grid-row: 2;
@@ -143,9 +146,16 @@
             if( active_game.transitional )
             {
                 show_board_by_id('transition_arrow');
+                hide_element_by_id('optional_slash');
+            }
+            else if( active_game.optional)
+            {
+                show_board_by_id('optional_slash');
+                hide_element_by_id('transition_arrow');
             }
             else
             {
+                hide_element_by_id('optional_slash');
                 hide_element_by_id('transition_arrow');
             }
             if( active_game.board_count == 2 )
@@ -200,9 +210,9 @@
             var tables = document.getElementsByClassName('preview_table');
             var cells = tables[0].querySelectorAll('td');
             var fontSize = adjustFontSizeToCell( cells[0] );
-            for( var i = 0; i < tables.length; ++i )
+            for(const element of tables)
             {
-                var cells = tables[i].querySelectorAll('td');
+                var cells = element.querySelectorAll('td');
                 cells.forEach(function(cell) {
                     if( cell.innerHTML != 'FREE')
                         cell.style.fontSize = fontSize + "px";
@@ -261,10 +271,18 @@
             full_view.appendChild(table1);
 
             var arrow = document.createElement('p');
+            arrow.className = "multi_table_operator";
             arrow.id = 'transition_arrow';
             arrow.innerHTML = '&#x27A7;';
             arrow.style.fontSize = '10vh';
             full_view.appendChild(arrow);
+
+            var slash = document.createElement('p');
+            slash.className = "multi_table_operator";
+            slash.id = 'optional_slash';
+            slash.innerHTML = '&#x2215;';
+            slash.style.fontSize = '6vh';
+            full_view.appendChild(slash);
 
             //Now add two more tables for double table gamess
             var table2 = create_table( document, 'full_table_1', game_s[current_game] );
@@ -340,11 +358,11 @@
 
             var game_s = games();
             // Define the word
-            for( var k = 0; k < game_s.length; k++){
-                var game = game_s[k];
+            for(const element of game_s){
+                var game = element;
                 var div = document.createElement('div');
 
-                var table = create_table( document, 'preview_table', game_s[k], '10px' );
+                var table = create_table( document, 'preview_table', element, '10px' );
                 div.appendChild(table);
 
                 var game_name_label = document.createElement('p');
