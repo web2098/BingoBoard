@@ -271,7 +271,7 @@ function Survivor(){
         "board": [
         ],
         "free_space_dynamic": false,
-        "free_space_on": true,
+        "free_space_on": false,
         "transitional": false,
         "rules": "Stand up with both boards up. If a number on a board gets called flip the board. If both boards are flipped sit down. Last person standing wins!",
         "length": 1
