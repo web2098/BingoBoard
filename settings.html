@@ -1,14 +1,6 @@
 <head>
 
     <style>
-        #body_div {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #quick_settings, #customizations {
-            width: 50%;
-        }
         #lnpdir {
             display: flex;
             justify-content: space-between;
@@ -22,53 +14,10 @@
             margin-bottom: 10px;
         }
     </style>
-    <script src="utilities.js"></script>
+    <script src="index.js"></script>
     <script>
 
-
         window.onload = function() {
-
-            const selectElement = document.getElementById('special_numbers');
-            selectElement.onchange = function() {
-                const specialNumbers = JSON.parse(getItemWithDefault('special-numbers'));
-                console.log(specialNumbers);
-                if ( specialNumbers && `${selectElement.value}` in specialNumbers ) {
-                    document.getElementById('special_number_text').value = specialNumbers[`${selectElement.value}`];
-                }
-            }
-            const bingoLetters = ['B', 'I', 'N', 'G', 'O'];
-            for (let i = 1; i <= 75; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                //divide i by 15 and convert to int to get the bingo letter
-                letterIndex = Math.floor((i-1)/15);
-                option.textContent = bingoLetters[letterIndex] + i;
-                selectElement.appendChild(option);
-            }
-            const specialNumbers = JSON.parse(getItemWithDefault('special-numbers'));
-            console.log(specialNumbers);
-            if ( specialNumbers && '1' in specialNumbers ) {
-                document.getElementById('special_number_text').value = specialNumbers['1'];
-            }
-            const selectElementText = document.getElementById('special_number_text');
-            selectElementText.onchange = function() {
-                const specialNumbers = JSON.parse(getItemWithDefault('special-numbers'));
-                console.log(selectElement.value);
-                if ( specialNumbers ) {
-                    if (document.getElementById('special_number_text').value.length === 0)
-                    {
-                        delete specialNumbers[`${selectElement.value}`];
-                    }
-                    else
-                    {
-                        specialNumbers[`${selectElement.value}`] = document.getElementById('special_number_text').value;
-                    }
-                }
-                console.log(`Updating special numbers ${specialNumbers}`)
-                console.log(specialNumbers);
-                localStorage.setItem('special-numbers', JSON.stringify(specialNumbers));
-            }
-
             var colorPickers = [
                 {
                     id: "Main Background Color",
@@ -103,9 +52,6 @@
             {
                 document.getElementById('last-number-enabled').checked = false;
             }
-            var lastDir = localStorage.getItem('last-number-dir');
-            document.getElementById('last-direction').value = lastDir;
-
             if( localStorage.getItem('number-history-on') === "true" ){
                 document.getElementById('history-enabled').checked = true;
             }
@@ -113,17 +59,6 @@
             {
                 document.getElementById('history-enabled').checked = false;
             }
-            var historyDir = localStorage.getItem('number-history-dir');
-            document.getElementById('history-direction').value = historyDir;
-
-            var defaultPage = localStorage.getItem('home-page');
-            document.getElementById('default-page').value = defaultPage;
-
-            var gameOrder = localStorage.getItem('game-order');
-            document.getElementById('game-order').value = gameOrder;
-
-            var welcomeMesg = localStorage.getItem('welcome-message');
-            document.getElementById('welcome_message_edit').value = welcomeMesg;
 
             for (var i = 0; i < colorPickers.length; i++) {
                 var colorPickerLabel = document.createElement('label');
@@ -166,14 +101,7 @@
                 var lastEnabled = document.getElementById('history-enabled').checked;
                 localStorage.setItem('number-history-on', lastEnabled);
 
-                var defaultPage = document.getElementById('default-page').value;
-                localStorage.setItem('home-page', defaultPage);
 
-                var gameOrder = document.getElementById('game-order').value;
-                localStorage.setItem('game-order', gameOrder);
-
-                var welcomeMesg = document.getElementById('welcome_message_edit').value;
-                localStorage.setItem('welcome-message', welcomeMesg);
 
                 var colorPickers = document.getElementsByTagName('input');
 
@@ -181,74 +109,37 @@
                     console.log('Setting', colorPickers[i].id, 'to', colorPickers[i].value);
                     localStorage.setItem(colorPickers[i].id, colorPickers[i].value);
                 }
-                window.location.href = localStorage.getItem('home-page')
+                window.location.href = 'index.html';
             });
             document.getElementById('resetButton').addEventListener('click', function() {
                 setDefaultSettings(true)
-                window.location.href = localStorage.getItem('home-page')
-            });
-            document.getElementById('resetFameButton').addEventListener('click', function() {
-                localStorage.removeItem('hallOfFame');
-                localStorage.removeItem('full_game_history');
+                window.location.href = 'index.html';
             });
         }
     </script>
 </head>
 
 <body>
-    <div id="body_div">
-        <div class="container" id="quick_settings">
-            <h1>Settings</h1>
-            <p>Change your settings here.</p>
-            <div class="row" id="lnpdir">
-                <label for="default-page">Default Page:</label>
-                <select id="default-page">
-                    <option value="select_game">Select Game</option>
-                    <option value="board">Board</option>
-                </select>
-            </div>
-            <div class="row" id="lnpdir">
-                <label for="game-order">Game Order:</label>
-                <select id="game-order">
-                    <option value="default">Default</option>
-                    <option value="length">Length</option>
-                    <option value="alphabetical">Alphabetical</option>
-                    <option value="random">Random</option>
-                </select>
-            </div>
-            <div class="row" id="lnpdir">
-                <input type="checkbox" id="last-number-enabled" checked="true">
-                <label for="last-direction">Last Number Played Location:</label>
-                <select id="last-direction">
-                    <option value="top">Top</option>
-                    <option value="bottom">Bottom</option>
-                </select>
-            </div>
-            <div class="row" id="nhdir">
-                <input type="checkbox" id="history-enabled" checked="true">
-                <label for="history-direction">Number History Location:</label>
-                <select id="history-direction">
-                    <option value="right">Right</option>
-                    <option value="left">Left</option>
-                </select>
-            </div>
+    <div class="container">
+        <h1>Settings</h1>
+        <p>Change your settings here.</p>
+        <div class="row" id="lnpdir">
+            <input type="checkbox" id="last-number-enabled" checked="true">
+            <label for="last-direction">Last Number Played Location:</label>
+            <select id="last-direction">
+                <option value="top">Top</option>
+                <option value="bottom">Bottom</option>
+            </select>
         </div>
-        <div id="customizations">
-            <div style="display: flex; flex-direction: column;">
-                <label for="welcome_message_edit">Welcome Message (HTML)</label>
-                <textarea id="welcome_message_edit" rows="4" cols="50"></textarea>
-            </div>
-
-            <div style="display: flex; flex-direction: column;">
-                <h2>Special Numbers</h2>
-                <select id="special_numbers">
-                </select>
-                <textarea id="special_number_text" rows="4" cols="50"></textarea>
-            </div>
+        <div class="row" id="nhdir">
+            <input type="checkbox" id="history-enabled" checked="true">
+            <label for="history-direction">Number History Location:</label>
+            <select id="history-direction">
+                <option value="right">Right</option>
+                <option value="left">Left</option>
+            </select>
         </div>
     </div>
-
     <button id="applyButton">Apply</button>
     <button id="resetButton">Reset To Default</button>
-    <button id="resetFameButton">Reset Hall of Fame</button>
 </body>
