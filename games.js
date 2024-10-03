@@ -109,7 +109,7 @@ function RailRoadTracks(){
 }
 function InsideCircle(){
     return {
-        "name": "Inside Circle",
+        "name": "Inside Square",
         "board":
         [
             [1,1],[1,2],[1,3], // top Row
@@ -126,7 +126,7 @@ function InsideCircle(){
 }
 function OutsideCircle(){
     return {
-        "name": "Outside Circle",
+        "name": "Outside Square",
         "board":
         [
             [0,0],[0,1],[0,2],[0,3],[0,4], // top Row
