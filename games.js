@@ -428,6 +428,27 @@ function BlackOutSurvivor(){
         "length": 3
     };
 }
+
+function TheM(){
+    return {
+        "name": "The M",
+        "board_count": 1,
+        "board": [
+            [0,0],[0,4],
+            [1,0],[1,1],[1,3],[1,4],
+            [2,0],[2,4],
+            [3,0],[3,4],
+            [4,0],[4,4]
+        ],
+        "free_space_dynamic": false,
+        "free_space_on": true,
+        "transitional": false,
+        "optional": false,
+        "rules": "Must match exact pattern",
+        "length": 1
+    };
+}
+
 function gameList()
 {
     return [
