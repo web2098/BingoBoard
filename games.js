@@ -474,7 +474,8 @@ function gameList()
         TheT(),
         TheZ(),
         Lucky7(),
-        ValentinesDay()
+        ValentinesDay(),
+        TheM()
     ]
 }
 
