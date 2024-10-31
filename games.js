@@ -445,7 +445,7 @@ function TheM(){
         "transitional": false,
         "optional": false,
         "rules": "Must match exact pattern",
-        "length": 1
+        "length": 3
     };
 }
 
