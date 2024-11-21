@@ -116,7 +116,7 @@ function InsideCircle(){
             [2,1],[2,3],//middle
             [3,1],[3,2],[3,3] // bottom Row
         ],
-        "free_space_dynamic": false,
+        "free_space_dynamic": true,
         "free_space_on": false,
         "transitional": false,
         "optional": false,
