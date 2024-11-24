@@ -96,10 +96,15 @@ function RailRoadTracks(){
         "board":
         [
             [0,1],[1,1],[2,1],[3,1],[4,1], // I Row
+            [0,2],[2,2],[4,2],//N Row
+            [0,3],[1,3],[2,3],[3,3],[4,3] // 0 Row
+        ],
+        "free_off_board": [
+            [0,1],[1,1],[2,1],[3,1],[4,1], // I Row
             [1,2],[3,2],//N Row
             [0,3],[1,3],[2,3],[3,3],[4,3] // 0 Row
         ],
-        "free_space_dynamic": false,
+        "free_space_dynamic": true,
         "free_space_on": false,
         "transitional": false,
         "optional": false,
@@ -112,11 +117,16 @@ function InsideCircle(){
         "name": "Inside Square",
         "board":
         [
+            [0,1],[0,2],[0,3], // top Row
+            [1,1],[1,3],//middle
+            [2,1],[2,2],[2,3] // bottom Row
+        ],
+        "free_off_board": [
             [1,1],[1,2],[1,3], // top Row
             [2,1],[2,3],//middle
             [3,1],[3,2],[3,3] // bottom Row
         ],
-        "free_space_dynamic": false,
+        "free_space_dynamic": true,
         "free_space_on": false,
         "transitional": false,
         "optional": false,
@@ -230,10 +240,13 @@ function CandyCane(){
         "name": "Candy Cane",
         "board_count": 1,
         "board": [
+            [0,0],[0,1],[0,2],[1,0],[1,2],[2,2],[3,2],[4,2]
+        ],
+        "free_off_board": [
             [0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]
         ],
-        "free_space_dynamic": false,
-        "free_space_on": true,
+        "free_space_dynamic": true,
+        "free_space_on": false,
         "transitional": false,
         "optional": false,
         "rules": "Must match exact pattern",
@@ -245,6 +258,13 @@ function TicTacToe(){
         "name": "Tic Tac Toe",
         "board_count": 1,
         "board": [
+            [0,0],[0,1],[0,2],[0,3],[0,4],
+            [1,1],[1,3], // top Row
+            [2,0],[2,1],[2,2],[2,3],[2,4],
+            [3,1],[3,3],
+            [4,0],[4,1],[4,2],[4,3],[4,4],
+        ],
+        "free_off_board": [
             [0,1],[0,3], // top Row
             [1,0],[1,1],[1,2],[1,3],[1,4],
             [2,1],[2,3],
@@ -252,7 +272,7 @@ function TicTacToe(){
             [4,1],[4,3],
         ],
         "free_space_dynamic": false,
-        "free_space_on": true,
+        "free_space_on": false,
         "transitional": false,
         "optional": false,
         "rules": "Must match exact pattern",
@@ -323,7 +343,7 @@ function Diamond(){
             [4,2]
         ],
         "free_space_dynamic": false,
-        "free_space_on": true,
+        "free_space_on": false,
         "transitional": false,
         "optional": false,
         "rules": "Must match exact pattern",
@@ -550,7 +570,7 @@ function create_table( parent, name , game, free_font_size = '3vh', board_num = 
 function game_contains_point( game, x, y, board_num = 0 )
 {
     var board = game.free_space_on ? game.board : game.free_off_board;
-    if (!game.free_space_dynamic)
+    if (!board)
     {
         board = game.board;
     }
