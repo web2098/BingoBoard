@@ -375,7 +375,7 @@ function createHeaderDiv()
     // Create paragraph to display the last clicked number
     const extraInfo = document.createElement('p');
     extraInfo.id = 'extraInfo';
-    extraInfo.innerHTML = "Test";
+    extraInfo.innerHTML = "";
     headerInfoDiv.appendChild(lastNumber);
     headerInfoDiv.appendChild(extraInfo);
 
