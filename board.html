@@ -446,7 +446,7 @@
             const client_url = `${server_url}/join/${auth.room_id}`;
             const client_url_b64 = btoa(client_url);
             const path = `${window.location.pathname}`;
-            const data = `${window.location.protocol}://${window.location.hostname}:${window.location.port}${path.replace("board", "client_view")}?server_url=${client_url_b64}`;
+            const data = `${window.location.protocol}//${window.location.hostname}:${window.location.port}${path.replace("board", "client_view")}?server_url=${client_url_b64}`;
             console.log("Connect url:", data);
             const qrcode = new QRCode(document.getElementById('qrcode'), {
                 text: data,

@@ -49,7 +49,7 @@ function init_view()
 
 
     const server_url_b64 = btoa(server_url);
-    const data = `${window.location.protocol}://${window.location.hostname}:${window.location.port}${window.location.pathname}?server_url=${server_url_b64}`;
+    const data = `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}?server_url=${server_url_b64}`;
 
     const qrcode = new QRCode(document.getElementById('qrcode'), {
         text: data,

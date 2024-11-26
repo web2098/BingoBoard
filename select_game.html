@@ -305,7 +305,7 @@
             const client_url_b64 = btoa(client_url);
             const path = `${window.location.pathname}`;
             console.log("Path:", path);
-            const data = `${window.location.protocol}://${window.location.hostname}:${window.location.port}${path.replace("select_game", "client_view")}?server_url=${client_url_b64}`;
+            const data = `${window.location.protocol}//${window.location.hostname}:${window.location.port}${path.replace("select_game", "client_view")}?server_url=${client_url_b64}`;
             console.log("Connect url:", data);
             const qrcode = new QRCode(document.getElementById('qrcode'), {
                 text: data,
