@@ -1,0 +1,230 @@
+
+:root {
+    --main-bg-color: #FFFFFF;
+    --main-font-color: #000000;
+    --item-font-size: 45px;
+    --header-font-size: 45px;
+    --header-details-font-size: 25px;
+    --last-numbers-font-size: 25px;
+    --button-margin-top:30px;
+    --button-font-size: 25px;
+}
+
+body{
+    margin:0
+}
+
+#server_status{
+    text-align: right; /* centers the text */
+    font-size: 10px;
+}
+#game_board_view {
+    z-index: 1;
+    margin: 5;
+    margin-top: -10px;
+}
+
+
+#headerDiv {
+    padding: 0;
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    /*background-color: red; /* The Color*/
+}
+
+
+#topHeaderDiv {
+    display: flex;
+    justify-content: space-between;
+    /*background-color: red; /* The Color*/
+}
+
+#headerInfoDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#lastNumber{
+    /*background-color: blue; /* The Color*/
+
+    user-select: none;
+    font-size: var(--header-font-size);  /*adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* centers the text */
+    margin: 0;
+    margin-left: 20px;
+}
+#numberRatioDiv{
+    padding: 0;
+    user-select: none;
+    font-size: 20;  /*adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: right; /* centers the text */
+    margin-left: 10%;
+}
+
+#extraInfo{
+    /*background-color: green; /* The Color*/
+    margin: 0;
+    font-size: var(--header-details-font-size); /* adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* centers the text */
+}
+
+#centerDiv {
+    display: flex;
+}
+
+#lettersTable td{
+    border: none;
+    color: var(--main-font-color);
+    min-width: 5vw; /* minimum width */
+
+    font-size: var(--item-font-size); /* adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* to center the content */
+    user-select: none;
+}
+#numbersTable{
+    width: 90%;
+}
+#numbersTable td {
+    border: 2px solid black;
+
+    font-size: var(--item-font-size); /* adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* to center the content */
+    user-select: none;
+}
+
+#footerDiv {
+    display: flex;
+    justify-content: left;
+}
+
+#lastNumberCalled {
+    user-select: none;
+    text-decoration: underline;
+    color: var(--main-font-color);
+    font-size: var(--last-numbers-font-size); /* adjust as needed */
+}
+#clickedNumbersTable {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adjust minmax value as needed */
+    gap: 10px; /* Adjust gap between cells as needed */
+    max-width: 100vw; /* Set the maximum width of the table */
+    margin: 0 auto; /* Center the table */
+}
+#clickedNumbersTable td{
+    font-size: var(--last-numbers-font-size); /* adjust as needed */
+    border: none;
+    color: var(--main-font-color);
+}
+
+#preview_div{
+    display: flex;
+    flex-direction: column;
+}
+#preview_table_div{
+    display: flex;
+    justify-content: space-evenly;
+}
+#preview_board td{
+    border: 1px solid black;
+    min-width: 25px;
+    max-width:  25px;
+    min-height: 20px;
+    max-height: 20px;
+}
+#preview_board_2 td{
+    border: 1px solid black;
+    min-width: 25px;
+    max-width:  25px;
+    min-height: 20px;
+    max-height: 20px;
+}
+#transition_arrow{
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 40px;
+    font-size: 30px; /* adjust as needed */
+    user-select: none;
+}
+#optional_slash{
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 40px;
+    font-size: 30px; /* adjust as needed */
+    user-select: none;
+}
+#game_preview_name{
+    margin: 0;
+    font-weight: bold; /* makes the text bold */
+    text-align: center;
+}
+#free_space_label{
+    margin: 0;
+    font-weight: bold; /* makes the text bold */
+    text-align: center;
+    user-select: none;
+    text-decoration: underline;
+}
+
+#large_preview_div {
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    z-index: 2;
+    border: 4px solid black;
+    background-color: white;
+    width: 90%;
+    height: 80%;
+}
+#large_game_preview_name{
+    user-select: none;
+    font-weight: bold;
+    text-align: center;
+    margin:0;
+}
+#large_preview_table_div{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+#large_preview_board td{
+    border: 1px solid black;
+    width: 50px;
+    font-size: 40px;
+}
+#large_preview_board_2 td{
+    border: 1px solid black;
+    width: 50px;
+    font-size: 40px;
+}
+#large_transition_arrow{
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 20vh;
+    font-size: 30px; /* adjust as needed */
+    user-select: none;
+}
+#large_optional_slash{
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 20vh;
+    font-size: 30px; /* adjust as needed */
+    user-select: none;
+}
+
+#large_free_space_label{
+    user-select: none;
+    font-weight: bold;
+    text-align: center;
+    margin:0;
+}

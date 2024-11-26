@@ -125,18 +125,24 @@
             var welcomeMesg = localStorage.getItem('welcome-message');
             document.getElementById('welcome_message_edit').value = welcomeMesg;
 
-            for (var i = 0; i < colorPickers.length; i++) {
+            var bingo_server_url = localStorage.getItem('bingo_server_url');
+            document.getElementById('bingo_server_url').value = bingo_server_url;
+
+            var bingo_server_auth = localStorage.getItem('bingo_server_auth');
+            document.getElementById('bingo_server_auth').value = bingo_server_auth;
+
+            for (const element of colorPickers) {
                 var colorPickerLabel = document.createElement('label');
-                colorPickerLabel.setAttribute('for', colorPickers[i].key);
-                colorPickerLabel.textContent = colorPickers[i].id;
+                colorPickerLabel.setAttribute('for', element.key);
+                colorPickerLabel.textContent = element.id;
 
                 var colorPicker = document.createElement('input');
                 colorPicker.setAttribute('type', 'color');
-                colorPicker.setAttribute('id', colorPickers[i].key);
-                colorPicker.setAttribute('name', colorPickers[i].key);
-                colorPicker.setAttribute('value', localStorage.getItem(colorPickers[i].key));
-                //console.log('Creating picker for:', colorPickers[i].key);
-                //console.log('Value:', localStorage.getItem(colorPickers[i].key));
+                colorPicker.setAttribute('id', element.key);
+                colorPicker.setAttribute('name', element.key);
+                colorPicker.setAttribute('value', localStorage.getItem(element.key));
+                //console.log('Creating picker for:', element.key);
+                //console.log('Value:', localStorage.getItem(element.key));
 
                 // Create a new row
                 var newRow = document.createElement('div');
@@ -174,12 +180,16 @@
 
                 var welcomeMesg = document.getElementById('welcome_message_edit').value;
                 localStorage.setItem('welcome-message', welcomeMesg);
+                var bingo_server_url = document.getElementById('bingo_server_url').value;
+                localStorage.setItem('bingo_server_url', bingo_server_url);
+                var bingo_server_auth = document.getElementById('bingo_server_auth').value;
+                localStorage.setItem('bingo_server_auth', bingo_server_auth);
 
                 var colorPickers = document.getElementsByTagName('input');
 
-                for (var i = 0; i < colorPickers.length; i++) {
-                    console.log('Setting', colorPickers[i].id, 'to', colorPickers[i].value);
-                    localStorage.setItem(colorPickers[i].id, colorPickers[i].value);
+                for (const element of colorPickers) {
+                    console.log('Setting', element.id, 'to', element.value);
+                    localStorage.setItem(element.id, element.value);
                 }
                 window.location.href = localStorage.getItem('home-page')
             });
@@ -244,6 +254,14 @@
                 <select id="special_numbers">
                 </select>
                 <textarea id="special_number_text" rows="4" cols="50"></textarea>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+                <h4>Bingo Server URL</h4>
+                <input id="bingo_server_url" rows="1" cols="50"></input>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+                <h4>Bingo Server Auth Token</h4>
+                <input id="bingo_server_auth" rows="1" cols="50" type="password"></input>
             </div>
         </div>
     </div>

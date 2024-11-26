@@ -44,7 +44,6 @@
         }
         #game_rules{
             font-size: 2.0vw; /* Adjust as needed */
-            margin-bottom: 14vh;
             margin-top: 2vh;
         }
         #free_space_message{
@@ -121,12 +120,14 @@
 
     </style>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="games.js"></script>
     <script src="utilities.js"></script>
     <script>
         var selected_game = null;
         var current_game = 0;
+        var room_connection = null;
         //var preview_index = 0;
 
         function hide_element_by_id(board_name)
@@ -231,7 +232,91 @@
             return fontSize;
         }
 
+        async function connectToServer()
+        {
+            console.log("Connecting to server");
+            const auth = await hostRoom();
+            if( auth )
+            {
+                connectToRoom(auth);;
+            }
+        }
+
+        async function hostRoom()
+        {
+            //Make an HTTP Get request to the server
+            const server_url = getItemWithDefault('bingo_server_url');
+            const server_token = getItemWithDefault('bingo_server_auth');
+
+            if( !(server_url && server_token) )
+            {
+                console.log('Server URL or token not set');
+                return null;
+            }
+
+            try {
+                const response = await fetch(`${server_url}/host`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': server_token
+                    },
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                console.log('Success:', data);
+                return data; // Assuming the server returns some auth data
+            } catch (error) {
+                console.error('Error:', error);
+                return null;
+            }
+
+        }
+
+        function connectToRoom( auth )
+        {
+            const server_url = getItemWithDefault('bingo_server_url');
+            const ws_url = `${server_url.replace('http', 'ws')}/start/${auth.room_id}?room_token=${auth.room_token}`;
+            console.log('Connecting to room:', ws_url);
+
+            room_connection = new WebSocket(ws_url);
+            room_connection.onopen = function() {
+                console.log("Connected to room");
+                updateQRCode( auth );
+            }
+            room_connection.onerror = function(error) {
+                console.error('Error:', error);
+            }
+            room_connection.onclose = function() {
+                console.log('Connection closed');
+            }
+        }
+
+        function updateQRCode( auth )
+        {
+            const server_url = getItemWithDefault('bingo_server_url');
+            const client_url = `${server_url}/join/${auth.room_id}`;
+            const client_url_b64 = btoa(client_url);
+            const data = `${window.location.protocol}://${window.location.hostname}:${window.location.port}/client_view.html?server_url=${client_url_b64}`;
+            console.log("Connect url:", data);
+            const qrcode = new QRCode(document.getElementById('qrcode'), {
+                text: data,
+                width: 256,
+                height: 256,
+                colorDark : '#000',
+                colorLight : '#fff',
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+
         window.onload = function() {
+
+            connectToServer();
             //adjustFontSizeToCell('game_cell');
             current_game = parseInt(getTemporaryItem('selected_game_index')) || 0;
             preview_index = parseInt(getTemporaryItem('selected_preview_index')) || 0;
@@ -418,6 +503,7 @@
             <p id="free_space_message">Free space is OFF</p>
              <div id="welcome_view">
                 <p id="welcome_message"></p>
+                <div id="qrcode"></div>
                 <p id="game_rules">Rules of the game....</p>
             </div>
             <div id="full_view"></div>
