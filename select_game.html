@@ -281,6 +281,7 @@
         function connectToRoom( auth )
         {
             const server_url = getItemWithDefault('bingo_server_url');
+            console.log(server_url);
             const ws_url = `${server_url.replace('http', 'ws')}/start/${auth.room_id}?room_token=${auth.room_token}`;
             console.log('Connecting to room:', ws_url);
 
@@ -302,7 +303,9 @@
             const server_url = getItemWithDefault('bingo_server_url');
             const client_url = `${server_url}/join/${auth.room_id}`;
             const client_url_b64 = btoa(client_url);
-            const data = `${window.location.protocol}://${window.location.hostname}:${window.location.port}/client_view.html?server_url=${client_url_b64}`;
+            const path = `${window.location.pathname}`;
+            console.log("Path:", path);
+            const data = `${window.location.protocol}://${window.location.hostname}:${window.location.port}${path.replace("select_game", "client_view")}?server_url=${client_url_b64}`;
             console.log("Connect url:", data);
             const qrcode = new QRCode(document.getElementById('qrcode'), {
                 text: data,
