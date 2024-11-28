@@ -141,8 +141,8 @@ function set_status( msg )
 
 function setup_board( msg )
 {
-    update_style(msg.style);
-    update_session(msg.session);
+    update_style(msg);
+    update_session(msg);
 
     current_game = find_game_by_name(msg.data.game);
     current_game.free_space_on = msg.data.free;
@@ -176,18 +176,34 @@ function setup_board( msg )
     }
 
 }
-function update_style(style)
+function update_style(msg)
 {
-    styleVariables.selectedColor = style.selectedColor;
-    styleVariables.selectedTextColor = style.selectedTextColor;
-    styleVariables.unselectedColor = style.unselectedColor;
-    styleVariables.unselectedTextColor = style.unselectedTextColor;
+    try
+    {
+        const style = msg.style;
+        styleVariables.selectedColor = style.selectedColor;
+        styleVariables.selectedTextColor = style.selectedTextColor;
+        styleVariables.unselectedColor = style.unselectedColor;
+        styleVariables.unselectedTextColor = style.unselectedTextColor;
+    }
+    catch(e)
+    {
+        console.log(`Failed to apply style: ${e}`);
+    }
 }
 
-function update_session(session)
+function update_session(msg)
 {
-    specialNumbers = session.numbers;
-    welcomeMessage = session.welcome;
+    try
+    {
+        const session = msg.session;
+        specialNumbers = session.numbers;
+        welcomeMessage = session.welcome;
+    }
+    catch(e)
+    {
+        console.log(`Failed to apply session info: ${e}`);
+    }
 }
 
 function update_free( free )
@@ -269,6 +285,7 @@ function find_td( id )
 function activiate_spot( id )
 {
     const letters = ['B', 'I', 'N', 'G', 'O'];
+    id = id.replace(/[A-Z]/, '');
     id = parseInt(id);
     const letter = letters[Math.floor((id - 1)/15)];
     const number = letter + id;
@@ -276,6 +293,7 @@ function activiate_spot( id )
     const index = clickedNumbers.indexOf(number);
     if( index == -1 )
     {
+        console.log(number);
         const spot = find_td(number);
         spot.style.backgroundColor = styleVariables.selectedColor;
         spot.style.color = styleVariables.selectedTextColor;
