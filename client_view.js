@@ -4,6 +4,7 @@ let clickedNumbers = []; // Array to store the clicked numbers
 let current_game = null;
 let specialNumbers = null;
 let welcomeMessage = null;
+let retryTime = 1000; // Initial retry time in milliseconds
 
 // Load all defaults from local storage, but will be overriden by the host of the room
 let styleVariables = {
@@ -50,8 +51,9 @@ function init_view()
 
     const server_url_b64 = btoa(server_url);
     const data = `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}?server_url=${server_url_b64}`;
-
-    const qrcode = new QRCode(document.getElementById('qrcode'), {
+    let element = document.getElementById('qrcode');
+    element.visible = true;
+    const qrcode = new QRCode(element, {
         text: data,
         width: 128,
         height: 128,
@@ -65,6 +67,8 @@ function init_view()
 
 function connectToServer( server_url )
 {
+    const element = document.getElementById('qrcode');
+    element.visible = false;
     set_status("Connecting to remote server...");
     ws = new WebSocket(server_url);
     ws.onopen = function() {
@@ -96,12 +100,24 @@ function connectToServer( server_url )
         }
     }
     ws.onerror = function(event) {
-        report_error("Error connecting to server");
+        report_error(`Failed to connect to server: ${event.message}`);
+        retryConnection();
     }
     ws.onclose = function(event) {
         report_error("Connection to server closed");
         set_status("Not connected to remote server");
+        retryConnection();
     }
+}
+
+function retryConnection() {
+    let element = document.getElementById('qrcode');
+    element.visible = false;
+    console.log(`Retrying connection in ${retryTime / 1000} seconds...`);
+    setTimeout(() => {
+        retryTime *= 2; // Double the retry time
+        connectToServer();
+    }, retryTime);
 }
 
 function update_view( msg )
@@ -168,6 +184,9 @@ function setup_board( msg )
     const large_free_space = document.getElementById('large_free_space_label');
     large_free_space.innerHTML = 'Free Space is ' + (current_game.free_space_on? 'On' : 'Off');
     update_preview_boards(current_game);
+
+    let extraInfo = document.getElementById('extraInfo');
+    extraInfo.innerHTML = " ";
 
     for(const element of msg.data.active)
     {

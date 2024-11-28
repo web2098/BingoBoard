@@ -306,6 +306,7 @@
 
         var start_time = new Date().getTime();
         var room_connection = null;
+        let retryTime = 1000; // Initial retry time in milliseconds
 
         function saveCurrentGame()
         {
@@ -360,6 +361,8 @@
 
         async function connectToServer()
         {
+            const element = document.getElementById('qrcode');
+            element.visible = false;
             console.log("Connecting to server");
             const auth = await hostRoom();
             if( auth )
@@ -434,9 +437,11 @@
             }
             room_connection.onerror = function(error) {
                 console.error('Error:', error);
+                retryConnection();
             }
             room_connection.onclose = function() {
                 console.log('Connection closed');
+                retryConnection();
             }
         }
 
@@ -448,7 +453,9 @@
             const path = `${window.location.pathname}`;
             const data = `${window.location.protocol}//${window.location.hostname}:${window.location.port}${path.replace("board", "client_view")}?server_url=${client_url_b64}`;
             console.log("Connect url:", data);
-            const qrcode = new QRCode(document.getElementById('qrcode'), {
+            const element = document.getElementById('qrcode');
+            element.visible = true;
+            const qrcode = new QRCode(element, {
                 text: data,
                 width: 128,
                 height: 128,
@@ -535,6 +542,17 @@
                 room_connection.send(JSON.stringify(update));
             }
         }
+
+        function retryConnection() {
+            let element = document.getElementById('qrcode');
+            element.visible = false;
+            console.log(`Retrying connection in ${retryTime / 1000} seconds...`);
+            setTimeout(() => {
+                retryTime *= 2; // Double the retry time
+                connectToServer();
+            }, retryTime);
+        }
+
 
         window.onload = function() {
             current_game = JSON.parse(getTemporaryItem('selected_game'))
