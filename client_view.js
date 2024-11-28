@@ -70,6 +70,7 @@ function connectToServer( server_url )
     const element = document.getElementById('qrcode');
     element.visible = false;
     set_status("Connecting to remote server...");
+    console.log("Attempting to connect to server...");
     ws = new WebSocket(server_url);
     ws.onopen = function() {
         set_status("Connected to remote server, getting id...");
@@ -106,7 +107,6 @@ function connectToServer( server_url )
     ws.onclose = function(event) {
         report_error("Connection to server closed");
         set_status("Not connected to remote server");
-        retryConnection();
     }
 }
 
