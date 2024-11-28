@@ -74,6 +74,7 @@ function connectToServer( server_url )
     ws = new WebSocket(server_url);
     ws.onopen = function() {
         set_status("Connected to remote server, getting id...");
+        console.log('Connected to remote server');
         const id_message = {
             type: "request_id",
         }
