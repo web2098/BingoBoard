@@ -337,7 +337,6 @@
 
         window.onload = function() {
 
-            connectToServer();
             //adjustFontSizeToCell('game_cell');
             current_game = parseInt(getTemporaryItem('selected_game_index')) || 0;
             preview_index = parseInt(getTemporaryItem('selected_preview_index')) || 0;
@@ -433,7 +432,9 @@
             adjustPreviewTables();
 
             var welcome_message = document.getElementById('welcome_message');
-            welcome_message.innerHTML = getItemWithDefault('welcome-message')
+            welcome_message.innerHTML = getItemWithDefault('welcome-message');
+
+            connectToServer();
         }
         document.addEventListener('DOMContentLoaded', (event) => {
             var swiper = new Swiper('.swiper-container', {
