@@ -462,6 +462,9 @@
                 colorLight : '#fff',
                 correctLevel : QRCode.CorrectLevel.H
             });
+
+            const txt_element = document.getElementById('qrcode_text');
+            txt_element.innerHTML = "Scan QR Code to join on your device";
         }
 
         function createStatus()
@@ -525,7 +528,8 @@
             {
                 const update = {
                     type: "activate",
-                    id: number
+                    id: number,
+                    spots: clickedNumbers.length
                 };
                 room_connection.send(JSON.stringify(update));
             }
@@ -536,7 +540,8 @@
             {
                 const update = {
                     type: "deactivate",
-                    id: number
+                    id: number,
+                    spots: clickedNumbers.length
                 };
                 room_connection.send(JSON.stringify(update));
             }
@@ -753,7 +758,11 @@
             const qrcode = document.createElement('div');
             qrcode.id = 'qrcode';
 
+            const qrcode_text = document.createElement('p');
+            qrcode_text.id = 'qrcode_text';
+            qrcode_text.innerHTML = "Host not connected to server";
 
+            qrcode.append(qrcode_text);
 
             const detailDiv = document.createElement('div');
             detailDiv.id = 'detailDiv';

@@ -321,6 +321,9 @@
                 colorLight : '#fff',
                 correctLevel : QRCode.CorrectLevel.H
             });
+
+            const qrcode_text = document.getElementById('qrcode_text');
+            qrcode_text.innerHTML = `Scan QR Code to join on your device`;
         }
 
         function retryConnection() {
@@ -335,7 +338,6 @@
 
 
         window.onload = function() {
-
             //adjustFontSizeToCell('game_cell');
             current_game = parseInt(getTemporaryItem('selected_game_index')) || 0;
             preview_index = parseInt(getTemporaryItem('selected_preview_index')) || 0;
@@ -524,7 +526,9 @@
             <p id="free_space_message">Free space is OFF</p>
              <div id="welcome_view">
                 <p id="welcome_message"></p>
-                <div id="qrcode"></div>
+                <div id="qrcode">
+                    <p id="qrcode_text"></p>
+                </div>
                 <p id="game_rules">Rules of the game....</p>
             </div>
             <div id="full_view"></div>

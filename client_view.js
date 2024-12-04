@@ -86,11 +86,7 @@ function connectToServer( server_url )
         {
             set_status("Connected to remote server as " + msg.conn_id);
             sessionStorage.setItem("server_client_id", msg.conn_id);
-            const update_request = {
-                type: "update",
-                client_id: msg.conn_id,
-            }
-            ws.send(JSON.stringify(update_request));
+            requestUpdate();
         }
         else if( msg.type == "error" )
         {
@@ -121,6 +117,15 @@ function retryConnection() {
     }, retryTime);
 }
 
+function requestUpdate()
+{
+    const update_request = {
+        type: "update",
+        client_id: msg.conn_id,
+    }
+    ws.send(JSON.stringify(update_request));
+}
+
 function update_view( msg )
 {
     if( msg.type === "setup" )
@@ -134,10 +139,18 @@ function update_view( msg )
     else if ( msg.type === "activate")
     {
         activiate_spot(msg.id);
+        if( msg.spots != clickedNumbers.length )
+        {
+            requestUpdate();
+        }
     }
     else if ( msg.type === "deactivate")
     {
         deactiviate_spot(msg.id);
+        if( msg.spots != clickedNumbers.length )
+        {
+            requestUpdate();
+        }
     }
     else{
         report_error("Unknown message type: " + msg.type);
