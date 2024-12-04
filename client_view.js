@@ -119,9 +119,10 @@ function retryConnection() {
 
 function requestUpdate()
 {
+    id = sessionStorage.getItem("server_client_id");
     const update_request = {
         type: "update",
-        client_id: msg.conn_id,
+        client_id: id,
     }
     ws.send(JSON.stringify(update_request));
 }
