@@ -5,6 +5,7 @@ let current_game = null;
 let specialNumbers = null;
 let welcomeMessage = null;
 let retryTime = 1000; // Initial retry time in milliseconds
+let server_url = null;
 
 // Load all defaults from local storage, but will be overriden by the host of the room
 let styleVariables = {
@@ -31,7 +32,7 @@ function init_view()
     const queryParams = getQueryParams();
 
     // Get Server URL from session storage
-    let server_url = queryParams.server_url;
+    server_url = queryParams.server_url;
     if( server_url == null )
     {
         report_error("No Valid server url is currently set, did you scan the QR code?");
@@ -62,10 +63,10 @@ function init_view()
         correctLevel : QRCode.CorrectLevel.H
       });
 
-    connectToServer(server_url);
+    connectToServer();
 }
 
-function connectToServer( server_url )
+function connectToServer()
 {
     const element = document.getElementById('qrcode');
     element.visible = false;
