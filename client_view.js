@@ -388,6 +388,11 @@ function update_last_number()
         lastNumber.innerHTML = "Waiting for first number";
     }
 
+
+    var numberRatio = document.getElementById('numberRatio');
+    numberRatio.innerHTML = clickedNumbers.length + "/75" + "(" + (75 - clickedNumbers.length) + " left)";
+
+
 }
 
 function createHeaderDiv()
