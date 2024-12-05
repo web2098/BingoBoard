@@ -105,6 +105,7 @@ function connectToServer()
     ws.onclose = function(event) {
         report_error("Connection to server closed");
         set_status("Not connected to remote server");
+        retryConnection();
     }
 }
 
