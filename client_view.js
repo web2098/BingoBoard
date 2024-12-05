@@ -205,7 +205,7 @@ function setup_board( msg )
     let extraInfo = document.getElementById('extraInfo');
     extraInfo.innerHTML = " ";
 
-    for(const element of msg.data.active)
+    for(const element of msg.data.active.reverse())
     {
         const id = element;
         activiate_spot(id);
