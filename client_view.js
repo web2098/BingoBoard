@@ -7,6 +7,23 @@ let welcomeMessage = null;
 let retryTime = 1000; // Initial retry time in milliseconds
 let server_url = null;
 
+let wakeLock = null;
+
+async function requestWakeLock() {
+    try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        console.log('Screen Wake Lock is active');
+
+        wakeLock.addEventListener('release', () => {
+            console.log('Screen Wake Lock released');
+        });
+    } catch (err) {
+        report_error('Wake Lock not supported ' + err.name + ', ' + err.message);
+        console.error(`${err.name}, ${err.message}`);
+    }
+}
+
+
 // Load all defaults from local storage, but will be overriden by the host of the room
 let styleVariables = {
     selectedColor: getItemWithDefault('select-tab-color'), //CSU Green
@@ -19,7 +36,7 @@ let styleVariables = {
     lastDirectionOn: localStorage.getItem('last-number-on') // 'true' or 'false'
 };
 
-function init_view()
+async function init_view()
 {
     createLargePreviewBoard();
 
@@ -64,6 +81,17 @@ function init_view()
       });
 
     connectToServer();
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && wakeLock) {
+            wakeLock.release();
+            wakeLock = null;
+            console.log('Wake Lock released due to visibility change');
+        }
+    });
+
+
+    await requestWakeLock();
 }
 
 function connectToServer()
@@ -114,7 +142,9 @@ function retryConnection() {
     element.visible = false;
     console.log(`Retrying connection in ${retryTime / 1000} seconds...`);
     setTimeout(() => {
-        retryTime *= 2; // Double the retry time
+        if (retryTime < 30000) {
+            retryTime *= 2; // Double the retry time
+        }
         connectToServer();
     }, retryTime);
 }
