@@ -1,0 +1,23 @@
+
+<head>
+    <link rel="stylesheet" type="text/css" href="client_view.css">
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <script src="utilities.js"></script>
+    <script src="games.js"></script>
+    <script src="client_view.js"></script>
+    <script>
+        window.onload = function() {
+            init_view();
+        };
+</script>
+</head>
+<body>
+    <div id="status">
+        <p id="server_status">Not Connected to remote server</p>
+    </div>
+    <div id="game_board_view"></div>
+    <div id="error_view">
+        <p id="error_message"></p>
+    </div>
+    <div id="large_preview_div"></div>
+</body>

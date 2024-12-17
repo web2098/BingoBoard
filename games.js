@@ -503,6 +503,17 @@ function games(){
     return applyOrder(gameList());
 }
 
+
+function find_game_by_name( name ){
+    const games = gameList();
+    for(const element of games){
+        if( element.name.toLowerCase() == name.toLowerCase() ){
+            return element;
+        }
+    }
+    return null;
+}
+
 function applyOrder( games ){
     var order = getItemWithDefault('game-order');
     if (order == 'random')
@@ -569,7 +580,7 @@ function create_table( parent, name , game, free_font_size = '3vh', board_num = 
 
 function game_contains_point( game, x, y, board_num = 0 )
 {
-    var board = game.free_space_on ? game.board : game.free_off_board;
+    let board = game.free_space_on ? game.board : game.free_off_board;
     if (!board)
     {
         board = game.board;
@@ -580,8 +591,8 @@ function game_contains_point( game, x, y, board_num = 0 )
         board = board[board_num];
     }
 
-    for( var i = 0; i < board.length; i++ ){
-        if( board[i][0] == x && board[i][1] == y ){
+    for(const element of board){
+        if( element[0] == x && element[1] == y ){
             return true;
         }
     }

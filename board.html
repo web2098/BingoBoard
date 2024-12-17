@@ -99,11 +99,14 @@
         }
 
         #headerTextDiv {
+            display: flex;
+            /*background-color: orange; /* The Color*/
+        }
+        #detailDiv{
             padding: 0;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            /*background-color: orange; /* The Color*/
             min-width: 60vw;
             max-width: 80vw;
             max-height: 18vh;
@@ -274,6 +277,7 @@
         }
 
     </style>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
     <script src="utilities.js"></script>
     <script src="games.js"></script>
     <script>
@@ -301,6 +305,8 @@
         var numberTimes = []
 
         var start_time = new Date().getTime();
+        var room_connection = null;
+        let retryTime = 1000; // Initial retry time in milliseconds
 
         function saveCurrentGame()
         {
@@ -352,12 +358,214 @@
 
         }
 
+
+        async function connectToServer()
+        {
+            const element = document.getElementById('qrcode');
+            element.visible = false;
+            console.log("Connecting to server");
+            const auth = await hostRoom();
+            if( auth )
+            {
+                connectToRoom(auth);;
+            }
+        }
+
+        async function hostRoom()
+        {
+            //Make an HTTP Get request to the server
+            const server_url = getItemWithDefault('bingo_server_url');
+            const server_token = getItemWithDefault('bingo_server_auth');
+
+            if( !(server_url && server_token) )
+            {
+                console.log('Server URL or token not set');
+                return null;
+            }
+
+            try {
+                const response = await fetch(`${server_url}/host`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': server_token
+                    },
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                console.log('Success:', data);
+                return data; // Assuming the server returns some auth data
+            } catch (error) {
+                console.error('Error:', error);
+                return null;
+            }
+
+        }
+
+        function connectToRoom( auth )
+        {
+            const server_url = getItemWithDefault('bingo_server_url');
+            const ws_url = `${server_url.replace('http', 'ws')}/start/${auth.room_id}?room_token=${auth.room_token}`;
+            console.log('Connecting to room:', ws_url);
+
+
+            room_connection = new WebSocket(ws_url);
+            room_connection.onopen = function() {
+                console.log("Connected to room");
+                const id_message = {
+                    type: "request_id",
+                }
+                room_connection.send(JSON.stringify(id_message));
+            }
+            room_connection.onmessage = function(msg) {
+                console.log('Message:', msg.data);
+                const data = JSON.parse(msg.data);
+                if( data.type == "id" )
+                {
+                    updateQRCode( auth );
+                    sendStatus();
+                }
+                else if( data.type === 'update' )
+                {
+                    sendStatusTo(data.client_id);
+                }
+            }
+            room_connection.onerror = function(error) {
+                console.error('Error:', error);
+                retryConnection();
+            }
+            room_connection.onclose = function() {
+                console.log('Connection closed');
+            }
+        }
+
+        function updateQRCode( auth )
+        {
+            const server_url = getItemWithDefault('bingo_server_url');
+            const client_url = `${server_url}/join/${auth.room_id}`;
+            const client_url_b64 = btoa(client_url);
+            const path = `${window.location.pathname}`;
+            const data = `${window.location.protocol}//${window.location.hostname}:${window.location.port}${path.replace("board", "client_view")}?server_url=${client_url_b64}`;
+            console.log("Connect url:", data);
+            const element = document.getElementById('qrcode');
+            element.visible = true;
+            const qrcode = new QRCode(element, {
+                text: data,
+                width: 128,
+                height: 128,
+                colorDark : '#000',
+                colorLight : '#fff',
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            const txt_element = document.getElementById('qrcode_text');
+            txt_element.innerHTML = "Scan QR Code to join on your device";
+        }
+
+        function createStatus()
+        {
+            const status = {
+                type: "setup",
+                data: {
+                    game: current_game.name,
+                    free: free_space_on,
+                    active: clickedNumbers
+                },
+                style: {
+                    selectedColor: styleVariables.selectedColor,
+                    selectedTextColor: styleVariables.selectedTextColor,
+                    unselectedColor: styleVariables.unselectedColor,
+                    unselectedTextColor: styleVariables.unselectedTextColor,
+                },
+                session:{
+                    numbers: JSON.parse(getItemWithDefault('special-numbers'))
+                }
+            }
+            return status;
+        }
+
+        function sendStatus()
+        {
+            const status = createStatus();
+            console.log("Sending status to all");
+            console.log(JSON.stringify(status));
+            room_connection.send(JSON.stringify(status));
+        }
+
+        function sendStatusTo( client_id )
+        {
+            const status = createStatus();
+            status.client_id = client_id;
+            console.log("Sending status to:", client_id);
+            console.log(JSON.stringify(status));
+            room_connection.send(JSON.stringify(status));
+        }
+
+        function update_free_space()
+        {
+            if (current_game.free_space_dynamic){
+                current_game.free_space_on=!current_game.free_space_on;
+            }
+
+            if( room_connection )
+            {
+                const update = {
+                    type: "update_free",
+                    free: current_game.free_space_on
+                }
+                room_connection.send(JSON.stringify(update));
+            }
+        }
+
+        function activateNumber( number )
+        {
+            if( room_connection )
+            {
+                const update = {
+                    type: "activate",
+                    id: number,
+                    spots: clickedNumbers.length
+                };
+                room_connection.send(JSON.stringify(update));
+            }
+        }
+        function deactivateNumber( number )
+        {
+            if( room_connection )
+            {
+                const update = {
+                    type: "deactivate",
+                    id: number,
+                    spots: clickedNumbers.length
+                };
+                room_connection.send(JSON.stringify(update));
+            }
+        }
+
+        function retryConnection() {
+            let element = document.getElementById('qrcode');
+            element.visible = false;
+            console.log(`Retrying connection in ${retryTime / 1000} seconds...`);
+            setTimeout(() => {
+                retryTime *= 2; // Double the retry time
+                connectToServer();
+            }, retryTime);
+        }
+
+
         window.onload = function() {
             current_game = JSON.parse(getTemporaryItem('selected_game'))
             if( current_game )
             {
                 free_space_on = current_game.free_space_on
             }
+
+
 
             loadCSSSettings();
 
@@ -398,13 +606,12 @@
                     }
                 }
             }, true);
+
+            connectToServer();
         }
 
         function updatePreviewBoards()
         {
-            if (current_game.free_space_dynamic){
-                    current_game.free_space_on=!current_game.free_space_on;
-            }
             update_main_board_num(current_game, 'preview_board', 0, '10px');
             var free_space_label = document.getElementById('free_space_label');
             free_space_label.innerHTML = 'Free Space is ' + (current_game.free_space_on ? 'On' : 'Off');
@@ -445,6 +652,7 @@
                 free_space_label.innerHTML = 'Free Space is ' + (current_game.free_space_on ? 'On' : 'Off');
                 free_space_label.addEventListener('click', function(event) {
                     event.stopPropagation();
+                    update_free_space();
                     updatePreviewBoards();
                 });
 
@@ -512,6 +720,7 @@
                 free_space_label.innerHTML = 'Free Space is ' + (current_game.free_space_on ? 'On' : 'Off');
                 free_space_label.addEventListener('click', function(event) {
                     event.stopPropagation();
+                    update_free_space();
                     updatePreviewBoards();
                 });
 
@@ -545,9 +754,23 @@
             var headerTextDiv = document.createElement('div');
             headerTextDiv.id = 'headerTextDiv';
 
+
+            const qrcode = document.createElement('div');
+            qrcode.id = 'qrcode';
+
+            const qrcode_text = document.createElement('p');
+            qrcode_text.id = 'qrcode_text';
+            qrcode_text.innerHTML = "Host not connected to server";
+
+            qrcode.append(qrcode_text);
+
+            const detailDiv = document.createElement('div');
+            detailDiv.id = 'detailDiv';
+            detailDiv.append(lastNumber);
+            detailDiv.append(extraInfo);
             var items = [
-                lastNumber,
-                extraInfo
+                detailDiv,
+                qrcode
             ]
 
             if( styleVariables.lastNumberDir === "top" ) {
@@ -597,14 +820,12 @@
                             this.style.backgroundColor = styleVariables.unselectedColor;
                             this.style.color = styleVariables.unselectedTextColor;
                             // Remove the number from the array
-                            var index = clickedNumbers.indexOf(number);
-                            if (index > -1) {
-                                clickedNumbers.splice(index, 1);
-                                numberTimes.splice(index, 1);
-                                clickedNumbersTable.removeChild(clickedNumbersTable.children[index]);
-                            }
+                            clickedNumbers.splice(index, 1);
+                            numberTimes.splice(index, 1);
+                            clickedNumbersTable.removeChild(clickedNumbersTable.children[index]);
 
                             document.getElementById('extraInfo').innerHTML = " ";
+                            deactivateNumber(this.innerHTML);
                         } else {
                             this.style.backgroundColor = styleVariables.selectedColor;
                             this.style.color = styleVariables.selectedTextColor;
@@ -630,6 +851,7 @@
                             else{
                                 document.getElementById('extraInfo').innerHTML = " ";
                             }
+                            activateNumber(this.innerHTML);
                         }
 
 
@@ -642,6 +864,7 @@
 
                         var numberRatio = document.getElementById('numberRatio');
                         numberRatio.innerHTML = clickedNumbers.length + "/75" + "(" + (75 - clickedNumbers.length) + " left)";
+
                     }
                     tr.appendChild(td);
                 }
@@ -665,6 +888,7 @@
             // Create a container for the clicked numbers
             var clickedNumbersDiv = document.createElement('div');
             clickedNumbersDiv.id = 'clickedNumbersDiv';
+
 
             var numberRatioDiv = document.createElement('div');
             numberRatioDiv.id = 'numberRatioDiv';
