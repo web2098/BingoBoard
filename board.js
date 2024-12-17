@@ -272,6 +272,7 @@ function createLargePreviewBoard()
         const div = document.getElementById('large_preview_div');
         div.hidden = true;
     });
+    large_preview_div.hidden = true;
 
     document.addEventListener('click', function(event) {
         const large_preview_div = document.getElementById('large_preview_div');

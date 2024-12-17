@@ -11,6 +11,8 @@
         var room_connection = null;
         let retryTime = 1000; // Initial retry time in milliseconds
         //var preview_index = 0;
+        let lastInnerWidth = window.innerWidth;
+        let lastInnerHeight = window.innerHeight;
 
         function hide_element_by_id(board_name)
         {
@@ -308,10 +310,6 @@
                 window.location.href = 'board.html';
             });
 
-            adjustTableFont("full_table");
-            adjustTableFont("full_table_0");
-            adjustTableFont("full_table_1")
-            adjustPreviewTables();
 
             var welcome_message = document.getElementById('welcome_message');
             welcome_message.innerHTML = getItemWithDefault('welcome-message');
