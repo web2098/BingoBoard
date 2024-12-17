@@ -1,0 +1,263 @@
+
+:root {
+    --main-bg-color: #FFFFFF;
+    --main-font-color: #000000;
+    --item-font-size: 45px;
+    --header-font-size: 45px;
+    --header-details-font-size: 25px;
+    --last-numbers-font-size: 25px;
+    --button-margin-top:30px;
+    --button-font-size: 25px;
+}
+
+body{
+    margin-bottom:10px;
+}
+
+#page_div{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+#header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:0;
+    margin:0;
+}
+#qrcode_text{
+    padding:0;
+    margin:0;
+}
+
+#game_board_view {
+    z-index: 1;
+    margin: 5;
+    margin-top: -10px;
+}
+
+#headerDiv {
+    padding: 0;
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    /*background-color: red; /* The Color*/
+}
+
+
+#topHeaderDiv {
+    display: flex;
+    justify-content: space-between;
+    height:100%;
+    /*background-color: red; /* The Color*/
+}
+
+#headerInfoDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items to the start of the container */
+    align-items: center; /* Center items horizontally */
+    height: 100%; /* Ensure the div takes up the full height */
+}
+
+#lastNumber {
+    user-select: none;
+    font-size: var(--header-font-size);  /* Adjust as needed */
+    font-weight: bold; /* Makes the text bold */
+    text-align: center; /* Centers the text */
+    margin: 0;
+}
+
+#numberRatio {
+    user-select: none;
+    font-size: 25px;  /* Adjust as needed */
+    text-align: center; /* Centers the text */
+    margin: 0;
+    margin-top: 10px; /* Add a single new line space between lastNumber and numberRatio */
+}
+
+#extraInfo {
+    user-select: none;
+    font-size: var(--header-details-font-size); /* Adjust as needed */
+    font-weight: bold; /* Makes the text bold */
+    text-align: center; /* Centers the text */
+    margin: 0;
+    margin-top: auto; /* Push extraInfo to the bottom */
+}
+
+
+#centerDiv {
+    display: flex;
+    height: 65%;
+    margin-top: 10px;
+}
+
+#lettersTable td{
+    border: none;
+    color: var(--main-font-color);
+    min-width: 5vw; /* minimum width */
+
+    font-size: var(--item-font-size); /* adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* to center the content */
+    user-select: none;
+}
+#numbersTable{
+    width: 90%;
+}
+#numbersTable td {
+    border: 2px solid black;
+
+    font-size: var(--item-font-size); /* adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* to center the content */
+    user-select: none;
+}
+
+#lastNumberCalled {
+    user-select: none;
+    text-decoration: underline;
+    color: var(--main-font-color);
+    font-size: var(--last-numbers-font-size); /* adjust as needed */
+}
+
+#clickedNumbersTableDiv{
+    overflow: auto;
+}
+#clickedNumbersTable {
+    display: flex;
+    flex-direction: column;
+    max-height: 90%; /* adjust as needed */
+    min-height: 90%; /* adjust as needed */
+    margin: 0 auto; /* Center the table */
+}
+#clickedNumbersTable td{
+    font-size: var(--last-numbers-font-size); /* adjust as needed */
+    border: none;
+    color: var(--main-font-color);
+}
+
+#preview_div{
+    display: flex;
+    flex-direction: column;
+}
+#preview_table_div{
+    display: flex;
+    justify-content: space-evenly;
+    height:75%;
+}
+#preview_board td{
+    border: 1px solid black;
+    min-width: 40px;
+    min-height: 40px;
+}
+#preview_board_2 td{
+    border: 1px solid black;
+    min-width: 40px;
+    min-height: 40px;
+}
+#transition_arrow{
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 70px;
+    font-size: 30px; /* adjust as needed */
+    user-select: none;
+}
+#optional_slash{
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 70px;
+    font-size: 30px; /* adjust as needed */
+    user-select: none;
+}
+#game_preview_name{
+    margin: 0;
+    font-weight: bold; /* makes the text bold */
+    text-align: center;
+    font-size: 20px;
+}
+#free_space_label{
+    margin: 0;
+    font-weight: bold; /* makes the text bold */
+    text-align: center;
+    user-select: none;
+    text-decoration: underline;
+    font-size: 20px;
+}
+
+#large_preview_div {
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    z-index: 2;
+    border: 4px solid black;
+    background-color: white;
+    width: 90%;
+    height: 80%;
+    overflow: auto;
+}
+#large_game_preview_name{
+    user-select: none;
+    font-weight: bold;
+    text-align: center;
+    margin:0;
+    font-size: 60px;
+}
+#large_preview_table_div{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 75%;
+}
+#large_preview_board td{
+    border: 1px solid black;
+    width: 100px;
+    font-size: 40px;
+}
+#large_preview_board_2 td{
+    border: 1px solid black;
+    width: 100px;
+    font-size: 40px;
+}
+#large_transition_arrow{
+    margin: 0;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 25vh;
+    font-size: 30px; /* adjust as needed */
+    user-select: none;
+}
+#large_optional_slash{
+    margin: 0;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 25vh;
+    font-size: 60px; /* adjust as needed */
+    user-select: none;
+}
+
+#large_free_space_label{
+    user-select: none;
+    font-weight: bold;
+    text-align: center;
+    margin:0;
+    font-size: 60px;
+}
+
+
+#footerDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%; /* adjust as needed */
+    margin-left: 25%;
+    margin-top: 10px;
+}
+button {
+    font-size: var(--button-font-size); /* adjust as needed */
+}

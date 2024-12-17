@@ -1,0 +1,152 @@
+body {
+    overflow: hidden;
+    margin:0;
+}
+
+table {
+    user-select: none;
+}
+#page_div {
+    position: absolute;
+    top: 0;
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#left_div{
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 100%;
+}
+
+#game_info{
+    display: flex;
+    justify-content: space-between;
+    padding-right: 20%;
+    padding-left: 20%;
+    user-select: none;
+}
+
+#full_view{
+    display: flex; /* Enable Flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    width: 100%;
+    height: 65%;
+}
+#swiper {
+    overflow: hidden;
+    width: 100%;
+    height: 20%;
+}
+#button_container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+}
+
+
+#right_div{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    height: 100%;
+    user-select: none;
+}
+
+#welcome_view{
+    display: flex; /* Enable Flexbox */
+    flex-direction: column;
+    align-items: center; /* Add this line */
+    height: 100%;
+    width: 100%;
+}
+#welcome_message{
+    font-size: 3vw; /* Adjust as needed */
+    height: 40%;
+    margin: 0;
+}
+#game_rules{
+    font-size: 2.0vw; /* Adjust as needed */
+    height: auto;
+    margin: 0;
+}
+
+#qrcode {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    margin: 0;
+}
+#qrcode_text
+{
+    margin: 0;
+}
+
+#free_space_message{
+    display: flex; /* Enable Flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    font-size: 2vw; /* Adjust as needed */
+    margin-bottom: 0;
+    margin-top: 0;
+}
+#game_name{
+    display: flex; /* Enable Flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    font-size: 3vw; /* Adjust as needed */
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.multi_table_operator{
+    margin-left: 15px;
+}
+#full_table td{
+    min-width:  10vw;
+    max-width:  10vw;
+    min-height: 10vw;
+    max-height: 10vw;
+    font-size: 10vh; /* Adjust as needed */
+    border: 1px solid black; /* Adjust as needed */
+}
+/* Games require pattern on both boards */
+.full_table_multi{
+    margin-left: 20px;
+}
+.full_table_multi td{
+    font-size: 6vh; /* Adjust as needed */
+    min-width:  5vw;
+    max-width:  5vw;
+    min-height: 5vw;
+    max-height: 5vw;
+    border: 1px solid black; /* Adjust as needed */
+}
+
+#preview_table td{
+    border: 1px solid black; /* Adjust as needed */
+
+    min-width:  1vw;
+    max-width:  1vw;
+    min-height: 1vw;
+    max-height: 1vw;
+    font-size: 1.7vh; /* Adjust as needed */
+}
+
+#back_button {
+    margin-left: 10px;
+    font-size: 40px;
+}
+
+#next_button {
+    margin-right: 10px;
+    font-size: 40px;
+}
+
+#play_game {
+    font-size: 40px;
+}
