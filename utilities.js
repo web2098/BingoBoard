@@ -29,6 +29,11 @@ function setDefaultSettings(force) {
     setDefaultItem('game-order', 'default', force);
     setDefaultItem('welcome-message', 'BINGO FREE TO PLAY! 2 CARDS PER PERSON START TIME - 6:30<br> Bingo Word: BAHHH!', force);
     setDefaultItem('special-numbers', JSON.stringify(defaultSpecialNumbers()), force);
+    setDefaultItem('item-font-size', '75', force);
+    setDefaultItem('header-font-size', '75', force);
+    setDefaultItem('header-details-font-size', '25', force);
+    setDefaultItem('last-numbers-font-size', '25', force);
+    setDefaultItem('qrcode-size', '128', force);
 }
 
 

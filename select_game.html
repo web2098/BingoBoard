@@ -118,6 +118,15 @@
             overflow-x: hidden;
         }
 
+        #gradient_div {
+            width: 100%; /* Full width */
+            height: 25px; /* Adjust the height as needed */
+            background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); /* Full color gradient */
+            position: fixed; /* Fix the div at the bottom */
+            top: 0; /* Align to the bottom */
+            left: 0; /* Align to the left */
+            z-index: -1; /* Ensure it is on top of other elements */
+        }
     </style>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
@@ -198,28 +207,28 @@
 
         function adjustTableFont( tableId )
         {
-            var table = document.getElementById(tableId);
-            var cells = table.querySelectorAll('td');
-            console.log(cells.length);
-            var fontSize = adjustFontSizeToCell( cells[0] );
-            cells.forEach(function(cell) {
-                if( cell.innerHTML != 'FREE')
-                    cell.style.fontSize = fontSize + "px";
-            });
+            // var table = document.getElementById(tableId);
+            // var cells = table.querySelectorAll('td');
+            // console.log(cells.length);
+            // var fontSize = adjustFontSizeToCell( cells[0] );
+            // cells.forEach(function(cell) {
+            //     if( cell.innerHTML != 'FREE')
+            //         cell.style.fontSize = fontSize + "px";
+            // });
         }
         function adjustPreviewTables()
         {
-            var tables = document.getElementsByClassName('preview_table');
-            var cells = tables[0].querySelectorAll('td');
-            var fontSize = adjustFontSizeToCell( cells[0] );
-            for(const element of tables)
-            {
-                var cells = element.querySelectorAll('td');
-                cells.forEach(function(cell) {
-                    if( cell.innerHTML != 'FREE')
-                        cell.style.fontSize = fontSize + "px";
-                });
-            }
+            // var tables = document.getElementsByClassName('preview_table');
+            // var cells = tables[0].querySelectorAll('td');
+            // var fontSize = adjustFontSizeToCell( cells[0] );
+            // for(const element of tables)
+            // {
+            //     var cells = element.querySelectorAll('td');
+            //     cells.forEach(function(cell) {
+            //         if( cell.innerHTML != 'FREE')
+            //             cell.style.fontSize = fontSize + "px";
+            //     });
+            // }
 
         }
 
@@ -518,9 +527,8 @@
 </head>
 <body>
     <body>
-        <body>
-            <a href="settings.html">Settings</a>
-        </body>
+        <div id="gradient_div"></div>
+        <a href="settings.html">Settings</a>
         <div class="grid-container">
             <div id="game_name"></div>
             <p id="free_space_message">Free space is OFF</p>

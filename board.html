@@ -3,8 +3,8 @@
         :root {
             --main-bg-color: #FFFFFF;
             --main-font-color: #000000;
-            --item-font-size: 45px;
-            --header-font-size: 45px;
+            --item-font-size: 75px;
+            --header-font-size: 75px;
             --header-details-font-size: 25px;
             --last-numbers-font-size: 25px;
             --button-margin-top:30px;
@@ -297,6 +297,9 @@
             document.documentElement.style.setProperty('--main-bg-color', localStorage.getItem('main-bg-color'));
             document.documentElement.style.setProperty('--main-font-color', localStorage.getItem('main-font-color'));
             document.documentElement.style.setProperty('--item-font-size', localStorage.getItem('item-font-size'));
+            document.documentElement.style.setProperty('--header-font-size', localStorage.getItem('header-font-size'));
+            document.documentElement.style.setProperty('--header-details-font-size', localStorage.getItem('header-details-font-size'));
+            document.documentElement.style.setProperty('--last-numbers-font-size', localStorage.getItem('last-numbers-font-size'));
         }
 
         var current_game = undefined;
@@ -456,8 +459,8 @@
             element.visible = true;
             const qrcode = new QRCode(element, {
                 text: data,
-                width: 128,
-                height: 128,
+                width: getItemWithDefault("qrcode-size"),
+                height: getItemWithDefault("qrcode-size"),
                 colorDark : '#000',
                 colorLight : '#fff',
                 correctLevel : QRCode.CorrectLevel.H

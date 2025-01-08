@@ -131,6 +131,22 @@
             var bingo_server_auth = localStorage.getItem('bingo_server_auth');
             document.getElementById('bingo_server_auth').value = bingo_server_auth;
 
+            let font_sizes = [
+                "item-font-size",
+                "header-font-size",
+                "header-details-font-size",
+                "last-numbers-font-size",
+                "qrcode-size"
+            ];
+
+            for( const element of font_sizes ){
+                var ui = document.getElementById(element);
+                const value = getItemWithDefault(element);
+                ui.value = value;
+            }
+
+
+            var color_section = document.getElementById("color_section");
             for (const element of colorPickers) {
                 var colorPickerLabel = document.createElement('label');
                 colorPickerLabel.setAttribute('for', element.key);
@@ -156,9 +172,7 @@
                 newRow.appendChild(colorPickerLabel);
                 newRow.appendChild(colorPicker);
 
-                // Append the new row to the container
-                var container = document.getElementsByClassName('container')[0];
-                container.appendChild(newRow);
+                color_section.appendChild(newRow);
             }
 
             document.getElementById('applyButton').addEventListener('click', function() {
@@ -191,11 +205,18 @@
                     console.log('Setting', element.id, 'to', element.value);
                     localStorage.setItem(element.id, element.value);
                 }
-                window.location.href = localStorage.getItem('home-page')
+
+
+                for( const element of font_sizes ){
+                    var ui = document.getElementById(element);
+                    localStorage.setItem(element, ui.value);
+                }
+
+                //window.location.href = localStorage.getItem('home-page') + '.html'
             });
             document.getElementById('resetButton').addEventListener('click', function() {
                 setDefaultSettings(true)
-                window.location.href = localStorage.getItem('home-page')
+                window.location.href = localStorage.getItem('home-page') + '.html'
             });
             document.getElementById('resetFameButton').addEventListener('click', function() {
                 localStorage.removeItem('hallOfFame');
@@ -241,6 +262,28 @@
                     <option value="right">Right</option>
                     <option value="left">Left</option>
                 </select>
+            </div>
+            <div id="color_section">
+            </div>
+            <div>
+                <lable for="item-font-size" class="font-size-label">Item Font Size</lable>
+                <input type="number" id="item-font-size">
+            </div>
+            <div>
+                <lable for="header-font-size" class="font-size-label">Header Font Size</lable>
+                <input type="number" id="header-font-size">
+            </div>
+            <div>
+                <lable for="header-details-font-size" class="font-size-label">Header Details Font Size</lable>
+                <input type="number" id="header-details-font-size">
+            </div>
+            <div>
+                <lable for="last-numbers-font-size" class="font-size-label">Last Number Font Size</lable>
+                <input type="number" id="last-numbers-font-size">
+            </div>
+            <div>
+                <lable for="qrcode-size" class="font-size-label">Board Qrcode Size</lable>
+                <input type="number" id="qrcode-size">
             </div>
         </div>
         <div id="customizations">
