@@ -21,11 +21,41 @@
             max-width: 300px;
             margin-bottom: 10px;
         }
+
+        .spinner {
+            display: flex;
+            align-items: center;
+        }
+
+        .spinner button {
+            width: 3%;
+            height: 5%;
+            font-size: 100%;
+            background: #ddd;
+            border: none;
+            cursor: pointer;
+        }
+
+        .spinner input {
+            width: 10%;
+            text-align: center;
+            font-size: 100%;
+        }
     </style>
     <script src="utilities.js"></script>
     <script>
 
 
+
+        function increase() {
+            const input = document.getElementById("audience_interaction_timeout");
+            input.stepUp();
+        }
+
+        function decrease() {
+            const input = document.getElementById("audience_interaction_timeout");
+            input.stepDown();
+        }
         window.onload = function() {
 
             const selectElement = document.getElementById('special_numbers');
@@ -95,6 +125,45 @@
                     key: 'unselect-tab-text-color'
                 }
             ];
+
+            document.getElementById('audience_interaction_text').value = getItemWithDefault('clap-message');
+
+            const audience_interaction = document.getElementById('audience_interaction');
+            audience_interaction.onchange = function() {
+                let id = "clap-message";
+                if (document.getElementById('audience_interaction').value === "ghost") {
+                    id = "boo-message";
+                }
+                else if (document.getElementById('audience_interaction').value === "beer") {
+                    id = "beer-message";
+                }
+                else if (document.getElementById('audience_interaction').value === "party") {
+                    id = "party-message";
+                }
+                console.log("Changing audience interaction to: " + id);
+                document.getElementById('audience_interaction_text').value = getItemWithDefault(id);
+            }
+
+            //Monitor for any text changes in the audience interaction text box
+            document.getElementById('audience_interaction_text').addEventListener('input', function() {
+                let id = "clap-message";
+                if (document.getElementById('audience_interaction').value === "ghost") {
+                    id = "boo-message";
+                }
+                else if (document.getElementById('audience_interaction').value === "beer") {
+                    id = "beer-message";
+                }
+                else if (document.getElementById('audience_interaction').value === "party") {
+                    id = "party-message";
+                }
+                console.log("Changing audience interaction to: " + id);
+                localStorage.setItem(id, document.getElementById('audience_interaction_text').value);
+            });
+
+            document.getElementById('audience_interaction_timeout').value = getItemWithDefault('audience-message-timeout');
+            document.getElementById('audience_interaction_timeout').addEventListener('input', function() {
+                localStorage.setItem('audience-message-timeout', document.getElementById('audience_interaction_timeout').value);
+            });
 
             if( localStorage.getItem('last-number-on') === "true" ){
                 document.getElementById('last-number-enabled').checked = true;
@@ -202,6 +271,7 @@
                 localStorage.removeItem('full_game_history');
             });
         }
+
     </script>
 </head>
 
@@ -254,6 +324,24 @@
                 <select id="special_numbers">
                 </select>
                 <textarea id="special_number_text" rows="4" cols="50"></textarea>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+                <h2>Audience Interaction</h2>
+                <select id="audience_interaction">
+                    <option value="clap" id="clap_option" className="emoji-option">&#x1F44F;</option>
+                    <option value="ghost" id="ghost_option" className="emoji-option">&#x1F47B;</option>
+                    <option value="beer" id="beer_option" className="emoji-option">&#x1F37B;</option>
+                    <option value="party" id="party_option" className="emoji-option">&#x1F973;</option>
+                </select>
+                <textarea id="audience_interaction_text" rows="1" cols="50"></textarea>
+            </div>
+            <div>
+                <h2>Audience Interaction Timeout</h2>
+                <div class="spinner">
+                    <button onclick="decrease()">−</button>
+                    <input id="audience_interaction_timeout" type="number" min="1000" max="15000" step="1" value="10">
+                    <button onclick="increase()">+</button>
+                </div>
             </div>
             <div style="display: flex; flex-direction: column;">
                 <h4>Bingo Server URL</h4>
