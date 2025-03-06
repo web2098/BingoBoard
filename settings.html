@@ -175,6 +175,14 @@
             var lastDir = localStorage.getItem('last-number-dir');
             document.getElementById('last-direction').value = lastDir;
 
+            if( localStorage.getItem('to-the-death-graphic') === "true" ){
+                document.getElementById('ttd-enabled').checked = true;
+            }
+            else
+            {
+                document.getElementById('ttd-enabled').checked = false;
+            }
+
             if( localStorage.getItem('number-history-on') === "true" ){
                 document.getElementById('history-enabled').checked = true;
             }
@@ -240,6 +248,9 @@
                 localStorage.setItem('last-number-on', lastEnabled);
                 var lastEnabled = document.getElementById('history-enabled').checked;
                 localStorage.setItem('number-history-on', lastEnabled);
+
+                var ttdEnabled = document.getElementById('ttd-enabled').checked;
+                localStorage.setItem('to-the-death-graphic', ttdEnabled);
 
                 var defaultPage = document.getElementById('default-page').value;
                 localStorage.setItem('home-page', defaultPage);
@@ -311,6 +322,10 @@
                     <option value="right">Right</option>
                     <option value="left">Left</option>
                 </select>
+            </div>
+            <div class="row" id="ttddir">
+                <input type="checkbox" id="ttd-enabled" checked="true">
+                <label for="ttd-enabled">Enable Graph Battle Image</label>
             </div>
         </div>
         <div id="customizations">

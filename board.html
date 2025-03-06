@@ -324,7 +324,11 @@
             font-size: 200%;
             margin: 0px;
         }
-
+        #skull{
+            user-select: none;
+            font-size: 200%;
+            margin: 0px;
+        }
         .modal {
             display: none;
             position: fixed;
@@ -364,7 +368,15 @@
             border-radius: 5px;
             clip:auto;
         }
-
+        #death_msg {
+            color: red;
+            text-align: center;
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            font-size: 1000%;
+            transform: translate(-50%, -50%);
+        }
         .circle {
             background-color: yellow;
             border-radius: 50%;
@@ -673,6 +685,7 @@
         {
             //remove any existing circles
             const container = document.querySelector('.container');
+            container.style.display = 'block';
             //Find all children with className cicle
             const circles = container.querySelectorAll('.circle');
             circles.forEach(circle => {
@@ -759,6 +772,9 @@
             paragraph.style.fontSize = "1000%";
             //Clip
 
+            const death_msg = document.getElementById('death_msg');
+            death_msg.style.display = 'none';
+
             const rectangle = document.querySelector('.rectangle');
             //Clip in rectangle
             //remove any existing paragraphs
@@ -773,6 +789,8 @@
             //Show modal and start a 5 second timer to hide it
             const modal = document.querySelector('.modal');
             modal.style.display = 'block';
+            // Set background color to rgba(0,0,0,.8)
+            modal.style.backgroundColor = 'rgba(0,0,0,.8)';
 
             const value = getItemWithDefault('audience-message-timeout');
             const timeout = parseInt(value);
@@ -782,6 +800,39 @@
                 modal.style.display = 'none';
             }, timeout);
 
+        }
+
+        function showToTheDeath()
+        {
+            const container = document.querySelector('.container');
+            container.style.display = 'none';
+
+            const modal = document.querySelector('.modal');
+            modal.style.display = 'block';
+
+
+            const isGraphic = getItemWithDefault('to-the-death-graphic');
+            const death_msg = document.getElementById('death_msg');
+            if( isGraphic === 'true' )
+            {
+                modal.style.background = "no-repeat center/cover url('to_the_death.jpg')";
+                death_msg.style.display = 'none';
+            }
+            else
+            {
+                death_msg.style.display = 'block';
+                modal.style.background = 'black';
+            }
+
+
+            //Fully black
+            modal.style.backgroundColor = 'black';
+            function clickHandler(event) {
+                modal.style.display = 'none';
+                console.log("Hide modal");
+                document.removeEventListener('click', clickHandler);
+            }
+            document.addEventListener('click', clickHandler);
         }
 
         window.addEventListener('resize', updateRectangleSize);
@@ -1051,11 +1102,20 @@
                 event.stopPropagation();
                 showAudienceInteraction(getItemWithDefault('party-message'));
             });
+            // Add a skull crossbones emoji
+            const skull = document.createElement('p');
+            skull.id = 'skull';
+            skull.innerHTML = "&#x2620;";
+            skull.addEventListener('click', function(event) {
+                event.stopPropagation();
+                showToTheDeath();
+            });
 
             emoji_actions.append(clap);
             emoji_actions.append(ghost);
             emoji_actions.append(beer);
             emoji_actions.append(party);
+            emoji_actions.append(skull);
 
 
             headerDiv.appendChild(headerTextDiv);
@@ -1246,6 +1306,6 @@
         <div class="container">
             <div class="rectangle"></div>
         </div>
-
+        <p id="death_msg" class="death-text">To the Death!</p>
     </div>
 </body>

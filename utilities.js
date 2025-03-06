@@ -34,6 +34,7 @@ function setDefaultSettings(force) {
     setDefaultItem('beer-message', "Cheers", force);
     setDefaultItem('party-message', "Winner", force);
     setDefaultItem('audience-message-timeout', "3000", force);
+    setDefaultItem('to-the-death-graphic', "false", force);
 }
 
 
