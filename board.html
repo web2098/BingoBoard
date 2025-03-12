@@ -297,17 +297,19 @@
             height: 100%;
             /*background-color: blue; /* The Color*/
         }
-        #emjoi_actions{
+        #emoji_actions{
             user-select: none;
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             width: 10%;
             height: 100%;
+            gap: 10px; /* optional spacing */
         }
         #clap{
             user-select: none;
             font-size: 200%;
             margin: 0px;
+
         }
         #ghost{
             user-select: none;
@@ -834,6 +836,27 @@
             }
             document.addEventListener('click', clickHandler);
         }
+
+        //Add a listener so that
+        // - 1,a keys activate audiance interaction for applause
+        // - 2,b keys activate audiance interaction for booing
+        // - 3,d keys activate audiance interaction for drinking
+        // - 4,w keys activate audiance interaction for winner
+        // - 5,x keys activate audiance interaction for battle
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === '1' || event.key === 'a') {
+                showAudienceInteraction(getItemWithDefault('clap-message'));
+            } else if (event.key === '2' || event.key === 'b')  {
+                showAudienceInteraction(getItemWithDefault('boo-message'));
+            } else if (event.key === '3' || event.key === 'd') {
+                showAudienceInteraction(getItemWithDefault('beer-message'));
+            } else if (event.key === '4' || event.key === 'w') {
+                showAudienceInteraction(getItemWithDefault('party-message'));
+            } else if (event.key === '5' || event.key === 'x') {
+                showToTheDeath();
+            }
+        });
 
         window.addEventListener('resize', updateRectangleSize);
         window.onload = function() {
