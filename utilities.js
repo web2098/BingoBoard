@@ -29,6 +29,12 @@ function setDefaultSettings(force) {
     setDefaultItem('game-order', 'default', force);
     setDefaultItem('welcome-message', 'BINGO FREE TO PLAY! 2 CARDS PER PERSON START TIME - 6:30<br> Bingo Word: BAHHH!', force);
     setDefaultItem('special-numbers', JSON.stringify(defaultSpecialNumbers()), force);
+    setDefaultItem('clap-message', "Applause", force);
+    setDefaultItem('boo-message', "Boooooo", force);
+    setDefaultItem('beer-message', "Cheers", force);
+    setDefaultItem('party-message', "Winner", force);
+    setDefaultItem('audience-message-timeout', "3000", force);
+    setDefaultItem('to-the-death-graphic', "false", force);
 }
 
 
