@@ -40,6 +40,39 @@ body{
     /*background-color: red; /* The Color*/
 }
 
+#headerInfoDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#lastNumber{
+    /*background-color: blue; /* The Color*/
+
+    user-select: none;
+    font-size: var(--header-font-size);  /*adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* centers the text */
+    margin: 0;
+    margin-left: 20px;
+}
+#numberRatioDiv{
+    padding: 0;
+    user-select: none;
+    font-size: 20;  /*adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: right; /* centers the text */
+    margin-left: 10%;
+}
+
+#extraInfo{
+    /*background-color: green; /* The Color*/
+    margin: 0;
+    font-size: var(--header-details-font-size); /* adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* centers the text */
+}
+
 #centerDiv {
     display: flex;
 }

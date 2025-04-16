@@ -1,17 +1,13 @@
 
 var current_game = undefined;
 var free_space_on = true;
-var numberTimes = []
 
 var start_time = new Date().getTime();
 var room_connection = null;
-let retryTime = 1000; // Initial retry time in milliseconds
 
 ///// INIT
 async function init_view()
 {
-    getGameSettings();
-
     createLargePreviewBoard();
 
     const page_div = document.getElementById('game_board_view');
@@ -32,14 +28,4 @@ async function init_view()
     header_div.insertBefore(create_audience_interaction(), header_div.lastChild);
 
     room_connection = await connectToServerAsHost(onMessage);
-}
-
-async function getGameSettings()
-{
-    current_game = JSON.parse(getTemporaryItem('selected_game'))
-    if( current_game )
-    {
-        free_space_on = current_game.free_space_on
-    }
-
 }

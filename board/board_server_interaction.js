@@ -1,3 +1,5 @@
+let retryTime = 1000; // Initial retry time in milliseconds
+
 function onMessage(auth, data)
 {
     if( data.type == "id" )
@@ -83,7 +85,7 @@ function createStatus()
         type: "setup",
         data: {
             game: current_game.name,
-            free: free_space_on,
+            free: current_game.free_space_on,
             active: clickedNumbers
         },
         style: {

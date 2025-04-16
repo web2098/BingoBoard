@@ -1,3 +1,5 @@
+var numberTimes = [];
+
 function saveCurrentGame()
 {
     game = {
@@ -55,9 +57,11 @@ function enable_main_board_interaction()
         cells[i].addEventListener('click', function() {
             const id = parseInt(cells[i].id.substring(1));
             if (clickedNumbers.includes(cells[i].id)) {
+                numberTimes.splice(index, 1);
                 deactiviate_spot(id);
                 sendDeactivateNumber(id, clickedNumbers);
             } else {
+                numberTimes.unshift(new Date().getTime() - start_time);
                 activiate_spot(id);
                 sendActivateNumber(id, clickedNumbers);
             }

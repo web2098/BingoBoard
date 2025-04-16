@@ -66,12 +66,11 @@ function setup_board( msg )
     let extraInfo = document.getElementById('extraInfo');
     extraInfo.innerHTML = " ";
 
-    for(const element of msg.data.active.reverse())
+    for(const element of msg.data.active)
     {
         const id = element;
         activiate_spot(id);
     }
-
 }
 
 function update_style(msg)
