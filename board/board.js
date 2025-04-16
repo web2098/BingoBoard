@@ -1,6 +1,5 @@
 
 var current_game = undefined;
-var free_space_on = true;
 
 var start_time = new Date().getTime();
 var room_connection = null;
@@ -8,6 +7,8 @@ var room_connection = null;
 ///// INIT
 async function init_view()
 {
+    await getGameSettings();
+
     createLargePreviewBoard();
 
     const page_div = document.getElementById('game_board_view');
@@ -28,4 +29,9 @@ async function init_view()
     header_div.insertBefore(create_audience_interaction(), header_div.lastChild);
 
     room_connection = await connectToServerAsHost(onMessage);
+}
+
+async function getGameSettings()
+{
+    current_game = JSON.parse(getTemporaryItem('selected_game'))
 }
