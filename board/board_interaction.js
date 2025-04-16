@@ -57,7 +57,7 @@ function enable_main_board_interaction()
         cells[i].addEventListener('click', function() {
             const id = parseInt(cells[i].id.substring(1));
             if (clickedNumbers.includes(cells[i].id)) {
-                numberTimes.splice(numberTimes.find(id), 1);
+                numberTimes.splice(numberTimes.indexOf(id), 1);
                 deactiviate_spot(id);
                 sendDeactivateNumber(id, clickedNumbers);
             } else {
