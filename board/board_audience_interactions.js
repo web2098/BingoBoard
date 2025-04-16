@@ -1,0 +1,249 @@
+let prompt_timeout = null;
+function updateRectangleSize()
+{
+    //remove any existing circles
+    const container = document.querySelector('.container');
+    container.style.display = 'block';
+    //Find all children with className cicle
+    const circles = container.querySelectorAll('.circle');
+    circles.forEach(circle => {
+        circle.remove();
+    });
+
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    // const rectWidth = 960;
+    // const rectHeight = 216;
+    const rect = container.getBoundingClientRect();
+    const styles = window.getComputedStyle(container);
+
+    // Get border sizes
+    const borderTop = parseFloat(styles.borderTopWidth);
+    const borderBottom = parseFloat(styles.borderBottomWidth);
+    const borderLeft = parseFloat(styles.borderLeftWidth);
+    const borderRight = parseFloat(styles.borderRightWidth);
+
+    const rectWidth = rect.width;
+    const rectHeight = rect.height;
+    const circleSize = borderTop * .7; // radius of circles
+    const circleSpacing = circleSize  * 1.1; // Space between circles
+
+    function createCircle(x, y, delay) {
+        const circle = document.createElement('div');
+        circle.classList.add('circle');
+        circle.className = 'circle';
+        circle.style.left = `${x - (borderTop) + (borderTop - circleSize)/2}px`;
+        circle.style.top = `${y - (borderTop) + (borderTop - circleSize)/2}px`;
+        circle.style.width = `${circleSize}px`;
+        circle.style.height = `${circleSize}px`;
+        container.appendChild(circle);
+    }
+
+    let delayCounter = 0;
+    // Top Edge
+    //createCircle(0, 0, delayCounter * 0.1);
+    //createCircle(rectWidth - borderTop, 0, delayCounter * 0.1);
+    const distanceHorizonalBetween = rectWidth - 2 * borderTop;
+    const numHorizonalCircles = Math.floor(distanceHorizonalBetween / circleSpacing);
+    for (let i = 0; i < numHorizonalCircles; i++) {
+        const x = borderTop + i * circleSpacing;
+        createCircle(x, 0, delayCounter * 0.1);
+        delayCounter++;
+    }
+
+
+    //createCircle(0, rectHeight - borderTop, delayCounter * 0.1);
+    //createCircle(rectWidth - borderTop, rectHeight - borderTop, delayCounter * 0.1);
+    for (let i = 0; i < numHorizonalCircles; i++) {
+        const x = borderTop + i * circleSpacing;
+        createCircle(x, rectHeight - borderTop, delayCounter * 0.1);
+        delayCounter++;
+    }
+
+    const distanceVerticalBetween = rectHeight - 2 * borderTop;
+    const numVerticalCircles = Math.floor(distanceVerticalBetween / circleSpacing);
+    for (let i = 0; i < numVerticalCircles; i++) {
+        const y = borderTop + i * circleSpacing;
+        createCircle(0, y, delayCounter * 0.1);
+        delayCounter++;
+    }
+
+    for (let i = 0; i < numVerticalCircles; i++) {
+        const y = borderTop + i * circleSpacing;
+        createCircle(rectWidth - borderTop, y, delayCounter * 0.1);
+        delayCounter++;
+    }
+}
+
+function showAudienceInteraction(message)
+{
+    //If prompt_timeout is not null clear it and make it null
+    if( prompt_timeout !== null )
+    {
+        clearTimeout(prompt_timeout);
+        prompt_timeout = null;
+    }
+
+    const paragraph = document.createElement('p');
+    paragraph.className = 'blink-text';
+    paragraph.innerHTML = message;
+    paragraph.style.width = "100%";
+    paragraph.style.height = "100%";
+    //Center text vertical annd horizontally
+    paragraph.style.display = "flex";
+    paragraph.style.justifyContent = "center";
+    paragraph.style.alignItems = "center";
+    paragraph.style.fontSize = "1000%";
+    //Clip
+
+    const death_msg = document.getElementById('death_msg');
+    death_msg.style.display = 'none';
+
+    const rectangle = document.querySelector('.rectangle');
+    //Clip in rectangle
+    //remove any existing paragraphs
+    const paragraphs = rectangle.querySelectorAll('p');
+    paragraphs.forEach(paragraph => {
+        paragraph.remove();
+    });
+
+    //add paragraph to rectangle
+    rectangle.appendChild(paragraph);
+
+    //Show modal and start a 5 second timer to hide it
+    const modal = document.querySelector('.modal');
+    modal.style.display = 'block';
+    // Set background color to rgba(0,0,0,.8)
+    modal.style.background = "none";
+    modal.style.backgroundColor = 'rgba(0,0,0,.8)';
+
+    const value = getItemWithDefault('audience-message-timeout');
+    const timeout = parseInt(value);
+
+    updateRectangleSize();
+    prompt_timeout = setTimeout(() => {
+        modal.style.display = 'none';
+    }, timeout);
+
+}
+
+function showToTheDeath()
+{
+    //check if modal is already open
+    const modal = document.querySelector('.modal');
+    if( modal.style.display === 'block' )
+    {
+        //Hide the model
+        modal.style.display = 'none';
+        return;
+    }
+
+
+    const container = document.querySelector('.container');
+    container.style.display = 'none';
+    modal.style.display = 'block';
+
+
+    const isGraphic = getItemWithDefault('to-the-death-graphic');
+    const death_msg = document.getElementById('death_msg');
+    if( isGraphic === 'true' )
+    {
+        modal.style.background = "no-repeat center/cover url('to_the_death.jpg')";
+        death_msg.style.display = 'none';
+    }
+    else
+    {
+        death_msg.style.display = 'block';
+        modal.style.background = 'black';
+    }
+
+
+    //Fully black
+    modal.style.backgroundColor = 'black';
+    function clickHandler(event) {
+        modal.style.display = 'none';
+        console.log("Hide modal");
+        document.removeEventListener('click', clickHandler);
+    }
+    document.addEventListener('click', clickHandler);
+}
+
+
+function create_audience_interaction()
+{
+    document.addEventListener('keydown', function(event) {
+        if (event.key === '1' || event.key === 'a') {
+            showAudienceInteraction(getItemWithDefault('clap-message'));
+        } else if (event.key === '2' || event.key === 'b')  {
+            showAudienceInteraction(getItemWithDefault('boo-message'));
+        } else if (event.key === '3' || event.key === 'd') {
+            showAudienceInteraction(getItemWithDefault('beer-message'));
+        } else if (event.key === '4' || event.key === 'w') {
+            showAudienceInteraction(getItemWithDefault('party-message'));
+        } else if (event.key === '5' || event.key === 'x') {
+            showToTheDeath();
+        }
+    });
+
+    return create_audio_interaction_ui();
+}
+
+
+function create_audio_interaction_ui()
+{
+    const emoji_actions = document.createElement('emoji_actions');
+    emoji_actions.id = 'emoji_actions';
+
+    const clap = document.createElement('p');
+    clap.id = 'clap';
+    clap.innerHTML = "&#x1F44F;";
+
+    clap.addEventListener('click', function(event) {
+        event.stopPropagation();
+        showAudienceInteraction(getItemWithDefault('clap-message'));
+    });
+
+    // Add ghost and beer glass cheers
+    const ghost = document.createElement('p');
+    ghost.id = 'ghost';
+    ghost.innerHTML = "&#x1F47B;";
+
+    ghost.addEventListener('click', function(event) {
+        event.stopPropagation();
+        showAudienceInteraction(getItemWithDefault('boo-message'));
+    });
+
+    const beer = document.createElement('p');
+    beer.id = 'beer';
+    beer.innerHTML = "&#x1F37B;";
+    beer.addEventListener('click', function(event) {
+        event.stopPropagation();
+        showAudienceInteraction(getItemWithDefault('beer-message'));
+    });
+    // Add a party emoji
+    const party = document.createElement('p');
+    party.id = 'party';
+    party.innerHTML = "&#x1F973;";
+    party.addEventListener('click', function(event) {
+        event.stopPropagation();
+        showAudienceInteraction(getItemWithDefault('party-message'));
+    });
+    // Add a skull crossbones emoji
+    const skull = document.createElement('p');
+    skull.id = 'skull';
+    skull.innerHTML = "&#x2620;";
+    skull.addEventListener('click', function(event) {
+        event.stopPropagation();
+        showToTheDeath();
+    });
+
+    emoji_actions.append(clap);
+    emoji_actions.append(ghost);
+    emoji_actions.append(beer);
+    emoji_actions.append(party);
+    emoji_actions.append(skull);
+
+    return emoji_actions;
+}
+

@@ -52,6 +52,7 @@
             font-size: 2vw; /* Adjust as needed */
             margin-bottom: 0;
             margin-top: 2vh;
+            user-select: none;
         }
         #game_name{
             grid-column: 1 / span 1; /* Places these divs in the first column */
@@ -121,7 +122,6 @@
         #emoji_actions{
             user-select: none;
             margin-left: -10%;
-            padding-right: 10%;
         }
         #clap{
             user-select: none;
@@ -423,8 +423,6 @@
                 correctLevel : QRCode.CorrectLevel.H
             });
 
-            const qrcode_text = document.getElementById('qrcode_text');
-            qrcode_text.innerHTML = `Scan QR Code to join on your device`;
         }
 
         function retryConnection() {
@@ -610,7 +608,8 @@
             //adjustFontSizeToCell('game_cell');
             current_game = parseInt(getTemporaryItem('selected_game_index')) || 0;
             preview_index = parseInt(getTemporaryItem('selected_preview_index')) || 0;
-            console.log(preview_index);
+            console.log(`Preview Game: ${preview_index}`);
+            console.log(`Current Game: ${current_game}`);
 
             var games_preview = document.getElementById('games_preview');
 
@@ -798,6 +797,9 @@
                     current_game = find_game(game_name);
                     console.log('Table clicked ' + current_game);
                     selected_game = game_s[current_game];
+
+                    setTemporaryItem('selected_game_index', current_game);
+                    setTemporaryItem('selected_preview_index', preview_index);
                     update_main_board();
                 });
                 div.className = 'swiper-slide';
@@ -831,7 +833,6 @@
              <div id="welcome_view">
                 <p id="welcome_message"></p>
                 <div id="qrcode">
-                    <p id="qrcode_text"></p>
                 </div>
                 <p id="game_rules">Rules of the game....</p>
             </div>

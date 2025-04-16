@@ -1,29 +1,6 @@
 
-let ws = null;
-let clickedNumbers = []; // Array to store the clicked numbers
-let current_game = null;
-let specialNumbers = null;
-let welcomeMessage = null;
-let retryTime = 1000; // Initial retry time in milliseconds
-let server_url = null;
-
-let wakeLock = null;
-
-async function requestWakeLock() {
-    try {
-        wakeLock = await navigator.wakeLock.request('screen');
-        console.log('Screen Wake Lock is active');
-
-        wakeLock.addEventListener('release', () => {
-            console.log('Screen Wake Lock released');
-        });
-    } catch (err) {
-        report_error('Wake Lock not supported ' + err.name + ', ' + err.message);
-        console.error(`${err.name}, ${err.message}`);
-    }
-}
-
-
+var clickedNumbers = []; // Array to store the clicked numbers
+let specialNumbers = null; // Object to store special numbers and their meanings
 // Load all defaults from local storage, but will be overriden by the host of the room
 let styleVariables = {
     selectedColor: getItemWithDefault('select-tab-color'), //CSU Green
@@ -36,240 +13,14 @@ let styleVariables = {
     lastDirectionOn: localStorage.getItem('last-number-on') // 'true' or 'false'
 };
 
-async function init_view()
+function find_td( id )
 {
-    createLargePreviewBoard();
-
-    function getQueryParams() {
-        const params = new URLSearchParams(window.location.search);
-        return {
-            server_url: params.get('server_url')
-        };
-    }
-    const queryParams = getQueryParams();
-
-    // Get Server URL from session storage
-    server_url = queryParams.server_url;
-    if( server_url == null )
-    {
-        report_error("No Valid server url is currently set, did you scan the QR code?");
-        return;
-    }
-    server_url = atob(server_url);
-
-    const page_div = document.getElementById('game_board_view');
-    const header_div = createHeaderDiv();
-    const center_div = createCenterDiv();
-    const footer_div = createFooterDiv();
-    const layout = [header_div, center_div, footer_div];
-    for (const element of layout) {
-        page_div.appendChild(element)
-    }
-
-
-    const server_url_b64 = btoa(server_url);
-    const data = `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}?server_url=${server_url_b64}`;
-    let element = document.getElementById('qrcode');
-    element.visible = true;
-    const qrcode = new QRCode(element, {
-        text: data,
-        width: 128,
-        height: 128,
-        colorDark : '#000',
-        colorLight : '#fff',
-        correctLevel : QRCode.CorrectLevel.H
-      });
-
-    connectToServer();
-
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden && wakeLock) {
-            wakeLock.release();
-            wakeLock = null;
-            console.log('Wake Lock released due to visibility change');
-        }
-    });
-
-
-    await requestWakeLock();
+    return document.getElementById(id);
 }
 
-function connectToServer()
+function set_special_numbers( numbers )
 {
-    const element = document.getElementById('qrcode');
-    element.visible = false;
-    set_status("Connecting to remote server...");
-    console.log("Attempting to connect to server...");
-    ws = new WebSocket(server_url);
-    ws.onopen = function() {
-        set_status("Connected to remote server, getting id...");
-        console.log('Connected to remote server');
-        const id_message = {
-            type: "request_id",
-        }
-        ws.send(JSON.stringify(id_message));
-    }
-    ws.onmessage = function (event) {
-        const msg = JSON.parse(event.data);
-        if( msg.type == "id" )
-        {
-            set_status("Connected to remote server as " + msg.conn_id);
-            sessionStorage.setItem("server_client_id", msg.conn_id);
-            requestUpdate();
-        }
-        else if( msg.type == "error" )
-        {
-            report_error(msg.message);
-        }
-        else
-        {
-            update_view(msg);
-        }
-    }
-    ws.onerror = function(event) {
-        report_error(`Failed to connect to server: ${event.message}`);
-        retryConnection();
-    }
-    ws.onclose = function(event) {
-        report_error("Connection to server closed");
-        set_status("Not connected to remote server");
-        retryConnection();
-    }
-}
-
-function retryConnection() {
-    let element = document.getElementById('qrcode');
-    element.visible = false;
-    console.log(`Retrying connection in ${retryTime / 1000} seconds...`);
-    setTimeout(() => {
-        if (retryTime < 30000) {
-            retryTime *= 2; // Double the retry time
-        }
-        connectToServer();
-    }, retryTime);
-}
-
-function requestUpdate()
-{
-    id = sessionStorage.getItem("server_client_id");
-    const update_request = {
-        type: "update",
-        client_id: id,
-    }
-    ws.send(JSON.stringify(update_request));
-}
-
-function update_view( msg )
-{
-    if( msg.type === "setup" )
-    {
-        setup_board(msg);
-    }
-    else if ( msg.type === "update_free")
-    {
-        update_free(msg.free);
-    }
-    else if ( msg.type === "activate")
-    {
-        activiate_spot(msg.id);
-        if( msg.spots != clickedNumbers.length )
-        {
-            requestUpdate();
-        }
-    }
-    else if ( msg.type === "deactivate")
-    {
-        deactiviate_spot(msg.id);
-        if( msg.spots != clickedNumbers.length )
-        {
-            requestUpdate();
-        }
-    }
-    else{
-        report_error("Unknown message type: " + msg.type);
-    }
-}
-
-function report_error( msg )
-{
-    console.log(msg);
-    const error_view = document.getElementById("error_message");
-    error_view.innerHTML = msg;
-}
-
-function set_status( msg )
-{
-    document.getElementById("server_status").innerHTML = msg;
-}
-
-function setup_board( msg )
-{
-    update_style(msg);
-    update_session(msg);
-
-    current_game = find_game_by_name(msg.data.game);
-    current_game.free_space_on = msg.data.free;
-    if( current_game == null )
-    {
-        report_error("Game not found: " + msg.data.game);
-        return;
-    }
-
-    while( clickedNumbers.length > 0)
-    {
-        const id = parseInt(clickedNumbers[0].substring(1));
-        deactiviate_spot(id);
-    }
-    clickedNumbers = [];
-
-    const game_name = document.getElementById('game_preview_name');
-    game_name.innerHTML = current_game.name;
-    const large_game_name = document.getElementById('large_game_preview_name');
-    large_game_name.innerHTML = current_game.name;
-    const free_space = document.getElementById('free_space_label');
-    free_space.innerHTML = 'Free Space is ' + (current_game.free_space_on? 'On' : 'Off');
-    const large_free_space = document.getElementById('large_free_space_label');
-    large_free_space.innerHTML = 'Free Space is ' + (current_game.free_space_on? 'On' : 'Off');
-    update_preview_boards(current_game);
-
-    let extraInfo = document.getElementById('extraInfo');
-    extraInfo.innerHTML = " ";
-
-    for(const element of msg.data.active.reverse())
-    {
-        const id = element;
-        activiate_spot(id);
-    }
-
-}
-function update_style(msg)
-{
-    try
-    {
-        const style = msg.style;
-        styleVariables.selectedColor = style.selectedColor;
-        styleVariables.selectedTextColor = style.selectedTextColor;
-        styleVariables.unselectedColor = style.unselectedColor;
-        styleVariables.unselectedTextColor = style.unselectedTextColor;
-    }
-    catch(e)
-    {
-        console.log(`Failed to apply style: ${e}`);
-    }
-}
-
-function update_session(msg)
-{
-    try
-    {
-        const session = msg.session;
-        specialNumbers = session.numbers;
-        welcomeMessage = session.welcome;
-    }
-    catch(e)
-    {
-        console.log(`Failed to apply session info: ${e}`);
-    }
+    specialNumbers = numbers;
 }
 
 function update_free( free )
@@ -285,6 +36,16 @@ function update_free( free )
 
 function update_preview_boards(game)
 {
+    //Update the large preview
+    const game_name = document.getElementById('game_preview_name');
+    game_name.innerHTML = current_game.name;
+    const large_game_name = document.getElementById('large_game_preview_name');
+    large_game_name.innerHTML = current_game.name;
+    const free_space = document.getElementById('free_space_label');
+    free_space.innerHTML = 'Free Space is ' + (current_game.free_space_on? 'On' : 'Off');
+    const large_free_space = document.getElementById('large_free_space_label');
+    large_free_space.innerHTML = 'Free Space is ' + (current_game.free_space_on? 'On' : 'Off');
+
     //Loop through entries in table and determine if they need to be updated
     update_preview_board(game, document.getElementById('preview_board'), 0);
     update_preview_board(game, document.getElementById('large_preview_board'), 0);
@@ -313,7 +74,6 @@ function update_preview_boards(game)
             large_slash.hidden = false;
         }
     }
-
 }
 
 function update_preview_board(game, board, board_id)
@@ -343,18 +103,9 @@ function update_preview_board(game, board, board_id)
     }
 }
 
-function find_td( id )
-{
-    return document.getElementById(id);
-}
-
 function activiate_spot( id )
 {
-    const letters = ['B', 'I', 'N', 'G', 'O'];
-    id = id.replace(/[A-Z]/, '');
-    id = parseInt(id);
-    const letter = letters[Math.floor((id - 1)/15)];
-    const number = letter + id;
+    const number = get_spot_id(id);
 
     const index = clickedNumbers.indexOf(number);
     if( index == -1 )
@@ -375,15 +126,11 @@ function activiate_spot( id )
         clickedNumbersTable.insertBefore(tr, clickedNumbersTable.firstChild);
         update_last_number();
     }
-
 }
 
 function deactiviate_spot( id )
 {
-    const letters = ['B', 'I', 'N', 'G', 'O'];
-    id = parseInt(id);
-    const letter = letters[Math.floor((id - 1)/15)];
-    const number = letter + id;
+    const number = get_spot_id(id);
     const index = clickedNumbers.indexOf(number);
     if( index > -1 )
     {
@@ -416,42 +163,28 @@ function update_last_number()
     else
     {
         lastNumber.innerHTML = "Waiting for first number";
+        document.getElementById('extraInfo').innerHTML = " ";
     }
 
 
     var numberRatio = document.getElementById('numberRatio');
     numberRatio.innerHTML = clickedNumbers.length + "/75" + "(" + (75 - clickedNumbers.length) + " left)";
-
-
 }
+
 
 function createHeaderDiv()
 {
-    const headerDiv = document.createElement('div');
-    headerDiv.id = 'headerDiv';
-
     const topHeaderDiv = document.createElement('div');
     topHeaderDiv.id = 'topHeaderDiv';
 
     const headerInfoDiv = document.createElement('div');
     headerInfoDiv.id = 'headerInfoDiv';
-    const lastNumber = document.createElement('p');
-    lastNumber.id = 'lastNumber';
-    lastNumber.innerHTML = "Waiting for game from server";
 
     const qrcode = document.createElement('div');
     qrcode.id = 'qrcode';
 
-    const numberRatioDiv = document.createElement('div');
-    numberRatioDiv.id = 'numberRatioDiv';
-    numberRatioDiv.appendChild(qrcode);
 
-    const numberRatio = document.createElement('p');
-    numberRatio.innerHTML = '0/75 (75 left)';
-    numberRatio.id = 'numberRatio';
-    numberRatioDiv.appendChild(numberRatio);
-
-    const previewBoard = createPreviewBoard("");
+    const previewBoard = createPreviewBoard("", '50%');
     previewBoard.addEventListener('click', function(event) {
         const div = document.getElementById('large_preview_div');
         div.hidden = !div.hidden;
@@ -459,27 +192,29 @@ function createHeaderDiv()
 
     topHeaderDiv.appendChild(previewBoard);
     topHeaderDiv.appendChild(headerInfoDiv);
-    topHeaderDiv.appendChild(numberRatioDiv);
+    topHeaderDiv.appendChild(qrcode);
 
     // Create paragraph to display the last clicked number
+    const lastNumber = document.createElement('p');
+    lastNumber.id = 'lastNumber';
+    lastNumber.innerHTML = "Waiting for game from server";
+
+    const numberRatioDiv = document.createElement('div');
+    numberRatioDiv.id = 'numberRatioDiv';
+
+    const numberRatio = document.createElement('p');
+    numberRatio.innerHTML = '0/75 (75 left)';
+    numberRatio.id = 'numberRatio';
+    numberRatioDiv.appendChild(numberRatio);
+
     const extraInfo = document.createElement('p');
     extraInfo.id = 'extraInfo';
     extraInfo.innerHTML = "";
     headerInfoDiv.appendChild(lastNumber);
+    headerInfoDiv.appendChild(numberRatioDiv);
     headerInfoDiv.appendChild(extraInfo);
 
-
-
-    const items = [
-        topHeaderDiv
-    ]
-
-    for (const element of items) {
-        headerDiv.appendChild(element);
-    }
-
-
-    return headerDiv;
+    return topHeaderDiv;
 }
 function createCenterDiv()
 {
@@ -544,7 +279,7 @@ function createFooterDiv()
 }
 
 
-function createPreviewBoard(ident)
+function createPreviewBoard(ident, freeSize)
 {
     let preview = document.getElementById(ident + 'preview_div');
     if( preview == null )
@@ -555,7 +290,7 @@ function createPreviewBoard(ident)
 
     const preview_table_div = document.createElement('div');
     preview_table_div.id = ident + 'preview_table_div';
-    const table = create_table(document, ident + 'preview_board', Survivor(), '10px' );
+    const table = create_table(document, ident + 'preview_board', Survivor(), freeSize );
     table.hidden = true;
 
     const arrow = document.createElement('p');
@@ -569,7 +304,7 @@ function createPreviewBoard(ident)
     slash.innerHTML = '&#x2215;';
     slash.hidden = true;
 
-    const table2 = create_table(document, ident + 'preview_board_2', Survivor(), '10px', 1 );
+    const table2 = create_table(document, ident + 'preview_board_2', Survivor(), freeSize, 1 );
     table2.hidden = true;
 
     preview_table_div.appendChild(table);
@@ -593,7 +328,7 @@ function createPreviewBoard(ident)
 
 function createLargePreviewBoard()
 {
-    const large_preview_div = createPreviewBoard("large_");
+    const large_preview_div = createPreviewBoard("large_", '200%');
     large_preview_div.addEventListener('click', function(event) {
         const div = document.getElementById('large_preview_div');
         div.hidden = true;
@@ -610,4 +345,35 @@ function createLargePreviewBoard()
             event.stopPropagation();
         }
     }, true);
+}
+
+function update_last_number_called( msg )
+{
+    document.getElementById('lastNumber').innerHTML = msg;
+}
+
+function report_error( msg )
+{
+    const toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        console.error(msg);
+        return;
+    }
+    const toast = document.createElement('div');
+    toast.className ='toast-error';
+    toast.textContent = msg;
+
+    // Append toast to the container
+    toastContainer.appendChild(toast);
+
+    // Show the toast with animation
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    // Automatically remove toast after 10 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 500); // Wait for animation to complete
+    }, 10000);
 }

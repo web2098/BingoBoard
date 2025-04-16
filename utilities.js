@@ -57,4 +57,3 @@ function setTemporaryItem(key, value) {
 function getTemporaryItem(key) {
     return sessionStorage.getItem(key);
 }
-
