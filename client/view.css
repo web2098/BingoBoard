@@ -33,6 +33,9 @@ body{
     /*background-color: red; /* The Color*/
 }
 
+#lastNumber {
+    font-size: 300%; /* adjust as needed */
+}
 
 #topHeaderDiv {
     display: flex;
