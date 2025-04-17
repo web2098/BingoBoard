@@ -6,6 +6,9 @@
     height: 20%;
     overflow: hidden; /* Enable vertical scrolling */
 }
+#qrcode{
+    margin-right:60px;
+}
 
 
 /* Center Styles */
