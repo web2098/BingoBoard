@@ -271,11 +271,11 @@
                     console.log('Setting', element.id, 'to', element.value);
                     localStorage.setItem(element.id, element.value);
                 }
-                window.location.href = localStorage.getItem('home-page')
+                window.location.href = `${localStorage.getItem('home-page')}.html`
             });
             document.getElementById('resetButton').addEventListener('click', function() {
                 setDefaultSettings(true)
-                window.location.href = localStorage.getItem('home-page')
+                window.location.href = `${localStorage.getItem('home-page')}.html`
             });
             document.getElementById('resetFameButton').addEventListener('click', function() {
                 localStorage.removeItem('hallOfFame');

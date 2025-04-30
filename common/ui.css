@@ -2,13 +2,13 @@
 :root {
     --main-bg-color: #FFFFFF;
     --main-font-color: #000000;
-    --item-font-size: 60px;
-    --header-font-size: 80px;
-    --header-details-font-size: 50px;
-    --last-number-header-font-size: 30px;
-    --last-numbers-font-size: 50px;
-    --button-margin-top:30px;
-    --button-font-size: 25px;
+    --item-font-size: 3vw;
+    --header-font-size: 3vw;
+    --header-details-font-size: 2vw;
+    --last-number-header-font-size: 1.5vw;
+    --last-numbers-font-size: 2vw;
+    --button-margin-top: 10px;
+    --button-font-size: 1.25vw;
 }
 
 body{
@@ -48,7 +48,7 @@ body{
 #lastNumber{
     /*background-color: blue; /* The Color*/
     user-select: none;
-    font-size: 400%;  /*adjust as needed */
+    font-size:  var(--header-font-size);  /*adjust as needed */
     font-weight: bold; /* makes the text bold */
     text-align: center; /* centers the text */
     margin: 0;
@@ -71,7 +71,6 @@ body{
     font-size: var(--header-details-font-size); /* adjust as needed */
     font-weight: bold; /* makes the text bold */
     text-align: center; /* centers the text */
-    margin-top: 4%;
 }
 
 #centerDiv {
@@ -126,7 +125,7 @@ body{
 }
 
 #game_preview_name{
-    font-size: 200%;
+    font-size: 1vw;
 }
 
 #preview_div{
@@ -149,10 +148,6 @@ body{
 }
 #preview_board_2 td{
     border: 1px solid black;
-    min-width: 25px;
-    max-width:  25px;
-    min-height: 20px;
-    max-height: 20px;
 }
 #transition_arrow{
     margin: 0;
@@ -181,7 +176,7 @@ body{
     text-align: center;
     user-select: none;
     text-decoration: underline;
-    font-size: 200%;
+    font-size: 1.5vw;
 }
 
 #large_preview_div {
@@ -200,7 +195,7 @@ body{
     font-weight: bold;
     text-align: center;
     margin:0;
-    font-size:300%;
+    font-size:3vw;
 }
 #large_preview_table_div{
     display: flex;
@@ -215,7 +210,7 @@ body{
 #large_preview_board td{
     border: 1px solid black;
     width: 50px;
-    font-size: 500%;
+    font-size: 4vw;
 }
 #large_preview_board_2{
     flex-grow:1;
@@ -224,7 +219,7 @@ body{
 #large_preview_board_2 td{
     border: 1px solid black;
     width: 50px;
-    font-size: 500%;
+    font-size: 4vw;
 }
 #large_transition_arrow{
     margin: 0;
@@ -248,7 +243,7 @@ body{
     font-weight: bold;
     text-align: center;
     margin:0;
-    font-size:300%;
+    font-size:3vw;
 }
 
 

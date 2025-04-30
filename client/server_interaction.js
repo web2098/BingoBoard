@@ -66,6 +66,12 @@ function setup_board( msg )
     let extraInfo = document.getElementById('extraInfo');
     extraInfo.innerHTML = " ";
 
+    if( msg.data.active[0] != msg.data.lastNumber)
+    {
+        //reverse msg.data.active
+        msg.data.active.reverse();
+    }
+
     for(const element of msg.data.active)
     {
         const id = element;

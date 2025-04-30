@@ -86,7 +86,8 @@ function createStatus()
         data: {
             game: current_game.name,
             free: current_game.free_space_on,
-            active: clickedNumbers
+            active: clickedNumbers,
+            lastNumber: clickedNumbers[0]
         },
         style: {
             selectedColor: styleVariables.selectedColor,
