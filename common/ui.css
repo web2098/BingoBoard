@@ -52,7 +52,6 @@ body{
     font-weight: bold; /* makes the text bold */
     text-align: center; /* centers the text */
     margin: 0;
-    margin-left: 20px;
 }
 #numberRatioDiv{
     padding: 0;
@@ -133,7 +132,7 @@ body{
     flex-direction: column;
     width: 20%;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
 }
 #preview_table_div{
     display: flex;
