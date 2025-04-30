@@ -65,7 +65,30 @@ function enable_main_board_interaction()
                 activiate_spot(id);
                 sendActivateNumber(id, clickedNumbers);
             }
+            setTemporaryItem('clickedNumbers', JSON.stringify(clickedNumbers));
+            setTemporaryItem('numberTimes', JSON.stringify(numberTimes));
         });
+    }
+
+    numbers = JSON.parse(sessionStorage.getItem('clickedNumbers'));
+    console.log("Clicked numbers: ", numbers);
+
+    if( numbers != null)
+    {
+        numbers.reverse();
+        for (const element of numbers) {
+            const id = parseInt(element.substring(1));
+            activiate_spot(id);
+        }
+    }
+
+    times = JSON.parse(sessionStorage.getItem('numberTimes'));
+    console.log("Clicked times: ", times);
+    if( times != null)
+    {
+        for (const element of times) {
+            numberTimes.unshift(element);
+        }
     }
 
     enable_free_space_interaction();
@@ -79,6 +102,8 @@ function enable_free_space_interaction()
             current_game.free_space_on=!current_game.free_space_on;
             update_free(current_game.free_space_on);
             send_update_free_space();
+
+            setTemporaryItem('selected_game', JSON.stringify(current_game));
         }
     });
 }
