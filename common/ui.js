@@ -184,7 +184,7 @@ function createHeaderDiv()
     qrcode.id = 'qrcode';
 
 
-    const previewBoard = createPreviewBoard("", '.4vw');
+    const previewBoard = createPreviewBoard("", '50%');
     previewBoard.addEventListener('click', function(event) {
         const div = document.getElementById('large_preview_div');
         div.hidden = !div.hidden;
