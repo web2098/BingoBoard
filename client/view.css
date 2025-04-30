@@ -43,6 +43,9 @@ body{
     /*background-color: red; /* The Color*/
 }
 
+#preview_div{
+    width: 30%;
+}
 #centerDiv {
     display: flex;
 }
