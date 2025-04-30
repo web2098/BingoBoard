@@ -377,3 +377,30 @@ function report_error( msg )
         setTimeout(() => toast.remove(), 500); // Wait for animation to complete
     }, 10000);
 }
+
+
+function report_message( msg )
+{
+    const toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        console.error(msg);
+        return;
+    }
+    const toast = document.createElement('div');
+    toast.className ='toast-error';
+    toast.textContent = msg;
+
+    // Append toast to the container
+    toastContainer.appendChild(toast);
+
+    // Show the toast with animation
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    // Automatically remove toast after 10 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 500); // Wait for animation to complete
+    }, 10000);
+}

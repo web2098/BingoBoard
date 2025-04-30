@@ -1,4 +1,5 @@
 var numberTimes = [];
+var hotfix_22_selection = null;
 
 function saveCurrentGame()
 {
@@ -26,7 +27,10 @@ function onReset()
         // Clear the array
         clickedNumbers = [];
         numberTimes = [];
+        setTemporaryItem('clickedNumbers', JSON.stringify(clickedNumbers));
+        setTemporaryItem('numberTimes', JSON.stringify(numberTimes));
     }
+    sessionStorage.clear('hot-fix-22-selection');
 
     if( getItemWithDefault('home-page') == 'select_game'){
         window.location.href = 'select_game.html';
@@ -49,8 +53,33 @@ function onReset()
     }
 }
 
+function showHotFixMessage(index)
+{
+    if( hotfix_22_selection != null && hotfix_22_selection == index )
+    {
+        report_message("Hotfix 22: Play 22 NOW!");
+    }
+}
+
 function enable_main_board_interaction()
 {
+    hotfix_22_selection = null;
+    const enable_hotfix_22 = getItemWithDefault('hot-fix-22-enabled', 'false') == 'true';
+    if( enable_hotfix_22 )
+    {
+        console.log("Hotfix 22 enabled: " + getTemporaryItem('hot-fix-22-selection', null));
+        if( getTemporaryItem('hot-fix-22-selection', null) != null ){
+            console.log("Hotfix 22 selection found in local storage");
+            hotfix_22_selection = JSON.parse(getTemporaryItem('hot-fix-22-selection'))["value"];
+        }
+        else{
+            //Pick a random number from 1 - 75
+            hotfix_22_selection = Math.floor(Math.random() * 75) + 1;
+            setTemporaryItem('hot-fix-22-selection', JSON.stringify({value: hotfix_22_selection}));
+            console.log("Hotfix 22 selection set to: " + hotfix_22_selection);
+        }
+    }
+
     const table = document.getElementById('numbersTable');
     const cells = table.getElementsByTagName('td');
     for (let i = 0; i < cells.length; i++) {
@@ -67,6 +96,7 @@ function enable_main_board_interaction()
             }
             setTemporaryItem('clickedNumbers', JSON.stringify(clickedNumbers));
             setTemporaryItem('numberTimes', JSON.stringify(numberTimes));
+            showHotFixMessage(clickedNumbers.length);
         });
     }
 
@@ -92,6 +122,7 @@ function enable_main_board_interaction()
     }
 
     enable_free_space_interaction();
+    showHotFixMessage(1);
 }
 
 function enable_free_space_interaction()
