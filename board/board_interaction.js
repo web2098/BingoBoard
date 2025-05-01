@@ -78,7 +78,7 @@ function enable_main_board_interaction()
         numbers.reverse();
         for (const element of numbers) {
             const id = parseInt(element.substring(1));
-            activiate_spot(id);
+            //activiate_spot(id);
         }
     }
 
@@ -87,7 +87,7 @@ function enable_main_board_interaction()
     if( times != null)
     {
         for (const element of times) {
-            numberTimes.unshift(element);
+            //numberTimes.unshift(element);
         }
     }
 
