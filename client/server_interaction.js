@@ -67,7 +67,7 @@ function setup_board( msg )
     extraInfo.innerHTML = " ";
 
     console.log("Received setup message: ", msg);
-    if( msg.data.active[0] != msg.data.lastNumber)
+    if( msg.data.active[0] == msg.data.lastNumber)
     {
         console.log("Last number is not the first number in the active list, reversing the list");
         //reverse msg.data.active
