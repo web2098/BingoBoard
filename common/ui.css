@@ -2,7 +2,7 @@
 :root {
     --main-bg-color: #FFFFFF;
     --main-font-color: #000000;
-    --item-font-size: 3vw;
+    --item-font-size: 3.5vw;
     --header-font-size: 3vw;
     --header-details-font-size: 2vw;
     --last-number-header-font-size: 1.5vw;
@@ -146,9 +146,11 @@ body{
 }
 #preview_board td{
     border: 1px solid black;
+    min-width: .9vw;
 }
 #preview_board_2 td{
     border: 1px solid black;
+    min-width: .9vw;
 }
 #transition_arrow{
     margin: 0;
