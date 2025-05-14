@@ -64,7 +64,7 @@ function showHotFixMessage(index)
 function enable_main_board_interaction()
 {
     hotfix_22_selection = null;
-    const enable_hotfix_22 = getItemWithDefault('hot-fix-22-enabled', 'false') == 'true';
+    const enable_hotfix_22 = getItemWithDefault('hot-fix-22-enabled') == 'true';
     if( enable_hotfix_22 )
     {
         console.log("Hotfix 22 enabled: " + getTemporaryItem('hot-fix-22-selection', null));
