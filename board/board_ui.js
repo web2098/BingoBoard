@@ -62,6 +62,9 @@ function createFooterDiv()
             saveCurrentGame();
             // Clear the array
             clickedNumbers = [];
+            numberTimes = [];
+            setTemporaryItem('clickedNumbers', JSON.stringify(clickedNumbers));
+            setTemporaryItem('numberTimes', JSON.stringify(numberTimes));
         }
         var cells = document.getElementsByTagName('td');
         for (var i = 0; i < cells.length; i++) {

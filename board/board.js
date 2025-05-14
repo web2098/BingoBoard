@@ -20,8 +20,11 @@ async function init_view()
         page_div.appendChild(element)
     }
 
-    update_preview_boards(current_game);
-    update_free(current_game.free_space_on);
+    if( current_game )
+    {
+        update_preview_boards(current_game);
+        update_free(current_game.free_space_on);
+    }
     enable_main_board_interaction();
     set_special_numbers(JSON.parse(getItemWithDefault('special-numbers')));
     update_last_number_called('Waiting for first number');

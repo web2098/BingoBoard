@@ -30,7 +30,7 @@ function onReset()
         setTemporaryItem('clickedNumbers', JSON.stringify(clickedNumbers));
         setTemporaryItem('numberTimes', JSON.stringify(numberTimes));
     }
-    sessionStorage.clear('hot-fix-22-selection');
+    sessionStorage.removeItem('hot-fix-22-selection');
 
     if( getItemWithDefault('home-page') == 'select_game'){
         window.location.href = 'select_game.html';
@@ -100,7 +100,7 @@ function enable_main_board_interaction()
         });
     }
 
-    numbers = JSON.parse(sessionStorage.getItem('clickedNumbers'));
+    numbers = JSON.parse(getTemporaryItem('clickedNumbers'));
     console.log("Clicked numbers: ", numbers);
 
     if( numbers != null)
@@ -112,7 +112,7 @@ function enable_main_board_interaction()
         }
     }
 
-    times = JSON.parse(sessionStorage.getItem('numberTimes'));
+    times = JSON.parse(getTemporaryItem('numberTimes'));
     console.log("Clicked times: ", times);
     if( times != null)
     {
