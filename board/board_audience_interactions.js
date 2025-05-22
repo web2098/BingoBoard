@@ -190,6 +190,43 @@ function create_audience_interaction()
 }
 
 
+function executeOrder66()
+{
+    //check if modal is already open
+    const modal = document.querySelector('.modal');
+    if( modal.style.display === 'block' )
+    {
+        //Hide the model
+        modal.style.display = 'none';
+        return;
+    }
+
+    const container = document.querySelector('.container');
+    container.style.display = 'none';
+    modal.style.display = 'block';
+
+    death_msg.style.display = 'none';
+    // Replace this line:
+
+
+    // With this:
+    modal.style.background = "black";  // Set base background
+    modal.style.backgroundImage = "url('order663.gif')";
+    modal.style.backgroundPosition = "center";
+    modal.style.backgroundRepeat = "no-repeat";
+    modal.style.backgroundSize = "contain"; // 'contain' keeps aspect ratio and fits the entire image
+
+    //Play the mp3 file order66.mp3
+    const audio = new Audio('order66.mp3');
+    audio.play();
+
+    //When the audio ends hide the modal
+    audio.addEventListener('ended', function() {
+        modal.style.display = 'none';
+        container.style.display = 'block';
+    });
+}
+
 function create_audio_interaction_ui()
 {
     const emoji_actions = document.createElement('emoji_actions');
@@ -238,11 +275,25 @@ function create_audio_interaction_ui()
         showToTheDeath();
     });
 
+
+        //add a lightsaber emoji using image lightsaber.png
+        const saber = document.createElement('img');
+        saber.id = 'saber';
+        saber.src = 'lightsaber.png';
+        saber.style.width = '50px';
+        saber.style.height = '50px';
+        saber.addEventListener('click', function(event) {
+            event.stopPropagation();
+            executeOrder66();
+        });
+
+
     emoji_actions.append(clap);
     emoji_actions.append(ghost);
     emoji_actions.append(beer);
     emoji_actions.append(party);
     emoji_actions.append(skull);
+    emoji_actions.append(saber);
 
     return emoji_actions;
 }
