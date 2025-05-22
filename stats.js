@@ -484,7 +484,7 @@ window.onload = function() {
     back.innerHTML = 'Back';
     back.onclick = function() {
         sessionStorage.removeItem('game_history');
-        window.history.back();
+        window.location.href = `${localStorage.getItem('home-page')}.html`
     }
     back.style = 'display: block; margin: auto; font-size: 40px; margin-top: 30px;';
     document.body.appendChild(back);

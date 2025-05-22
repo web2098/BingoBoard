@@ -190,6 +190,16 @@
             {
                 document.getElementById('history-enabled').checked = false;
             }
+
+            console.log('hot-fix-22: ' + localStorage.getItem('hot-fix-22-enabled'));
+            if( localStorage.getItem('hot-fix-22-enabled') === "true" ){
+                document.getElementById('hot-fix-22').checked = true;
+            }
+            else
+            {
+                document.getElementById('hot-fix-22').checked = false;
+            }
+
             var historyDir = localStorage.getItem('number-history-dir');
             document.getElementById('history-direction').value = historyDir;
 
@@ -244,6 +254,10 @@
                 var lastDirection = document.getElementById('history-direction').value;
                 localStorage.setItem('number-history-dir', lastDirection);
 
+                var lastEnabled = document.getElementById('hot-fix-22').checked;
+                console.log('Hotfix 22:', lastEnabled);
+                localStorage.setItem('hot-fix-22-enabled', lastEnabled);
+
                 var lastEnabled = document.getElementById('last-number-enabled').checked;
                 localStorage.setItem('last-number-on', lastEnabled);
                 var lastEnabled = document.getElementById('history-enabled').checked;
@@ -271,11 +285,11 @@
                     console.log('Setting', element.id, 'to', element.value);
                     localStorage.setItem(element.id, element.value);
                 }
-                window.location.href = localStorage.getItem('home-page')
+                window.location.href = `${localStorage.getItem('home-page')}.html`
             });
             document.getElementById('resetButton').addEventListener('click', function() {
                 setDefaultSettings(true)
-                window.location.href = localStorage.getItem('home-page')
+                window.location.href = `${localStorage.getItem('home-page')}.html`
             });
             document.getElementById('resetFameButton').addEventListener('click', function() {
                 localStorage.removeItem('hallOfFame');
@@ -306,6 +320,10 @@
                     <option value="alphabetical">Alphabetical</option>
                     <option value="random">Random</option>
                 </select>
+            </div>
+            <div class="row" id="lnpdir">
+                <label for="hot-fix-22">Enable 22 HotFix:</label>
+                <input type="checkbox" id="hot-fix-22" checked="true">
             </div>
             <div class="row" id="lnpdir">
                 <input type="checkbox" id="last-number-enabled" checked="true">
