@@ -229,28 +229,28 @@ body{
 }
 #clap{
     user-select: none;
-    font-size: 1.75vw;
+    font-size: 1.0vw;
     margin: 0px;
 
 }
 #ghost{
     user-select: none;
-    font-size: 1.75vw;
+    font-size: 1.0vw;
     margin: 0px;
 }
 #beer{
     user-select: none;
-    font-size: 1.75vw;
+    font-size: 1.0vw;
     margin: 0px;
 }
 #party{
     user-select: none;
-    font-size: 1.75vw;
+    font-size: 1.0vw;
     margin: 0px;
 }
 #skull{
     user-select: none;
-    font-size: 1.75vw;
+    font-size: 1.0vw;
     margin: 0px;
 }
 .modal {
@@ -264,15 +264,13 @@ body{
     text-align: center;
     font-family: 'DotGothic16', sans-serif;
     background-color: rgba(0, 0, 0, 0.8);
-
-
 }
 
 .blink-text{
     margin: 0;
     text-align: center;
     vertical-align:middle;
-    font-size: 200%;
+    font-size: 100%;
 }
 
 .container {
