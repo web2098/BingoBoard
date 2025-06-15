@@ -205,7 +205,13 @@ function executeOrder66()
     container.style.display = 'none';
     modal.style.display = 'block';
 
-    death_msg.style.display = 'none';
+
+    const death_msg = document.getElementById('death_msg');
+    //Check death_msg is defined
+    if( death_msg != null )
+    {
+        death_msg.style.display = 'none';
+    }
     // Replace this line:
 
 
