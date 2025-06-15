@@ -186,7 +186,7 @@ function create_audience_interaction()
         }
     });
 
-    return create_audio_interaction_ui();
+    return create_audience_interaction_ui();
 }
 
 
@@ -241,7 +241,7 @@ function executeOrder66()
     });
 }
 
-function create_audio_interaction_ui()
+function create_audience_interaction_ui()
 {
     const emoji_actions = document.createElement('emoji_actions');
     emoji_actions.id = 'emoji_actions';
