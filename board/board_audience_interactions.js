@@ -177,6 +177,10 @@ function showToTheDeath()
         modal.style.display = 'none';
         console.log("Hide modal");
         document.removeEventListener('click', clickHandler);
+        if( audience_interaction_cb !== null )
+        {
+            audience_interaction_cb('skull');
+        }
     }
     document.addEventListener('click', clickHandler);
 }
