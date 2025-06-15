@@ -192,6 +192,12 @@ function create_audience_interaction()
 
 function executeOrder66()
 {
+    //If prompt_timeout is not null clear it and make it null
+    if( prompt_timeout !== null )
+    {
+        clearTimeout(prompt_timeout);
+        prompt_timeout = null;
+    }
     //check if modal is already open
     const modal = document.querySelector('.modal');
     if( modal.style.display === 'block' )
@@ -212,8 +218,6 @@ function executeOrder66()
     {
         death_msg.style.display = 'none';
     }
-    // Replace this line:
-
 
     // With this:
     modal.style.background = "black";  // Set base background
@@ -222,21 +226,31 @@ function executeOrder66()
     modal.style.backgroundRepeat = "no-repeat";
     modal.style.backgroundSize = "contain"; // 'contain' keeps aspect ratio and fits the entire image
 
-    //Play the mp3 file order66.mp3
-    const audio = new Audio('order66.mp3');
-    audio.play();
 
-    //When the audio ends hide the modal
-    audio.addEventListener('ended', function() {
-        modal.style.display = 'none';
-        container.style.display = 'block';
-    });
+    try
+    {
+        //Play the mp3 file order66.mp3
+        const audio = new Audio('order66.mp3');
+        audio.play();
+
+
+
+        //When the audio ends hide the modal
+        audio.addEventListener('ended', function() {
+            modal.style.display = 'none';
+            container.style.display = 'block';
+        });
+    }
+    catch (e)
+    {
+        log_message('Error playing audio: ' + e.message);
+        prompt_timeout = setTimeout(() => {
+            modal.style.display = 'none';
+            container.style.display = 'block';
+        }, 3000);
+    }
 
     
-    prompt_timeout = setTimeout(() => {
-        modal.style.display = 'none';
-        container.style.display = 'block';
-    }, 3000);
 }
 
 function create_audio_interaction_ui()

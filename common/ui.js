@@ -422,12 +422,11 @@ function add_special_number_interaction( number, interaction )
 
 function log_message( msg)
 {
+    console.log(msg);
     const textArea = document.getElementById('log_textarea');
     if (!textArea) {
-        console.error("Log textarea not found");
         return;
     }
-    console.log(msg);
     textArea.value += msg + '\n';
     textArea.scrollTop = textArea.scrollHeight; // Scroll to the bottom 
     //Remove lines more then 1000 lines
