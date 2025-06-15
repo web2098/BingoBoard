@@ -11,7 +11,6 @@ function enable_client_audience_interaction() {
         death_msg.style.display = 'none';
     }
 
-
     log_message('Enabling client audience interaction');
     add_special_number_interaction(66, function(){
         log_message('Executing Order 66');

@@ -231,6 +231,12 @@ function executeOrder66()
         modal.style.display = 'none';
         container.style.display = 'block';
     });
+
+    
+    prompt_timeout = setTimeout(() => {
+        modal.style.display = 'none';
+        container.style.display = 'block';
+    }, 3000);
 }
 
 function create_audio_interaction_ui()
