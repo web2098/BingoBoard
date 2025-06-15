@@ -18,3 +18,16 @@ function enable_client_audience_interaction() {
         log_message('Order 66 executed');
     });
 }
+
+function activate_modal(event_type){
+    log_message('Activating modal for event type: ' + event_type);
+    
+    if( event_type === 'skull')
+    {
+        showToTheDeath();
+    }
+    else
+    {
+        showAudienceInteraction(event_type);
+    }
+}

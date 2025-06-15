@@ -36,6 +36,10 @@ function update_view( msg )
             requestUpdate();
         }
     }
+    else if ( msg.type === "modal_activate")
+    {
+        activate_modal(msg.event_type);
+    }
     else{
         report_error("Unknown message type: " + msg.type);
     }
