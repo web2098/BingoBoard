@@ -225,35 +225,20 @@ function executeOrder66()
     modal.style.backgroundPosition = "center";
     modal.style.backgroundRepeat = "no-repeat";
     modal.style.backgroundSize = "contain"; // 'contain' keeps aspect ratio and fits the entire image
+    prompt_timeout = setTimeout(() => {
+        modal.style.display = 'none';
+        container.style.display = 'block';
+    }, 3000);
 
+    //Play the mp3 file order66.mp3
+    const audio = new Audio('order66.mp3');
+    audio.play();
 
-    try
-    {
-        //Play the mp3 file order66.mp3
-        // const audio = new Audio('order66.mp3');
-        // audio.play();
-
-        // //When the audio ends hide the modal
-        // audio.addEventListener('ended', function() {
-        //     modal.style.display = 'none';
-        //     container.style.display = 'block';
-        // });
-        
-        prompt_timeout = setTimeout(() => {
-            modal.style.display = 'none';
-            container.style.display = 'block';
-        }, 3000);
-    }
-    catch (e)
-    {
-        log_message('Error playing audio: ' + e.message);
-        prompt_timeout = setTimeout(() => {
-            modal.style.display = 'none';
-            container.style.display = 'block';
-        }, 3000);
-    }
-
-    
+    //When the audio ends hide the modal
+    audio.addEventListener('ended', function() {
+        modal.style.display = 'none';
+        container.style.display = 'block';
+    });
 }
 
 function create_audio_interaction_ui()
