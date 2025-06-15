@@ -419,3 +419,20 @@ function add_special_number_interaction( number, interaction )
     }
     specialNumberInteractions[number] = interaction;
 }
+
+function log_message( msg)
+{
+    const textArea = document.getElementById('log_textarea');
+    if (!textArea) {
+        console.error("Log textarea not found");
+        return;
+    }
+    console.log(msg);
+    textArea.value += msg + '\n';
+    textArea.scrollTop = textArea.scrollHeight; // Scroll to the bottom 
+    //Remove lines more then 1000 lines
+    const lines = textArea.value.split('\n');
+    if (lines.length > 1000) {
+        textArea.value = lines.slice(lines.length - 1000).join('\n');
+    }
+}

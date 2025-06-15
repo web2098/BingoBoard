@@ -8,10 +8,10 @@ let wakeLock = null;
 async function requestWakeLock() {
     try {
         wakeLock = await navigator.wakeLock.request('screen');
-        console.log('Screen Wake Lock is active');
+        log_message('Screen Wake Lock is active');
 
         wakeLock.addEventListener('release', () => {
-            console.log('Screen Wake Lock released');
+            log_message('Screen Wake Lock released');
         });
     } catch (err) {
         report_error('Wake Lock not supported ' + err.name + ', ' + err.message);
@@ -63,13 +63,14 @@ async function init_view()
         if (document.hidden && wakeLock) {
             wakeLock.release();
             wakeLock = null;
-            console.log('Wake Lock released due to visibility change');
+            log_message('Wake Lock released due to visibility change');
         }
     });
 
     enable_client_audience_interaction();
 
     await requestWakeLock();
+    log_message('Client view initialized');
 }
 
 function onMessage(msg)
