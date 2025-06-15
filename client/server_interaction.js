@@ -77,7 +77,7 @@ function setup_board( msg )
     for(const element of msg.data.active)
     {
         const id = element;
-        activiate_spot(id);
+        activiate_spot(id, false);
     }
 }
 

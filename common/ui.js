@@ -104,7 +104,7 @@ function update_preview_board(game, board, board_id)
     }
 }
 
-function activiate_spot( id )
+function activiate_spot( id, enable_events = true )
 {
     const number = get_spot_id(id);
 
@@ -125,7 +125,7 @@ function activiate_spot( id )
 
         const clickedNumbersTable = document.getElementById('clickedNumbersTable');
         clickedNumbersTable.insertBefore(tr, clickedNumbersTable.firstChild);
-        update_last_number();
+        update_last_number(enable_events);
     }
 }
 
@@ -146,7 +146,7 @@ function deactiviate_spot( id )
     }
 }
 
-function update_last_number()
+function update_last_number(enable_events)
 {
     const lastNumber = document.getElementById('lastNumber');
     if( clickedNumbers.length > 0 )
@@ -161,9 +161,12 @@ function update_last_number()
             document.getElementById('extraInfo').innerHTML = " ";
         }
 
-        if (specialNumberInteractions && id in specialNumberInteractions) {
-            const interaction = specialNumberInteractions[id];
-            interaction();
+        if( enable_events )
+        {
+            if (specialNumberInteractions && id in specialNumberInteractions) {
+                const interaction = specialNumberInteractions[id];
+                interaction();
+            }
         }
     }
     else
