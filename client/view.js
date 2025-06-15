@@ -67,6 +67,7 @@ async function init_view()
         }
     });
 
+    enable_client_audience_interaction();
 
     await requestWakeLock();
 }

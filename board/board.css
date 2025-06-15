@@ -3,17 +3,17 @@
     flex-grow: 1;
 }
 #topHeaderDiv{
-    height: 22%;
+    height: 26%;
     overflow: hidden; /* Enable vertical scrolling */
+    margin-top: 10px;
 }
 #qrcode{
     margin-right:60px;
 }
 
-
 /* Center Styles */
 #centerDiv {
-    height: 68%;
+    height: 60%;
     flex-grow: 1;
 }
 

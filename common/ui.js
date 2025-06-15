@@ -1,6 +1,7 @@
 
 var clickedNumbers = []; // Array to store the clicked numbers
 let specialNumbers = null; // Object to store special numbers and their meanings
+let specialNumberInteractions = {};
 // Load all defaults from local storage, but will be overriden by the host of the room
 let styleVariables = {
     selectedColor: getItemWithDefault('select-tab-color'), //CSU Green
@@ -158,6 +159,11 @@ function update_last_number()
         }
         else{
             document.getElementById('extraInfo').innerHTML = " ";
+        }
+
+        if (specialNumberInteractions && id in specialNumberInteractions) {
+            const interaction = specialNumberInteractions[id];
+            interaction();
         }
     }
     else
@@ -403,4 +409,13 @@ function report_message( msg )
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 500); // Wait for animation to complete
     }, 10000);
+}
+
+function add_special_number_interaction( number, interaction )
+{
+    if( specialNumberInteractions === null )
+    {
+        specialNumberInteractions = {};
+    }
+    specialNumberInteractions[number] = interaction;
 }

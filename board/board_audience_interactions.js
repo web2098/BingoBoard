@@ -293,7 +293,17 @@ function create_audio_interaction_ui()
     emoji_actions.append(beer);
     emoji_actions.append(party);
     emoji_actions.append(skull);
-    emoji_actions.append(saber);
+
+    if( getItemWithDefault('auto-lightsaber') === 'true' )
+    {
+        add_special_number_interaction(66, function(){
+            executeOrder66();
+        });
+    }
+    else
+    {
+        emoji_actions.append(saber);
+    }
 
     return emoji_actions;
 }
