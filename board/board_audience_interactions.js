@@ -230,16 +230,19 @@ function executeOrder66()
     try
     {
         //Play the mp3 file order66.mp3
-        const audio = new Audio('order66.mp3');
-        audio.play();
+        // const audio = new Audio('order66.mp3');
+        // audio.play();
 
-
-
-        //When the audio ends hide the modal
-        audio.addEventListener('ended', function() {
+        // //When the audio ends hide the modal
+        // audio.addEventListener('ended', function() {
+        //     modal.style.display = 'none';
+        //     container.style.display = 'block';
+        // });
+        
+        prompt_timeout = setTimeout(() => {
             modal.style.display = 'none';
             container.style.display = 'block';
-        });
+        }, 3000);
     }
     catch (e)
     {
