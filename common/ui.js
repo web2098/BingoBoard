@@ -129,7 +129,7 @@ function activiate_spot( id, enable_events = true )
     }
 }
 
-function deactiviate_spot( id )
+function deactiviate_spot( id, enable_events = true  )
 {
     const number = get_spot_id(id);
     const index = clickedNumbers.indexOf(number);
@@ -142,7 +142,7 @@ function deactiviate_spot( id )
         const spot = find_td(number);
         spot.style.backgroundColor = styleVariables.unselectedColor;
         spot.style.color = styleVariables.unselectedTextColor;
-        update_last_number();
+        update_last_number(enable_events);
     }
 }
 

@@ -57,7 +57,7 @@ function setup_board( msg )
     while( clickedNumbers.length > 0)
     {
         const id = parseInt(clickedNumbers[0].substring(1));
-        deactiviate_spot(id);
+        deactiviate_spot(id, false);
     }
     clickedNumbers = [];
 
