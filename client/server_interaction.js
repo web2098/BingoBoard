@@ -12,6 +12,7 @@ function requestUpdate()
 
 function update_view( msg )
 {
+    log_message(`Updating view with message: ${JSON.stringify(msg)}`);
     if( msg.type === "setup" )
     {
         setup_board(msg);
@@ -38,7 +39,7 @@ function update_view( msg )
     }
     else if ( msg.type === "modal_activate")
     {
-        activate_modal(msg.event_type);
+        activate_modal(msg.event_type, msg.options);
     }
     else{
         report_error("Unknown message type: " + msg.type);
@@ -134,6 +135,7 @@ function connectToServerAsClient(server_url, onMesssage)
     }
     ws.onmessage = function (event) {
         const msg = JSON.parse(event.data);
+        log_message(`Received message from server: ${event.data}`);
         if( msg.type == "id" )
         {
             set_status("Connected to remote server as " + msg.conn_id);
@@ -143,10 +145,6 @@ function connectToServerAsClient(server_url, onMesssage)
         else if( msg.type == "error" )
         {
             report_error(msg.message);
-        }
-        else
-        {
-            update_view(msg);
         }
         onMesssage(msg);
     }

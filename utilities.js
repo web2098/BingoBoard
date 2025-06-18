@@ -44,6 +44,15 @@ function getItemWithDefault( item, force ){
     return localStorage.getItem(item);
 }
 
+function setLocalSetting(key, value) {
+    if (value === null || value === undefined) {
+        localStorage.removeItem(key);
+    } else {
+        localStorage.setItem(key, value);
+    }
+}
+
+
 function getRandomColor() {
     var r = Math.floor(Math.random() * 256); // Random between 0-255
     var g = Math.floor(Math.random() * 256); // Random between 0-255

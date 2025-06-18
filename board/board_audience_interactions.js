@@ -77,10 +77,10 @@ function updateRectangleSize()
     }
 }
 
-function showAudienceInteraction(type)
+function showAudienceInteraction(type, options)
 {
     const message = getItemWithDefault(type);
-    
+
     if( audience_interaction_cb !== null )
     {
         audience_interaction_cb(type);
@@ -103,8 +103,12 @@ function showAudienceInteraction(type)
     paragraph.style.justifyContent = "center";
     paragraph.style.alignItems = "center";
     paragraph.style.fontSize = "1000%";
+    if( options && options.font_size )
+    {
+        paragraph.style.fontSize = options.font_size;
+    }
     //Clip
-    
+
 
     const death_msg = document.getElementById('death_msg');
     death_msg.style.display = 'none';
@@ -137,7 +141,7 @@ function showAudienceInteraction(type)
 
 }
 
-function showToTheDeath()
+function showToTheDeath(options)
 {
     //check if modal is already open
     const modal = document.querySelector('.modal');
@@ -153,8 +157,14 @@ function showToTheDeath()
     modal.style.display = 'block';
 
 
-    const isGraphic = getItemWithDefault('to-the-death-graphic');
+    let isGraphic = getItemWithDefault('to-the-death-graphic');
     const death_msg = document.getElementById('death_msg');
+
+    if( options && options.isGraphic !== undefined)
+    {
+        isGraphic = options.isGraphic; // Override if provided in options
+    }
+
     if( isGraphic === 'true' )
     {
         modal.style.background = "no-repeat center/cover url('to_the_death.jpg')";
@@ -168,7 +178,7 @@ function showToTheDeath()
 
     if( audience_interaction_cb !== null )
     {
-        audience_interaction_cb("skull");
+        audience_interaction_cb("skull", {isGraphic: isGraphic});
     }
 
     //Fully black
@@ -190,15 +200,15 @@ function create_audience_interaction()
 {
     document.addEventListener('keydown', function(event) {
         if (event.key === '1' || event.key === 'a') {
-            showAudienceInteraction('clap-message');
+            showAudienceInteraction('clap-message', {});
         } else if (event.key === '2' || event.key === 'b')  {
-            showAudienceInteraction('boo-message');
+            showAudienceInteraction('boo-message', {});
         } else if (event.key === '3' || event.key === 'd') {
-            showAudienceInteraction('beer-message');
+            showAudienceInteraction('beer-message', {});
         } else if (event.key === '4' || event.key === 'w') {
-            showAudienceInteraction('party-message');
+            showAudienceInteraction('party-message', {});
         } else if (event.key === '5' || event.key === 'x') {
-            showToTheDeath();
+            showToTheDeath({});
         }
     });
 
@@ -206,7 +216,7 @@ function create_audience_interaction()
 }
 
 
-function executeOrder66()
+function executeOrder66(enable_audio)
 {
     //If prompt_timeout is not null clear it and make it null
     if( prompt_timeout !== null )
@@ -246,15 +256,18 @@ function executeOrder66()
         container.style.display = 'block';
     }, 3000);
 
-    //Play the mp3 file order66.mp3
-    const audio = new Audio('order66.mp3');
-    audio.play();
+    if( enable_audio )
+    {
+        //Play the mp3 file order66.mp3
+        const audio = new Audio('order66.mp3');
+        audio.play();
 
-    //When the audio ends hide the modal
-    audio.addEventListener('ended', function() {
-        modal.style.display = 'none';
-        container.style.display = 'block';
-    });
+        //When the audio ends hide the modal
+        audio.addEventListener('ended', function() {
+            modal.style.display = 'none';
+            container.style.display = 'block';
+        });
+    }
 }
 
 function create_audience_interaction_ui()
@@ -268,7 +281,7 @@ function create_audience_interaction_ui()
 
     clap.addEventListener('click', function(event) {
         event.stopPropagation();
-        showAudienceInteraction('clap-message');
+        showAudienceInteraction('clap-message', {});
     });
 
     // Add ghost and beer glass cheers
@@ -278,7 +291,7 @@ function create_audience_interaction_ui()
 
     ghost.addEventListener('click', function(event) {
         event.stopPropagation();
-        showAudienceInteraction('boo-message');
+        showAudienceInteraction('boo-message', {});
     });
 
     const beer = document.createElement('p');
@@ -286,7 +299,7 @@ function create_audience_interaction_ui()
     beer.innerHTML = "&#x1F37B;";
     beer.addEventListener('click', function(event) {
         event.stopPropagation();
-        showAudienceInteraction('beer-message');
+        showAudienceInteraction('beer-message', {});
     });
     // Add a party emoji
     const party = document.createElement('p');
@@ -294,7 +307,7 @@ function create_audience_interaction_ui()
     party.innerHTML = "&#x1F973;";
     party.addEventListener('click', function(event) {
         event.stopPropagation();
-        showAudienceInteraction('party-message');
+        showAudienceInteraction('party-message', {});
     });
     // Add a skull crossbones emoji
     const skull = document.createElement('p');
@@ -302,7 +315,7 @@ function create_audience_interaction_ui()
     skull.innerHTML = "&#x2620;";
     skull.addEventListener('click', function(event) {
         event.stopPropagation();
-        showToTheDeath();
+        showToTheDeath({});
     });
 
 
@@ -314,7 +327,7 @@ function create_audience_interaction_ui()
         saber.style.height = '50px';
         saber.addEventListener('click', function(event) {
             event.stopPropagation();
-            executeOrder66();
+            executeOrder66(true);
         });
 
 
@@ -327,7 +340,7 @@ function create_audience_interaction_ui()
     if( getItemWithDefault('auto-lightsaber') === 'true' )
     {
         add_special_number_interaction(66, function(){
-            executeOrder66();
+            executeOrder66(true);
         });
     }
     else

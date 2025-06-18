@@ -69,6 +69,37 @@ async function init_view()
 
     enable_client_audience_interaction();
 
+    const showLogsCheckbox = document.getElementById('show_logs');
+    showLogsCheckbox.addEventListener('change', function() {
+        const logView = document.getElementById('log_view');
+        if (this.checked) {
+            logView.style.display = 'block';
+        } else {
+            logView.style.display = 'none';
+        }
+    });
+
+
+    var settings = {
+        "enable_audio": "client_enable_popup_audio",
+        "enable_popups": "client_enable_popups",
+        "hide_graphic_to_the_death": "client_hide_graphic_to_the_death"
+    };
+
+    for (const [key, value] of Object.entries(settings)) {
+        const checkbox = document.getElementById(key);
+        if (checkbox) {
+            checkbox.checked = getItemWithDefault(value) === 'true';
+            checkbox.addEventListener('change', function() {
+                setLocalSetting(value, this.checked ? 'true' : 'false');
+                log_message(`Setting ${value} to ${this.checked}`);
+            });
+        } else {
+            log_message(`Checkbox with id ${key} not found`);
+        }
+    }
+
+
     await requestWakeLock();
     log_message('Client view initialized');
 }
