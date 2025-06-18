@@ -83,7 +83,7 @@ function showAudienceInteraction(type, options)
 
     if( audience_interaction_cb !== null )
     {
-        audience_interaction_cb(type);
+        audience_interaction_cb(type, options);
     }
 
     //If prompt_timeout is not null clear it and make it null
@@ -189,7 +189,7 @@ function showToTheDeath(options)
         document.removeEventListener('click', clickHandler);
         if( audience_interaction_cb !== null )
         {
-            audience_interaction_cb('skull');
+            audience_interaction_cb('skull', {isGraphic: isGraphic});
         }
     }
     document.addEventListener('click', clickHandler);

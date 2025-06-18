@@ -36,6 +36,9 @@ function setDefaultSettings(force) {
     setDefaultItem('audience-message-timeout', "3000", force);
     setDefaultItem('to-the-death-graphic', "false", force);
     setDefaultItem('auto-lightsaber', "true", force);
+    setDefaultItem('client_enable_popup_audio', "true", force);
+    setDefaultItem('client_enable_popups', "true", force);
+    setDefaultItem('client_hide_graphic_to_the_death', "false", force);
 }
 
 

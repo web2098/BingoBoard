@@ -13,12 +13,12 @@ function enable_client_audience_interaction() {
 
     log_message('Enabling client audience interaction');
     add_special_number_interaction(66, function(){
-        const enablePopUps = getItemWithDefault('client_enable_popup_audio') === 'true';
-        if( enablePopUps.checked )
+        const enablePopUps = getItemWithDefault('client_enable_popups') === 'true';
+        if( enablePopUps )
         {
-            const enableAudioCheckBox = getItemWithDefault('client_enable_popups') === 'true';
+            const enableAudioCheckBox = getItemWithDefault('client_enable_popup_audio') === 'true';
             log_message('Executing Order 66');
-            executeOrder66(enableAudioCheckBox.checked);
+            executeOrder66(enableAudioCheckBox);
             log_message('Order 66 executed');
         }
         else{
@@ -29,18 +29,19 @@ function enable_client_audience_interaction() {
 
 function activate_modal(event_type, options)
 {
-    const enablePopUps = getItemWithDefault('client_enable_popup_audio') === 'true';
-    if( enablePopUps.checked )
+    const enablePopUps = getItemWithDefault('client_enable_popups') === 'true';
+    if( enablePopUps )
     {
         log_message('Activating modal for event type: ' + event_type);
         if( event_type === 'skull')
         {
+            log_message(`Showing to the death with options: ${JSON.stringify(options)}`);
             const hideIsGraphic = getItemWithDefault('client_hide_graphic_to_the_death') === 'true';
             if( hideIsGraphic)
             {
                 options.isGraphic=false; // Force no graphic if the option is set
+                log_message(`Updated options to hide the graphic image: ${JSON.stringify(options)}`);
             }
-
             showToTheDeath(options);
         }
         else

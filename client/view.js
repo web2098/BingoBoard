@@ -89,6 +89,7 @@ async function init_view()
     for (const [key, value] of Object.entries(settings)) {
         const checkbox = document.getElementById(key);
         if (checkbox) {
+            console.log(`Setting up checkbox for ${key} with id ${value}, value: ${getItemWithDefault(value)}`);
             checkbox.checked = getItemWithDefault(value) === 'true';
             checkbox.addEventListener('change', function() {
                 setLocalSetting(value, this.checked ? 'true' : 'false');

@@ -198,12 +198,13 @@ function retryConnection(onMesssage) {
 }
 
 
-function on_audience_interaction_type(type){
+function on_audience_interaction_type(type, options){
     console.log("Audience interaction type: " + type);
-    
+
     const update = {
         type: "modal_activate",
         event_type: type,
+        options: options
     }
     room_connection.send(JSON.stringify(update));
 }
