@@ -363,9 +363,9 @@ function update_last_number_called( msg )
 
 function report_error( msg )
 {
+    log_message(msg);
     const toastContainer = document.getElementById('toast-container');
     if (!toastContainer) {
-        console.error(msg);
         return;
     }
     const toast = document.createElement('div');
@@ -431,7 +431,7 @@ function log_message( msg)
         return;
     }
     textArea.value += msg + '\n';
-    textArea.scrollTop = textArea.scrollHeight; // Scroll to the bottom 
+    textArea.scrollTop = textArea.scrollHeight; // Scroll to the bottom
     //Remove lines more then 1000 lines
     const lines = textArea.value.split('\n');
     if (lines.length > 1000) {
