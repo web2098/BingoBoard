@@ -264,6 +264,7 @@ function executeOrder66(enable_audio)
         //Play the mp3 file order66.mp3
         order66Audio.currentTime = 0;
         order66Audio.play();
+        console.log("Order 66 audio enabled and playing");
     }
     else{
         console.log("Order 66 audio not enabled");
