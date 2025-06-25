@@ -1,5 +1,10 @@
 let retryTime = 1000; // Initial retry time in milliseconds
 
+function enableBoardServerInteraction()
+{
+    registerAudienceInteractionCallback(on_audience_interaction_type);
+}
+
 function onMessage(auth, data)
 {
     if( data.type == "id" )
@@ -190,4 +195,21 @@ function retryConnection(onMesssage) {
         }
         connectToServerAsHost(onMesssage);
     }, retryTime);
+}
+
+
+function on_audience_interaction_type(type, options){
+    if( !room_connection )
+    {
+        console.log("No room connection established, cannot send audience interaction type");
+        return;
+    }
+    console.log("Audience interaction type: " + type);
+
+    const update = {
+        type: "modal_activate",
+        event_type: type,
+        options: options
+    }
+    room_connection.send(JSON.stringify(update));
 }

@@ -1,6 +1,7 @@
 
 var clickedNumbers = []; // Array to store the clicked numbers
 let specialNumbers = null; // Object to store special numbers and their meanings
+let specialNumberInteractions = {};
 // Load all defaults from local storage, but will be overriden by the host of the room
 let styleVariables = {
     selectedColor: getItemWithDefault('select-tab-color'), //CSU Green
@@ -103,7 +104,7 @@ function update_preview_board(game, board, board_id)
     }
 }
 
-function activiate_spot( id )
+function activiate_spot( id, enable_events = true )
 {
     const number = get_spot_id(id);
 
@@ -124,11 +125,11 @@ function activiate_spot( id )
 
         const clickedNumbersTable = document.getElementById('clickedNumbersTable');
         clickedNumbersTable.insertBefore(tr, clickedNumbersTable.firstChild);
-        update_last_number();
+        update_last_number(enable_events);
     }
 }
 
-function deactiviate_spot( id )
+function deactiviate_spot( id, enable_events = true  )
 {
     const number = get_spot_id(id);
     const index = clickedNumbers.indexOf(number);
@@ -141,11 +142,11 @@ function deactiviate_spot( id )
         const spot = find_td(number);
         spot.style.backgroundColor = styleVariables.unselectedColor;
         spot.style.color = styleVariables.unselectedTextColor;
-        update_last_number();
+        update_last_number(enable_events);
     }
 }
 
-function update_last_number()
+function update_last_number(enable_events)
 {
     const lastNumber = document.getElementById('lastNumber');
     if( clickedNumbers.length > 0 )
@@ -158,6 +159,14 @@ function update_last_number()
         }
         else{
             document.getElementById('extraInfo').innerHTML = " ";
+        }
+
+        if( enable_events )
+        {
+            if (specialNumberInteractions && id in specialNumberInteractions) {
+                const interaction = specialNumberInteractions[id];
+                interaction();
+            }
         }
     }
     else
@@ -354,9 +363,9 @@ function update_last_number_called( msg )
 
 function report_error( msg )
 {
+    log_message(msg);
     const toastContainer = document.getElementById('toast-container');
     if (!toastContainer) {
-        console.error(msg);
         return;
     }
     const toast = document.createElement('div');
@@ -403,4 +412,29 @@ function report_message( msg )
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 500); // Wait for animation to complete
     }, 10000);
+}
+
+function add_special_number_interaction( number, interaction )
+{
+    if( specialNumberInteractions === null )
+    {
+        specialNumberInteractions = {};
+    }
+    specialNumberInteractions[number] = interaction;
+}
+
+function log_message( msg)
+{
+    console.log(msg);
+    const textArea = document.getElementById('log_textarea');
+    if (!textArea) {
+        return;
+    }
+    textArea.value += msg + '\n';
+    textArea.scrollTop = textArea.scrollHeight; // Scroll to the bottom
+    //Remove lines more then 1000 lines
+    const lines = textArea.value.split('\n');
+    if (lines.length > 1000) {
+        textArea.value = lines.slice(lines.length - 1000).join('\n');
+    }
 }

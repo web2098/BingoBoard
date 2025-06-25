@@ -12,6 +12,7 @@ function requestUpdate()
 
 function update_view( msg )
 {
+    log_message(`Updating view with message: ${JSON.stringify(msg)}`);
     if( msg.type === "setup" )
     {
         setup_board(msg);
@@ -36,6 +37,10 @@ function update_view( msg )
             requestUpdate();
         }
     }
+    else if ( msg.type === "modal_activate")
+    {
+        activate_modal(msg.event_type, msg.options);
+    }
     else{
         report_error("Unknown message type: " + msg.type);
     }
@@ -54,10 +59,11 @@ function setup_board( msg )
         return;
     }
 
+    log_message("Deactivating all spots for game: " + current_game.name);
     while( clickedNumbers.length > 0)
     {
         const id = parseInt(clickedNumbers[0].substring(1));
-        deactiviate_spot(id);
+        deactiviate_spot(id, false);
     }
     clickedNumbers = [];
 
@@ -66,18 +72,19 @@ function setup_board( msg )
     let extraInfo = document.getElementById('extraInfo');
     extraInfo.innerHTML = " ";
 
-    console.log("Received setup message: ", msg);
+    log_message("Received setup message: ", msg);
     if( msg.data.active[0] == msg.data.lastNumber)
     {
-        console.log("Last number is not the first number in the active list, reversing the list");
+        log_message("Last number is not the first number in the active list, reversing the list");
         //reverse msg.data.active
         msg.data.active.reverse();
     }
 
+    log_message("Activating all spots for game: " + current_game.name);
     for(const element of msg.data.active)
     {
         const id = element;
-        activiate_spot(id);
+        activiate_spot(id, false);
     }
 }
 
@@ -93,7 +100,7 @@ function update_style(msg)
     }
     catch(e)
     {
-        console.log(`Failed to apply style: ${e}`);
+        log_message(`Failed to apply style: ${e}`);
     }
 }
 
@@ -107,7 +114,7 @@ function update_session(msg)
     }
     catch(e)
     {
-        console.log(`Failed to apply session info: ${e}`);
+        log_message(`Failed to apply session info: ${e}`);
     }
 }
 
@@ -116,11 +123,11 @@ function connectToServerAsClient(server_url, onMesssage)
     const element = document.getElementById('qrcode');
     element.visible = false;
     set_status("Connecting to remote server...");
-    console.log("Attempting to connect to server...");
+    log_message("Attempting to connect to server...");
     ws = new WebSocket(server_url);
     ws.onopen = function() {
         set_status("Connected to remote server, getting id...");
-        console.log('Connected to remote server');
+        log_message('Connected to remote server');
         const id_message = {
             type: "request_id",
         }
@@ -128,6 +135,7 @@ function connectToServerAsClient(server_url, onMesssage)
     }
     ws.onmessage = function (event) {
         const msg = JSON.parse(event.data);
+        log_message(`Received message from server: ${event.data}`);
         if( msg.type == "id" )
         {
             set_status("Connected to remote server as " + msg.conn_id);
@@ -137,10 +145,6 @@ function connectToServerAsClient(server_url, onMesssage)
         else if( msg.type == "error" )
         {
             report_error(msg.message);
-        }
-        else
-        {
-            update_view(msg);
         }
         onMesssage(msg);
     }
@@ -158,7 +162,7 @@ function connectToServerAsClient(server_url, onMesssage)
 function retryConnection(server_url, onMesssage) {
     let element = document.getElementById('qrcode');
     element.visible = false;
-    console.log(`Retrying connection in ${retryTime / 1000} seconds...`);
+    log_message(`Retrying connection in ${retryTime / 1000} seconds...`);
     setTimeout(() => {
         if (retryTime < 30000) {
             retryTime *= 2; // Double the retry time

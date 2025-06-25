@@ -200,6 +200,15 @@
                 document.getElementById('hot-fix-22').checked = false;
             }
 
+            console.log('enable-auto-saber: ' + localStorage.getItem('auto-lightsaber'));
+            if( localStorage.getItem('auto-lightsaber') === "true" ){
+                document.getElementById('enable-auto-saber').checked = true;
+            }
+            else
+            {
+                document.getElementById('enable-auto-saber').checked = false;
+            }
+
             var historyDir = localStorage.getItem('number-history-dir');
             document.getElementById('history-direction').value = historyDir;
 
@@ -257,6 +266,10 @@
                 var lastEnabled = document.getElementById('hot-fix-22').checked;
                 console.log('Hotfix 22:', lastEnabled);
                 localStorage.setItem('hot-fix-22-enabled', lastEnabled);
+
+                var lastEnabled = document.getElementById('enable-auto-saber').checked;
+                console.log('enable-auto-saber:', lastEnabled);
+                localStorage.setItem('auto-lightsaber', lastEnabled);
 
                 var lastEnabled = document.getElementById('last-number-enabled').checked;
                 localStorage.setItem('last-number-on', lastEnabled);
@@ -324,6 +337,10 @@
             <div class="row" id="lnpdir">
                 <label for="hot-fix-22">Enable 22 HotFix:</label>
                 <input type="checkbox" id="hot-fix-22" checked="true">
+            </div>
+            <div class="row" id="lnpdir">
+                <label for="enable-auto-saber">Enable Order 66 Auto Activation:</label>
+                <input type="checkbox" id="enable-auto-saber" checked="true">
             </div>
             <div class="row" id="lnpdir">
                 <input type="checkbox" id="last-number-enabled" checked="true">

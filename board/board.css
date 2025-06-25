@@ -3,17 +3,17 @@
     flex-grow: 1;
 }
 #topHeaderDiv{
-    height: 22%;
+    height: 26%;
     overflow: hidden; /* Enable vertical scrolling */
+    margin-top: 10px;
 }
 #qrcode{
     margin-right:60px;
 }
 
-
 /* Center Styles */
 #centerDiv {
-    height: 68%;
+    height: 60%;
     flex-grow: 1;
 }
 
@@ -46,7 +46,6 @@
 button {
     font-size: var(--button-font-size); /* adjust as needed */
 }
-
 
 /* Emoji Section Styles */
 #emoji_actions{
@@ -94,8 +93,6 @@ button {
     text-align: center;
     font-family: 'DotGothic16', sans-serif;
     background-color: rgba(0, 0, 0, 0.8);
-
-
 }
 
 .blink-text{
@@ -123,6 +120,7 @@ button {
     clip:auto;
 }
 #death_msg {
+    display: none;
     color: red;
     text-align: center;
     position: absolute;
@@ -130,6 +128,13 @@ button {
     left: 50%;
     font-size: 1000%;
     transform: translate(-50%, -50%);
+}
+#order66_image{
+    display: none;
+    width: 100%;
+    height: 92%;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .circle {
     background-color: yellow;
@@ -152,3 +157,5 @@ button {
         box-shadow: none;
     }
 }
+
+

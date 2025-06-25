@@ -35,6 +35,10 @@ function setDefaultSettings(force) {
     setDefaultItem('party-message', "Winner", force);
     setDefaultItem('audience-message-timeout', "3000", force);
     setDefaultItem('to-the-death-graphic', "false", force);
+    setDefaultItem('auto-lightsaber', "true", force);
+    setDefaultItem('client_enable_popup_audio', "true", force);
+    setDefaultItem('client_enable_popups', "true", force);
+    setDefaultItem('client_hide_graphic_to_the_death', "false", force);
 }
 
 
@@ -42,6 +46,15 @@ function getItemWithDefault( item, force ){
     setDefaultSettings(force);
     return localStorage.getItem(item);
 }
+
+function setLocalSetting(key, value) {
+    if (value === null || value === undefined) {
+        localStorage.removeItem(key);
+    } else {
+        localStorage.setItem(key, value);
+    }
+}
+
 
 function getRandomColor() {
     var r = Math.floor(Math.random() * 256); // Random between 0-255

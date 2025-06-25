@@ -154,8 +154,9 @@ function fillStatsInfo(stats, suffix)
     }
 }
 
-function generateHeatMap(stats)
+function generateHeatMap(div, stats)
 {
+    console.log(`STATS: ${JSON.stringify(stats)}`);
     let styleVariables = {
         selectedColor: localStorage.getItem('select-tab-color'), //CSU Green
         selectedTextColor: localStorage.getItem('select-tab-text-color'),
@@ -185,14 +186,17 @@ function generateHeatMap(stats)
         for (let j = 0; j < 15; j++) {
             let id = letters[i] + counter;
             let td = document.createElement('td');
-            td.innerHTML = counter;
+
+            let tdText = `${counter}(${stats[id] || 0})`;
+
+            td.innerHTML = tdText;
             td.style.backgroundColor = styleVariables.unselectedColor;
             td.style.color = styleVariables.unselectedTextColor;
 
 
             let overlay = document.createElement('div');
             overlay.className = 'fill-overlay';
-            overlay.textContent = counter++;
+            overlay.textContent = `${counter++}(${stats[id] || 0})`;
             td.appendChild(overlay);
 
             // Get the percentage value from the data attribute
@@ -210,7 +214,6 @@ function generateHeatMap(stats)
         }
         table.appendChild(tr);
     }
-    let div = document.getElementById('heat_map');
     div.appendChild(table);
 }
 function millisecondsToMinutes(milliseconds) {
@@ -429,10 +432,35 @@ window.onload = function() {
         gamesPlayed = document.getElementById('gamesPlayed_filtered');
         gamesPlayed.innerHTML = `Game Stats Without blackout: ${data_withoutblackout.length}`;
         fillStatsInfo(statsFromData(data_withoutblackout), '_withoutBlackout');
-        generateHeatMap(statsFromData(data_withoutblackout));
+        generateHeatMap(document.getElementById('heat_map'), statsFromData(data_withoutblackout));
         //Loop through each game and calculate the stats
 
         createGameInfoTable(game_history);
+
+
+         let full_game_history = JSON.parse(localStorage.getItem('full_game_history'));
+
+        // let div = document.getElementById('game_info');
+        // let fullGameHistoryDiv = document.createElement('div');
+        // fullGameHistoryDiv.id = 'fullGameHistory';
+        // fullGameHistoryDiv.innerHTML = '<h2>Full Game History</h2>';
+        // if( full_game_history ){
+        //     fullGameHistoryDiv.innerHTML += '<pre>' + JSON.stringify(full_game_history, null, 4) + '</pre>';
+        // }
+        // else{
+        //     fullGameHistoryDiv.innerHTML += '<p>No Full Game History Found</p>';
+        // }
+        // div.appendChild(fullGameHistoryDiv);
+
+        let fullHistoryHeatMap = document.createElement('div');
+        //Create a header for full history
+        let fullHistoryHeader = document.createElement('h2');
+        fullHistoryHeader.innerHTML = 'Full Game History Heat Map';
+        fullHistoryHeatMap.appendChild(fullHistoryHeader);
+        generateHeatMap(fullHistoryHeatMap, full_game_history.numbers);
+
+        document.body.appendChild(fullHistoryHeatMap);
+
 
         // Create save button
         let saveButton = document.createElement('button');
@@ -478,6 +506,7 @@ window.onload = function() {
         //center button increase size to 50px and add padding to to the top of 10px
         saveButton.style = 'display: block; margin: auto; font-size: 40px; margin-top: 30px;';
         document.body.appendChild(saveButton);
+
     }
     //center button increase size to 50px and add padding to to the top of 10px
     const back = document.createElement('button');

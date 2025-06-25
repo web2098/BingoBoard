@@ -8,10 +8,10 @@ let wakeLock = null;
 async function requestWakeLock() {
     try {
         wakeLock = await navigator.wakeLock.request('screen');
-        console.log('Screen Wake Lock is active');
+        log_message('Screen Wake Lock is active');
 
         wakeLock.addEventListener('release', () => {
-            console.log('Screen Wake Lock released');
+            log_message('Screen Wake Lock released');
         });
     } catch (err) {
         report_error('Wake Lock not supported ' + err.name + ', ' + err.message);
@@ -63,12 +63,46 @@ async function init_view()
         if (document.hidden && wakeLock) {
             wakeLock.release();
             wakeLock = null;
-            console.log('Wake Lock released due to visibility change');
+            log_message('Wake Lock released due to visibility change');
+        }
+    });
+
+    enable_client_audience_interaction();
+
+    const showLogsCheckbox = document.getElementById('show_logs');
+    showLogsCheckbox.addEventListener('change', function() {
+        const logView = document.getElementById('log_view');
+        if (this.checked) {
+            logView.style.display = 'block';
+        } else {
+            logView.style.display = 'none';
         }
     });
 
 
+    var settings = {
+        "enable_audio": "client_enable_popup_audio",
+        "enable_popups": "client_enable_popups",
+        "hide_graphic_to_the_death": "client_hide_graphic_to_the_death"
+    };
+
+    for (const [key, value] of Object.entries(settings)) {
+        const checkbox = document.getElementById(key);
+        if (checkbox) {
+            console.log(`Setting up checkbox for ${key} with id ${value}, value: ${getItemWithDefault(value)}`);
+            checkbox.checked = getItemWithDefault(value) === 'true';
+            checkbox.addEventListener('change', function() {
+                setLocalSetting(value, this.checked ? 'true' : 'false');
+                log_message(`Setting ${value} to ${this.checked}`);
+            });
+        } else {
+            log_message(`Checkbox with id ${key} not found`);
+        }
+    }
+
+
     await requestWakeLock();
+    log_message('Client view initialized');
 }
 
 function onMessage(msg)

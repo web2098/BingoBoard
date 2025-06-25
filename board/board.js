@@ -31,6 +31,7 @@ async function init_view()
 
     header_div.insertBefore(create_audience_interaction(), header_div.lastChild);
 
+    enableBoardServerInteraction();
     room_connection = await connectToServerAsHost(onMessage);
 }
 
