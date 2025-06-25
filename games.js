@@ -508,7 +508,7 @@ function Turtle(){
     };
 }
 
-function Twistedteas(){
+function TwistedTs(){
     return {
         "name": "Twisted Ts",
         "board_count": 1,
@@ -558,7 +558,7 @@ function gameList()
         TheM(),
         Sailboat(),
         Turtle(),
-        TwistedTeas()
+        TwistedTs()
 
     ]
 }
