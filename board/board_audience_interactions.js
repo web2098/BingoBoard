@@ -244,49 +244,26 @@ function executeOrder66(enable_audio)
     container.style.display = 'none';
     modal.style.display = 'block';
 
-
-    const death_msg = document.getElementById('death_msg');
-    //Check death_msg is defined
-    if( death_msg != null )
-    {
-        death_msg.style.display = 'none';
-    }
-
     // With this:
     modal.style.background = "black";  // Set base background
 
-    const img = document.createElement('img');
-    img.src = 'order663.gif';
-    img.style.width = '100%';
-    img.style.height = '92%';
-    img.style.backgroundRepeat = 'no-repeat';
-    img.style.backgroundSize = "contain";
+    const order66_img = document.getElementById('order66_image');
+    order66_img.style.display = 'block';
 
-    modal.appendChild(img);
 
     prompt_timeout = setTimeout(() => {
         modal.style.display = 'none';
         container.style.display = 'block';
-        //Remove the img element from the modal
-        if( img.parentNode === modal ) {
-            modal.removeChild(img);
-        }
-    }, 3000);
+        order66_img.style.display = 'none';
+        order66Audio.pause();
+
+    }, 3500);
 
     if( enable_audio )
     {
         //Play the mp3 file order66.mp3
+        order66Audio.currentTime = 0;
         order66Audio.play();
-
-        //When the audio ends hide the modal
-        order66Audio.addEventListener('ended', function() {
-            modal.style.display = 'none';
-            container.style.display = 'block';
-            //Remove the img element from the modal
-            if( img.parentNode === modal ) {
-                modal.removeChild(img);
-            }
-        });
     }
 }
 

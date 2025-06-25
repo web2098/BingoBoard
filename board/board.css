@@ -120,6 +120,7 @@ button {
     clip:auto;
 }
 #death_msg {
+    display: none;
     color: red;
     text-align: center;
     position: absolute;
@@ -127,6 +128,13 @@ button {
     left: 50%;
     font-size: 1000%;
     transform: translate(-50%, -50%);
+}
+#order66_image{
+    display: none;
+    width: 100%;
+    height: 92%;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .circle {
     background-color: yellow;
