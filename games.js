@@ -536,7 +536,7 @@ function gameList()
         ValentinesDay(),
         TheM(),
         Sailboat(),
-        Tutrle()
+        Turtle()
 
     ]
 }
