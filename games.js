@@ -517,7 +517,7 @@ function TwistedTs(){
             [1,1],
             [2,1],[2,3],
             [3,3],
-            [4,1],[4,2],[4,3],[4,3]
+            [4,1],[4,2],[4,3],[4,4]
         ],
         "free_space_dynamic": false,
         "free_space_on": true,
