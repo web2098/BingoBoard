@@ -265,6 +265,9 @@ function executeOrder66(enable_audio)
         order66Audio.currentTime = 0;
         order66Audio.play();
     }
+    else{
+        console.log("Order 66 audio not enabled");
+    }
 }
 
 function create_audience_interaction_ui()
