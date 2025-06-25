@@ -487,6 +487,27 @@ function Sailboat(){
         "length": 3
     };
 }
+
+function Turtle(){
+    return {
+        "name": "Turtle",
+        "board_count": 1,
+        "board": [
+            [0,0,【0,4】,
+            [1,1],[1,2],[1,3],[1,4],
+             [2,1],[2,3],
+            [3,1],[3,2],[3,3],
+            [4,0],[4,1],[4,4]
+        ],
+        "free_space_dynamic": false,
+        "free_space_on": true,
+        "transitional": false,
+        "optional": false,
+        "rules": "Must match exact pattern",
+        "length": 3
+    };
+}
+
 function gameList()
 {
     return [
@@ -514,7 +535,8 @@ function gameList()
         Lucky7(),
         ValentinesDay(),
         TheM(),
-        Sailboat()
+        Sailboat(),
+        Tutrle()
 
     ]
 }
