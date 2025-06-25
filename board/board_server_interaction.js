@@ -199,6 +199,11 @@ function retryConnection(onMesssage) {
 
 
 function on_audience_interaction_type(type, options){
+    if( !room_connection )
+    {
+        console.log("No room connection established, cannot send audience interaction type");
+        return;
+    }
     console.log("Audience interaction type: " + type);
 
     const update = {

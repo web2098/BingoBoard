@@ -209,15 +209,22 @@ function create_audience_interaction()
             showAudienceInteraction('party-message', {});
         } else if (event.key === '5' || event.key === 'x') {
             showToTheDeath({});
+        } else if (event.key === '6' || event.key === 'l') {
+            executeOrder66(true);
         }
     });
 
     return create_audience_interaction_ui();
 }
 
+let order66Audio = null;
 
 function executeOrder66(enable_audio)
 {
+    if( order66Audio !== null && !order66Audio.paused)
+    {
+        return;
+    }
     //If prompt_timeout is not null clear it and make it null
     if( prompt_timeout !== null )
     {
@@ -247,31 +254,45 @@ function executeOrder66(enable_audio)
 
     // With this:
     modal.style.background = "black";  // Set base background
-    modal.style.backgroundImage = "url('order663.gif')";
-    modal.style.backgroundPosition = "center";
-    modal.style.backgroundRepeat = "no-repeat";
-    modal.style.backgroundSize = "contain"; // 'contain' keeps aspect ratio and fits the entire image
+
+    const img = document.createElement('img');
+    img.src = 'order663.gif';
+    img.style.width = '100%';
+    img.style.height = '92%';
+    img.style.backgroundRepeat = 'no-repeat';
+    img.style.backgroundSize = "contain";
+
+    modal.appendChild(img);
+
     prompt_timeout = setTimeout(() => {
         modal.style.display = 'none';
         container.style.display = 'block';
+        //Remove the img element from the modal
+        if( img.parentNode === modal ) {
+            modal.removeChild(img);
+        }
     }, 3000);
 
     if( enable_audio )
     {
         //Play the mp3 file order66.mp3
-        const audio = new Audio('order66.mp3');
-        audio.play();
+        order66Audio.play();
 
         //When the audio ends hide the modal
-        audio.addEventListener('ended', function() {
+        order66Audio.addEventListener('ended', function() {
             modal.style.display = 'none';
             container.style.display = 'block';
+            //Remove the img element from the modal
+            if( img.parentNode === modal ) {
+                modal.removeChild(img);
+            }
         });
     }
 }
 
 function create_audience_interaction_ui()
 {
+    order66Audio = new Audio('order66.mp3');
     const emoji_actions = document.createElement('emoji_actions');
     emoji_actions.id = 'emoji_actions';
 
