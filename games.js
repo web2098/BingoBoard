@@ -469,6 +469,24 @@ function TheM(){
     };
 }
 
+function Sailboat(){
+    return {
+        "name": "Sailboat",
+        "board_count": 1,
+        "board": [
+            [0,2],
+            [1,2],[1,3],
+            [3,0],[3,1],[3,2],[3,3],[3,4]
+            [4,1],[4,2],[4,3]
+        ],
+        "free_space_dynamic": false,
+        "free_space_on": true,
+        "transitional": false,
+        "optional": false,
+        "rules": "Must match exact pattern",
+        "length": 3
+    };
+}
 function gameList()
 {
     return [
@@ -495,7 +513,9 @@ function gameList()
         TheZ(),
         Lucky7(),
         ValentinesDay(),
-        TheM()
+        TheM(),
+        Sailboat()
+
     ]
 }
 
