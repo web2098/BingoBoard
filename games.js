@@ -493,7 +493,7 @@ function Turtle(){
         "name": "Turtle",
         "board_count": 1,
         "board": [
-            [0,0,[0,4],
+            [0,0],[0,4],
             [1,1],[1,2],[1,3],[1,4],
             [2,1],[2,3],
             [3,1],[3,2],[3,3],
@@ -507,6 +507,27 @@ function Turtle(){
         "length": 3
     };
 }
+
+function Twistedteas(){
+    return {
+        "name": "Twisted Ts",
+        "board_count": 1,
+        "board": [
+            [0,0],[0,1],[0,2],[0,3],
+            [1,1],
+            [2,1],[2,3],
+            [3,3],
+            [4,1],[4,2],[4,3],[4,3]
+        ],
+        "free_space_dynamic": false,
+        "free_space_on": true,
+        "transitional": false,
+        "optional": false,
+        "rules": "Must match exact pattern",
+        "length": 3
+    };
+}
+
 
 function gameList()
 {
@@ -536,7 +557,8 @@ function gameList()
         ValentinesDay(),
         TheM(),
         Sailboat(),
-        Turtle()
+        Turtle(),
+        TwistedTeas()
 
     ]
 }
