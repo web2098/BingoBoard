@@ -71,9 +71,9 @@ const GameBoard = ({ board, freeSpace, isSelected = false, onClick }: {
 const OperatorIcon = ({ operator }: { operator: string }) => {
   const getOperatorSymbol = () => {
     switch (operator.toUpperCase()) {
-      case 'AND': return '&';
-      case 'OR': return '|';
-      case 'TRANSITION': return '→';
+      case 'AND': return 'AND';
+      case 'OR': return 'OR';
+      case 'TRANSITION': return 'INTO';
       default: return operator;
     }
   };
