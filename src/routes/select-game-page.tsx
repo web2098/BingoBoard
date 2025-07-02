@@ -1,21 +1,23 @@
-// Home.jsx
-import React, { useRef } from 'react';
+// Select Game Page
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './select-game-page.css';
-import games, {boardContainsPoint} from '../data/games';
+import games from '../data/games';
 import HamburgerMenu from '../components/HamburgerMenu';
 import QRCode from '../components/QRCode';
 import AudienceInteractionButtons from '../components/AudienceInteractionButtons';
 import { generateWelcomeMessage } from '../utils/settings';
 
-import { Mousewheel, Keyboard, Pagination, Navigation } from 'swiper/modules';
+// Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Mousewheel, Keyboard } from 'swiper/modules';
+
+// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/mousewheel';
 import 'swiper/css/keyboard';
-
 
 interface GameSettings {
   id: number,
@@ -24,247 +26,391 @@ interface GameSettings {
   freeSpace: boolean,
 }
 
-const SliderViewSize = 4;
-
-
-//Create a preview game board that is 5x5 with each row containing the letters B, I, N, G, O
-const GameBoardPreview = ({isPreview, game}:{isPreview: boolean, game:object}) => {
+// Game Board Component for displaying 5x5 grids
+const GameBoard = ({ board, freeSpace, isSelected = false, onClick }: {
+  board: number[][],
+  freeSpace: boolean,
+  isSelected?: boolean,
+  onClick?: () => void
+}) => {
   const letters = ['B', 'I', 'N', 'G', 'O'];
-  const freeSquareRef  = useRef<HTMLDivElement>(null);
 
-  var size = isPreview ? 'small-' : 'large-';
+  const handleClick = () => {
+    if (onClick) onClick();
+  };
 
+  // Create a 5x5 grid and mark highlighted cells
+  const isHighlighted = (row: number, col: number): boolean => {
+    return board.some(coord => coord[0] === row && coord[1] === col);
+  };
 
-  //console.log("Game: ", game);
-  const board = Array.from({ length: 5 }, (_, i) => {
-    const row = Array.from({ length: 5 }, (_, j) => {
-      var selected = boardContainsPoint(game, i, j);
-      var letter = letters[j];
-      if (i === 2 && j === 2) {
-        return (
-          <div key={i* 5 + j} ref={freeSquareRef} className={`${size}preview-square-free ${selected ? 'selected' : ''}`}>
-            FREE
-          </div>
-        );
-      }
-      return (
-        <div key={i* 5 + j} className={`${size}preview-square ${selected ? 'selected' : ''}`}>
-          {letter}
+  return (
+    <div className={`game-board ${isSelected ? 'selected' : ''}`} onClick={handleClick}>
+      {[0, 1, 2, 3, 4].map((rowIndex) => (
+        <div key={rowIndex} className="board-row">
+          {[0, 1, 2, 3, 4].map((colIndex) => {
+            const isHighlightedCell = isHighlighted(rowIndex, colIndex);
+            const isFreeSpace = rowIndex === 2 && colIndex === 2;
+
+            return (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                className={`board-cell ${isHighlightedCell ? 'highlighted' : ''} ${isFreeSpace ? 'free-space' : ''}`}
+              >
+                {isFreeSpace ? (freeSpace ? 'FREE' : letters[colIndex]) : letters[colIndex]}
+              </div>
+            );
+          })}
         </div>
-      );
-    });
-    return <div key={'row' + i} className={size+"preview-row"}>{row}</div>;
-  });
-  return <div className={size+"game-board-preview"}>{board}</div>;
-}
+      ))}
+    </div>
+  );
+};
 
+// Operator Icon Component for dual board games
+const OperatorIcon = ({ operator }: { operator: string }) => {
+  const getOperatorSymbol = () => {
+    switch (operator.toUpperCase()) {
+      case 'AND': return '&';
+      case 'OR': return '|';
+      case 'TRANSITION': return '→';
+      default: return operator;
+    }
+  };
 
+  return (
+    <div className="operator-icon">
+      {getOperatorSymbol()}
+    </div>
+  );
+};
 
+// Game Info Card Component
+const GameInfoCard = ({ game, variant }: { game: any, variant: any }) => {
+  return (
+    <div className="game-info-card">
+      <h2 className="game-title">{game.name}</h2>
+      <div className="game-rules">
+        <h4>Rules:</h4>
+        <p>{variant.rules}</p>
+      </div>
+    </div>
+  );
+};
 
-const WelcomePanel = ({games, settings}: {games: any, settings:GameSettings}) => {
-  const game = games[settings.id];
-  const variant = game.variants[settings.variant];
+// Toggle Component for Free Space
+const FreeSpaceToggle = ({ freeSpace, onChange }: { freeSpace: boolean, onChange: (value: boolean) => void }) => {
+  return (
+    <div className="free-space-toggle">
+      <span className="toggle-label">Free Space:</span>
+      <label className="toggle-switch">
+        <input
+          type="checkbox"
+          checked={freeSpace}
+          onChange={(e) => onChange(e.target.checked)}
+        />
+        <span className="slider"></span>
+      </label>
+      <span className="toggle-state">{freeSpace ? 'ON' : 'OFF'}</span>
+    </div>
+  );
+};
+
+// Variant Controls Component
+const VariantControls = ({
+  currentVariant,
+  totalVariants,
+  onPrevious,
+  onNext
+}: {
+  currentVariant: number,
+  totalVariants: number,
+  onPrevious: () => void,
+  onNext: () => void
+}) => {
+  return (
+    <div className="variant-controls">
+      <button
+        className="variant-arrow"
+        onClick={onPrevious}
+        disabled={totalVariants <= 1}
+      >
+        ←
+      </button>
+      <span className="variant-indicator">
+        {currentVariant + 1} / {totalVariants}
+      </span>
+      <button
+        className="variant-arrow"
+        onClick={onNext}
+        disabled={totalVariants <= 1}
+      >
+        →
+      </button>
+    </div>
+  );
+};
+
+// Welcome Panel Component
+const WelcomePanel = () => {
   const welcomeText = generateWelcomeMessage();
 
   return (
     <div className="welcome-panel">
-      <div className="welcome-message">
+      <div className="welcome-message-card">
+        <h3>Welcome</h3>
         <pre className="welcome-template">{welcomeText}</pre>
       </div>
-      <div className="qr-code-section">
-        <h4>See The Board On Your Device</h4>
-        <QRCode
-          value={`${window.location.origin}/BingoBoard/board`}
-          size={300}
-          className="game-qr-code"
-        />
+      <div className="qr-code-card">
+        <h4>Join The Game</h4>
+        <div className="qr-code-container">
+          <QRCode
+            value={`${window.location.origin}/BingoBoard/board`}
+            size={200}
+            className="game-qr-code"
+          />
+        </div>
       </div>
     </div>
   );
 };
 
+// Main Game Preview Section
+const GamePreviewSection = ({
+  games,
+  settings,
+  onSettingsChange
+}: {
+  games: any[],
+  settings: GameSettings,
+  onSettingsChange: (settings: GameSettings) => void
+}) => {
+  const currentGame = games[settings.id];
+  const currentVariant = currentGame.variants[settings.variant];
 
+  const handleFreeSpaceToggle = (freeSpace: boolean) => {
+    onSettingsChange({ ...settings, freeSpace });
+  };
 
+  const handleVariantChange = (direction: 'prev' | 'next') => {
+    const totalVariants = currentGame.variants.length;
+    let newVariant = settings.variant;
 
-const Footer = ({games, onBoardSelect}: {games: any, onBoardSelect:any}) => {
-  return (
-    <div className="footer">
-      <div className="game-board-previews">
-        <Swiper
-          modules={[Navigation, Mousewheel, Keyboard, Pagination]}
-          direction={'horizontal'}
-          spaceBetween={0}
-          slidesPerView={SliderViewSize}
-          mousewheel={true}
-          keyboard={{
-            enabled: true,
-          }}
-          navigation
-          loop={true}
-          pagination={{ clickable: true }}
-        >
-          {Array.from({ length: games.length }, (_, i) => (
-          <SwiperSlide key={i} className="preview-slide-entry">
-            <div key={i} className="game-preview-entry" onClick={onBoardSelect} data-board={i} >
-              <p key={i} className="game-board-preview-label">{games[i].name}</p>
-              <GameBoardPreview isPreview={true} game={games[i].variants[0].boards[0]} />
-            </div>
-          </SwiperSlide>
+    if (direction === 'prev') {
+      newVariant = settings.variant > 0 ? settings.variant - 1 : totalVariants - 1;
+    } else {
+      newVariant = settings.variant < totalVariants - 1 ? settings.variant + 1 : 0;
+    }
+
+    onSettingsChange({ ...settings, variant: newVariant });
+  };
+
+  const handleGameBoardClick = () => {
+    // Toggle free space when clicking on the game board (if available)
+    handleFreeSpaceToggle(!settings.freeSpace);
+  };
+
+  // Handle scroll wheel for variant rotation
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    if (e.deltaY > 0) {
+      handleVariantChange('next');
+    } else {
+      handleVariantChange('prev');
+    }
+  };
+
+  const renderGameBoards = () => {
+    const boards = settings.freeSpace ? currentVariant.boards : (currentVariant.alt_boards || currentVariant.boards);
+    const isDualBoard = boards.length > 1;
+
+    return (
+      <div className={`game-boards-container ${isDualBoard ? 'dual-board' : 'single-board'}`}>
+        {boards.map((board: number[][], index: number) => (
+          <React.Fragment key={index}>
+            <GameBoard
+              board={board}
+              freeSpace={settings.freeSpace}
+              onClick={handleGameBoardClick}
+            />
+            {index < boards.length - 1 && currentVariant.op && (
+              <OperatorIcon operator={currentVariant.op} />
+            )}
+          </React.Fragment>
         ))}
-        </Swiper>
+      </div>
+    );
+  };
+
+  return (
+    <div className="game-preview-section" onWheel={handleWheel}>
+      <GameInfoCard game={currentGame} variant={currentVariant} />
+
+      <FreeSpaceToggle
+        freeSpace={settings.freeSpace}
+        onChange={handleFreeSpaceToggle}
+      />
+
+      <div className="game-display-area">
+        {renderGameBoards()}
+      </div>
+
+      <VariantControls
+        currentVariant={settings.variant}
+        totalVariants={currentGame.variants.length}
+        onPrevious={() => handleVariantChange('prev')}
+        onNext={() => handleVariantChange('next')}
+      />
+    </div>
+  );
+};
+
+// Small Game Preview for Swiper
+const SmallGamePreview = ({ game, gameIndex, onClick }: { game: any, gameIndex: number, onClick: () => void }) => {
+  const firstVariant = game.variants[0];
+  const firstBoard = firstVariant.boards[0];
+
+  return (
+    <div className="small-game-preview" onClick={onClick}>
+      <div className="small-game-board">
+        <GameBoard board={firstBoard} freeSpace={true} />
+      </div>
+      <div className="game-preview-label">
+        {game.name} [{firstVariant.length || 'Standard'}]
       </div>
     </div>
   );
 };
 
+// Game Selection Swiper Section
+const GameSelectionSection = ({
+  games,
+  currentGameId,
+  onGameSelect
+}: {
+  games: any[],
+  currentGameId: number,
+  onGameSelect: (gameId: number) => void
+}) => {
+  return (
+    <div className="game-selection-section">
+      <div className="swiper-container">
+        <Swiper
+          modules={[Navigation, Pagination, Mousewheel, Keyboard]}
+          spaceBetween={20}
+          slidesPerView={4}
+          slidesPerGroup={1}
+          loop={true}
+          loopAdditionalSlides={4}
+          breakpoints={{
+            320: {
+              slidesPerView: 2,
+              slidesPerGroup: 1,
+            },
+            640: {
+              slidesPerView: 3,
+              slidesPerGroup: 1,
+            },
+            768: {
+              slidesPerView: 4,
+              slidesPerGroup: 1,
+            },
+          }}
+          navigation={{
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          }}
+          pagination={{
+            clickable: true,
+            el: '.swiper-pagination',
+          }}
+          mousewheel={true}
+          keyboard={true}
+          className="game-swiper"
+        >
+          {games.map((game, index) => (
+            <SwiperSlide key={index} className="game-slide">
+              <SmallGamePreview
+                game={game}
+                gameIndex={index}
+                onClick={() => onGameSelect(index)}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
-const Home = () => {
+        <div className="swiper-navigation">
+          <div className="swiper-button-prev"></div>
+          <div className="swiper-pagination"></div>
+          <div className="swiper-button-next"></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Main Component
+const SelectGamePage = () => {
   const gameList = games();
   const navigate = useNavigate();
 
-  const [
-    gameSettings,
-    setGameSettings
-  ] = React.useState<GameSettings>({
+  const [gameSettings, setGameSettings] = useState<GameSettings>({
     id: 0,
     name: gameList[0].name,
     variant: 0,
     freeSpace: true
   });
 
-  function handleMainClick(){
-    // Toggle free space when clicking the main board
-    handleFreeSpaceToggle();
-  }
+  const handleGameSelect = (gameId: number) => {
+    setGameSettings({
+      id: gameId,
+      name: gameList[gameId].name,
+      variant: 0, // Reset to first variant when selecting new game
+      freeSpace: true
+    });
+  };
 
-  function handleFreeSpaceToggle(){
-    if ( 'alt_boards' in gameList[gameSettings.id].variants[gameSettings.variant]){
-      setGameSettings({...gameSettings, freeSpace: !gameSettings.freeSpace});
-    }
-  }
-
-  function handleRotate(direction: 'left' | 'right'){
-    const currentGame = gameList[gameSettings.id];
-    const newVariant = direction === 'left' ? (gameSettings.variant - 1 + currentGame.variants.length) % currentGame.variants.length : (gameSettings.variant + 1) % currentGame.variants.length;
-    var freeSpace = gameSettings.freeSpace;
-    if ( !('alt_boards' in currentGame.variants[newVariant]) ){
-      freeSpace = true;
-    }
-    setGameSettings({...gameSettings, variant: newVariant, freeSpace: freeSpace});
-  }
-
-  function onRotateWheel(event: React.WheelEvent<HTMLDivElement>){
-    event.preventDefault();
-    const delta = Math.sign(event.deltaY);
-    handleRotate(delta === 1 ? 'right' : 'left');
-  }
-
-  function handlePreviewClick(event: any){
-    var freeSpace = gameSettings.freeSpace;
-    var game : any = gameList[parseInt(event.currentTarget.dataset.board)];
-    if ( !('alt_boards' in game.variants[0]) ){
-      freeSpace = true;
-    }
-    setGameSettings({...gameSettings, freeSpace: freeSpace, id: parseInt(event.currentTarget.dataset.board), variant:0});
-  }
-
-  function handlePlayGame(){
+  const handlePlayGame = () => {
     // Store game settings in localStorage for the board page
     localStorage.setItem('gameSettings', JSON.stringify(gameSettings));
     navigate('/BingoBoard/board');
-  }
-
-
-  // Game-related variables for the preview section
-  const game = gameList[gameSettings.id];
-  const variant = game.variants[gameSettings.variant];
-  const canToggleFreeSpace = 'alt_boards' in variant;
-
-  var boards = variant.boards;
-  if( !gameSettings.freeSpace && (variant as any).alt_boards )
-  {
-    boards = (variant as any).alt_boards;
-  }
-
-  var op = "";
-  if( (variant as any).op === "and" ){
-    op = "+";
-  }
-  else if( (variant as any).op === "or"){
-    op = "/";
-  }
-  else if( (variant as any).op === "transition"){
-    op = "=>";
-  }
+  };
 
   return (
-    <div className="home select-game-page">
+    <div className="select-game-page">
       <HamburgerMenu currentPage="select-game" />
 
-      <div className="main-content">
-        {/* Section 1: Game Preview */}
-        <div className="preview-section">
-          <div className="game-title-section">
-            <div className="game-rules">
-              <h4>{game.name}</h4>
-              <p>{variant.rules}</p>
-            </div>
-
-            <div className="free-space-toggle">
-              <label className="toggle-switch">
-                <input
-                  type="checkbox"
-                  checked={gameSettings.freeSpace}
-                  onChange={handleFreeSpaceToggle}
-                  disabled={!canToggleFreeSpace}
-                />
-                <span className="slider"></span>
-              </label>
-              <span className="toggle-label">Free Space: {gameSettings.freeSpace ? 'ON' : 'OFF'}</span>
-            </div>
+      <div className="main-layout">
+        <div className="top-section">
+          <div className="game-preview-area">
+            <GamePreviewSection
+              games={gameList}
+              settings={gameSettings}
+              onSettingsChange={setGameSettings}
+            />
           </div>
 
-          <div className="game-preview" onClick={handleMainClick} onWheel={onRotateWheel}>
-            {boards.length > 1 ? (
-              <div className="multi-board-preview">
-                <GameBoardPreview isPreview={false} game={boards[0]}/>
-                <p className="board-operator">{op}</p>
-                <GameBoardPreview isPreview={false} game={boards[1]}/>
-              </div>
-            ) : (
-              <GameBoardPreview isPreview={false} game={boards[0]}/>
-            )}
+          <div className="welcome-area">
+            <WelcomePanel />
           </div>
-
-          {game.variants.length > 1 && (
-            <div className="variant-controls">
-              <button onClick={() => handleRotate('left')} className="variant-arrow">←</button>
-              <span>Variant {gameSettings.variant + 1} of {game.variants.length}</span>
-              <button onClick={() => handleRotate('right')} className="variant-arrow">→</button>
-            </div>
-          )}
         </div>
 
-        {/* Section 2: Welcome, Rules, QR Code */}
-        <div className="welcome-section">
-          <WelcomePanel games={gameList} settings={gameSettings} />
+        <div className="bottom-section">
+          <GameSelectionSection
+            games={gameList}
+            currentGameId={gameSettings.id}
+            onGameSelect={handleGameSelect}
+          />
         </div>
       </div>
 
-      {/* Section 3: Game Selection Footer */}
-      <div className="game-selection-section">
-        <Footer games={gameList} onBoardSelect={handlePreviewClick}/>
-      </div>
-
-      {/* Floating Start Game Button */}
-      <button className="floating-start-button" onClick={handlePlayGame} title="Start Game">
+      <button className="start-game-button" onClick={handlePlayGame} title="Start Game">
         <div className="play-icon"></div>
       </button>
 
-      {/* Audience Interaction Buttons */}
       <AudienceInteractionButtons currentPage="select-game" />
     </div>
   );
 };
 
-export default Home;
+export default SelectGamePage;

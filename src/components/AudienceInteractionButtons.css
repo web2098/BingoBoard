@@ -1,7 +1,7 @@
 /* Audience Interaction Buttons Styles */
 .audience-interaction-buttons {
   position: fixed;
-  left: 20px;
+  left: 12px;
   top: 160px; /* Position below the floating start button */
   display: flex;
   flex-direction: column;
@@ -11,8 +11,8 @@
 }
 
 .audience-interaction-btn {
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   border: none;
   border-radius: 50%;
   background: linear-gradient(145deg, #6366f1, #4f46e5);

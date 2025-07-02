@@ -7,13 +7,39 @@
 7. The menu area must be accessible from all pages
 8. There should be a select game page
 9. The select game page must have 3 sections
-    - Section 1 is a preview of the current selected game and this should take up 2/3 of the width and 2/3 of the height
-         - The current game should have a title, and if the free space is on/off
+    - Section 1 is a preview of the current selected game and this should take up 2/3 of the width and 3/4 of the height
+         - The top of section 1 should contain a card with the name of the game and the rules of the game
+         - Under the card should be  toggle button for the current state of the free space
+         - When toggled it should change the current state of the freespace and switch the primary grid to display the alternative board
+         - Under the toggle should show the current selected game+variant described in data/games.ts
+            - Each game may have multiple variants
+            - Each variant can either have 1 single 5x5 board or 2 5x5 boards with AND/OR/TRANSITION operation that is shown with an icon between the boards
+            - Each board should have all cells list in the current variant should be higlighted
+            - The boards should use up all available space in the section
+            - The boards should shrink when the available space is reduced to prevent clipping
+            - If there is not enough space to show both boards horizontal they should layout vertically
+            - Each cell in the grid should have a letter cosponding to the columns: B, I, N, G, O
+            - The middle cell in the grid at 2,2 should say free
+            - All cells should be of equal size
+            - All text should fill the availble space in the cell and change sizes when the cell resizes
          - The current game should be clickable to change free space if available
-         - The free space label should be a toggle switch
-         - The current game area should have a left/right arrow to change variant
-    - Section 2 is a area for welcom message, rules of the game and QR code to join a bingo room this area is 1/3 of the width and 2/3 of the height
-    - section 3 is the full width and the last 1/3 of the height is a scrollable list of all available games
+         - Under the current game there should be arrows to go to previous and next variant
+         - Between the arrows should list the current variant index
+         - The scroll wheel used in this panel should rotate the variant
+    - Section 2 is a area for welcome message, QR code to join a bingo room this area is 1/3 of the width and 3/4 of the height
+        - The Welcome message and QR code should both be a card
+    - Section 3 is the full width and the last 1/4 and be named preview
+        - The section should contain a swippable horizontal list of all available games
+            - Each available game should be rendered as a single 5x5 grid of the first variant and first board
+            - Each board should have all cells list in the first variant should be higlighted
+            - Under each grid should be the name of the game followed by [{length}]
+        - Under the swippable section should have a left arrow to go to the left on the left side of the page
+        - Under the swippable section should have a right arrow to go to the right on the right side of the page
+        - Between the arrows should be dots for the current position in the list
+        - You should be able to click in the area and move the swip the cursor to move the list
+        - You should be able to click the dots to change the list
+        - you should be able to use the scroll wheel to move the list
+        - clicking on one of the grids should change the primary view current selected game
 10. The select game page must have a button to start the game
 11. There should be a board page which have 2 sections
     - Section 1 is a header
