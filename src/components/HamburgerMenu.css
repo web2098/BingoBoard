@@ -112,7 +112,13 @@
   }
 
   .hamburger-button {
+    width: 40px;
+    height: 40px;
+
     top: 15px;
-    left: 15px;
+    left: 5px;
+  }
+  .hamburger-line {
+    width: 20px;
   }
 }
