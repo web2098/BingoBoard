@@ -1,0 +1,83 @@
+[
+    {
+        "id": "applause",
+        "content":{"text": "Applause"},
+        "icon": {"emoji": "👏"},
+        "action": {
+            "function": "showAudienceInteraction",
+            "args": ["audienceApplause"]
+        },
+        "description": "Show Audience Applause Modal",
+        "pages": ["select-game", "game-board"],
+        "shortcuts":["a", "1"]
+    },
+    {
+        "id": "boo",
+        "content":{"text": "Booooooo"},
+        "icon": {"emoji": "👻"},
+        "action": {
+            "function": "showAudienceInteraction",
+            "args": ["audienceBoo"]
+        },
+        "description": "Show Audience Boo Modal",
+        "pages": ["select-game", "game-board"],
+        "shortcuts":["b", "2"]
+    },
+    {
+        "id": "drink",
+        "content":{"text": "Drink"},
+        "icon": {"emoji": "🍺"},
+        "action": {
+            "function": "showAudienceInteraction",
+            "args": ["audienceDrink"]
+        },
+        "description": "Show Audience Drink Modal",
+        "pages": ["select-game", "game-board"],
+        "shortcuts":["d", "3"]
+    },
+    {
+        "id": "winner",
+        "content":{"text": "Winner"},
+        "icon": {"emoji": "🎉"},
+        "action": {
+            "function": "showAudienceInteraction",
+            "args": ["audienceWinner"]
+        },
+        "description": "Show Winner Applause Modal",
+        "pages": ["game-board"],
+        "shortcuts":["w", "4"]
+    },
+    {
+        "id": "battle",
+        "icon": {"emoji": "⚔️"},
+        "content":{
+            "text": "To The Death!",
+            "img": "/images/audience-interactions/battle.jpg"
+        },
+        "action": {
+            "function": "showBattleToTheDeath",
+            "args": ["enableGraphicBattleImagery"]
+        },
+        "description": "Show Audience Battle Modal",
+        "pages": ["game-board"],
+        "shortcuts":["x", "5"]
+    },
+    {
+        "id": "executeOrder66",
+        "icon":{"img": "/images/audience-interactions/lightsaber.png"},
+        "content":{
+            "img": "/images/audience-interactions/order66.gif",
+            "audio": "/audio/audience-interactions/order66.mp3"
+        },
+        "action": {
+            "function": "executeOrder66",
+            "args": ["soundEffects"]
+        },
+        "auto":{
+            "number": 66
+        },
+        "description": "Show Execute Order 66 Modal",
+        "pages": ["game-board"],
+        "shortcuts":["l", "6"]
+    }
+]

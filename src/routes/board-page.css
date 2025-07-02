@@ -1,0 +1,255 @@
+/* Board Page Styles */
+
+.board-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background-color: #f5f5f5;
+}
+
+/* Header Section */
+.board-header {
+  display: flex;
+  background: white;
+  border-bottom: 2px solid #ccc;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-left, .header-center, .header-right {
+  flex: 1;
+  padding: 0 15px;
+}
+
+.header-center {
+  flex: 2; /* Give more space to the center section */
+  text-align: center;
+}
+
+/* Game Preview Mini */
+.game-preview-mini {
+  text-align: center;
+}
+
+.game-preview-mini h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.mini-board {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+}
+
+.mini-cell {
+  background: #f0f0f0;
+  border: 1px solid #999;
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+/* Last Number Section */
+.last-number-section h2 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 2em;
+}
+
+.number-count {
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+  color: #666;
+}
+
+.special-callout {
+  margin: 0;
+  font-size: 1.1em;
+  color: #e74c3c;
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* Quick Actions */
+.quick-actions, .qr-code-header {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.quick-actions h4, .qr-code-header h4 {
+  margin: 0 0 10px 0;
+  color: #333;
+  text-align: center;
+}
+
+.action-btn {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+  padding: 8px 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+  background: #0056b3;
+}
+
+/* QR Code */
+.qr-placeholder {
+  width: 100px;
+  height: 100px;
+  background: #f0f0f0;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border-radius: 4px;
+}
+
+.qr-placeholder p {
+  margin: 0;
+  color: #999;
+  font-size: 0.8em;
+}
+
+/* Bingo Grid Section */
+.bingo-grid-section {
+  flex: 1;
+  padding: 20px;
+  overflow: auto;
+}
+
+.bingo-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.bingo-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.row-letter {
+  width: 60px;
+  height: 60px;
+  background: #28a745;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+  font-weight: bold;
+  margin-right: 10px;
+  border-radius: 8px;
+}
+
+.bingo-cell {
+  flex: 1;
+  height: 60px;
+  margin: 0 2px;
+  background: #f8f9fa;
+  border: 2px solid #dee2e6;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.bingo-cell:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.bingo-cell.called {
+  background: #dc3545;
+  color: white;
+  border-color: #c82333;
+  transform: scale(0.95);
+}
+
+.bingo-cell.called:hover {
+  background: #c82333;
+  transform: scale(0.95);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .board-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .header-left, .header-center, .header-right {
+    flex: none;
+  }
+
+  .bingo-cell {
+    font-size: 1.2em;
+    height: 50px;
+  }
+
+  .row-letter {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5em;
+  }
+}
+
+@media (max-width: 768px) {
+  .board-header {
+    padding: 10px;
+  }
+
+  .bingo-grid {
+    padding: 10px;
+  }
+
+  .bingo-cell {
+    font-size: 1em;
+    height: 40px;
+  }
+
+  .row-letter {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2em;
+    margin-right: 5px;
+  }
+
+  .last-number-section h2 {
+    font-size: 1.5em;
+  }
+}

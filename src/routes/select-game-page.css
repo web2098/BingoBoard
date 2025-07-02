@@ -1,0 +1,756 @@
+/* Select Game Page Styles */
+
+.home {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Main Content Area */
+.main-content {
+  display: flex;
+  flex: 2;
+  height: 67vh;
+  padding-left: 80px;
+}
+
+/* Game Preview Section */
+.preview-section {
+  flex: 2;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* Welcome Section */
+.welcome-section {
+  flex: 1;
+  padding: 20px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* Game Selection Section */
+.game-selection-section {
+  flex: 0.5;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.game-title-section {
+  text-align: center;
+}
+
+.game-title-section h2 {
+  margin: 0 0 0px 0;
+  font-size: 2.5em;
+  color: #333;
+}
+
+.game-title-section h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.8em;
+  color: #666;
+}
+
+/* Toggle Switch Styles */
+.free-space-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+input:disabled + .slider {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.toggle-label {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Game Preview Area */
+.game-preview {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  cursor: pointer;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.multi-board-preview {
+  display: grid;
+  grid-template-columns: 2fr .1fr 2fr;
+  align-items: center;
+}
+
+.board-operator {
+  font-size: 2em;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+/* Variant Controls */
+.variant-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.variant-arrow {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: background-color 0.3s;
+}
+
+.variant-arrow:hover {
+  background: #0056b3;
+}
+
+/* Welcome Panel Styles */
+.welcome-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 25px;
+  overflow: hidden;
+}
+
+.welcome-message h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.welcome-template {
+  font-family: 'Courier New', monospace;
+  font-size: 2.5rem;
+  font-weight: bold;
+  line-height: 1.6;
+  color: #2c3e50;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  border-left: 4px solid #007bff;
+  margin: 0;
+  white-space: pre-line;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Game Rules Section */
+.game-rules {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  border-left: 4px solid #007bff;
+  overflow: hidden;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.game-rules h4 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-weight: bold;
+  font-size: 2.5rem;
+}
+
+.game-rules p {
+  margin: 0;
+  line-height: 1.6;
+  color: #2c3e50;
+  font-size: 2.0rem;
+}
+
+/* QR Code Section */
+.qr-code-section {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  border-left: 4px solid #007bff;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.qr-code-section .qr-code {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.qr-code-section .qr-code-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+}
+
+.qr-code-section h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+/* Footer and Game Selection */
+.footer {
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+  height: auto;
+}
+
+.footer-buttons {
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #eee;
+}
+
+.footer-button {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 15px 40px;
+  font-size: 1.5em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.footer-button:hover {
+  background: #218838;
+}
+
+/* Game Board Preview Styles */
+.game-board-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 5px;
+  padding-left: 5px;
+  overflow: hidden;
+}
+
+.preview-row {
+  display: flex;
+}
+
+.preview-square {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  box-sizing: border-box;
+  user-select: none;
+  color: #000000;
+}
+
+.preview-square-free {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  box-sizing: border-box;
+  user-select: none;
+  min-width: min-content;
+  background-color: #FFFFFF;
+}
+
+.large-preview-square {
+  font-size: 4.2em;
+  min-width: 72px;
+}
+
+.large-preview-square-free {
+  font-size: 2.1em;
+}
+
+.small-preview-square {
+  font-size: 1.2em;
+  width: 1.0rem;
+  height: 1.7rem;
+}
+
+.small-preview-square-free {
+  font-size: 0.35em;
+  width: 1.0rem;
+}
+
+.selected {
+  background-color: #1E4D2B;
+  color: #FFFFFF;
+}
+
+/* Game Board Previews and Swiper */
+.game-board-previews {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.swiper-slide {
+  margin: 0px;
+  margin-left: 40px;
+  overflow: hidden;
+}
+
+.game-preview-entry {
+  padding: 8px;
+}
+
+.game-board-preview-label {
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+}
+
+.large-game-board-preview {
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.small-game-board-preview {
+  margin-bottom: 5px;
+}
+
+/* Custom Swiper Navigation and Pagination Layout */
+.game-board-previews .swiper-button-prev,
+.game-board-previews .swiper-button-next {
+  top: auto !important;
+  bottom: 5px !important;
+  margin-top: 0 !important;
+  width: 30px !important;
+  height: 30px !important;
+  color: #333 !important;
+}
+
+.game-board-previews .swiper-button-prev {
+  left: 20px !important;
+}
+
+.game-board-previews .swiper-button-next {
+  right: 20px !important;
+}
+
+.game-board-previews .swiper-pagination {
+  bottom: 8px !important;
+  left: 50% !important;
+  width: auto !important;
+  transform: translateX(-50%) !important;
+}
+
+.game-board-previews .swiper-pagination-bullet {
+  background: #333 !important;
+  width: 8px !important;
+  height: 8px !important;
+  margin: 0 4px !important;
+}
+
+.game-board-previews .swiper-pagination-bullet-active {
+  background: #007bff !important;
+}
+
+.game-board-previews .swiper-button-prev::after,
+.game-board-previews .swiper-button-next::after {
+  font-size: 16px !important;
+  font-weight: bold !important;
+}
+
+/* Floating Action Button for Start Game */
+.floating-start-button {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  z-index: 999;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.floating-start-button:hover {
+  background: #218838;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.floating-start-button:active {
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.floating-start-button .play-icon {
+  width: 0;
+  height: 0;
+  border-left: 14px solid white;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  margin-left: 3px;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .home {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-y: auto;
+  }
+
+  .main-content {
+    flex-direction: column;
+    height: auto;
+    flex: none;
+    overflow: visible;
+  }
+
+  .preview-section {
+    flex: none;
+    min-height: 40vh;
+    height: auto;
+    order: 2;
+  }
+
+  .welcome-section {
+    flex: none;
+    min-height: 30vh;
+    height: auto;
+    padding: 15px;
+    min-width: auto;
+    order: 1;
+  }
+
+  .game-selection-section {
+    flex: none;
+    min-height: 25vh;
+    height: auto;
+    padding: 15px 0;
+    order: 3;
+  }
+
+  .game-title-section h2 {
+    font-size: 2rem;
+  }
+
+  .game-title-section h3 {
+    font-size: 1.5rem;
+  }
+
+  .welcome-template {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .game-rules {
+    padding: 12px;
+  }
+
+  .qr-code-section {
+    padding: 12px;
+  }
+
+  .welcome-panel {
+    gap: 15px;
+  }
+
+  .game-board-previews {
+    height: calc(100% - 30px);
+    padding-bottom: 30px;
+  }
+
+  .swiper {
+    padding-bottom: 45px !important;
+  }
+
+  .swiper-slide {
+    margin-left: 20px;
+  }
+
+  .game-board-previews .swiper-button-prev,
+  .game-board-previews .swiper-button-next {
+    width: 25px !important;
+    height: 25px !important;
+    bottom: 5px !important;
+  }
+
+  .game-board-previews .swiper-pagination {
+    bottom: 8px !important;
+  }
+
+  .game-preview-entry {
+    padding: 8px;
+    min-height: 80px;
+  }
+
+  .game-board-preview-label {
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+  }
+
+  .game-board-preview {
+    max-height: none;
+  }
+
+  .large-preview-square {
+    font-size: 3.5em;
+  }
+
+  .floating-start-button {
+    width: 50px;
+    height: 50px;
+    top: 75px;
+    left: 15px;
+    font-size: 18px;
+  }
+
+  .floating-start-button .play-icon {
+    border-left: 12px solid white;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    margin-left: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home {
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
+  }
+
+  .preview-section {
+    min-height: 35vh;
+    height: auto;
+    padding: 10px;
+    order: 2;
+  }
+
+  .welcome-section {
+    min-height: 30vh;
+    height: auto;
+    padding: 10px;
+    order: 1;
+  }
+
+  .game-selection-section {
+    min-height: 28vh;
+    height: auto;
+    padding: 10px 0;
+    order: 3;
+  }
+
+  .game-title-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+  }
+
+  .game-title-section h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+
+  .free-space-toggle {
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  .toggle-label {
+    font-size: 1rem;
+  }
+
+  .welcome-template {
+    font-size: 0.9rem;
+    padding: 10px;
+    line-height: 1.4;
+  }
+
+  .game-rules {
+    padding: 10px;
+  }
+
+  .game-rules h4 {
+    font-size: 1.1rem;
+  }
+
+  .qr-code-section {
+    padding: 10px;
+  }
+
+  .qr-code-section h4 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+
+  .welcome-panel {
+    gap: 15px;
+  }
+
+  .large-preview-square {
+    font-size: 3rem;
+    min-width: 50px;
+  }
+
+  .large-preview-square-free {
+    font-size: 1.5rem;
+  }
+
+  .board-operator {
+    font-size: 1.5rem;
+  }
+
+  .game-board-previews {
+    height: calc(100% - 40px);
+    padding-bottom: 40px;
+    padding-top: 5px;
+  }
+
+  .swiper {
+    padding-bottom: 55px !important;
+  }
+
+  .swiper-slide {
+    margin-left: 15px;
+  }
+
+  .game-board-previews .swiper-button-prev,
+  .game-board-previews .swiper-button-next {
+    width: 24px !important;
+    height: 24px !important;
+    bottom: 5px !important;
+  }
+
+  .game-board-previews .swiper-pagination {
+    bottom: 8px !important;
+  }
+
+  .game-preview-entry {
+    padding: 6px;
+    margin-bottom: 8px;
+    min-height: 70px;
+  }
+
+  .game-board-preview-label {
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .floating-start-button {
+    width: 44px;
+    height: 44px;
+    top: 70px;
+    left: 12px;
+    font-size: 16px;
+  }
+
+  .floating-start-button .play-icon {
+    border-left: 10px solid white;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    margin-left: 2px;
+  }
+}

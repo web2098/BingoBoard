@@ -1,27 +1,20 @@
 // Home.jsx
-import React, { useRef, useEffect } from 'react';
-import '../styles/select-game-page.css';
+import React, { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './select-game-page.css';
 import games, {boardContainsPoint} from '../data/games';
+import HamburgerMenu from '../components/HamburgerMenu';
+import QRCode from '../components/QRCode';
+import AudienceInteractionButtons from '../components/AudienceInteractionButtons';
+import { generateWelcomeMessage } from '../utils/settings';
 
-
- //import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
- import { Mousewheel, Keyboard, Pagination, Navigation } from 'swiper/modules';
+import { Mousewheel, Keyboard, Pagination, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/mousewheel';
 import 'swiper/css/keyboard';
-// import 'swiper/swiper-bundle.min.css';
-
-//What do I want on this webpage:
-// 1. A small header with a button to settings on left, name of the current game, status of free space
-//   a. This element should cover 50% of the available space
-// 2. Then I want a right panel that will contain 2 paragraph elements that goes 75% of the available vertical space and 40% of the available horizontal space
-// 3. The left panel should then contain a preview of the game board
-// 4. Below these two panels shoudl be  foot with a small preview of each each available game board
-//   a. Only 5 of these should be visible at a time, and you should be able to swipe through or use buttons
-// 5. Under this list of game board should be a back, play, and next button
 
 
 interface GameSettings {
@@ -30,6 +23,8 @@ interface GameSettings {
   variant: number,
   freeSpace: boolean,
 }
+
+const SliderViewSize = 4;
 
 
 //Create a preview game board that is 5x5 with each row containing the letters B, I, N, G, O
@@ -66,80 +61,30 @@ const GameBoardPreview = ({isPreview, game}:{isPreview: boolean, game:object}) =
 
 
 
-const Header = ({games, settings}: {games: any, settings:GameSettings}) => {
-  const freeSpaceMessage = settings.freeSpace ? 'ON' : 'OFF';
-
-  var name = games[settings.id].name;
-  if (games[settings.id].variants[settings.variant].name){
-    name = games[settings.id].variants[settings.variant].name
-  }
+const WelcomePanel = ({games, settings}: {games: any, settings:GameSettings}) => {
+  const game = games[settings.id];
+  const variant = game.variants[settings.variant];
+  const welcomeText = generateWelcomeMessage();
 
   return (
-    <div className="header">
-      <button className="settings-button">Settings</button>
-      <h1 className="game-name">{name}</h1>
-      <div className="free-space-status">Free Space: {freeSpaceMessage}</div>
-    </div>
-  );
-};
-
-const RightPanel = ({games, settings}: {games: any, settings:GameSettings}) => {
-  const game = games[settings.id];
-  //console.log("Current game: ", game.name);
-  const hasVariants = game.variants.length > 1;
-  const variant = game.variants[settings.variant];
-
-  return (
-    <div className="right-panel">
-      <p>Paragraph 1</p>
-      <p>{variant.rules}</p>
-    </div>
-  );
-};
-
-
-const LeftPanel = ({games, settings, onBoardClick, onRotate}: {games: any, settings:GameSettings, onBoardClick: any, onRotate:any}) => {
-  const game = games[settings.id];
-  //console.log("Current game: ", game.name);
-  const hasVariants = game.variants.length > 1;
-  const variant = game.variants[settings.variant];
-
-  // TODO: Add a foward/back button for variants when required
-
-
-  var boards = variant.boards;
-  if( !settings.freeSpace && variant.alt_boards )
-  {
-    boards = variant.alt_boards;
-  }
-
-  var op = "";
-  if( variant.op === "and" ){
-    op = "+";
-  }
-  else if( variant.op === "or"){
-    op = "/";
-  }
-  else if( variant.op === "transition"){
-    op = "=>";
-  }
-
-  if ( boards.length > 1 )
-  {
-    return (
-      <div className="left-panel" onClick={onBoardClick} onWheel={onRotate}>
-          <GameBoardPreview isPreview={false} game={boards[0]}/>
-          <p className="left-panel-op">{op}</p>
-          <GameBoardPreview isPreview={false} game={boards[1]}/>
+    <div className="welcome-panel">
+      <div className="welcome-message">
+        <pre className="welcome-template">{welcomeText}</pre>
       </div>
-    );
-  }
-  return (
-    <div className="left-panel" onClick={onBoardClick} onWheel={onRotate}>
-        <GameBoardPreview isPreview={false} game={boards[0]}/>
+      <div className="qr-code-section">
+        <h4>See The Board On Your Device</h4>
+        <QRCode
+          value={`${window.location.origin}/BingoBoard/board`}
+          size={300}
+          className="game-qr-code"
+        />
+      </div>
     </div>
   );
 };
+
+
+
 
 const Footer = ({games, onBoardSelect}: {games: any, onBoardSelect:any}) => {
   return (
@@ -149,7 +94,7 @@ const Footer = ({games, onBoardSelect}: {games: any, onBoardSelect:any}) => {
           modules={[Navigation, Mousewheel, Keyboard, Pagination]}
           direction={'horizontal'}
           spaceBetween={0}
-          slidesPerView={5}
+          slidesPerView={SliderViewSize}
           mousewheel={true}
           keyboard={{
             enabled: true,
@@ -175,6 +120,7 @@ const Footer = ({games, onBoardSelect}: {games: any, onBoardSelect:any}) => {
 
 const Home = () => {
   const gameList = games();
+  const navigate = useNavigate();
 
   const [
     gameSettings,
@@ -187,19 +133,30 @@ const Home = () => {
   });
 
   function handleMainClick(){
+    // Toggle free space when clicking the main board
+    handleFreeSpaceToggle();
+  }
+
+  function handleFreeSpaceToggle(){
     if ( 'alt_boards' in gameList[gameSettings.id].variants[gameSettings.variant]){
       setGameSettings({...gameSettings, freeSpace: !gameSettings.freeSpace});
     }
   }
 
-  function handleRotate(){
+  function handleRotate(direction: 'left' | 'right'){
     const currentGame = gameList[gameSettings.id];
-    const newVariant = (gameSettings.variant + 1) % currentGame.variants.length;
+    const newVariant = direction === 'left' ? (gameSettings.variant - 1 + currentGame.variants.length) % currentGame.variants.length : (gameSettings.variant + 1) % currentGame.variants.length;
     var freeSpace = gameSettings.freeSpace;
     if ( !('alt_boards' in currentGame.variants[newVariant]) ){
       freeSpace = true;
     }
     setGameSettings({...gameSettings, variant: newVariant, freeSpace: freeSpace});
+  }
+
+  function onRotateWheel(event: React.WheelEvent<HTMLDivElement>){
+    event.preventDefault();
+    const delta = Math.sign(event.deltaY);
+    handleRotate(delta === 1 ? 'right' : 'left');
   }
 
   function handlePreviewClick(event: any){
@@ -211,18 +168,101 @@ const Home = () => {
     setGameSettings({...gameSettings, freeSpace: freeSpace, id: parseInt(event.currentTarget.dataset.board), variant:0});
   }
 
+  function handlePlayGame(){
+    // Store game settings in localStorage for the board page
+    localStorage.setItem('gameSettings', JSON.stringify(gameSettings));
+    navigate('/BingoBoard/board');
+  }
+
+
+  // Game-related variables for the preview section
+  const game = gameList[gameSettings.id];
+  const variant = game.variants[gameSettings.variant];
+  const canToggleFreeSpace = 'alt_boards' in variant;
+
+  var boards = variant.boards;
+  if( !gameSettings.freeSpace && (variant as any).alt_boards )
+  {
+    boards = (variant as any).alt_boards;
+  }
+
+  var op = "";
+  if( (variant as any).op === "and" ){
+    op = "+";
+  }
+  else if( (variant as any).op === "or"){
+    op = "/";
+  }
+  else if( (variant as any).op === "transition"){
+    op = "=>";
+  }
 
   return (
-    <div className="home">
-      <Header games={gameList} settings={gameSettings}/>
-      <p>Welcome to bingo night</p>
-      <LeftPanel games={gameList} settings={gameSettings} onBoardClick={handleMainClick} onRotate={handleRotate}/>
-      <p>Variant Selected</p>
-      <p>Rules</p>
-      <div className="footer-buttons">
-        <button className='footer-button'>Play</button>
+    <div className="home select-game-page">
+      <HamburgerMenu currentPage="select-game" />
+
+      <div className="main-content">
+        {/* Section 1: Game Preview */}
+        <div className="preview-section">
+          <div className="game-title-section">
+            <div className="game-rules">
+              <h4>{game.name}</h4>
+              <p>{variant.rules}</p>
+            </div>
+
+            <div className="free-space-toggle">
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={gameSettings.freeSpace}
+                  onChange={handleFreeSpaceToggle}
+                  disabled={!canToggleFreeSpace}
+                />
+                <span className="slider"></span>
+              </label>
+              <span className="toggle-label">Free Space: {gameSettings.freeSpace ? 'ON' : 'OFF'}</span>
+            </div>
+          </div>
+
+          <div className="game-preview" onClick={handleMainClick} onWheel={onRotateWheel}>
+            {boards.length > 1 ? (
+              <div className="multi-board-preview">
+                <GameBoardPreview isPreview={false} game={boards[0]}/>
+                <p className="board-operator">{op}</p>
+                <GameBoardPreview isPreview={false} game={boards[1]}/>
+              </div>
+            ) : (
+              <GameBoardPreview isPreview={false} game={boards[0]}/>
+            )}
+          </div>
+
+          {game.variants.length > 1 && (
+            <div className="variant-controls">
+              <button onClick={() => handleRotate('left')} className="variant-arrow">←</button>
+              <span>Variant {gameSettings.variant + 1} of {game.variants.length}</span>
+              <button onClick={() => handleRotate('right')} className="variant-arrow">→</button>
+            </div>
+          )}
+        </div>
+
+        {/* Section 2: Welcome, Rules, QR Code */}
+        <div className="welcome-section">
+          <WelcomePanel games={gameList} settings={gameSettings} />
+        </div>
       </div>
-      <Footer games={gameList} onBoardSelect={handlePreviewClick}/>
+
+      {/* Section 3: Game Selection Footer */}
+      <div className="game-selection-section">
+        <Footer games={gameList} onBoardSelect={handlePreviewClick}/>
+      </div>
+
+      {/* Floating Start Game Button */}
+      <button className="floating-start-button" onClick={handlePlayGame} title="Start Game">
+        <div className="play-icon"></div>
+      </button>
+
+      {/* Audience Interaction Buttons */}
+      <AudienceInteractionButtons currentPage="select-game" />
     </div>
   );
 };

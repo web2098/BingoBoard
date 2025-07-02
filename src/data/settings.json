@@ -1,0 +1,124 @@
+[
+  {
+    "section": "Welcome Customizations",
+    "Label": "Welcome Message",
+    "id": "welcomeMessage",
+    "description": "Custom message displayed on the welcome screen",
+    "type": "textarea",
+    "default": "BINGO FREE TO PLAY!"
+  },
+  {
+    "section": "Welcome Customizations",
+    "Label": "Number of Cards Per Person",
+    "id": "numberOfCards",
+    "description": "Number of bingo cards each player receives",
+    "type": "number",
+    "default": 2
+  },
+  {
+    "section": "Welcome Customizations",
+    "Label": "Time",
+    "id": "timeMessage",
+    "description": "The time when the bingo game starts, and optionally ends",
+    "type": "textarea",
+    "default": "6:30 PM"
+  },
+  {
+    "section": "Welcome Customizations",
+    "Label": "Bingo Word",
+    "id": "bingoWord",
+    "description": "Custom word displayed on the welcome screen for what a person should call out at bingo",
+    "type": "textarea",
+    "default": "BAHHH!"
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "Show Last Number Played",
+    "id": "showLastNumberPlayed",
+    "description": "Display the last number played on the bingo board",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "Show Number History Section",
+    "id": "showNumberHistory",
+    "description": "Display the number history section on the bingo board",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "Sound Effects",
+    "id": "soundEffects",
+    "description": "Enable sound effects for game events",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Display Settings",
+    "Label": "Theme",
+    "id": "theme",
+    "description": "Choose the visual theme for the application",
+    "type": "select",
+    "default": "light",
+    "options": "getThemes"
+  },
+  {
+    "section": "Display Settings",
+    "Label": "Font Size",
+    "id": "fontSize",
+    "description": "Adjust the base font size",
+    "type": "select",
+    "default": "medium",
+    "options": "getFontSizes"
+  },
+  {
+    "section": "Display Settings",
+    "Label": "Board Background Color",
+    "id": "boardBackgroundColor",
+    "description": "Background color for the bingo board",
+    "type": "colorpicker",
+    "default": "#ffffff"
+  },
+  {
+    "section": "Bingo Server Settings",
+    "Label": "Auto Connect",
+    "id": "autoConnect",
+    "description": "Automatically connect to server on startup",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Bingo Server Settings",
+    "Label": "Bingo Server URL",
+    "id": "serverUrl",
+    "description": "URL of the bingo server for multiplayer games",
+    "type": "text",
+    "default": "localhost:8080"
+  },
+  {
+    "section": "Bingo Server Settings",
+    "Label": "Bingo Server Auth Token",
+    "id": "serverAuthToken",
+    "description": "Token for authenticating with the bingo server",
+    "type": "password",
+    "default": ""
+  },
+  {
+    "section": "Bingo Server Settings",
+    "Label": "Player Name",
+    "id": "playerName",
+    "description": "Default name for multiplayer games",
+    "type": "text",
+    "default": "Player1"
+  },
+  {
+    "section": "Bingo Server Settings",
+    "Label": "Connection Timeout (ms)",
+    "id": "connectionTimeout",
+    "description": "Timeout for server connections",
+    "type": "number",
+    "default": 5000
+  }
+]

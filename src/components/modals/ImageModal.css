@@ -1,0 +1,75 @@
+/* Image Modal Styles */
+.image-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.image-modal-content {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+}
+
+.image-modal-img {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.image-modal-close-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffffff;
+  font-size: 0.9rem;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 8px 16px;
+  border-radius: 20px;
+  opacity: 0.9;
+  z-index: 10000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .image-modal-content {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .image-modal-img {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .image-modal-close-hint {
+    font-size: 0.8rem;
+    bottom: 15px;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-modal-close-hint {
+    font-size: 0.7rem;
+    bottom: 10px;
+    padding: 4px 8px;
+  }
+}

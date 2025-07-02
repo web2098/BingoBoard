@@ -1,0 +1,118 @@
+/* Animated Modal Styles */
+.animated-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.animated-modal-content {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.animated-modal-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.animated-modal-progress {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.animated-modal-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff);
+  background-size: 400% 400%;
+  border-radius: 2px;
+  animation: progressFill linear forwards, progressGradient 2s ease infinite;
+  width: 0%;
+}
+
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes progressGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .animated-modal-content {
+    width: 95vw;
+    height: 95vh;
+  }
+
+  .animated-modal-progress {
+    bottom: 15px;
+    width: 150px;
+    height: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .animated-modal-content {
+    width: 98vw;
+    height: 98vh;
+  }
+
+  .animated-modal-img {
+    border-radius: 8px;
+  }
+
+  .animated-modal-progress {
+    bottom: 10px;
+    width: 120px;
+    height: 2px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .animated-modal-overlay {
+    background-color: rgba(0, 0, 0, 0.95);
+  }
+
+  .animated-modal-progress {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .animated-modal-progress-bar {
+    background: #ffffff;
+  }
+}

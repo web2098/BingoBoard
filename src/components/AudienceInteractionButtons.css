@@ -1,0 +1,119 @@
+/* Audience Interaction Buttons Styles */
+.audience-interaction-buttons {
+  position: fixed;
+  left: 20px;
+  top: 160px; /* Position below the floating start button */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+  pointer-events: none; /* Allow clicks to pass through the container */
+}
+
+.audience-interaction-btn {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #6366f1, #4f46e5);
+  box-shadow:
+    0 4px 15px rgba(99, 102, 241, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto; /* Re-enable clicks for buttons */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Animation delay based on index */
+  animation: slideInLeft 0.5s ease-out forwards;
+  animation-delay: calc(var(--btn-index) * 0.1s);
+  opacity: 0;
+  transform: translateX(-100px);
+}
+
+.audience-interaction-btn:hover {
+  transform: scale(1.1);
+  box-shadow:
+    0 6px 20px rgba(99, 102, 241, 0.4),
+    0 3px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: linear-gradient(145deg, #7c3aed, #6366f1);
+}
+
+.audience-interaction-btn:active {
+  transform: scale(0.95);
+  box-shadow:
+    0 2px 8px rgba(99, 102, 241, 0.3),
+    0 1px 4px rgba(0, 0, 0, 0.1),
+    inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.interaction-emoji {
+  font-size: 24px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.interaction-icon-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+/* Slide in animation */
+@keyframes slideInLeft {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .audience-interaction-buttons {
+    left: 15px;
+    top: 140px; /* Account for smaller floating button */
+    gap: 8px;
+  }
+
+  .audience-interaction-btn {
+    width: 50px;
+    height: 50px;
+  }
+
+  .interaction-emoji {
+    font-size: 20px;
+  }
+
+  .interaction-icon-img {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .audience-interaction-buttons {
+    left: 10px;
+    top: 130px;
+    gap: 6px;
+  }
+
+  .audience-interaction-btn {
+    width: 45px;
+    height: 45px;
+  }
+
+  .interaction-emoji {
+    font-size: 18px;
+  }
+
+  .interaction-icon-img {
+    width: 22px;
+    height: 22px;
+  }
+}

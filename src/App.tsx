@@ -50,23 +50,42 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import Home from './routes/select-game-page';
+import SelectGamePage from './routes/select-game-page';
+import BoardPage from './routes/board-page';
+import SettingsPage from './routes/settings-page';
 import About from './routes/about-page';
 import ErrorPage from "./routes/error-page";
 
-
-import Root from "./routes/root";
-
 export default function MyApp() {
-  // return (
-  //   <div className="App">
-  //     <Board />
-  //   </div>
-  // );
   const router = createBrowserRouter([
     {
+      path: "/",
+      element: <SelectGamePage />,
+      errorElement: <ErrorPage />,
+    },
+    {
       path: "/BingoBoard",
-      element: <Home />,
+      element: <SelectGamePage />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/BingoBoard/select-game",
+      element: <SelectGamePage />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/BingoBoard/board",
+      element: <BoardPage />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/BingoBoard/settings",
+      element: <SettingsPage />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/BingoBoard/about",
+      element: <About />,
       errorElement: <ErrorPage />,
     },
   ]);

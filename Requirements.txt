@@ -1,0 +1,81 @@
+1. All pages must have a menu button in the top left corner that is 3 horizontally bars (hamburger menu)
+2. The menu area must have a title "Bingo Menu"
+3. The menu area must have a version string under the title
+4. The menu area should have a section for links based on the current page
+5. The menu area must have a horizontal divider line
+6. The menu area must have a link to the settings page under the divider line
+7. The menu area must be accessible from all pages
+8. There should be a select game page
+9. The select game page must have 3 sections
+    - Section 1 is a preview of the current selected game and this should take up 2/3 of the width and 2/3 of the height
+         - The current game should have a title, and if the free space is on/off
+         - The current game should be clickable to change free space if available
+         - The free space label should be a toggle switch
+         - The current game area should have a left/right arrow to change variant
+    - Section 2 is a area for welcom message, rules of the game and QR code to join a bingo room this area is 1/3 of the width and 2/3 of the height
+    - section 3 is the full width and the last 1/3 of the height is a scrollable list of all available games
+10. The select game page must have a button to start the game
+11. There should be a board page which have 2 sections
+    - Section 1 is a header
+        - The header should have a preview of the current game
+        - The header should have text with "The last number called is: [NUMBER]"
+        - Under the text should be smaller text that says "[Called]/[Total] numbers called"
+        - Under the text should be an optional text that says special callouts for different cells when selected
+        - The header should then have a section for quick actions
+        - The header should then have a section for a QR code to join the bingo room
+    - Section 2 is all the bingo numbers in a grid
+        - The grid should be 5x15
+        - The grid should have the letters B,I,N,G,O as the label for each row
+        - Each cell in the grid should have a number between 1 and 75
+        - Each cell in the grid should be clickable to mark the number as called
+12. There should be a setting page
+    - The sections page should contain collapsible sections with a grouping title
+    - Under each section will be all properties with a label, description and UI element to change the property
+    - Settings sections should support horizontal scrolling when content exceeds container width
+    - The settings page should have a single floating action button positioned under the hamburger menu on the left side:
+        - A red reset button with a revert icon for resetting to default settings
+    - The hamburger menu should also provide reset functionality for alternative access
+    - Settings should auto-save automatically without user intervention or notifications
+    - Settings should be defined in json in the format supporting extended types:
+       ```json
+       {
+         "section": "Section Title",
+         "Label": "Property Label",
+         "id": "property-id",
+         "description": "Property Description",
+         "type": "text|number|boolean|select|colorpicker|password|combo+textarea|special-numbers",
+         "default": "Default Value",
+         "options": ["Option 1", "Option 2"] // Only for select type, can be dynamic functions
+       }
+       ```
+    - Settings should be defined in a single settings.json file with dynamic section rendering
+    - Sections should be built from the json data for each unique section value in the property list
+    - Each section should have properties listed under built from the json data
+    - The settings page should have responsive design:
+        - Two-column layout (settings + special numbers) on desktop/tablet
+        - Single-column stacked layout on mobile devices
+        - Horizontal scrolling with custom scrollbars for overflow content
+    - The settings page should have a link to the about page via the hamburger menu
+    - The Settings page should have a static section for Special numbers:
+        - The Special numbers section should have a 5x15 grid of the numbers 1-75
+        - The grid should be visually centered and responsive across all screen sizes
+        - Under the special numbers grid should be a text area to add custom messages
+        - When a number is clicked in the special numbers grid the text area should be updated with any registered messages for that number if available
+        - When a number is clicked any previous number should be unselected
+        - When a number is clicked the background of the cell should change to indicate it is selected
+        - There should be a specialNumbers.json file that defines pre-built special numbers that are loaded and overridable by the user
+        - The special numbers should support both pre-built messages and user customizations
+        - User customizations should override pre-built messages but fall back gracefully
+    - The settings page should have a static Debug section at the bottom of the left column:
+        - The Debug section should be collapsed by default to keep the interface clean
+        - The Debug section should display all current settings in formatted JSON
+        - The Debug section should include metadata like settings count, version, and last modified timestamp
+        - The Debug section should automatically update when any setting changes
+        - The Debug section should be implemented as a standalone component, not as part of the settings.json configuration
+        - The Debug section should have distinctive visual styling (purple accent, wrench icon)
+        - The Debug section should use a monospace font for better JSON readability
+        - The Debug section should be responsive and work well on mobile devices
+    - All settings controls should use full width in single-column mobile layout
+    - The page should have proper padding to clear the hamburger menu and maintain visual balance
+    - Settings should include validation and proper data type handling
+    - Settings operations should happen silently without notifications or popups

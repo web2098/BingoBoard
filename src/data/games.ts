@@ -14,7 +14,8 @@ function bingo(){
                         [0, 0], [0,1],[0,2],[0,3],[0,4]
                     ]
                 ],
-                rules: 'Must get 5 in a row, column, or diagonal'
+                rules: 'Must get 5 in a row, column, or diagonal',
+                length: "Fast"
             }
         ]
     }
@@ -38,7 +39,8 @@ function doubleBingo(){
                         [0, 0],[0,1],[0,2],[0,3],[0,4],
                         [1,3],[2,3],[3,3],[4,3]
                     ]
-                ]
+                ],
+                length: "Average"
             },
             {
                 rules: 'Must get a one bingo on both boards',
@@ -58,7 +60,8 @@ function doubleBingo(){
                     [
                         [0, 0],[0,1],[0,2],[0,3],[0,4]
                     ]
-                ]
+                ],
+                length: "Average"
             },
             {
                 rules: 'Must get two bingos on one or both boards',
@@ -82,7 +85,8 @@ function doubleBingo(){
                         [0, 0],[0,1],[0,2],[0,3],[0,4],
                         [1,3],[2,3],[3,3],[4,3]
                     ]
-                ]
+                ],
+                length: "Average"
             },
         ]
     }
@@ -98,6 +102,7 @@ function tinyX(){
                         [0,0],[0,2],[1,1],[2,0],[2,2]
                     ]
                 ],
+                length: "Fast",
                 rules: 'Must get the tiny x pattern any where on one board'
             },
             {
@@ -107,6 +112,7 @@ function tinyX(){
                         [3,3],[4,4],[2,4],[4,2]
                     ]
                 ],
+                length: "Fast",
                 rules: 'Must get two tiny x patterns any where on one board'
             },
             {
@@ -118,6 +124,7 @@ function tinyX(){
                         [3,1],[1,3],[1,1],[3,3],[2,2]
                     ]
                 ],
+                length: "Fast",
                 op : "and",
                 rules: 'Must get the tiny x pattern on both boards'
             },
@@ -130,6 +137,7 @@ function tinyX(){
                         [0,0],[0,2],[1,1],[2,0],[2,2]
                     ]
                 ],
+                length: "Fast",
                 op : "or",
                 rules: 'Must get the two tiny x patterns on either board'
             }
@@ -144,6 +152,7 @@ function corners(){
         variants:[
             {
                 name: "4 Corners",
+                length: "Fast",
                 boards: [
                     [
                         [0,0],[4,4],[0,4],[4,0]
@@ -153,6 +162,7 @@ function corners(){
             },
             {
                 name: "8 Corners",
+                length: "Fast",
                 boards: [
                     [
                         [0,0],[4,4],[0,4],[4,0]
@@ -180,7 +190,8 @@ function railRoadTracks(){
                         [0,3],[1,3],[2,3],[3,3],[4,3] // 0 Row
                     ]
                 ],
-                rules: "Must match exact pattern"
+                rules: "Must match exact pattern",
+                length: "Not Set"
             }
         ]
     }
@@ -197,7 +208,8 @@ function insideCircle(){
                         [3,1],[3,2],[3,3] // bottom Row
                     ]
                 ],
-                rules: "Must match exact pattern"
+                rules: "Must match exact pattern",
+                length: "Not Set"
             }
         ]
     }
@@ -216,7 +228,8 @@ function outsideCircle(){
                         [4,0],[4,1],[4,2],[4,3],[4,4] // bottom Row
                     ]
                 ],
-                rules: "Must match exact pattern"
+                rules: "Must match exact pattern",
+                length: "Not Set"
             }
         ]
     }
@@ -234,7 +247,8 @@ function postageStamp(){
                         [4,0],[4,1],[4,3],[4,4],
                     ]
                 ],
-                rules: "Must match exact pattern"
+                rules: "Must match exact pattern",
+                length: "Not Set"
             }
         ]
     }
@@ -261,7 +275,8 @@ function theGoat(){
                     ]
                 ],
                 op:"or",
-                rules: "Must match ONE of the two boards"
+                rules: "Must match ONE of the two boards",
+                length: "Not Set"
             }
         ]
     }
@@ -280,7 +295,8 @@ function xmas(){
                         [4,2],
                     ]
                 ],
-                rules: "Must match exact pattern"
+                rules: "Must match exact pattern",
+                length: "Not Set"
             }
         ]
     }
@@ -295,7 +311,8 @@ function largeX(){
                         [0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]
                     ]
                 ],
-                rules: "Must match exact pattern on one board"
+                rules: "Must match exact pattern on one board",
+                length: "Not Set"
             },
             {
                 boards: [
@@ -307,7 +324,8 @@ function largeX(){
                     ]
                 ],
                 op: "and",
-                rules: "Must match exact pattern on both boards"
+                rules: "Must match exact pattern on both boards",
+                length: "Not Set"
             }
         ]
     }
@@ -322,7 +340,8 @@ function candyCane(){
                         [0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]
                     ]
                 ],
-                rules: "Must match exact pattern on one board"
+                rules: "Must match exact pattern on one board",
+                length: "Not Set"
             },
             {
                 boards: [
@@ -334,7 +353,8 @@ function candyCane(){
                     ]
                 ],
                 op: "and",
-                rules: "Must match exact pattern on both boards"
+                rules: "Must match exact pattern on both boards",
+                length: "Not Set"
             }
         ]
     }
@@ -353,7 +373,8 @@ function ticTacToe(){
                         [4,1],[4,3],
                     ]
                 ],
-                rules: "Must match exact pattern on one board"
+                rules: "Must match exact pattern on one board",
+                length: "Not Set"
             },
             {
                 boards: [
@@ -373,7 +394,8 @@ function ticTacToe(){
                     ]
                 ],
                 op: "and",
-                rules: "Must match exact pattern on both boards"
+                rules: "Must match exact pattern on both boards",
+                length: "Not Set"
             }
         ]
     }
@@ -392,7 +414,8 @@ function blackout(){
                         [4,0],[4,1],[4,2],[4,3],[4,4],
                     ]
                 ],
-                rules: "Fill out the entire board!"
+                rules: "Fill out the entire board!",
+                length: "Not Set"
             }
         ]
     }
@@ -406,7 +429,8 @@ function survivor(){
                     [
                     ]
                 ],
-                rules: "Stand up with both boards up. If a number on a board gets called flip the board. If both boards are flipped sit down. Last person standing wins!"
+                rules: "Stand up with both boards up. If a number on a board gets called flip the board. If both boards are flipped sit down. Last person standing wins!",
+                length: "Not Set"
             },
             {
                 name: "Blackout Survivor",
@@ -421,7 +445,8 @@ function survivor(){
                     ]
                 ],
                 op:"transition",
-                rules: "Be the last person standing, or fill out the entire board!"
+                rules: "Be the last person standing, or fill out the entire board!",
+                length: "Not Set"
             }
         ]
     }
@@ -440,7 +465,8 @@ function arrow(){
                         [4,2],
                     ]
                 ],
-                rules: "Must match exact pattern on one board"
+                rules: "Must match exact pattern on one board",
+                length: "Not Set"
             },
             {
                 boards: [
@@ -460,7 +486,8 @@ function arrow(){
                     ]
                 ],
                 op: "and",
-                rules: "Must match exact pattern on both boards"
+                rules: "Must match exact pattern on both boards",
+                length: "Not Set"
             }
         ]
     }
@@ -479,7 +506,8 @@ function diamond(){
                         [4,2],
                     ]
                 ],
-                rules: "Must match exact pattern on one board"
+                rules: "Must match exact pattern on one board",
+                length: "Not Set"
             },
             {
                 boards: [
@@ -499,7 +527,8 @@ function diamond(){
                     ]
                 ],
                 op: "and",
-                rules: "Must match exact pattern on both boards"
+                rules: "Must match exact pattern on both boards",
+                length: "Not Set"
             }
         ]
     }
@@ -518,7 +547,8 @@ function theT(){
                         [4,2],
                     ]
                 ],
-                rules: "Must match exact pattern on one board"
+                rules: "Must match exact pattern on one board",
+                length: "Not Set"
             },
             {
                 boards: [
@@ -538,7 +568,8 @@ function theT(){
                     ]
                 ],
                 op: "and",
-                rules: "Must match exact pattern on both boards"
+                rules: "Must match exact pattern on both boards",
+                length: "Not Set"
             }
         ]
     }
@@ -557,7 +588,8 @@ function theZ(){
                         [4,0],[4,1],[4,2],[4,3],[4,4],
                     ]
                 ],
-                rules: "Must match exact pattern on one board"
+                rules: "Must match exact pattern on one board",
+                length: "Not Set"
             },
             {
                 boards: [
@@ -577,7 +609,8 @@ function theZ(){
                     ]
                 ],
                 op: "and",
-                rules: "Must match exact pattern on both boards"
+                rules: "Must match exact pattern on both boards",
+                length: "Not Set"
             }
         ]
     }
@@ -596,7 +629,8 @@ function lucky7(){
                         [4,0],
                     ]
                 ],
-                rules: "Must match exact pattern on one board"
+                rules: "Must match exact pattern on one board",
+                length: "Not Set"
             },
             {
                 boards: [
@@ -616,7 +650,8 @@ function lucky7(){
                     ]
                 ],
                 op: "and",
-                rules: "Must match exact pattern on both boards"
+                rules: "Must match exact pattern on both boards",
+                length: "Not Set"
             }
         ]
     }
@@ -635,7 +670,8 @@ function valentinesDay(){
                         [4,2],
                     ]
                 ],
-                rules: "Must match exact pattern on one board"
+                rules: "Must match exact pattern on one board",
+                length: "Not Set"
             },
             {
                 boards: [
@@ -655,7 +691,8 @@ function valentinesDay(){
                     ]
                 ],
                 op: "and",
-                rules: "Must match exact pattern on both boards"
+                rules: "Must match exact pattern on both boards",
+                length: "Not Set"
             }
         ]
     }
