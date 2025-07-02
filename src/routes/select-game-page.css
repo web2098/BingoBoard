@@ -129,7 +129,7 @@ input:disabled + .slider {
   color: #333;
 }
 
-/* Game Preview Area */
+/* Game Preview Area - Responsive Container */
 .game-preview {
   flex: 1;
   display: flex;
@@ -139,19 +139,38 @@ input:disabled + .slider {
   cursor: pointer;
   overflow: hidden;
   min-height: 0;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .multi-board-preview {
   display: grid;
-  grid-template-columns: 2fr .1fr 2fr;
+  grid-template-columns: 1fr minmax(60px, auto) 1fr;
   align-items: center;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.multi-board-preview .large-game-board-preview {
+  width: 100%;
+  height: 100%;
+  max-width: 35vh;
+  max-height: 35vh;
+  justify-self: center;
 }
 
 .board-operator {
-  font-size: 2em;
+  font-size: clamp(1rem, 4vw, 3rem);
   font-weight: bold;
   color: #333;
   margin: 0;
+  padding: 0;
+  text-align: center;
+  justify-self: center;
 }
 
 /* Variant Controls */
@@ -306,21 +325,29 @@ input:disabled + .slider {
   background: #218838;
 }
 
-/* Game Board Preview Styles */
-.game-board-preview {
+/* ==============================================
+   LARGE PREVIEW STYLES (Main preview area)
+   ============================================== */
+
+.large-game-board-preview {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-right: 5px;
-  padding-left: 5px;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
+  max-width: min(40vh, 40vw);
+  max-height: min(40vh, 40vw);
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-.preview-row {
+.large-preview-row {
   display: flex;
+  flex: 1;
+  width: 100%;
 }
 
-.preview-square {
+.large-preview-square {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -329,9 +356,14 @@ input:disabled + .slider {
   box-sizing: border-box;
   user-select: none;
   color: #000000;
+  aspect-ratio: 1;
+  font-size: clamp(0.8rem, 4vw, 3rem);
+  font-weight: bold;
+  min-height: 0;
+  min-width: 0;
 }
 
-.preview-square-free {
+.large-preview-square-free {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -339,36 +371,77 @@ input:disabled + .slider {
   border: 1px solid black;
   box-sizing: border-box;
   user-select: none;
-  min-width: min-content;
   background-color: #FFFFFF;
+  aspect-ratio: 1;
+  font-size: clamp(0.4rem, 2vw, 1.5rem);
+  font-weight: bold;
+  min-height: 0;
+  min-width: 0;
 }
 
-.large-preview-square {
-  font-size: 4.2em;
-  min-width: 72px;
-}
-
-.large-preview-square-free {
-  font-size: 2.1em;
-}
-
-.small-preview-square {
-  font-size: 1.2em;
-  width: 1.0rem;
-  height: 1.7rem;
-}
-
-.small-preview-square-free {
-  font-size: 0.35em;
-  width: 1.0rem;
-}
-
-.selected {
+.large-preview-square.selected,
+.large-preview-square-free.selected {
   background-color: #1E4D2B;
   color: #FFFFFF;
 }
 
-/* Game Board Previews and Swiper */
+/* ==============================================
+   SMALL PREVIEW STYLES (Swiper previews)
+   ============================================== */
+
+.small-preview-row {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+.small-preview-square {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  box-sizing: border-box;
+  user-select: none;
+  color: #000000;
+  font-weight: bold;
+}
+
+.small-preview-square-free {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  box-sizing: border-box;
+  user-select: none;
+  background-color: #FFFFFF;
+  font-weight: bold;
+  min-height: 0;
+  min-width: 0;
+}
+
+.small-preview-square.selected,
+.small-preview-square-free.selected {
+  background-color: #1E4D2B;
+  color: #FFFFFF;
+}
+
+/* Small preview wrapper for swiper */
+.small-game-board-preview {
+
+  width: 100%;
+  height: calc(100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+  max-height: 140px;
+}
+
+
+/* Game Board Previews and Swiper - Responsive */
 .game-board-previews {
   width: 100%;
   height: 100%;
@@ -384,25 +457,55 @@ input:disabled + .slider {
   margin: 0px;
   margin-left: 40px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .game-preview-entry {
-  padding: 8px;
+  height: 100%;
+  width: 100%;
 }
 
 .game-board-preview-label {
-  font-size: 0.8rem;
+  font-size: clamp(0.6rem, 2vw, 0.9rem);
   margin-bottom: 5px;
-}
-
-.large-game-board-preview {
-  max-width: 100%;
-  max-height: 100%;
+  text-align: center;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
-.small-game-board-preview {
-  margin-bottom: 5px;
+/* Responsive sizing for small previews */
+@media (max-width: 768px) {
+  .small-game-board-preview {
+    max-width: 50px;
+    max-height: 50px;
+  }
+
+  .small-preview-square {
+    font-size: clamp(0.12rem, 0.3vw, 0.25rem);
+  }
+
+  .small-preview-square-free {
+    font-size: clamp(0.06rem, 0.15vw, 0.12rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .small-game-board-preview {
+    max-width: 40px;
+    max-height: 40px;
+  }
+
+  .small-preview-square {
+    font-size: clamp(0.1rem, 0.25vw, 0.2rem);
+  }
+
+  .small-preview-square-free {
+    font-size: clamp(0.05rem, 0.12vw, 0.1rem);
+  }
 }
 
 /* Custom Swiper Navigation and Pagination Layout */
@@ -580,21 +683,15 @@ input:disabled + .slider {
   }
 
   .game-preview-entry {
-    padding: 8px;
-    min-height: 80px;
+    padding: 4px;
+    min-height: 60px;
+    width: 100%;
+    height: 100%;
   }
 
   .game-board-preview-label {
-    font-size: 0.8rem;
+    font-size: clamp(0.5rem, 2vw, 0.8rem);
     margin-bottom: 5px;
-  }
-
-  .game-board-preview {
-    max-height: none;
-  }
-
-  .large-preview-square {
-    font-size: 3.5em;
   }
 
   .floating-start-button {
@@ -610,6 +707,20 @@ input:disabled + .slider {
     border-top: 7px solid transparent;
     border-bottom: 7px solid transparent;
     margin-left: 2px;
+  }
+
+  /* Responsive dual board spacing adjustments */
+  .multi-board-preview {
+    gap: 15px;
+  }
+
+  .multi-board-preview .large-game-board-preview {
+    max-width: 30vh;
+    max-height: 30vh;
+  }
+
+  .board-operator {
+    font-size: clamp(0.8rem, 3vw, 2.5rem);
   }
 }
 
@@ -687,17 +798,8 @@ input:disabled + .slider {
     gap: 15px;
   }
 
-  .large-preview-square {
-    font-size: 3rem;
-    min-width: 50px;
-  }
-
-  .large-preview-square-free {
-    font-size: 1.5rem;
-  }
-
   .board-operator {
-    font-size: 1.5rem;
+    font-size: clamp(0.8rem, 3vw, 2rem);
   }
 
   .game-board-previews {
@@ -726,13 +828,15 @@ input:disabled + .slider {
   }
 
   .game-preview-entry {
-    padding: 6px;
-    margin-bottom: 8px;
-    min-height: 70px;
+    padding: 3px;
+    margin-bottom: 5px;
+    min-height: 50px;
+    width: 100%;
+    height: 100%;
   }
 
   .game-board-preview-label {
-    font-size: 0.8rem;
+    font-size: clamp(0.4rem, 1.8vw, 0.8rem);
     margin-bottom: 5px;
     white-space: nowrap;
     overflow: hidden;
@@ -752,5 +856,51 @@ input:disabled + .slider {
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
     margin-left: 2px;
+  }
+
+  /* Responsive dual board spacing adjustments */
+  .multi-board-preview {
+    gap: 10px;
+    grid-template-columns: 1fr minmax(40px, auto) 1fr;
+  }
+
+  .multi-board-preview .large-game-board-preview {
+    max-width: 25vh;
+    max-height: 25vh;
+  }
+
+  .board-operator {
+    font-size: clamp(0.6rem, 2.5vw, 2rem);
+  }
+}
+
+/* Responsive adjustments for large previews */
+@media (max-width: 768px) {
+  .large-game-board-preview {
+    max-width: min(35vh, 70vw);
+    max-height: min(35vh, 70vw);
+  }
+
+  .large-preview-square {
+    font-size: clamp(0.6rem, 3vw, 2.5rem);
+  }
+
+  .large-preview-square-free {
+    font-size: clamp(0.3rem, 1.5vw, 1.2rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .large-game-board-preview {
+    max-width: min(30vh, 75vw);
+    max-height: min(30vh, 75vw);
+  }
+
+  .large-preview-square {
+    font-size: clamp(0.5rem, 2.5vw, 2rem);
+  }
+
+  .large-preview-square-free {
+    font-size: clamp(0.25rem, 1.2vw, 1rem);
   }
 }

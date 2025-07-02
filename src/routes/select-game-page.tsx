@@ -42,20 +42,20 @@ const GameBoardPreview = ({isPreview, game}:{isPreview: boolean, game:object}) =
       var letter = letters[j];
       if (i === 2 && j === 2) {
         return (
-          <div key={i* 5 + j} ref={freeSquareRef} className={`${size}preview-square-free preview-square-free ${selected ? 'selected' : ''}`}>
+          <div key={i* 5 + j} ref={freeSquareRef} className={`${size}preview-square-free ${selected ? 'selected' : ''}`}>
             FREE
           </div>
         );
       }
       return (
-        <div key={i* 5 + j} className={`${size}preview-square preview-square ${selected ? 'selected' : ''}`}>
+        <div key={i* 5 + j} className={`${size}preview-square ${selected ? 'selected' : ''}`}>
           {letter}
         </div>
       );
     });
-    return <div key={'row' + i} className={size+"preview-row preview-row"}>{row}</div>;
+    return <div key={'row' + i} className={size+"preview-row"}>{row}</div>;
   });
-  return <div className={size+"game-board-preview game-board-preview"}>{board}</div>;
+  return <div className={size+"game-board-preview"}>{board}</div>;
 }
 
 
