@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import audienceInteractionsData from '../data/audienceInteractions.json';
-import { TextModal, ImageModal, AnimatedModal } from './modals';
+import { TextModal, ImageModal, AnimatedModal, WelcomeModal } from './modals';
 import { getMappedAsset } from '../utils/assetMapping';
 import './AudienceInteractionButtons.css';
 
@@ -47,6 +47,7 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
     audioSrc: '',
     alt: ''
   });
+  const [welcomeModal, setWelcomeModal] = useState({ isVisible: false });
 
   useEffect(() => {
     // Filter interactions for current page
@@ -80,10 +81,19 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
       case 'executeOrder66':
         showAnimatedModal(interaction);
         break;
+      case 'showWelcomeCard':
+        if (welcomeModal.isVisible) {
+          // If modal is already visible, close it
+          closeWelcomeModal();
+        } else {
+          // If modal is not visible, show it
+          showWelcomeModal();
+        }
+        break;
       default:
         console.log('Unknown interaction function:', interaction.action.function);
     }
-  }, [imageModal.isVisible]);
+  }, [imageModal.isVisible, welcomeModal.isVisible]);
 
   // Modal handler functions
   const showTextModal = (text: string) => {
@@ -107,6 +117,10 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
     });
   };
 
+  const showWelcomeModal = () => {
+    setWelcomeModal({ isVisible: true });
+  };
+
   // Modal close handlers
   const closeTextModal = () => setTextModal({ isVisible: false, text: '' });
   const closeImageModal = () => setImageModal({ isVisible: false, imageSrc: '', text: '' });
@@ -116,6 +130,7 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
     audioSrc: '',
     alt: ''
   });
+  const closeWelcomeModal = () => setWelcomeModal({ isVisible: false });
 
   useEffect(() => {
     // Set up keyboard shortcuts
@@ -197,6 +212,12 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
         onClose={closeAnimatedModal}
         timeout={6000}
         autoPlay={true}
+      />
+
+      <WelcomeModal
+        isVisible={welcomeModal.isVisible}
+        onClose={closeWelcomeModal}
+        timeout={0}
       />
     </>
   );

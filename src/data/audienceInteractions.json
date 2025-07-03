@@ -36,6 +36,18 @@
         "shortcuts":["d", "3"]
     },
     {
+        "id": "welcomeCard",
+        "content":{"text": "Welcome Card"},
+        "icon": {"emoji": "👋"},
+        "action": {
+            "function": "showWelcomeCard",
+            "args": ["welcomeModal"]
+        },
+        "description": "Show Welcome Card Modal",
+        "pages": ["select-game"],
+        "shortcuts":["h", "0"]
+    },
+    {
         "id": "winner",
         "content":{"text": "Winner"},
         "icon": {"emoji": "🎉"},
