@@ -52,6 +52,20 @@
   min-height: 100vh;
   background-color: #f5f5f5;
   font-family: Arial, sans-serif;
+  position: relative;
+}
+
+/* Vertical off-white sidebar */
+.settings-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 100vh;
+  background-color: #f8f9fa;
+  z-index: 1;
+  border-right: 1px solid #e9ecef;
 }
 
 .settings-content {
@@ -529,6 +543,10 @@
 }
 
 @media (max-width: 768px) {
+  .settings-page::before {
+    width: 60px;
+  }
+
   .settings-content {
     margin: 0; /* Remove auto centering */
     padding: 16px;
@@ -615,6 +633,10 @@
 }
 
 @media (max-width: 480px) {
+  .settings-page::before {
+    width: 50px;
+  }
+
   .settings-content {
     margin: 0;
     padding-left: 70px; /* Reduced for small screens but still clear of hamburger */

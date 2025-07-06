@@ -137,19 +137,61 @@
   font-weight: bold;
 }
 
+/* Variant controlled indicator */
+.variant-controlled-indicator {
+  font-size: 0.8em;
+  color: #666;
+  font-style: italic;
+  font-weight: normal;
+}
+
+/* Disabled toggle switch */
+.toggle-switch.disabled {
+  opacity: 0.6;
+}
+
+.toggle-switch.disabled .slider {
+  cursor: not-allowed;
+}
+
 /* Game Display Area */
 .game-display-area {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  gap: 15px;
+}
+
+/* Game Boards Wrapper */
+.game-boards-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Progress Circle */
+.progress-circle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.progress-circle {
+  transform: scale(0.8);
+  filter: drop-shadow(0 2px 4px rgba(0, 123, 255, 0.2));
 }
 
 /* Game Boards Container */
 .game-boards-container {
   width: 100%;
-  height: 100%;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -174,6 +216,26 @@
   color: #333;
   width: 30px;
   height: 30px;
+}
+
+/* Variant Controls Wrapper */
+.variant-controls-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Progress Circle Inline */
+.progress-circle-inline {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* Variant Controls */
@@ -791,6 +853,10 @@ input:disabled + .slider {
     font-size: 1rem;
   }
 
+  .progress-circle {
+    transform: scale(0.7);
+  }
+
   /* Dual board layout adjustments */
   .game-boards-container.dual-board {
     grid-template-columns: 1fr;
@@ -832,6 +898,10 @@ input:disabled + .slider {
 
   .welcome-template {
     font-size: 0.9rem;
+  }
+
+  .progress-circle {
+    transform: scale(0.6);
   }
 
   .board-cell {

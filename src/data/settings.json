@@ -32,6 +32,14 @@
     "default": "BAHHH!"
   },
   {
+    "section": "Welcome Customizations",
+    "Label": "Pattern Rotation Interval (seconds)",
+    "id": "patternRotationInterval",
+    "description": "Time in seconds between pattern rotations in the game preview",
+    "type": "number",
+    "default": 3
+  },
+  {
     "section": "Board Customizations",
     "Label": "Show Last Number Played",
     "id": "showLastNumberPlayed",

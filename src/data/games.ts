@@ -1,3 +1,171 @@
+// Reusable Fisher-Yates shuffle function for randomizing arrays
+function shuffleArray<T>(array: T[]): T[] {
+    // Create a copy to avoid mutating the original array
+    const shuffled = [...array];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled;
+}
+
+// Reusable rotation function for generating all single bingo combinations
+function generateSingleBoardRotations(freeSpace: boolean, shuffle: boolean = true, previewMode: boolean = false) {
+    const rotations = [
+        [[0,0],[1,1],[2,2],[3,3],[4,4]], // Main diagonal
+        [[0,4],[1,3],[2,2],[3,1],[4,0]], // Anti-diagonal
+        [[0,0],[0,1],[0,2],[0,3],[0,4]], // Top row
+        [[1,0],[1,1],[1,2],[1,3],[1,4]], // Second row
+        [[2,0],[2,1],[2,2],[2,3],[2,4]], // Middle row
+        [[3,0],[3,1],[3,2],[3,3],[3,4]], // Fourth row
+        [[4,0],[4,1],[4,2],[4,3],[4,4]], // Bottom row
+        [[0,0],[1,0],[2,0],[3,0],[4,0]], // Left column
+        [[0,1],[1,1],[2,1],[3,1],[4,1]], // Second column
+        [[0,2],[1,2],[2,2],[3,2],[4,2]], // Middle column
+        [[0,3],[1,3],[2,3],[3,3],[4,3]], // Fourth column
+        [[0,4],[1,4],[2,4],[3,4],[4,4]]  // Right column
+    ];
+
+    // If free space is disabled, filter out patterns that include the center square
+    let result = rotations;
+    if (!freeSpace) {
+        result = rotations.filter(pattern =>
+            !pattern.some(coord => coord[0] === 2 && coord[1] === 2)
+        );
+    }
+
+    // For preview mode, always return the first pattern (main diagonal or first valid pattern)
+    if (previewMode) {
+        return [result[0]];
+    }
+
+    return shuffle ? shuffleArray(result) : result;
+}
+
+// Reusable rotation function for generating all double bingo combinations
+function generateDoubleBingoRotations(freeSpace: boolean, previewMode: boolean = false) {
+    const baseBingoPatterns = generateSingleBoardRotations(freeSpace, false, false); // Don't shuffle here, we'll shuffle the final result
+
+    // Filter out patterns with center if freeSpace is disabled
+    let availablePatterns = baseBingoPatterns;
+    if (!freeSpace) {
+        availablePatterns = baseBingoPatterns.filter(pattern =>
+            !pattern.some(coord => coord[0] === 2 && coord[1] === 2)
+        );
+    }
+
+    // For preview mode, return a consistent double bingo pattern
+    if (previewMode) {
+        // Use the first two patterns (main diagonal + anti-diagonal)
+        const combinedPattern = [...availablePatterns[0], ...availablePatterns[2]];
+        return [combinedPattern];
+    }
+
+    // Generate all unique pairs of bingo patterns (no duplicates)
+    const doubleBingoPatterns = [];
+    for (let i = 0; i < availablePatterns.length; i++) {
+        for (let j = i + 1; j < availablePatterns.length; j++) {
+            // Combine two different bingo patterns into one
+            const combinedPattern = [...availablePatterns[i], ...availablePatterns[j]];
+            doubleBingoPatterns.push(combinedPattern);
+        }
+    }
+
+    // Randomize the order using the reusable shuffle function
+    return shuffleArray(doubleBingoPatterns);
+}
+
+function generateTinyXBingoRotations(freeSpace: boolean = true, shuffle: boolean = true,previewMode: boolean = false) {
+    let patterns = [
+    ];
+
+    // A Tiny x is defined by the top left item being some where in the first 3 rows, and 3 columns
+    //Then from that TL it has two spots diagonally down and then one spot 2 to the right and one spot 2 down
+    function createTinyX( topLeft: number[] ){
+        const row = topLeft[0];
+        const col = topLeft[1];
+
+        return [
+            [row, col],
+            [row, col + 2],
+            [row + 1, col + 1],
+            [row + 2, col],
+            [row + 2, col + 2]
+        ];
+    }
+
+    for( let y = 0; y < 3; y++ ){
+        for( let x = 0; x < 3; x++ ){
+            patterns.push(createTinyX([y, x]));
+        }
+    }
+
+    if( previewMode) {
+        return [patterns[0]];
+    }
+
+    let result = patterns;
+    if (!freeSpace) {
+        result = patterns.filter(pattern =>
+            !pattern.some(coord => coord[0] === 2 && coord[1] === 2)
+        );
+    }
+
+    if (shuffle)
+    {
+        return shuffleArray(result);
+    }
+    return result;
+}
+
+function generateSmallSquarePattern(freeSpace: boolean = true, shuffle: boolean = true,previewMode: boolean = false) {
+    let patterns = [
+    ];
+
+    // A SmallSquare Pattern is defined by the top left item being some where in the first 3 rows, and 3 columns
+    //Then from that TL it has two spots right and two spots down, 1 spot 2 to the right and 1 down, 1 spot 2 down and 1 to the right
+    //and one spot 2 down and 2 to the right
+    function createSmallSquare( topLeft: number[] ){
+        const row = topLeft[0];
+        const col = topLeft[1];
+
+        return [
+            [row, col],
+            [row, col + 1],
+            [row, col + 2],
+            [row + 1, col],
+            [row + 2, col],
+            [row + 2, col + 1],
+            [row + 1, col + 2],
+            [row + 2, col + 2]
+        ];
+    }
+
+    for( let y = 0; y < 3; y++ ){
+        for( let x = 0; x < 3; x++ ){
+            patterns.push(createSmallSquare([y, x]));
+        }
+    }
+
+    if( previewMode) {
+        return [patterns[0]];
+    }
+
+    let result = patterns;
+    if (!freeSpace) {
+        result = patterns.filter(pattern =>
+            !pattern.some(coord => coord[0] === 2 && coord[1] === 2)
+        );
+    }
+
+    if (shuffle)
+    {
+        return shuffleArray(result);
+    }
+    return result;
+}
 
 function bingo(){
     return {
@@ -5,17 +173,50 @@ function bingo(){
         variants:[
             {
                 boards: [
-                    [
-                        [0,0],[1,1],[2,2],[3,3],[4,4]
-                    ]
-                ],
-                alt_boards: [
-                    [
-                        [0, 0], [0,1],[0,2],[0,3],[0,4]
-                    ]
+                    (freeSpace: boolean, previewMode: boolean = false) => generateSingleBoardRotations(freeSpace, true, previewMode)
                 ],
                 rules: 'Must get 5 in a row, column, or diagonal',
-                length: "Fast"
+                length: "Fast",
+                dynamicFreeSpace: true
+            },
+            {
+                boards: [
+                    (freeSpace: boolean, previewMode: boolean = false) => {
+                        const rotations = [
+                            [[0,0],[1,1],[2,2],[3,3],[4,4]], // Main diagonal
+                            [[0,4],[1,3],[2,2],[3,1],[4,0]], // Anti-diagonal
+                            [[0,0],[0,1],[0,2],[0,3],[0,4]], // Top row
+                            [[1,0],[1,1],[1,2],[1,3],[1,4]], // Second row
+                            [[2,0],[2,1],[2,2],[2,3],[2,4]], // Middle row
+                            [[3,0],[3,1],[3,2],[3,3],[3,4]], // Fourth row
+                            [[4,0],[4,1],[4,2],[4,3],[4,4]], // Bottom row
+                            [[0,0],[1,0],[2,0],[3,0],[4,0]], // Left column
+                            [[0,1],[1,1],[2,1],[3,1],[4,1]], // Second column
+                            [[0,2],[1,2],[2,2],[3,2],[4,2]], // Middle column
+                            [[0,3],[1,3],[2,3],[3,3],[4,3]], // Fourth column
+                            [[0,4],[1,4],[2,4],[3,4],[4,4]],  // Right column
+                            [[0,0],[0,4],[2,2],[4,0],[4,4]], // 4 corners
+                        ];
+
+                        // For preview mode, return the main diagonal
+                        if (previewMode) {
+                            return freeSpace ? [rotations[0]] : [[[0,0],[1,1],[3,3],[4,4]]]; // Main diagonal without center
+                        }
+
+                        // If free space is disabled, filter out patterns that include the center square
+                        if (!freeSpace) {
+                            const filteredRotations = rotations.filter(pattern =>
+                                !pattern.some(coord => coord[0] === 2 && coord[1] === 2)
+                            );
+                            return shuffleArray(filteredRotations);
+                        }
+
+                        return shuffleArray(rotations);
+                    }
+                ],
+                rules: 'Must get 5 in a row, column, or diagonal or 4 corners + free space',
+                length: "Fast",
+                freeSpace: true
             }
         ]
     }
@@ -29,64 +230,90 @@ function doubleBingo(){
                 rules: 'Must get a two bingos on one board',
                 op: "none",
                 boards: [
-                    [
-                        [0,0],[1,1],[2,2],[3,3],[4,4],
-                        [0,1],[0,2],[0,3],[0,4]
-                    ]
+                    (freeSpace: boolean, previewMode: boolean = false) => generateDoubleBingoRotations(freeSpace, previewMode)
                 ],
-                alt_boards: [
-                    [
-                        [0, 0],[0,1],[0,2],[0,3],[0,4],
-                        [1,3],[2,3],[3,3],[4,3]
-                    ]
-                ],
-                length: "Average"
+                length: "Average",
+                dynamicFreeSpace: true
             },
             {
                 rules: 'Must get a one bingo on both boards',
                 op: "and",
                 boards: [
-                    [
-                        [0,0],[1,1],[2,2],[3,3],[4,4]
-                    ],
-                    [
-                        [0,0],[1,1],[2,2],[3,3],[4,4]
-                    ]
+                    (freeSpace: boolean, previewMode: boolean = false) => generateSingleBoardRotations(freeSpace, true, previewMode),
+                    (freeSpace: boolean, previewMode: boolean = false) => generateSingleBoardRotations(freeSpace, true, previewMode)
                 ],
-                alt_boards: [
-                    [
-                        [0, 0],[0,1],[0,2],[0,3],[0,4]
-                    ],
-                    [
-                        [0, 0],[0,1],[0,2],[0,3],[0,4]
-                    ]
-                ],
-                length: "Average"
+                length: "Average",
+                dynamicFreeSpace: true
             },
             {
                 rules: 'Must get two bingos on one or both boards',
                 op: "or",
                 boards: [
-                    [
-                        [0,0],[1,1],[2,2],[3,3],[4,4],
-                        [0,1],[0,2],[0,3],[0,4]
-                    ],
-                    [
-                        [0,0],[1,1],[2,2],[3,3],[4,4],
-                        [0,1],[0,2],[0,3],[0,4]
-                    ]
+                    (freeSpace: boolean, previewMode: boolean = false) => {
+                        // This board can have either single bingo or double bingo patterns
+                        const singlePatterns = generateSingleBoardRotations(freeSpace, true, previewMode);
+                        const doublePatterns = generateDoubleBingoRotations(freeSpace, previewMode);
+
+                        if (previewMode) {
+                            // For preview, show a double bingo pattern on the left board
+                            return doublePatterns;
+                        }
+
+                        // Combine both single and double patterns, but favor double patterns (2:1 ratio)
+                        const combinedPatterns = [...doublePatterns, ...singlePatterns];
+                        return shuffleArray(combinedPatterns);
+                    },
+                    (freeSpace: boolean, previewMode: boolean = false) => {
+                        // This board can have either single bingo or double bingo patterns
+                        const singlePatterns = generateSingleBoardRotations(freeSpace, true, previewMode);
+                        const doublePatterns = generateDoubleBingoRotations(freeSpace, previewMode);
+
+                        if (previewMode) {
+                            // For preview, show a single bingo pattern on the right board
+                            return singlePatterns;
+                        }
+
+                        // Combine both single and double patterns, but favor single patterns (2:1 ratio)
+                        const combinedPatterns = [...singlePatterns, ...doublePatterns];
+                        return shuffleArray(combinedPatterns);
+                    }
                 ],
-                alt_boards: [
-                    [
-                        [0, 0],[0,1],[0,2],[0,3],[0,4],
-                        [1,3],[2,3],[3,3],[4,3]
-                    ],
-                    [
-                        [0, 0],[0,1],[0,2],[0,3],[0,4],
-                        [1,3],[2,3],[3,3],[4,3]
-                    ]
-                ],
-                length: "Average"
+                length: "Average",
+                dynamicFreeSpace: true,
+                filter: function(freeSpace: boolean, allPatterns: number[][][][]) {
+                    const maxPatterns = Math.max(...allPatterns.map(patterns => patterns.length));
+                    let output: number[][][][] = [[],[]]
+                    for( let i = 0; i < maxPatterns; i++ )
+                    {
+                        const board1 = allPatterns[0][i];
+                        const board2 = allPatterns[1][i];
+
+                        if( board1.length === 10)
+                        {
+                            //Add board 1 back into output with board 2 as empty
+                            output[0].push(board1);
+                            output[1].push([]);
+                        }
+                        if( board2.length === 10 )
+                        {
+                            //Add board 2 back into output with board 1 as empty
+                            output[0].push([]);
+                            output[1].push(board2);
+                        }
+                    }
+
+                    const board1Singles = generateSingleBoardRotations(freeSpace, true, false);
+                    const board2Singles = generateSingleBoardRotations(freeSpace, true, false);
+
+                    // Now insert each element of the singles into the correct output board so that it singles is inserted every odd index
+                    for( let i = 0; i < board1Singles.length; i++)
+                    {
+                        output[0].splice(i * 2 + 1, 0, board1Singles[i]);
+                        output[1].splice(i * 2 + 1, 0, board2Singles[i]);
+                    }
+
+                    return output;
+                }
             },
         ]
     }
@@ -98,53 +325,49 @@ function tinyX(){
         variants:[
             {
                 boards: [
-                    [
-                        [0,0],[0,2],[1,1],[2,0],[2,2]
-                    ]
+                    (freeSpace: boolean, previewMode: boolean = false) => generateTinyXBingoRotations(freeSpace, true, previewMode)
                 ],
+                dynamicFreeSpace: true,
                 length: "Fast",
                 rules: 'Must get the tiny x pattern any where on one board'
             },
             {
                 boards: [
-                    [
-                        [0,0],[0,2],[1,1],[2,0],[2,2],
-                        [3,3],[4,4],[2,4],[4,2]
-                    ]
-                ],
-                length: "Fast",
-                rules: 'Must get two tiny x patterns any where on one board'
-            },
-            {
-                boards: [
-                    [
-                        [0,0],[0,2],[1,1],[2,0],[2,2]
-                    ],
-                    [
-                        [3,1],[1,3],[1,1],[3,3],[2,2]
-                    ]
+                    (freeSpace: boolean, previewMode: boolean = false) => generateTinyXBingoRotations(freeSpace, true, previewMode),
+                    (freeSpace: boolean, previewMode: boolean = false) => generateTinyXBingoRotations(freeSpace, true, previewMode)
                 ],
                 length: "Fast",
                 op : "and",
                 rules: 'Must get the tiny x pattern on both boards'
-            },
-            {
-                boards: [
-                    [
-                        [0,0],[0,2],[1,1],[2,0],[2,2]
-                    ],
-                    [
-                        [0,0],[0,2],[1,1],[2,0],[2,2]
-                    ]
-                ],
-                length: "Fast",
-                op : "or",
-                rules: 'Must get the two tiny x patterns on either board'
             }
         ]
     }
 }
 
+function largeX(){
+    return {
+        name: "Large X",
+        variants:[
+            {
+                boards: [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]]]
+                ],
+                rules: "Must match exact pattern on one board",
+                length: "Not Set",
+                dynamicFreeSpace: true
+            },
+            {
+                boards: [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]]],
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]]]
+                ],
+                op: "and",
+                rules: "Must match exact pattern on both boards",
+                length: "Not Set"
+            }
+        ]
+    }
+}
 
 function corners(){
     return {
@@ -154,22 +377,16 @@ function corners(){
                 name: "4 Corners",
                 length: "Fast",
                 boards: [
-                    [
-                        [0,0],[4,4],[0,4],[4,0]
-                    ]
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[4,4],[0,4],[4,0]]]
                 ],
-                rules: 'Must match all 4 corners on ONE boards'
+                rules: 'Must match all 4 corners on ONE boards',
             },
             {
                 name: "8 Corners",
                 length: "Fast",
                 boards: [
-                    [
-                        [0,0],[4,4],[0,4],[4,0]
-                    ],
-                    [
-                        [0,0],[4,4],[0,4],[4,0]
-                    ]
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[4,4],[0,4],[4,0]]],
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[4,4],[0,4],[4,0]]]
                 ],
                 op: "and",
                 rules: 'Must match all 4 corners on ONE boards'
@@ -184,14 +401,30 @@ function railRoadTracks(){
         variants:[
             {
                 boards: [
-                    [
-                        [0,1],[1,1],[2,1],[3,1],[4,1], // I Row
-                        [1,2],[3,2],//N Row
-                        [0,3],[1,3],[2,3],[3,3],[4,3] // 0 Row
-                    ]
+                    function(freeSpace: boolean = true, previewMode: boolean = false)
+                    {
+                        if( !freeSpace || previewMode)
+                        {
+                            return [[
+                                [0,1],[1,1],[2,1],[3,1],[4,1], // I Row
+                                [1,2],[3,2],//N Row
+                                [0,3],[1,3],[2,3],[3,3],[4,3] // 0 Row
+                            ]];
+                        }
+                        else
+                        {
+                            return [[
+                                [0,1],[1,1],[2,1],[3,1],[4,1], // I Row
+                                [0,2],[2,2],[4,2],//N Row
+                                [0,3],[1,3],[2,3],[3,3],[4,3] // 0 Row
+                            ]];
+                        }
+                    }
                 ],
                 rules: "Must match exact pattern",
-                length: "Not Set"
+                dynamicFreeSpace: true,
+                freeSpace: false,
+                length: "Slow"
             }
         ]
     }
@@ -202,13 +435,22 @@ function insideCircle(){
         variants:[
             {
                 boards: [
-                    [
-                        [1,1],[1,2],[1,3], // top Row
-                        [2,1],[2,3],//middle
-                        [3,1],[3,2],[3,3] // bottom Row
-                    ]
+                    function(freeSpace: boolean = true, previewMode: boolean = false)
+                    {
+                        if( !freeSpace || previewMode)
+                        {
+                            return [[
+                                [1,1],[1,2],[1,3], // top Row
+                                [2,1],[2,3],//middle
+                                [3,1],[3,2],[3,3] // bottom Row
+                            ]];
+                        }
+                        return generateSmallSquarePattern();
+                    }
                 ],
                 rules: "Must match exact pattern",
+                dynamicFreeSpace: true,
+                freeSpace: false,
                 length: "Not Set"
             }
         ]
@@ -219,14 +461,14 @@ function outsideCircle(){
         name: "Outside Circle",
         variants:[
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,2],[0,3],[0,4], // top Row
                         [1,0],[1,4],
                         [2,0],[2,4],
                         [3,0],[3,4],
                         [4,0],[4,1],[4,2],[4,3],[4,4] // bottom Row
-                    ]
+                    ]]
                 ],
                 rules: "Must match exact pattern",
                 length: "Not Set"
@@ -239,13 +481,13 @@ function postageStamp(){
         name: "Postage Stamp",
         variants:[
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,3],[0,4], // top Row
                         [1,0],[1,1],[1,3],[1,4],
                         [3,0],[3,1],[3,3],[3,4],
                         [4,0],[4,1],[4,3],[4,4],
-                    ]
+                    ]]
                 ],
                 rules: "Must match exact pattern",
                 length: "Not Set"
@@ -258,21 +500,21 @@ function theGoat(){
         name: "The GOAT",
         variants:[
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,2],[0,3], // top Row
                         [1,0],
                         [2,0],[2,2],[2,3],
                         [3,0],[3,3],
                         [4,0],[4,1],[4,2],[4,3]
-                    ],
-                    [
+                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,1],[0,2],[0,3],[0,4], // top Row
                         [1,1],
                         [2,1],[2,3],[2,4],
                         [3,1],[3,4],
                         [4,1],[4,2],[4,3],[4,4]
-                    ]
+                    ]]
                 ],
                 op:"or",
                 rules: "Must match ONE of the two boards",
@@ -286,45 +528,16 @@ function xmas(){
         name: "XMas",
         variants:[
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,2], // top Row
                         [1,1],[1,2],[1,3],
                         [2,0],[2,1],[2,2],[2,3],[2,4],
                         [3,0],[3,1],[3,2],[3,3],[3,4],
                         [4,2],
-                    ]
+                    ]]
                 ],
                 rules: "Must match exact pattern",
-                length: "Not Set"
-            }
-        ]
-    }
-}
-function largeX(){
-    return {
-        name: "Large X",
-        variants:[
-            {
-                boards: [
-                    [
-                        [0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]
-                    ]
-                ],
-                rules: "Must match exact pattern on one board",
-                length: "Not Set"
-            },
-            {
-                boards: [
-                    [
-                        [0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]
-                    ],
-                    [
-                        [0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]
-                    ]
-                ],
-                op: "and",
-                rules: "Must match exact pattern on both boards",
                 length: "Not Set"
             }
         ]
@@ -335,22 +548,22 @@ function candyCane(){
         name: "Candy Cane",
         variants:[
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]
-                    ]
+                    ]]
                 ],
                 rules: "Must match exact pattern on one board",
                 length: "Not Set"
             },
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]
-                    ],
-                    [
+                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]
-                    ]
+                    ]]
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
@@ -364,34 +577,34 @@ function ticTacToe(){
         name: "Tic Tac Toe",
         variants:[
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,1],[0,3], // top Row
                         [1,0],[1,1],[1,2],[1,3],[1,4],
                         [2,1],[2,3],
                         [3,0],[3,1],[3,2],[3,3],[3,4],
                         [4,1],[4,3],
-                    ]
+                    ]]
                 ],
                 rules: "Must match exact pattern on one board",
                 length: "Not Set"
             },
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,1],[0,3], // top Row
                         [1,0],[1,1],[1,2],[1,3],[1,4],
                         [2,1],[2,3],
                         [3,0],[3,1],[3,2],[3,3],[3,4],
                         [4,1],[4,3],
-                    ],
-                    [
+                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,1],[0,3], // top Row
                         [1,0],[1,1],[1,2],[1,3],[1,4],
                         [2,1],[2,3],
                         [3,0],[3,1],[3,2],[3,3],[3,4],
                         [4,1],[4,3],
-                    ]
+                    ]]
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
@@ -406,13 +619,13 @@ function blackout(){
         variants:[
             {
                 boards: [
-                    [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[
                         [0,0],[0,1],[0,2],[0,3],[0,4],
                         [1,0],[1,1],[1,2],[1,3],[1,4],
                         [2,0],[2,1],[2,2],[2,3],[2,4],
                         [3,0],[3,1],[3,2],[3,3],[3,4],
-                        [4,0],[4,1],[4,2],[4,3],[4,4],
-                    ]
+                        [4,0],[4,1],[4,2],[4,3],[4,4]
+                    ]]
                 ],
                 rules: "Fill out the entire board!",
                 length: "Not Set"
@@ -425,24 +638,23 @@ function survivor(){
         name: "Survivor",
         variants:[
             {
-                boards: [
-                    [
-                    ]
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[]]
                 ],
                 rules: "Stand up with both boards up. If a number on a board gets called flip the board. If both boards are flipped sit down. Last person standing wins!",
                 length: "Not Set"
             },
             {
                 name: "Blackout Survivor",
-                boards: [
-                    [],
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,2],[0,3],[0,4],
                         [1,0],[1,1],[1,2],[1,3],[1,4],
                         [2,0],[2,1],[2,2],[2,3],[2,4],
                         [3,0],[3,1],[3,2],[3,3],[3,4],
                         [4,0],[4,1],[4,2],[4,3],[4,4],
-                    ]
+                    ]]
                 ],
                 op:"transition",
                 rules: "Be the last person standing, or fill out the entire board!",
@@ -456,34 +668,34 @@ function arrow(){
         name: "Arrow/Tree",
         variants:[
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,2],
                         [1,1],[1,2],[1,3],
                         [2,0],[2,1],[2,2],[2,3],[2,4],
                         [3,2],
                         [4,2],
-                    ]
+                    ]]
                 ],
                 rules: "Must match exact pattern on one board",
                 length: "Not Set"
             },
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,2],
                         [1,1],[1,2],[1,3],
                         [2,0],[2,1],[2,2],[2,3],[2,4],
                         [3,2],
                         [4,2],
-                    ],
-                    [
+                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,2],
                         [1,1],[1,2],[1,3],
                         [2,0],[2,1],[2,2],[2,3],[2,4],
                         [3,2],
                         [4,2],
-                    ]
+                    ]]
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
@@ -498,37 +710,54 @@ function diamond(){
         variants:[
             {
                 boards: [
-                    [
-                        [0,2],
-                        [1,1],[1,2],[1,3],
-                        [2,0],[2,1],[2,2],[2,3],[2,4],
-                        [3,2],
-                        [4,2],
-                    ]
+                    (freeSpace: boolean, previewMode: boolean = false) => {
+                        const withFreeSpace = [
+                            // Original diamond
+                            [[0,2],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[2,4],[3,1],[3,2],[3,3],[4,2]],
+                            // Plus sign
+                            [[0,2],[1,2],[2,0],[2,1],[2,2],[2,3],[2,4],[3,2],[4,2]],
+                            // Small diamond
+                            [[1,2],[2,1],[2,2],[2,3],[3,2]],
+                            // Cross
+                            [[0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]]
+                        ];
+
+                        const withoutFreeSpace = [
+                            // Diamond without center
+                            [[0,2],[1,1],[1,3],[2,0],[2,1],[2,3],[2,4],[3,1],[3,3],[4,2]],
+                            // Plus without center
+                            [[0,2],[1,2],[2,0],[2,1],[2,3],[2,4],[3,2],[4,2]],
+                            // Small diamond without center
+                            [[1,2],[2,1],[2,3],[3,2]],
+                            // Cross (same as it doesn't use center)
+                            [[0,0],[0,4],[1,1],[1,3],[3,1],[3,3],[4,0],[4,4]]
+                        ];
+
+                        // For preview mode, always return the first pattern (original diamond)
+                        if (previewMode) {
+                            return freeSpace ? [withFreeSpace[0]] : [withoutFreeSpace[0]];
+                        }
+
+                        return freeSpace ? shuffleArray(withFreeSpace) : shuffleArray(withoutFreeSpace);
+                    }
                 ],
                 rules: "Must match exact pattern on one board",
-                length: "Not Set"
+                length: "Not Set",
+                dynamicFreeSpace: true
             },
             {
                 boards: [
-                    [
-                        [0,2],
-                        [1,1],[1,2],[1,3],
-                        [2,0],[2,1],[2,2],[2,3],[2,4],
-                        [3,2],
-                        [4,2],
-                    ],
-                    [
-                        [0,2],
-                        [1,1],[1,2],[1,3],
-                        [2,0],[2,1],[2,2],[2,3],[2,4],
-                        [3,2],
-                        [4,2],
-                    ]
+                    (freeSpace: boolean, previewMode: boolean = false) => freeSpace ?
+                        [[[0,2], [1,1],[1,2],[1,3], [2,0],[2,1],[2,2],[2,3],[2,4], [3,1],[3,2],[3,3], [4,2]]] :
+                        [[[0,2], [1,1],[1,3], [2,0],[2,1],[2,3],[2,4], [3,1],[3,3], [4,2]]],
+                    (freeSpace: boolean, previewMode: boolean = false) => freeSpace ?
+                        [[[0,2], [1,1],[1,2],[1,3], [2,0],[2,1],[2,2],[2,3],[2,4], [3,1],[3,2],[3,3], [4,2]]] :
+                        [[[0,2], [1,1],[1,3], [2,0],[2,1],[2,3],[2,4], [3,1],[3,3], [4,2]]]
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
-                length: "Not Set"
+                length: "Not Set",
+                dynamicFreeSpace: true
             }
         ]
     }
@@ -539,33 +768,32 @@ function theT(){
         variants:[
             {
                 boards: [
-                    [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[
                         [0,0],[0,1],[0,2],[0,3],[0,4],
                         [1,2],
                         [2,2],
                         [3,2],
                         [4,2],
-                    ]
+                    ]]
                 ],
                 rules: "Must match exact pattern on one board",
                 length: "Not Set"
             },
             {
                 boards: [
-                    [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => freeSpace ? [[
                         [0,0],[0,1],[0,2],[0,3],[0,4],
                         [1,2],
                         [2,2],
                         [3,2],
                         [4,2],
-                    ],
-                    [
+                    ]] : [[
                         [0,0],[0,1],[0,2],[0,3],[0,4],
                         [1,2],
                         [2,2],
                         [3,2],
                         [4,2],
-                    ]
+                    ]]
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
@@ -580,33 +808,33 @@ function theZ(){
         variants:[
             {
                 boards: [
-                    [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[
                         [0,0],[0,1],[0,2],[0,3],[0,4],
                         [1,3],
                         [2,2],
                         [3,1],
                         [4,0],[4,1],[4,2],[4,3],[4,4],
-                    ]
+                    ]]
                 ],
                 rules: "Must match exact pattern on one board",
                 length: "Not Set"
             },
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,2],[0,3],[0,4],
                         [1,3],
                         [2,2],
                         [3,1],
                         [4,0],[4,1],[4,2],[4,3],[4,4],
-                    ],
-                    [
+                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,2],[0,3],[0,4],
                         [1,3],
                         [2,2],
                         [3,1],
                         [4,0],[4,1],[4,2],[4,3],[4,4],
-                    ]
+                    ]]
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
@@ -620,34 +848,34 @@ function lucky7(){
         name: "Lucky7",
         variants:[
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,2],[0,3],[0,4],
                         [1,3],
                         [2,2],
                         [3,1],
                         [4,0],
-                    ]
+                    ]]
                 ],
                 rules: "Must match exact pattern on one board",
                 length: "Not Set"
             },
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,2],[0,3],[0,4],
                         [1,3],
                         [2,2],
                         [3,1],
                         [4,0],
-                    ],
-                    [
+                ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,2],[0,3],[0,4],
                         [1,3],
                         [2,2],
                         [3,1],
                         [4,0],
-                    ]
+                    ]]
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
@@ -661,34 +889,34 @@ function valentinesDay(){
         name: "ValentinesDay",
         variants:[
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,3],[0,4],
                         [1,0],[1,2],[1,4],
                         [2,0],[2,4],
                         [3,1],[3,3],
                         [4,2],
-                    ]
+                    ]]
                 ],
                 rules: "Must match exact pattern on one board",
                 length: "Not Set"
             },
             {
-                boards: [
-                    [
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,3],[0,4],
                         [1,0],[1,2],[1,4],
                         [2,0],[2,4],
                         [3,1],[3,3],
                         [4,2],
-                    ],
-                    [
+                ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
                         [0,0],[0,1],[0,3],[0,4],
                         [1,0],[1,2],[1,4],
                         [2,0],[2,4],
                         [3,1],[3,3],
                         [4,2],
-                    ]
+                    ]]
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
@@ -721,7 +949,6 @@ function games(){
         theZ(),
         lucky7(),
         valentinesDay()
-
     ]
 }
 

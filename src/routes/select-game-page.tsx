@@ -1,12 +1,12 @@
 // Select Game Page
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './select-game-page.css';
 import games from '../data/games';
 import HamburgerMenu from '../components/HamburgerMenu';
 import QRCode from '../components/QRCode';
 import AudienceInteractionButtons from '../components/AudienceInteractionButtons';
-import { generateWelcomeMessage } from '../utils/settings';
+import { generateWelcomeMessage, getSetting } from '../utils/settings';
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -26,8 +26,53 @@ interface GameSettings {
   freeSpace: boolean,
 }
 
+// Progress Circle Component for rotation timing
+const ProgressCircle = ({ progress, isResetting }: { progress: number, isResetting: boolean }) => {
+  const radius = 20;
+  const strokeWidth = 3;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (progress * circumference);
+
+  return (
+    <div className="progress-circle-container">
+      <svg width="50" height="50" viewBox="0 0 50 50" className="progress-circle">
+        {/* Background circle */}
+        <circle
+          cx="25"
+          cy="25"
+          r={radius}
+          fill="none"
+          stroke="#e0e0e0"
+          strokeWidth={strokeWidth}
+        />
+        {/* Progress circle */}
+        <circle
+          cx="25"
+          cy="25"
+          r={radius}
+          fill="none"
+          stroke="#007bff"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          transform="rotate(-90 25 25)"
+          style={{
+            transition: isResetting ? 'none' : 'stroke-dashoffset 0.1s linear'
+          }}
+        />
+      </svg>
+    </div>
+  );
+};
+
 // Game Board Component for displaying 5x5 grids
-const GameBoard = ({ board, freeSpace, isSelected = false, onClick }: {
+const GameBoard = ({
+  board,
+  freeSpace,
+  isSelected = false,
+  onClick
+}: {
   board: number[][],
   freeSpace: boolean,
   isSelected?: boolean,
@@ -99,15 +144,30 @@ const GameInfoCard = ({ game, variant }: { game: any, variant: any }) => {
 };
 
 // Toggle Component for Free Space
-const FreeSpaceToggle = ({ freeSpace, onChange }: { freeSpace: boolean, onChange: (value: boolean) => void }) => {
+const FreeSpaceToggle = ({
+  freeSpace,
+  onChange,
+  disabled = false,
+  variant = null
+}: {
+  freeSpace: boolean,
+  onChange: (value: boolean) => void,
+  disabled?: boolean,
+  variant?: any
+}) => {
+  // Toggle should only be disabled if dynamicFreeSpace is not available
+  const hasDynamicFreeSpace = variant && variant.hasOwnProperty('dynamicFreeSpace') && variant.dynamicFreeSpace;
+  const isDisabled = disabled || (!hasDynamicFreeSpace);
+
   return (
     <div className="free-space-toggle">
       <span className="toggle-label">Free Space:</span>
-      <label className="toggle-switch">
+      <label className={`toggle-switch ${isDisabled ? 'disabled' : ''}`}>
         <input
           type="checkbox"
           checked={freeSpace}
-          onChange={(e) => onChange(e.target.checked)}
+          onChange={(e) => !isDisabled && onChange(e.target.checked)}
+          disabled={isDisabled}
         />
         <span className="slider"></span>
       </label>
@@ -162,7 +222,7 @@ const WelcomePanel = () => {
         <pre className="welcome-template">{welcomeText}</pre>
       </div>
       <div className="qr-code-card">
-        <h4>Join The Game</h4>
+        <h4>View On Your Device</h4>
         <div className="qr-code-container">
           <QRCode
             value={`${window.location.origin}/BingoBoard/board`}
@@ -188,6 +248,79 @@ const GamePreviewSection = ({
   const currentGame = games[settings.id];
   const currentVariant = currentGame.variants[settings.variant];
 
+  // State for rotation functionality
+  const [rotationIndex, setRotationIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [isResetting, setIsResetting] = useState(false);
+  const [hasMultiplePatterns, setHasMultiplePatterns] = useState(false);
+  const [cachedPatterns, setCachedPatterns] = useState<number[][][][] | null>(null);
+
+  // Effect to handle automatic rotation of patterns
+  useEffect(() => {
+    // Check if current variant has multiple possible patterns and cache them
+    let allPatterns: number[][][][] = [];
+    let hasMultiple = false;
+
+    currentVariant.boards.forEach((boardFunction: (freeSpace: boolean) => number[][][]) => {
+      if (typeof boardFunction === 'function') {
+        const possiblePatterns = boardFunction(settings.freeSpace);
+        allPatterns.push(possiblePatterns);
+        if (possiblePatterns.length > 1) {
+          hasMultiple = true;
+        }
+      }
+    });
+
+    if( currentVariant.filter )
+    {
+      // run a filter function over the all patterns and remove all boards that have 10 cells
+      allPatterns = currentVariant.filter(settings.freeSpace, allPatterns);
+    }
+
+
+    setCachedPatterns(allPatterns);
+    setHasMultiplePatterns(hasMultiple);
+    setProgress(0);
+    setIsResetting(false);
+    setRotationIndex(0);
+
+    if (hasMultiple) {
+      // Get rotation interval from settings (in seconds)
+      const intervalSeconds = getSetting('patternRotationInterval', 3);
+      const intervalMs = intervalSeconds * 1000;
+
+      // Set up interval for rotation
+      const rotationInterval = setInterval(() => {
+        // Find the maximum number of patterns across all boards
+        const maxPatterns = Math.max(...allPatterns.map(patterns => patterns.length));
+
+        setRotationIndex(prevIndex => (prevIndex + 1) % maxPatterns);
+        setProgress(0);
+        setIsResetting(true);
+
+        // Re-enable transitions after a brief moment
+        setTimeout(() => {
+          setIsResetting(false);
+        }, 50);
+      }, intervalMs);
+
+      // Set up progress interval (update every 100ms for smooth animation)
+      const progressUpdateInterval = 100;
+      const progressInterval = setInterval(() => {
+        setProgress(prevProgress => {
+          const increment = progressUpdateInterval / intervalMs;
+          const newProgress = prevProgress + increment;
+          return newProgress >= 1 ? 1 : newProgress;
+        });
+      }, progressUpdateInterval);
+
+      return () => {
+        clearInterval(rotationInterval);
+        clearInterval(progressInterval);
+      };
+    }
+  }, [currentVariant, settings.freeSpace]);
+
   const handleFreeSpaceToggle = (freeSpace: boolean) => {
     onSettingsChange({ ...settings, freeSpace });
   };
@@ -202,7 +335,26 @@ const GamePreviewSection = ({
       newVariant = settings.variant < totalVariants - 1 ? settings.variant + 1 : 0;
     }
 
-    onSettingsChange({ ...settings, variant: newVariant });
+    // Helper function to determine default freeSpace value for a variant
+    const getDefaultFreeSpace = (game: any, variantIndex: number): boolean => {
+      const variant = game.variants[variantIndex];
+
+      // If variant explicitly defines freeSpace, use that value
+      if (variant.hasOwnProperty('freeSpace')) {
+        return variant.freeSpace;
+      }
+
+      // Otherwise, default to false unless dynamicFreeSpace exists, then default to true
+      const hasDynamicFreeSpace = variant.hasOwnProperty('dynamicFreeSpace') && variant.dynamicFreeSpace;
+      return hasDynamicFreeSpace;
+    };
+
+    // Update both variant and freeSpace based on the new variant's default
+    onSettingsChange({
+      ...settings,
+      variant: newVariant,
+      freeSpace: getDefaultFreeSpace(currentGame, newVariant)
+    });
   };
 
   const handleGameBoardClick = () => {
@@ -221,23 +373,33 @@ const GamePreviewSection = ({
   };
 
   const renderGameBoards = () => {
-    const boards = settings.freeSpace ? currentVariant.boards : (currentVariant.alt_boards || currentVariant.boards);
-    const isDualBoard = boards.length > 1;
+    // All boards are now functions that return arrays of possible patterns
+    const isDualBoard = currentVariant.boards.length > 1;
+
+    // Use cached patterns to avoid regenerating them on every render
+    if (!cachedPatterns) {
+      return <div>Loading patterns...</div>;
+    }
 
     return (
       <div className={`game-boards-container ${isDualBoard ? 'dual-board' : 'single-board'}`}>
-        {boards.map((board: number[][], index: number) => (
-          <React.Fragment key={index}>
-            <GameBoard
-              board={board}
-              freeSpace={settings.freeSpace}
-              onClick={handleGameBoardClick}
-            />
-            {index < boards.length - 1 && currentVariant.op && (
-              <OperatorIcon operator={currentVariant.op} />
-            )}
-          </React.Fragment>
-        ))}
+        {cachedPatterns.map((possiblePatterns: number[][][], index: number) => {
+          // Use rotation index to pick which pattern to display (with wrap-around)
+          const selectedPattern = possiblePatterns[rotationIndex % possiblePatterns.length];
+
+          return (
+            <React.Fragment key={index}>
+              <GameBoard
+                board={selectedPattern}
+                freeSpace={settings.freeSpace}
+                onClick={handleGameBoardClick}
+              />
+              {index < cachedPatterns.length - 1 && currentVariant.op && (
+                <OperatorIcon operator={currentVariant.op} />
+              )}
+            </React.Fragment>
+          );
+        })}
       </div>
     );
   };
@@ -249,18 +411,28 @@ const GamePreviewSection = ({
       <FreeSpaceToggle
         freeSpace={settings.freeSpace}
         onChange={handleFreeSpaceToggle}
+        variant={currentVariant}
       />
 
       <div className="game-display-area">
-        {renderGameBoards()}
+        <div className="game-boards-wrapper">
+          {renderGameBoards()}
+        </div>
       </div>
 
-      <VariantControls
-        currentVariant={settings.variant}
-        totalVariants={currentGame.variants.length}
-        onPrevious={() => handleVariantChange('prev')}
-        onNext={() => handleVariantChange('next')}
-      />
+      <div className="variant-controls-wrapper">
+        <VariantControls
+          currentVariant={settings.variant}
+          totalVariants={currentGame.variants.length}
+          onPrevious={() => handleVariantChange('prev')}
+          onNext={() => handleVariantChange('next')}
+        />
+        {hasMultiplePatterns && (
+          <div className="progress-circle-inline">
+            <ProgressCircle progress={progress} isResetting={isResetting} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -268,12 +440,17 @@ const GamePreviewSection = ({
 // Small Game Preview for Swiper
 const SmallGamePreview = ({ game, gameIndex, onClick }: { game: any, gameIndex: number, onClick: () => void }) => {
   const firstVariant = game.variants[0];
-  const firstBoard = firstVariant.boards[0];
+  const firstBoardFunction = firstVariant.boards[0];
+
+  // Call the board function to get the first pattern using preview mode for consistency
+  const firstPattern = typeof firstBoardFunction === 'function'
+    ? firstBoardFunction(true, true)[0]  // Get first pattern with free space enabled and preview mode on
+    : firstBoardFunction; // Fallback for any remaining non-function boards
 
   return (
     <div className="small-game-preview" onClick={onClick}>
       <div className="small-game-board">
-        <GameBoard board={firstBoard} freeSpace={true} />
+        <GameBoard board={firstPattern} freeSpace={true} />
       </div>
       <div className="game-preview-label">
         {game.name} [{firstVariant.length || 'Standard'}]
@@ -354,19 +531,36 @@ const SelectGamePage = () => {
   const gameList = games();
   const navigate = useNavigate();
 
+  // Helper function to determine default freeSpace value for a variant
+  const getDefaultFreeSpace = (game: any, variantIndex: number): boolean => {
+    const variant = game.variants[variantIndex];
+
+    // If variant explicitly defines freeSpace, use that value
+    if (variant.hasOwnProperty('freeSpace')) {
+      return variant.freeSpace;
+    }
+
+    // Otherwise, default to false unless dynamicFreeSpace exists, then default to true
+    const hasDynamicFreeSpace = variant.hasOwnProperty('dynamicFreeSpace') && variant.dynamicFreeSpace;
+    return hasDynamicFreeSpace;
+  };
+
   const [gameSettings, setGameSettings] = useState<GameSettings>({
     id: 0,
     name: gameList[0].name,
     variant: 0,
-    freeSpace: true
+    freeSpace: getDefaultFreeSpace(gameList[0], 0)
   });
 
   const handleGameSelect = (gameId: number) => {
+    const newGame = gameList[gameId];
+    const newVariant = 0; // Reset to first variant when selecting new game
+
     setGameSettings({
       id: gameId,
-      name: gameList[gameId].name,
-      variant: 0, // Reset to first variant when selecting new game
-      freeSpace: true
+      name: newGame.name,
+      variant: newVariant,
+      freeSpace: getDefaultFreeSpace(newGame, newVariant)
     });
   };
 
