@@ -364,16 +364,6 @@ const GamePreviewSection = ({
     }
   };
 
-  // Handle scroll wheel for variant rotation
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    if (e.deltaY > 0) {
-      handleVariantChange('next');
-    } else {
-      handleVariantChange('prev');
-    }
-  };
-
   const renderGameBoards = () => {
     // All boards are now functions that return arrays of possible patterns
     const isDualBoard = currentVariant.boards.length > 1;
@@ -407,7 +397,7 @@ const GamePreviewSection = ({
   };
 
   return (
-    <div className="game-preview-section" onWheel={handleWheel}>
+    <div className="game-preview-section">
       <GameInfoCard game={currentGame} variant={currentVariant} />
 
       <FreeSpaceToggle
