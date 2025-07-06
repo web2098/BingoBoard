@@ -167,6 +167,21 @@ function generateSmallSquarePattern(freeSpace: boolean = true, shuffle: boolean 
     return result;
 }
 
+function generateCandyCanePattern(freeSpace: boolean = true, previewMode: boolean = false)
+{
+    if( !freeSpace || previewMode ) {
+        return [[
+            [0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]
+        ]];
+    }
+    
+    return [
+        [[0,0],[0,1],[0,2],[1,0],[1,2],[2,2],[3,2],[4,2]],
+        [[0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]],
+        [[0,2],[0,3],[1,2],[0,4],[1,4],[2,4],[3,4],[4,4]]
+    ];
+}
+
 function bingo(){
     return {
         name: "Normal Bingo",
@@ -507,8 +522,7 @@ function theGoat(){
                         [2,0],[2,2],[2,3],
                         [3,0],[3,3],
                         [4,0],[4,1],[4,2],[4,3]
-                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
-                    [[
+                    ],[
                         [0,1],[0,2],[0,3],[0,4], // top Row
                         [1,1],
                         [2,1],[2,3],[2,4],
@@ -516,8 +530,7 @@ function theGoat(){
                         [4,1],[4,2],[4,3],[4,4]
                     ]]
                 ],
-                op:"or",
-                rules: "Must match ONE of the two boards",
+                rules: "Must make the GOAT pattern on one board aligned in the first or second column",
                 length: "Not Set"
             }
         ]
@@ -548,22 +561,17 @@ function candyCane(){
         name: "Candy Cane",
         variants:[
             {
-                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
-                    [[
-                        [0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]
-                    ]]
+                boards: [
+                    (freeSpace: boolean, previewMode: boolean = false) => generateCandyCanePattern(freeSpace, previewMode)
                 ],
+                dynamicFreeSpace: true,
                 rules: "Must match exact pattern on one board",
                 length: "Not Set"
             },
             {
-                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
-                    [[
-                        [0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]
-                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
-                    [[
-                        [0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]
-                    ]]
+                boards: [
+                    (freeSpace: boolean, previewMode: boolean = false) => generateCandyCanePattern(freeSpace, previewMode),
+                    (freeSpace: boolean, previewMode: boolean = false) => generateCandyCanePattern(freeSpace, previewMode)
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
@@ -710,54 +718,22 @@ function diamond(){
         variants:[
             {
                 boards: [
-                    (freeSpace: boolean, previewMode: boolean = false) => {
-                        const withFreeSpace = [
-                            // Original diamond
-                            [[0,2],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[2,4],[3,1],[3,2],[3,3],[4,2]],
-                            // Plus sign
-                            [[0,2],[1,2],[2,0],[2,1],[2,2],[2,3],[2,4],[3,2],[4,2]],
-                            // Small diamond
-                            [[1,2],[2,1],[2,2],[2,3],[3,2]],
-                            // Cross
-                            [[0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]]
-                        ];
-
-                        const withoutFreeSpace = [
-                            // Diamond without center
-                            [[0,2],[1,1],[1,3],[2,0],[2,1],[2,3],[2,4],[3,1],[3,3],[4,2]],
-                            // Plus without center
-                            [[0,2],[1,2],[2,0],[2,1],[2,3],[2,4],[3,2],[4,2]],
-                            // Small diamond without center
-                            [[1,2],[2,1],[2,3],[3,2]],
-                            // Cross (same as it doesn't use center)
-                            [[0,0],[0,4],[1,1],[1,3],[3,1],[3,3],[4,0],[4,4]]
-                        ];
-
-                        // For preview mode, always return the first pattern (original diamond)
-                        if (previewMode) {
-                            return freeSpace ? [withFreeSpace[0]] : [withoutFreeSpace[0]];
-                        }
-
-                        return freeSpace ? shuffleArray(withFreeSpace) : shuffleArray(withoutFreeSpace);
-                    }
+                    (freeSpace: boolean, previewMode: boolean = false) => 
+                        [[[0,2],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[2,4],[3,1],[3,2],[3,3],[4,2]]]
                 ],
                 rules: "Must match exact pattern on one board",
                 length: "Not Set",
-                dynamicFreeSpace: true
             },
             {
                 boards: [
-                    (freeSpace: boolean, previewMode: boolean = false) => freeSpace ?
-                        [[[0,2], [1,1],[1,2],[1,3], [2,0],[2,1],[2,2],[2,3],[2,4], [3,1],[3,2],[3,3], [4,2]]] :
-                        [[[0,2], [1,1],[1,3], [2,0],[2,1],[2,3],[2,4], [3,1],[3,3], [4,2]]],
-                    (freeSpace: boolean, previewMode: boolean = false) => freeSpace ?
-                        [[[0,2], [1,1],[1,2],[1,3], [2,0],[2,1],[2,2],[2,3],[2,4], [3,1],[3,2],[3,3], [4,2]]] :
-                        [[[0,2], [1,1],[1,3], [2,0],[2,1],[2,3],[2,4], [3,1],[3,3], [4,2]]]
+                        (freeSpace: boolean, previewMode: boolean = false) => 
+                            [[[0,2],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[2,4],[3,1],[3,2],[3,3],[4,2]]],
+                        (freeSpace: boolean, previewMode: boolean = false) => 
+                            [[[0,2],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[2,4],[3,1],[3,2],[3,3],[4,2]]]
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
                 length: "Not Set",
-                dynamicFreeSpace: true
             }
         ]
     }

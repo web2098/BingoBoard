@@ -136,8 +136,7 @@ const GameInfoCard = ({ game, variant }: { game: any, variant: any }) => {
     <div className="game-info-card">
       <h2 className="game-title">{game.name}</h2>
       <div className="game-rules">
-        <h4>Rules:</h4>
-        <p>{variant.rules}</p>
+        <h4>{variant.rules}</h4>
       </div>
     </div>
   );
@@ -358,8 +357,11 @@ const GamePreviewSection = ({
   };
 
   const handleGameBoardClick = () => {
-    // Toggle free space when clicking on the game board (if available)
-    handleFreeSpaceToggle(!settings.freeSpace);
+    // Only toggle free space if dynamicFreeSpace is available for this variant
+    const hasDynamicFreeSpace = currentVariant && currentVariant.hasOwnProperty('dynamicFreeSpace') && currentVariant.dynamicFreeSpace;
+    if (hasDynamicFreeSpace) {
+      handleFreeSpaceToggle(!settings.freeSpace);
+    }
   };
 
   // Handle scroll wheel for variant rotation
@@ -449,11 +451,11 @@ const SmallGamePreview = ({ game, gameIndex, onClick }: { game: any, gameIndex: 
 
   return (
     <div className="small-game-preview" onClick={onClick}>
-      <div className="small-game-board">
-        <GameBoard board={firstPattern} freeSpace={true} />
-      </div>
       <div className="game-preview-label">
         {game.name} [{firstVariant.length || 'Standard'}]
+      </div>
+      <div className="small-game-board">
+        <GameBoard board={firstPattern} freeSpace={true} />
       </div>
     </div>
   );
