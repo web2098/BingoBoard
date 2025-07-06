@@ -409,7 +409,7 @@
 .welcome-message-card,
 .qr-code-card {
   background: #f8f9fa;
-  padding: 20px;
+  padding: 10px;
   border-radius: 8px;
   border-left: 4px solid #007bff;
   text-align: center;
