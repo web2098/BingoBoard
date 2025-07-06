@@ -4,7 +4,7 @@
 .floating-actions {
   position: fixed;
   top: 80px; /* Position below hamburger button (20px top + 48px height + 12px gap) */
-  left: 20px;
+  left: 18px;
   z-index: 999; /* Below hamburger menu but above content */
   display: flex;
   flex-direction: column;
@@ -234,7 +234,6 @@
 
 .setting-control {
   flex-shrink: 0;
-  min-width: 120px;
 }
 
 /* Input Styles */
@@ -886,15 +885,36 @@
   padding: 16px;
 }
 
+.interaction-audio-toggle {
+  background: #f3e5f5;
+  border: 2px solid #9c27b0;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
 .auto-label {
   font-weight: 600;
   color: #0c5460;
   margin-right: 12px;
 }
 
+.audio-label {
+  font-weight: 600;
+  color: #4a148c;
+  margin-right: 12px;
+}
+
 .auto-description {
   margin: 8px 0 0 0;
   color: #0c5460;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.audio-description {
+  margin: 8px 0 0 0;
+  color: #4a148c;
   font-size: 14px;
   font-style: italic;
 }
@@ -953,6 +973,10 @@
   }
 
   .interaction-auto-toggle {
+    padding: 12px;
+  }
+
+  .interaction-audio-toggle {
     padding: 12px;
   }
 
