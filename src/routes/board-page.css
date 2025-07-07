@@ -6,6 +6,21 @@
   height: 100vh;
   width: 100%;
   background-color: #f5f5f5;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Vertical off-white sidebar */
+.board-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 100vh;
+  background-color: #f8f9fa;
+  z-index: 1;
+  border-right: 1px solid #e9ecef;
 }
 
 /* Header Section */
@@ -14,7 +29,10 @@
   background: white;
   border-bottom: 2px solid #ccc;
   padding: 20px;
+  padding-left: 100px; /* Space for sidebar */
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  height: 17.5vh; /* Reduced by 30% from 25vh */
+  flex-shrink: 0;
 }
 
 .header-left, .header-center, .header-right {
@@ -81,37 +99,27 @@
   font-style: italic;
 }
 
-/* Quick Actions */
-.quick-actions, .qr-code-header {
+/* QR Code Header */
+.qr-code-header {
   background: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 15px;
+  padding: 7.5px;
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 150px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.quick-actions h4, .qr-code-header h4 {
-  margin: 0 0 10px 0;
+.qr-code-header h4 {
+  margin: 0 0 5px 0;
   color: #333;
   text-align: center;
-}
-
-.action-btn {
-  display: block;
-  width: 100%;
-  margin: 5px 0;
-  padding: 8px 12px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
   font-size: 0.9em;
-  transition: background-color 0.3s;
-}
-
-.action-btn:hover {
-  background: #0056b3;
 }
 
 /* QR Code */
@@ -135,29 +143,25 @@
 
 /* Bingo Grid Section */
 .bingo-grid-section {
-  flex: 1;
+  height: calc((100vh - 17.5vh - 20px) * 0.95); /* Reduced by 5% from full available height */
   padding: 20px;
-  overflow: auto;
-}
-
-.bingo-grid {
-  max-width: 1200px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding-left: 100px; /* Space for sidebar */
+  padding-bottom: 0; /* Remove bottom padding to use for gap */
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .bingo-row {
   display: flex;
   align-items: center;
+  flex: 1;
   margin-bottom: 5px;
 }
 
 .row-letter {
-  width: 60px;
-  height: 60px;
+  width: 7.2%;
+  height: 100%;
+  min-height: 60px;
   background: #28a745;
   color: white;
   display: flex;
@@ -171,7 +175,8 @@
 
 .bingo-cell {
   flex: 1;
-  height: 60px;
+  height: 100%;
+  min-height: 60px;
   margin: 0 2px;
   background: #f8f9fa;
   border: 2px solid #dee2e6;
@@ -203,6 +208,93 @@
 .bingo-cell.called:hover {
   background: #c82333;
   transform: scale(0.95);
+}
+
+/* Grid and History Container */
+.grid-and-history-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+/* Bingo Grid - takes up most of the available space */
+.bingo-grid {
+  flex: 1;
+  height: 100%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* History Section - takes up 25% of width */
+.history-section {
+  flex: 0 0 25%;
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow-y: auto;
+  height: calc(100% - 40px); /* Full height minus padding */
+}
+
+/* Number History - compact sidebar aligned to the right */
+.number-history {
+  flex: 0 0 150px;
+  height: 100%;
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.number-history h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.2em;
+  text-align: center;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+.history-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.history-item {
+  background: #f8f9fa;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #333;
+}
+
+.history-item.most-recent {
+  background: #f8f9fa;
+  color: #333;
+  border-color: #dee2e6;
+  transform: scale(1.05);
+}
+
+.no-numbers {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 20px;
 }
 
 /* Responsive Design */

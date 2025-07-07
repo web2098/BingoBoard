@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './board-page.css';
 import HamburgerMenu from '../components/HamburgerMenu';
 import QRCode from '../components/QRCode';
+import AudienceInteractionButtons from '../components/AudienceInteractionButtons';
 
 interface BoardPageProps {}
 
@@ -50,7 +51,15 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   const bingoGrid = generateBingoGrid();
 
   const handleNumberClick = (number: number) => {
-    if (!calledNumbers.includes(number)) {
+    if (calledNumbers.includes(number)) {
+      // If number is already called, remove it (unselect)
+      setCalledNumbers(calledNumbers.filter(num => num !== number));
+      // If this was the last number called, clear it
+      if (lastNumber === number) {
+        setLastNumber(null);
+      }
+    } else {
+      // If number is not called, add it (select)
       setCalledNumbers([...calledNumbers, number]);
       setLastNumber(number);
     }
@@ -105,20 +114,12 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         </div>
 
         <div className="header-right">
-          {/* Quick Actions */}
-          <div className="quick-actions">
-            <h4>Quick Actions</h4>
-            <button className="action-btn">Reset Game</button>
-            <button className="action-btn">Undo Last</button>
-            <button className="action-btn">New Game</button>
-          </div>
-
           {/* QR Code */}
           <div className="qr-code-header">
             <h4>Join Game</h4>
             <QRCode
               value={`${window.location.origin}/BingoBoard/board`}
-              size={100}
+              size={50}
               className="board-qr-code"
             />
           </div>
@@ -127,23 +128,44 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
       {/* Section 2: Bingo Numbers Grid */}
       <div className="bingo-grid-section">
-        <div className="bingo-grid">
-          {bingoGrid.map((row, rowIndex) => (
-            <div key={rowIndex} className="bingo-row">
-              <div className="row-letter">{row[0].letter}</div>
-              {row.map((cell) => (
-                <div
-                  key={cell.number}
-                  className={`bingo-cell ${cell.called ? 'called' : ''}`}
-                  onClick={() => handleNumberClick(cell.number)}
+        <div className="grid-and-history-container">
+          <div className="bingo-grid">
+            {bingoGrid.map((row, rowIndex) => (
+              <div key={rowIndex} className="bingo-row">
+                <div className="row-letter">{row[0].letter}</div>
+                {row.map((cell) => (
+                  <div
+                    key={cell.number}
+                    className={`bingo-cell ${cell.called ? 'called' : ''}`}
+                    onClick={() => handleNumberClick(cell.number)}
+                  >
+                    {cell.number}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+          
+          <div className="number-history">
+            <h4>Last Numbers Called</h4>
+            <div className="history-list">
+              {calledNumbers.slice(-10).reverse().map((number, index) => (
+                <div 
+                  key={number} 
+                  className={`history-item ${index === 0 ? 'most-recent' : ''}`}
                 >
-                  {cell.number}
+                  {number}
                 </div>
               ))}
+              {calledNumbers.length === 0 && (
+                <div className="no-numbers">No numbers called yet</div>
+              )}
             </div>
-          ))}
+          </div>
         </div>
       </div>
+
+      <AudienceInteractionButtons currentPage="game-board" />
     </div>
   );
 };
