@@ -190,5 +190,18 @@
     "description": "Timeout for server connections",
     "type": "number",
     "default": 5000
+  },
+  {
+    "section": "Website Version",
+    "Label": "Default Version",
+    "id": "defaultVersion",
+    "description": "The default version to use when accessing the application",
+    "type": "select",
+    "options": [
+      "latest",
+      "v5",
+      "v4"
+    ],
+    "default": "latest"
   }
 ]

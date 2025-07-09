@@ -1,0 +1,18 @@
+<head>
+    <script src="utilities.js"></script>
+    <script>
+        window.onload = function() {
+            setDefaultSettings(false);
+
+            if( getItemWithDefault('home-page') == 'select_game'){
+                window.location.href = 'select_game.html';
+            }
+            else {
+                window.location.href = 'board.html';
+            }
+        }
+    </script>
+</head>
+<body>
+
+</body>

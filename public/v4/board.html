@@ -1,0 +1,35 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="common/ui.css">
+    <link rel="stylesheet" type="text/css" href="board/board.css">
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <script src="utilities.js"></script>
+    <script src="games.js"></script>
+    <script src="common/utilities.js"></script>
+    <script src="common/ui.js"></script>
+    <script src="board/board_ui.js"></script>
+    <script src="board/board_interaction.js"></script>
+    <script src="board/board_server_interaction.js"></script>
+    <script src="board/board_audience_interactions.js"></script>
+    <script src="board/board.js"></script>
+    <script>
+        window.onload = function() {
+            init_view();
+        };
+    </script>
+</head>
+<body>
+    <div id="page_div">
+        <a href="settings.html" id="setting-link">Settings</a>
+    </div>
+    <div id="game_board_view"></div>
+    <div id="large_preview_div"></div>
+    <div class="modal" id="audience_message_modal">
+        <div class="container">
+            <div class="rectangle"></div>
+        </div>
+        <p id="death_msg" class="death-text">To the Death!</p>
+        <img id="order66_image" src="order663.gif" alt="Order 66 Image" class="order66-image">
+    </div>
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+</body>

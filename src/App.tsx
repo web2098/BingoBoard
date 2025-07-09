@@ -1,94 +1,117 @@
-// import React from 'react';
-// import logo from './logo.svg';
-// import './App.css';
-// import { useState } from 'react';
-
-
-// function BoardLineHeader({value}: {value:string})
-// {
-//   return (
-//     <p className="board-line-header">
-//       {value}
-//     </p>
-//   );
-// }
-
-// function Square({value, onClick}: {value: string, onClick: any}){
-//   return (
-//     <td className="Square" onClick={onClick}>
-//       {value}
-//     </td>
-//   );
-// }
-
-// function Board(){
-//   // Create a board of 5x15 squares with the values 1 to 75
-//   // The board should have a line break after every 15 squares
-
-//   let board = []
-//   const rowLabels = ['B', 'I', 'N', 'G', 'O'];
-
-//   for (let i = 0; i < 5; i++) {
-//     let row = [];
-//     row.push(<BoardLineHeader key={`header-${i}`} value={rowLabels[i]} />);
-//     for (let j = 0; j < 15; j++) {
-//       row.push(<Square key={`square-${i}-${j}`} value={String(i * 15 + j + 1)} onClick={() => console.log("click")} />);
-//     }
-//     board.push(<div key={`row-${i}`} style={{ display: 'flex', alignItems: 'center' }}>{row}</div>);
-//   }
-
-//   return (
-//     <div>
-//       {board}
-//     </div>
-//   );
-// }
-
-
 import React from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
+  Navigate,
 } from "react-router-dom";
 import SelectGamePage from './routes/select-game-page';
 import BoardPage from './routes/board-page';
 import SettingsPage from './routes/settings-page';
 import About from './routes/about-page';
 import ErrorPage from "./routes/error-page";
+import { getSetting } from './utils/settings';
+import { getVersionRoute, getVersionConfig, getAvailableVersions } from './config/versions';
+
+// Component to handle version-based redirection
+function VersionRedirect() {
+  const defaultVersion = getSetting('defaultVersion', 'latest');
+  const route = getVersionRoute(defaultVersion, 'root');
+  
+  // For external routes (like V4), use window.location.href
+  if (route.external) {
+    window.location.href = route.path;
+    return null;
+  }
+  
+  // For internal routes, use React Router navigation
+  return <Navigate to={route.path} replace />;
+}
+
+// Component to handle version-aware routing for specific pages
+function VersionAwareRoute({ routeKey, children }: { routeKey: keyof ReturnType<typeof getVersionConfig>['routes'], children: React.ReactNode }) {
+  const defaultVersion = getSetting('defaultVersion', 'latest');
+  const route = getVersionRoute(defaultVersion, routeKey);
+  
+  // If the current version for this route is external, redirect there
+  if (route.external) {
+    window.location.href = route.path;
+    return null;
+  }
+  
+  // Otherwise, render the React component
+  return <>{children}</>;
+}
+
+// Component to handle version-specific routing
+function VersionSpecificRoute({ 
+  versionId, 
+  routeKey, 
+  children 
+}: { 
+  versionId: string, 
+  routeKey: keyof ReturnType<typeof getVersionConfig>['routes'], 
+  children: React.ReactNode 
+}) {
+  const route = getVersionRoute(versionId, routeKey);
+  
+  // If this version route is external, redirect there
+  if (route.external) {
+    window.location.href = route.path;
+    return null;
+  }
+  
+  // Otherwise, render the React component
+  return <>{children}</>;
+}
 
 export default function MyApp() {
-  const router = createBrowserRouter([
+  // Define page components mapping
+  const pageComponents = {
+    selectGame: SelectGamePage,
+    board: BoardPage,
+    settings: SettingsPage,
+    about: About,
+  };
+
+  // Generate routes dynamically
+  const routes = [
+    // Root and base routes
     {
       path: "/",
-      element: <SelectGamePage />,
+      element: <VersionRedirect />,
       errorElement: <ErrorPage />,
     },
     {
       path: "/BingoBoard",
-      element: <SelectGamePage />,
+      element: <VersionRedirect />,
       errorElement: <ErrorPage />,
     },
-    {
-      path: "/BingoBoard/select-game",
-      element: <SelectGamePage />,
+  ];
+
+  // Add default version-aware routes
+  Object.entries(pageComponents).forEach(([routeKey, Component]) => {
+    const routePath = `/BingoBoard/${routeKey === 'selectGame' ? 'select-game' : routeKey}`;
+    routes.push({
+      path: routePath,
+      element: <VersionAwareRoute routeKey={routeKey as keyof typeof pageComponents}><Component /></VersionAwareRoute>,
       errorElement: <ErrorPage />,
-    },
-    {
-      path: "/BingoBoard/board",
-      element: <BoardPage />,
-      errorElement: <ErrorPage />,
-    },
-    {
-      path: "/BingoBoard/settings",
-      element: <SettingsPage />,
-      errorElement: <ErrorPage />,
-    },
-    {
-      path: "/BingoBoard/about",
-      element: <About />,
-      errorElement: <ErrorPage />,
-    },
-  ]);
+    });
+  });
+
+  // Add version-specific routes for each version
+  const availableVersions = getAvailableVersions();
+  availableVersions.forEach(version => {
+    Object.entries(pageComponents).forEach(([routeKey, Component]) => {
+      const routePath = `/BingoBoard/${version.id}/${routeKey === 'selectGame' ? 'select-game' : routeKey}`;
+      routes.push({
+        path: routePath,
+        element: <VersionSpecificRoute versionId={version.id} routeKey={routeKey as keyof typeof pageComponents}><Component /></VersionSpecificRoute>,
+        errorElement: <ErrorPage />,
+      });
+    });
+  });
+
+  const router = createBrowserRouter(routes);
 
   return (
     <RouterProvider router={router} />

@@ -1,0 +1,323 @@
+
+:root {
+    --main-bg-color: #FFFFFF;
+    --main-font-color: #000000;
+    --item-font-size: 3.5vw;
+    --header-font-size: 3vw;
+    --header-details-font-size: 2vw;
+    --last-number-header-font-size: 1.5vw;
+    --last-numbers-font-size: 2vw;
+    --button-margin-top: 10px;
+    --button-font-size: 1.25vw;
+}
+
+body{
+    margin:0
+}
+
+#server_status{
+    text-align: right; /* centers the text */
+    font-size: 10px;
+}
+#game_board_view {
+    z-index: 1;
+    margin: 5;
+    margin-top: -10px;
+}
+
+
+#headerDiv {
+    padding: 0;
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    /*background-color: red; /* The Color*/
+}
+
+
+#topHeaderDiv {
+    display: flex;
+    justify-content: space-between;
+    /*background-color: red; /* The Color*/
+}
+
+#headerInfoDiv{
+    flex-grow: 1;
+}
+
+#lastNumber{
+    /*background-color: blue; /* The Color*/
+    user-select: none;
+    font-size:  var(--header-font-size);  /*adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* centers the text */
+    margin: 0;
+}
+#numberRatioDiv{
+    padding: 0;
+    user-select: none;
+    font-size: var(--header-details-font-size);  /*adjust as needed */
+    text-align: center; /* centers the text */
+}
+
+#numberRatio{
+    margin: 0;
+}
+
+#extraInfo{
+    /*background-color: green; /* The Color*/
+    margin: 0;
+    font-size: var(--header-details-font-size); /* adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* centers the text */
+}
+
+#centerDiv {
+    display: flex;
+}
+
+#lettersTable td{
+    border: none;
+    color: var(--main-font-color);
+    min-width: 5vw; /* minimum width */
+
+    font-size: var(--item-font-size); /* adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* to center the content */
+    user-select: none;
+}
+#numbersTable{
+    width: 90%;
+}
+#numbersTable td {
+    border: 2px solid black;
+
+    font-size: var(--item-font-size); /* adjust as needed */
+    font-weight: bold; /* makes the text bold */
+    text-align: center; /* to center the content */
+    user-select: none;
+}
+
+#footerDiv {
+    display: flex;
+    justify-content: left;
+}
+
+#lastNumberCalled {
+    user-select: none;
+    text-decoration: underline;
+    color: var(--main-font-color);
+    font-size: var(--last-number-header-font-size); /* adjust as needed */
+    margin:0;
+}
+#clickedNumbersTable {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adjust minmax value as needed */
+    gap: 10px; /* Adjust gap between cells as needed */
+    max-width: 100vw; /* Set the maximum width of the table */
+    margin: 0 auto; /* Center the table */
+}
+#clickedNumbersTable td{
+    font-size: var(--last-numbers-font-size); /* adjust as needed */
+    border: none;
+    color: var(--main-font-color);
+}
+
+#game_preview_name{
+    font-size: 1vw;
+}
+
+#preview_div{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+#preview_table_div{
+    display: flex;
+    justify-content: space-evenly;
+}
+#preview_board{
+    width: 45%;
+}
+#preview_board_2{
+    width: 45%;
+}
+#preview_board td{
+    border: 1px solid black;
+    min-width: .9vw;
+}
+#preview_board_2 td{
+    border: 1px solid black;
+    min-width: .9vw;
+}
+#transition_arrow{
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 40px;
+    font-size: 30px; /* adjust as needed */
+    user-select: none;
+}
+#optional_slash{
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 40px;
+    font-size: 30px; /* adjust as needed */
+    user-select: none;
+}
+#game_preview_name{
+    margin: 0;
+    font-weight: bold; /* makes the text bold */
+    text-align: center;
+}
+#free_space_label{
+    margin: 0;
+    font-weight: bold; /* makes the text bold */
+    text-align: center;
+    user-select: none;
+    text-decoration: underline;
+    font-size: 1.5vw;
+}
+
+#large_preview_div {
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    z-index: 2;
+    border: 4px solid black;
+    background-color: white;
+    width: 90%;
+    height: 80%;
+    overflow: hidden;;
+}
+#large_game_preview_name{
+    user-select: none;
+    font-weight: bold;
+    text-align: center;
+    margin:0;
+    font-size:3vw;
+}
+#large_preview_table_div{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 80%;
+}
+#large_preview_board{
+    flex-grow:1;
+    margin:1%;
+}
+#large_preview_board td{
+    border: 1px solid black;
+    width: 50px;
+    font-size: 4vw;
+}
+#large_preview_board_2{
+    flex-grow:1;
+    margin:1%;
+}
+#large_preview_board_2 td{
+    border: 1px solid black;
+    width: 50px;
+    font-size: 4vw;
+}
+#large_transition_arrow{
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 20vh;
+    font-size: 800%; /* adjust as needed */
+    user-select: none;
+}
+#large_optional_slash{
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 20vh;
+    font-size: 800%; /* adjust as needed */
+    user-select: none;
+}
+
+#large_free_space_label{
+    user-select: none;
+    font-weight: bold;
+    text-align: center;
+    margin:0;
+    font-size:3vw;
+}
+
+
+
+
+/* Toast Notification Styles */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background-color: #35dc3d;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: auto;
+    max-width: 350px;
+    word-break: break-word;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-error {
+    background-color: #dc3545;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: auto;
+    max-width: 350px;
+    word-break: break-word;
+}
+
+.toast-error.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Toast close button */
+.toast-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 0;
+    min-width: auto;
+}
+
+.toast-close:hover {
+    opacity: 1;
+    background: none;
+}
+

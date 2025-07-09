@@ -130,10 +130,10 @@ export function saveSettings(settings: { [key: string]: any }): boolean {
   try {
     localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
     localStorage.setItem(SETTINGS_VERSION_KEY, CURRENT_SETTINGS_VERSION);
-    
+
     // Dispatch custom event to notify components of settings change
     window.dispatchEvent(new CustomEvent('bingoSettingsChanged', { detail: { action: 'save', settings } }));
-    
+
     return true;
   } catch (error) {
     console.error('Error saving settings:', error);
@@ -351,6 +351,20 @@ export function resolveOptions(options?: string[] | string, property?: SettingPr
  * Get display name for an option (includes emoji if available)
  */
 export function getOptionDisplayName(optionKey: string, property?: SettingProperty): string {
+  // Special handling for version options
+  if (property?.id === 'defaultVersion') {
+    switch (optionKey) {
+      case 'latest':
+        return 'Latest';
+      case 'v5':
+        return 'V5 (Current)';
+      case 'v4':
+        return 'V4 (Legacy)';
+      default:
+        return optionKey.toUpperCase();
+    }
+  }
+
   if (!property?.default || typeof property.default !== 'object') {
     return optionKey.charAt(0).toUpperCase() + optionKey.slice(1);
   }
