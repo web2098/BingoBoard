@@ -6,6 +6,7 @@ import games from '../../data/games';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
 import QRCode from '../../components/QRCode';
 import { generateWelcomeMessage, getSetting, getBoardHighlightColor, getContrastTextColor } from '../../utils/settings';
+import { switchToNewGame } from '../../utils/telemetry';
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -625,6 +626,16 @@ const SelectGamePage = () => {
   const handlePlayGame = () => {
     // Store game settings in localStorage for the board page
     localStorage.setItem('gameSettings', JSON.stringify(gameSettings));
+
+    // Initialize telemetry session for the new game
+    switchToNewGame(
+      gameSettings.id,
+      gameSettings.name,
+      gameSettings.variant,
+      gameSettings.freeSpace,
+      75 // total numbers
+    );
+
     navigate('/BingoBoard/board');
   };
 

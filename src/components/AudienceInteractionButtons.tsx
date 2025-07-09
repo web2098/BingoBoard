@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import audienceInteractionsData from '../data/audienceInteractions.json';
 import { TextModal, ImageModal, AnimatedModal, WelcomeModal } from './modals';
 import { getMappedAsset } from '../utils/assetMapping';
+import { recordAudienceWinner } from '../utils/telemetry';
 import './AudienceInteractionButtons.css';
 
 interface AudienceInteraction {
@@ -59,6 +60,11 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
 
   const handleInteractionClick = React.useCallback((interaction: AudienceInteraction) => {
     console.log(`Triggered interaction: ${interaction.id}`, interaction);
+
+    // Record winner if this is a winner interaction
+    if (interaction.id === 'winner') {
+      recordAudienceWinner();
+    }
 
     // Use proper modals based on interaction type
     switch (interaction.action.function) {

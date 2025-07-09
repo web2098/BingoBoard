@@ -1603,3 +1603,169 @@
     font-size: 10px;
   }
 }
+
+/* Telemetry Section Styles */
+.telemetry-section {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.telemetry-info {
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.telemetry-info p {
+  margin: 4px 0;
+}
+
+.telemetry-info strong {
+  color: #495057;
+  font-weight: 600;
+}
+
+.telemetry-history {
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.session-item {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.session-header strong {
+  color: #495057;
+  font-weight: 600;
+}
+
+.session-date {
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.session-details {
+  display: flex;
+  gap: 12px;
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.session-note {
+  color: #6c757d;
+  font-size: 12px;
+  font-style: italic;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.telemetry-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.telemetry-button {
+  padding: 8px 16px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #495057;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.telemetry-button:hover {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+}
+
+.telemetry-button:active {
+  transform: scale(0.98);
+}
+
+.telemetry-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.telemetry-button:disabled:hover {
+  background-color: #ffffff;
+  border-color: #dee2e6;
+  transform: none;
+}
+
+.telemetry-button.export {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.telemetry-button.export:hover {
+  background-color: #e3f2fd;
+  border-color: #0056b3;
+}
+
+.telemetry-button.clear {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.telemetry-button.clear:hover {
+  background-color: #f8d7da;
+  border-color: #c82333;
+}
+
+/* Responsive telemetry styles */
+@media (max-width: 768px) {
+  .telemetry-actions {
+    flex-direction: column;
+  }
+
+  .telemetry-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .session-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .session-details {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

@@ -4,10 +4,11 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import SelectGamePage from './routes/select-game-page';
-import BoardPage from './routes/board-page';
-import SettingsPage from './routes/settings-page';
-import About from './routes/about-page';
+import SelectGamePage from './routes/V5/select-game-page';
+import BoardPage from './routes/V5/board-page';
+import SettingsPage from './routes/V5/settings-page';
+import About from './routes/V5/about-page';
+import TelemetryPage from './routes/V5/telemetry-page';
 import ErrorPage from "./routes/error-page";
 import { getSetting } from './utils/settings';
 import { getVersionRoute, getVersionConfig, getAvailableVersions } from './config/versions';
@@ -16,13 +17,13 @@ import { getVersionRoute, getVersionConfig, getAvailableVersions } from './confi
 function VersionRedirect() {
   const defaultVersion = getSetting('defaultVersion', 'latest');
   const route = getVersionRoute(defaultVersion, 'root');
-  
+
   // For external routes (like V4), use window.location.href
   if (route.external) {
     window.location.href = route.path;
     return null;
   }
-  
+
   // For internal routes, use React Router navigation
   return <Navigate to={route.path} replace />;
 }
@@ -31,35 +32,35 @@ function VersionRedirect() {
 function VersionAwareRoute({ routeKey, children }: { routeKey: keyof ReturnType<typeof getVersionConfig>['routes'], children: React.ReactNode }) {
   const defaultVersion = getSetting('defaultVersion', 'latest');
   const route = getVersionRoute(defaultVersion, routeKey);
-  
+
   // If the current version for this route is external, redirect there
   if (route.external) {
     window.location.href = route.path;
     return null;
   }
-  
+
   // Otherwise, render the React component
   return <>{children}</>;
 }
 
 // Component to handle version-specific routing
-function VersionSpecificRoute({ 
-  versionId, 
-  routeKey, 
-  children 
-}: { 
-  versionId: string, 
-  routeKey: keyof ReturnType<typeof getVersionConfig>['routes'], 
-  children: React.ReactNode 
+function VersionSpecificRoute({
+  versionId,
+  routeKey,
+  children
+}: {
+  versionId: string,
+  routeKey: keyof ReturnType<typeof getVersionConfig>['routes'],
+  children: React.ReactNode
 }) {
   const route = getVersionRoute(versionId, routeKey);
-  
+
   // If this version route is external, redirect there
   if (route.external) {
     window.location.href = route.path;
     return null;
   }
-  
+
   // Otherwise, render the React component
   return <>{children}</>;
 }
@@ -71,6 +72,7 @@ export default function MyApp() {
     board: BoardPage,
     settings: SettingsPage,
     about: About,
+    telemetry: TelemetryPage,
   };
 
   // Generate routes dynamically

@@ -203,5 +203,13 @@
       "v4"
     ],
     "default": "latest"
+  },
+  {
+    "section": "Debug Settings",
+    "Label": "Developer Mode",
+    "id": "developerMode",
+    "description": "Enable developer features including sample data generation and debugging tools",
+    "type": "boolean",
+    "default": false
   }
 ]

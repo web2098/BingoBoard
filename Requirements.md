@@ -197,3 +197,163 @@ Pattern generation and display must not impact UI responsiveness:
 - Pattern caching must prevent regeneration on every render
 - Cache invalidation must occur when game variant or settings change
 - Complex filtering operations must not block user interactions
+
+
+# Telemetry
+- A sessions telemetry is defined as telemetry for all games played within that session of the webpage on that day
+- When the board page, a game, is left with an active board and numbers selected it should be saved into the list of sessions for that night
+- A games telemetry is defined with this data
+```json
+{
+  "gameId": 0,
+  "gameName": "Traditional Bingo",
+  "variant": 0,
+  "freeSpace": true,
+  "startTime": "2025-07-09T10:30:00.000Z",
+  "endTime": "2025-07-09T10:45:00.000Z",
+  "totalNumbers": 75,
+  "sessionId": "session_1720519800000_abc123def",
+  "numbersCalled": [
+    {
+      "number": 15,
+      "timestamp": "2025-07-09T10:31:30.000Z",
+      "letter": "B"
+    },
+    {
+      "number": 42,
+      "timestamp": "2025-07-09T10:32:45.000Z",
+      "letter": "N"
+    },
+    {
+      "number": 67,
+      "timestamp": "2025-07-09T10:33:20.000Z",
+      "letter": "O"
+    }
+  ],
+  "statistics": {
+    "duration": 900000,
+    "numbersCalledCount": 23,
+    "percentComplete": 30.67,
+    "averageTimePerCall": 39130.43,
+    "gameCompletionStatus": "incomplete"
+  }
+}
+```
+- Each instance of game with a board pattern, can have multiple winners
+- There should be 3 ways to determine a winner
+    - It is assumed that one win happened right at the end when the board data is saved off
+    - It is assumed a winner happens when ever the "Winner" audience interaction is activated
+    - It is assumed there was a winner when the time between number calls is an outline when considering the standard deviation of all times between numbers called in the entire night of games.
+        - An example of this calculation is here:
+```js
+
+function getTimeBetweenNumbers(numbers)
+{
+    let timeBetweenNumbers = [];
+    for (let i = 1; i < numbers.length; i++) {
+        timeBetweenNumbers.push( numbers[i - 1] - numbers[i]);
+    }
+    return timeBetweenNumbers;
+}
+
+function calculateRealMath( timeBetweenNumbers )
+{
+    console.log('Time Between Numbers: ' + timeBetweenNumbers.length);
+    const mean = timeBetweenNumbers.reduce((a, b) => a + b, 0) / timeBetweenNumbers.length;
+    console.log('Mean: ' + mean);
+    const stdDev = Math.sqrt(timeBetweenNumbers.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) / (timeBetweenNumbers.length-1));
+    console.log('Standard Deviation: ' + stdDev);
+
+    const median = timeBetweenNumbers.sort((a, b) => a - b)[Math.floor(timeBetweenNumbers.length / 2)];
+    console.log('Median: ' + median);
+
+    const threshold = median + ( 2 * stdDev );
+    console.log('Threshold: ' + threshold);
+
+    const outliers = timeBetweenNumbers.filter(x => x > threshold);
+    console.log('Outliers: ' + outliers);
+
+    //Order outlies smallest to largest
+    outliers.sort((a, b) => a - b);
+    console.log('Outliers: ' + outliers);
+
+    //Return the lowest outlier
+    return outliers[0];
+}
+
+function determineWinners(game_name, duration, numbers, winThreshold, called)
+{
+    console.log('Calculating math');
+    console.log('Duration: ' + duration);
+    console.log('Numbers: ' + numbers);
+    const numbersPerSecond = called.length / (duration / 1000);
+
+    if( numbers === undefined || numbers.length === 0)
+        return {
+            numbersPerSecond: numbersPerSecond,
+            winners: [called.length]
+        };
+
+    const timeBetweenNumbers = getTimeBetweenNumbers(numbers);
+    console.log('Time between numbers: ' + timeBetweenNumbers);
+
+    const outliers = timeBetweenNumbers.filter(x => x > winThreshold);
+    console.log('Outliers: ' + outliers);
+
+    let outlierIndicies = [];
+    for (const element of outliers) {
+        outlierIndicies.push(numbers.length - (timeBetweenNumbers.indexOf(element)+1));
+    }
+    console.log('Outlier Indicies: ' + outlierIndicies);
+
+    outlierIndicies = outlierIndicies.reverse();
+    outlierIndicies.push(numbers.length);
+
+    if ( game_name.toLowerCase() === 'survivor')
+    {
+        outlierIndicies = [outlierIndicies[outlierIndicies.length-1]];
+    }
+
+
+    return {
+        numbersPerSecond: numbersPerSecond,
+        winners: outlierIndicies
+    };
+}
+```
+- The number the win happened should be recorded in the telemetry of the game
+- Long term telemetry should store:
+    - The total times each number was called
+    - The total games played
+    - The total time each board has been played
+    - The shortest, longest, and average game time for each board type
+    - The shortest, longest, and average number selection rate ( call rate ) for each board type
+    - The average call rate for all games
+    - The shortest number of numbers for a winner
+    - The longest number of numbers for a winner
+
+# Telemetry Page
+This page is used to show all telemetry in the current session and long term telemetry
+- The page should have a navigation side bar to go back to selecting games
+- The end the night button on the board should redirect to this page
+- The page should list how many games were played in this session, and how many for all time
+- The page should list the following for three sets: Tonight, Tonight filtering any game with the word "Blackout", case insenstive, in it, and all time
+    - The page should show the top 10 numbers called that night with their counts
+    - The page should show the bottom 10 numbers called that night with their counts
+    - The page should list any numbers that were not called
+- The page should have a section that has a table of all the games played that night
+    - The table should the following cells
+        - Game Name
+        - Game Time
+        - Numbers Per Second
+        - List of Winner
+            - Number of the win was on
+            - How the win was determined
+        - Fastest Win
+            - Number of called numbers
+            - Date it occured
+        - Slowest Win
+            - Number of called numbers
+            - Date it occured
+- The page should have a heat map of all 75 numbers, and their count call, for how often they were called
+    - There should be one for the current session, and one for the all time

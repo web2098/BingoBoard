@@ -19,6 +19,7 @@ export interface VersionConfig {
     board: VersionRoute;
     settings: VersionRoute;
     about: VersionRoute;
+    telemetry: VersionRoute;
   };
 }
 
@@ -43,7 +44,8 @@ export const VERSIONS: Record<string, VersionConfig> = {
       selectGame: { path: '/BingoBoard/select-game' },
       board: { path: '/BingoBoard/board' },
       settings: { path: '/BingoBoard/settings' },
-      about: { path: '/BingoBoard/about' }
+      about: { path: '/BingoBoard/about' },
+      telemetry: { path: '/BingoBoard/telemetry' }
     }
   },
   v4: {
@@ -57,7 +59,8 @@ export const VERSIONS: Record<string, VersionConfig> = {
       selectGame: { path: '/BingoBoard/v4/index.html', external: true },
       board: { path: '/BingoBoard/v4/board.html', external: true },
       settings: { path: '/BingoBoard/v4/settings.html', external: true },
-      about: { path: '/BingoBoard/v4/about.html', external: true }
+      about: { path: '/BingoBoard/v4/about.html', external: true },
+      telemetry: { path: '/BingoBoard/v4/stats.html' } // V4 uses V5 telemetry page
     }
   }
 };

@@ -30,6 +30,17 @@ import { getMappedAsset } from '../../utils/assetMapping';
 // Import version configuration
 import { getVersionRoute } from '../../config/versions';
 
+// Import telemetry utilities
+import {
+  getSessionHistory,
+  getCurrentSession,
+  clearAllTelemetryData,
+  exportTelemetryData,
+  getCurrentSessionStats,
+  getLongTermStats,
+  getTonightSessionStats
+} from '../../utils/telemetry';
+
 interface SettingsPageProps {}
 
 // Color Picker Component with Undo/Redo functionality
@@ -729,6 +740,7 @@ interface SettingsPageProps {}
 const SettingsPage: React.FC<SettingsPageProps> = () => {
   const [settingsSections, setSettingsSections] = useState<SettingsSection[]>([]);
   const [debugCollapsed, setDebugCollapsed] = useState<boolean>(true); // Debug section collapsed by default
+  const [telemetryCollapsed, setTelemetryCollapsed] = useState<boolean>(true); // Telemetry section collapsed by default
   const [currentSettings, setCurrentSettings] = useState<{ [key: string]: any }>({});
   const [colorVersion, setColorVersion] = useState<number>(0);
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -880,17 +892,17 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
           if (window.location.pathname.includes('/v4/') && value !== 'v4') {
             return true;
           }
-          
+
           // If we're on V5 and selecting V4, navigate
           if (!window.location.pathname.includes('/v4/') && value === 'v4') {
             return true;
           }
-          
+
           // If we're on V5 and selecting latest or v5, no need to navigate (they're the same)
           if (!window.location.pathname.includes('/v4/') && (value === 'latest' || value === 'v5')) {
             return false;
           }
-          
+
           return false;
         };
 
@@ -1040,6 +1052,231 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
     }
   };
 
+  // Telemetry Section Component
+  interface TelemetrySectionProps {
+    collapsed: boolean;
+    onToggle: () => void;
+  }
+
+  const TelemetrySection: React.FC<TelemetrySectionProps> = ({ collapsed, onToggle }) => {
+    const [sessionHistory, setSessionHistory] = useState(getSessionHistory());
+    const [currentSession, setCurrentSession] = useState(getCurrentSession());
+    const [currentStats, setCurrentStats] = useState(getCurrentSessionStats());
+    const [longTermStats, setLongTermStats] = useState(getLongTermStats());
+    const [tonightStats, setTonightStats] = useState(getTonightSessionStats());
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setSessionHistory(getSessionHistory());
+        setCurrentSession(getCurrentSession());
+        setCurrentStats(getCurrentSessionStats());
+        setLongTermStats(getLongTermStats());
+        setTonightStats(getTonightSessionStats());
+      }, 1000); // Update every second
+
+      return () => clearInterval(interval);
+    }, []);
+
+    const handleClearTelemetry = () => {
+      if (window.confirm('Are you sure you want to clear all telemetry data? This action cannot be undone.')) {
+        clearAllTelemetryData();
+        setSessionHistory([]);
+        setCurrentSession(null);
+        setCurrentStats(null);
+        setLongTermStats(getLongTermStats());
+        setTonightStats(getTonightSessionStats());
+      }
+    };
+
+    const handleExportTelemetry = () => {
+      const data = exportTelemetryData();
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `bingo-telemetry-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    };
+
+    const formatDuration = (milliseconds: number) => {
+      const seconds = Math.floor(milliseconds / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+
+      if (hours > 0) {
+        return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
+      } else if (minutes > 0) {
+        return `${minutes}m ${seconds % 60}s`;
+      } else {
+        return `${seconds}s`;
+      }
+    };
+
+    return (
+      <div className="settings-section telemetry-section">
+        <div className="section-header" onClick={onToggle}>
+          <h2>Game Telemetry</h2>
+          <span className={`collapse-arrow ${collapsed ? 'collapsed' : ''}`}>
+            ▼
+          </span>
+        </div>
+
+        {!collapsed && (
+          <div className="section-content">
+            <div className="section-content-wrapper">
+              {/* Current Session */}
+              {currentStats && (
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <label className="setting-label">Current Session</label>
+                    <p className="setting-description">
+                      Information about the currently active game session.
+                    </p>
+                  </div>
+                  <div className="setting-control">
+                    <div className="telemetry-info">
+                      <p><strong>Game:</strong> {currentStats.gameName}</p>
+                      <p><strong>Variant:</strong> {currentStats.variant}</p>
+                      <p><strong>Free Space:</strong> {currentStats.freeSpace ? 'ON' : 'OFF'}</p>
+                      <p><strong>Numbers Called:</strong> {currentStats.numbersCalled}/{currentStats.totalNumbers} ({currentStats.percentComplete}%)</p>
+                      <p><strong>Duration:</strong> {formatDuration(currentStats.duration)}</p>
+                      <p><strong>Started:</strong> {currentStats.startTime.toLocaleString()}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Session History */}
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label className="setting-label">Session History</label>
+                  <p className="setting-description">
+                    History of completed game sessions. Shows {sessionHistory.length} total sessions.
+                  </p>
+                </div>
+                <div className="setting-control">
+                  <div className="telemetry-history">
+                    {sessionHistory.length === 0 ? (
+                      <p>No completed sessions yet.</p>
+                    ) : (
+                      <div className="session-list">
+                        {sessionHistory.slice(-5).reverse().map((session, index) => (
+                          <div key={session.sessionId} className="session-item">
+                            <div className="session-header">
+                              <strong>{session.gameName}</strong>
+                              <span className="session-date">
+                                {session.startTime.toLocaleDateString()} {session.startTime.toLocaleTimeString()}
+                              </span>
+                            </div>
+                            <div className="session-details">
+                              <span>Numbers: {session.numbersCalled.length}/{session.totalNumbers}</span>
+                              {session.endTime && (
+                                <span>Duration: {formatDuration(session.endTime.getTime() - session.startTime.getTime())}</span>
+                              )}
+                              {session.winners && session.winners.length > 0 && (
+                                <span>Winners: {session.winners.length} ({session.winners.map(w => w.detectionMethod).join(', ')})</span>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                        {sessionHistory.length > 5 && (
+                          <p className="session-note">Showing 5 most recent sessions of {sessionHistory.length} total.</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Tonight's Session Stats */}
+              {tonightStats && tonightStats.totalGames > 0 && (
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <label className="setting-label">Tonight's Session</label>
+                    <p className="setting-description">
+                      Statistics for all games played in today's session.
+                    </p>
+                  </div>
+                  <div className="setting-control">
+                    <div className="telemetry-info">
+                      <p><strong>Total Games:</strong> {tonightStats.totalGames}</p>
+                      <p><strong>Total Numbers Called:</strong> {tonightStats.totalNumbersCalled}</p>
+                      <p><strong>Total Duration:</strong> {formatDuration(tonightStats.totalDuration)}</p>
+                      <p><strong>Total Winners:</strong> {tonightStats.totalWinners}</p>
+                      <p><strong>Average Game Duration:</strong> {formatDuration(tonightStats.averageGameDuration)}</p>
+                      <p><strong>Average Numbers Per Game:</strong> {Math.round(tonightStats.averageNumbersPerGame * 100) / 100}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Long-Term Statistics */}
+              {longTermStats && longTermStats.totalGamesPlayed > 0 && (
+                <div className="setting-item">
+                  <div className="setting-info">
+                    <label className="setting-label">Long-Term Statistics</label>
+                    <p className="setting-description">
+                      Overall statistics across all recorded game sessions.
+                    </p>
+                  </div>
+                  <div className="setting-control">
+                    <div className="telemetry-info">
+                      <p><strong>Total Games Played:</strong> {longTermStats.totalGamesPlayed}</p>
+                      <p><strong>Average Call Rate:</strong> {Math.round(longTermStats.overallStats.averageCallRate * 100) / 100} numbers/second</p>
+                      {longTermStats.overallStats.shortestWinnerNumbers !== Infinity && (
+                        <>
+                          <p><strong>Shortest Winner:</strong> {longTermStats.overallStats.shortestWinnerNumbers} numbers</p>
+                          <p><strong>Longest Winner:</strong> {longTermStats.overallStats.longestWinnerNumbers} numbers</p>
+                        </>
+                      )}
+                      <p><strong>Most Called Number:</strong> {
+                        Object.entries(longTermStats.numberCallFrequency).length > 0 ?
+                        Object.entries(longTermStats.numberCallFrequency)
+                          .sort(([,a], [,b]) => b - a)[0]?.[0] || 'None'
+                        : 'None'
+                      }</p>
+                      <p><strong>Game Types Played:</strong> {Object.keys(longTermStats.gameTypeStats).length}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="setting-item">
+                <div className="setting-info">
+                  <label className="setting-label">Telemetry Actions</label>
+                  <p className="setting-description">
+                    Export or clear telemetry data. Export includes all session history and statistics.
+                  </p>
+                </div>
+                <div className="setting-control">
+                  <div className="telemetry-actions">
+                    <button
+                      className="telemetry-button export"
+                      onClick={handleExportTelemetry}
+                      disabled={sessionHistory.length === 0 && !currentSession}
+                    >
+                      📊 Export Data
+                    </button>
+                    <button
+                      className="telemetry-button clear"
+                      onClick={handleClearTelemetry}
+                    >
+                      🗑️ Clear All Data
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // Static Debug Section Component
   interface DebugSectionProps {
     collapsed: boolean;
@@ -1049,6 +1286,9 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
 
   const DebugSection: React.FC<DebugSectionProps> = ({ collapsed, onToggle, currentSettings }) => {
     const debugInfo = formatDebugSettings(currentSettings);
+
+    // Get the debug settings from the main settings sections
+    const debugSettings = settingsSections.find(section => section.title === 'Debug Settings');
 
     return (
       <div className="settings-section debug-section">
@@ -1062,6 +1302,23 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
         {!collapsed && (
           <div className="section-content">
             <div className="section-content-wrapper">
+              {/* Debug Settings */}
+              {debugSettings && debugSettings.properties.map((property) => {
+                const originalSectionIndex = settingsSections.findIndex(section => section.title === 'Debug Settings');
+                return (
+                  <div key={property.id} className="setting-item">
+                    <div className="setting-info">
+                      <label className="setting-label">{property.Label}</label>
+                      <p className="setting-description">{property.description}</p>
+                    </div>
+                    <div className="setting-control">
+                      {renderSettingInput(property, originalSectionIndex)}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Debug JSON Dump */}
               <div className="setting-item">
                 <div className="setting-info">
                   <label className="setting-label">Current Settings JSON</label>
@@ -1126,37 +1383,48 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
 
         <div className="settings-layout">
           <div className="settings-sections">
-            {settingsSections.map((section, sectionIndex) => (
-              <div key={section.title} className="settings-section">
-                <div
-                  className="section-header"
-                  onClick={() => toggleSection(sectionIndex)}
-                >
-                  <h2>{section.title}</h2>
-                  <span className={`collapse-arrow ${section.collapsed ? 'collapsed' : ''}`}>
-                    ▼
-                  </span>
-                </div>
+            {settingsSections.map((section, sectionIndex) => {
+              // Skip debug settings as they're handled separately
+              if (section.title === 'Debug Settings') return null;
 
-                {!section.collapsed && (
-                  <div className="section-content">
-                    <div className="section-content-wrapper">
-                      {section.properties.map((property) => (
-                        <div key={property.id} className="setting-item">
-                          <div className="setting-info">
-                            <label className="setting-label">{property.Label}</label>
-                            <p className="setting-description">{property.description}</p>
-                          </div>
-                          <div className="setting-control">
-                            {renderSettingInput(property, sectionIndex)}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+              return (
+                <div key={section.title} className="settings-section">
+                  <div
+                    className="section-header"
+                    onClick={() => toggleSection(sectionIndex)}
+                  >
+                    <h2>{section.title}</h2>
+                    <span className={`collapse-arrow ${section.collapsed ? 'collapsed' : ''}`}>
+                      ▼
+                    </span>
                   </div>
-                )}
-              </div>
-            ))}
+
+                  {!section.collapsed && (
+                    <div className="section-content">
+                      <div className="section-content-wrapper">
+                        {section.properties.map((property) => (
+                          <div key={property.id} className="setting-item">
+                            <div className="setting-info">
+                              <label className="setting-label">{property.Label}</label>
+                              <p className="setting-description">{property.description}</p>
+                            </div>
+                            <div className="setting-control">
+                              {renderSettingInput(property, sectionIndex)}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Static Telemetry Section */}
+            <TelemetrySection
+              collapsed={telemetryCollapsed}
+              onToggle={() => setTelemetryCollapsed(!telemetryCollapsed)}
+            />
 
             {/* Static Debug Section */}
             <DebugSection

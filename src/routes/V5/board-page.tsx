@@ -5,6 +5,16 @@ import SidebarWithMenu from '../../components/SidebarWithMenu';
 import QRCode from '../../components/QRCode';
 import { getNumberMessage, getSetting, getLetterColor, getContrastTextColor, getBoardHighlightColor } from '../../utils/settings';
 import games from '../../data/games';
+import {
+  startGameSession,
+  recordNumberCall,
+  resetGameSession,
+  endCurrentSession,
+  getCurrentSession,
+  getLastCalledNumbers,
+  getLastCalledNumber,
+  isNumberCalled
+} from '../../utils/telemetry';
 
 interface BoardPageProps {}
 
@@ -302,18 +312,21 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     setIsModalVisible(false);
   };
 
-  // Game options handlers
+  // Game options handlers with telemetry integration
   const handleResetBoard = () => {
+    resetGameSession();
     setCalledNumbers([]);
     setLastNumber(null);
   };
 
   const handleSelectNewGame = () => {
+    endCurrentSession();
     navigate('/BingoBoard/select-game');
   };
 
   const handleEndNight = () => {
-    navigate('/BingoBoard/');
+    endCurrentSession();
+    navigate('/BingoBoard/telemetry');
   };
 
   // Define page buttons for the sidebar
@@ -348,19 +361,82 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     }
   ];
 
-  // Load game settings from localStorage
+  // Load game settings from localStorage and initialize telemetry
   useEffect(() => {
     const savedSettings = localStorage.getItem('gameSettings');
     if (savedSettings) {
       const settings = JSON.parse(savedSettings);
-      setGameData({
+      const gameConfig = {
         id: settings.id || 0,
         name: settings.name || "Traditional Bingo",
         variant: settings.variant || 0,
         freeSpace: settings.freeSpace,
         totalNumbers: 75
-      });
+      };
+
+      setGameData(gameConfig);
+
+      // Initialize telemetry session
+      const currentSession = getCurrentSession();
+      if (!currentSession ||
+          currentSession.gameId !== gameConfig.id ||
+          currentSession.variant !== gameConfig.variant ||
+          currentSession.freeSpace !== gameConfig.freeSpace) {
+        // Start new session if no current session or game changed
+        startGameSession(
+          gameConfig.id,
+          gameConfig.name,
+          gameConfig.variant,
+          gameConfig.freeSpace,
+          gameConfig.totalNumbers
+        );
+      }
+
+      // Load called numbers from telemetry
+      const telemetryNumbers = getLastCalledNumbers();
+      const lastTelemetryNumber = getLastCalledNumber();
+
+      setCalledNumbers(telemetryNumbers);
+      setLastNumber(lastTelemetryNumber);
+    } else {
+      // Initialize telemetry session for default game
+      startGameSession(0, "Traditional Bingo", 0, true, 75);
     }
+  }, []);
+
+  // Cleanup effect to end session when component unmounts
+  useEffect(() => {
+    return () => {
+      // Only end session if we're actually leaving the app, not just re-rendering
+      const currentPath = window.location.pathname;
+      if (!currentPath.includes('/BingoBoard/board')) {
+        endCurrentSession();
+      }
+    };
+  }, []);
+
+  // Effect to handle page visibility changes and save session state
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Page is being hidden - save current state but don't end session
+        // This handles tab switches, minimizing, etc.
+        console.log('Page hidden - session state saved');
+      }
+    };
+
+    const handleBeforeUnload = () => {
+      // Browser is closing or navigating away - end the session
+      endCurrentSession();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
   // Effect to handle settings changes for letter colors and board highlight
@@ -459,7 +535,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         rowData.push({
           number,
           letter: letters[row],
-          called: calledNumbers.includes(number)
+          called: isNumberCalled(number)
         });
       }
       grid.push(rowData);
@@ -471,20 +547,15 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   const bingoGrid = generateBingoGrid();
 
   const handleNumberClick = (number: number) => {
-    if (calledNumbers.includes(number)) {
-      // If number is already called, remove it (unselect)
-      setCalledNumbers(calledNumbers.filter(num => num !== number));
-      // If this was the last number called, clear it
-      if (lastNumber === number) {
-        // If this was the last number called, update the last number to previous number in the sequence
-        const previousNumber = calledNumbers[calledNumbers.length - 2] || null;
-        setLastNumber(previousNumber);
-      }
-    } else {
-      // If number is not called, add it (select)
-      setCalledNumbers([...calledNumbers, number]);
-      setLastNumber(number);
-    }
+    // Record in telemetry (handles both adding and removing)
+    recordNumberCall(number);
+
+    // Update local state
+    const updatedNumbers = getLastCalledNumbers();
+    const lastTelemetryNumber = getLastCalledNumber();
+
+    setCalledNumbers(updatedNumbers);
+    setLastNumber(lastTelemetryNumber);
   };
 
   const getSpecialCallout = (number: number | null) => {
@@ -493,6 +564,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   };
 
   const resetGame = () => {
+    resetGameSession();
     setCalledNumbers([]);
     setLastNumber(null);
   };

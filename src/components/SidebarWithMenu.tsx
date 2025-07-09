@@ -52,17 +52,17 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
       if (window.location.pathname.includes('/v4/') && selectedVersion !== 'v4') {
         return true;
       }
-      
+
       // If we're on V5 and selecting V4, navigate
       if (!window.location.pathname.includes('/v4/') && selectedVersion === 'v4') {
         return true;
       }
-      
+
       // If we're on V5 and selecting latest or v5, no need to navigate (they're the same)
       if (!window.location.pathname.includes('/v4/') && (selectedVersion === 'latest' || selectedVersion === 'v5')) {
         return false;
       }
-      
+
       return false;
     };
 
@@ -101,6 +101,7 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
       case 'select-game':
         return [
           { label: 'Start Game', href: '/BingoBoard/board' },
+          { label: 'Telemetry', href: '/BingoBoard/telemetry' },
           { label: 'divider', href: '#' },
           { label: 'About', href: '/BingoBoard/about' },
           { label: 'Settings', href: '/BingoBoard/settings' },
@@ -126,6 +127,13 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
           { label: 'Report an Issue', href: 'https://github.com/web2098/BingoBoard/issues/new', external: true }
         ];
       case 'about':
+        return [
+          { label: 'Back to Game Selection', href: '/BingoBoard/select-game' },
+          { label: 'divider', href: '#' },
+          { label: 'Settings', href: '/BingoBoard/settings' },
+          { label: 'Report an Issue', href: 'https://github.com/web2098/BingoBoard/issues/new', external: true }
+        ];
+      case 'telemetry':
         return [
           { label: 'Back to Game Selection', href: '/BingoBoard/select-game' },
           { label: 'divider', href: '#' },
