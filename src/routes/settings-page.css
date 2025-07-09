@@ -1,49 +1,18 @@
 /* Settings Page Styles */
 
-/* Floating Action Buttons */
-.floating-actions {
-  position: fixed;
-  top: 80px; /* Position below hamburger button (20px top + 48px height + 12px gap) */
-  left: 18px;
-  z-index: 999; /* Below hamburger menu but above content */
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+/* Reset Button Styling */
+.reset-settings-button {
+  background: #dc3545 !important;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3) !important;
 }
 
-.floating-action-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  color: white;
+.reset-settings-button:hover {
+  background: #c82333 !important;
+  box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4) !important;
 }
 
-.floating-action-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.floating-action-btn.save-btn {
-  background: #28a745;
-}
-
-.floating-action-btn.save-btn:hover {
-  background: #218838;
-}
-
-.floating-action-btn.reset-btn {
-  background: #dc3545;
-}
-
-.floating-action-btn.reset-btn:hover {
-  background: #c82333;
+.reset-settings-button:active {
+  transform: scale(1.02) !important;
 }
 
 .settings-page {
@@ -291,7 +260,8 @@
 }
 
 .color-input {
-  height: 40px;
+  height: 60px;
+  width: 120px !important;
   cursor: pointer;
   padding: 4px;
 }
@@ -607,28 +577,30 @@
     max-width: 200px;
   }
 
-  /* Responsive design for floating actions */
-  .floating-actions {
-    top: 75px; /* Slightly closer on mobile */
-    left: 15px; /* Closer to edge on mobile */
-  }
-
-  .floating-action-btn {
-    width: 44px;
-    height: 44px;
-  }
-
-  .floating-action-btn svg {
-    width: 18px;
-    height: 18px;
-  }
-
   /* Mobile responsive styles for debug section */
   .textarea-input[readonly] {
     width: 100% !important;
     max-width: none;
     height: 150px;
     font-size: 11px;
+  }
+
+  /* Reset button responsive styles */
+  .reset-settings-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Color picker responsive styles for tablets */
+  .color-input {
+    width: 110px !important;
+    height: 55px;
+  }
+
+  .color-text-input {
+    width: 70px !important;
+    height: 35px;
+    font-size: 12px;
   }
 }
 
@@ -673,27 +645,29 @@
     min-width: 250px; /* Smaller minimum width for very small screens */
   }
 
-  /* Responsive design for floating actions */
-  .floating-actions {
-    top: 70px;
-    left: 10px;
-  }
-
-  .floating-action-btn {
-    width: 40px;
-    height: 40px;
-  }
-
-  .floating-action-btn svg {
-    width: 16px;
-    height: 16px;
-  }
-
   .textarea-input[readonly] {
     width: 100% !important;
     height: 120px;
     font-size: 10px;
     padding: 8px;
+  }
+
+  /* Reset button mobile styles */
+  .reset-settings-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Color picker responsive styles for mobile */
+  .color-input {
+    width: 100px !important;
+    height: 50px;
+  }
+
+  .color-text-input {
+    width: 65px !important;
+    height: 32px;
+    font-size: 11px;
   }
 }
 
@@ -1263,8 +1237,6 @@
 }
 
 .row-header {
-  background: #007bff;
-  color: white;
   text-align: center;
   padding: 6px 8px;
   font-weight: bold;
@@ -1272,6 +1244,8 @@
   border-radius: 4px;
   min-width: 32px;
   flex-shrink: 0;
+  border: 1px solid #000000;
+  /* Background and color now set dynamically via inline styles */
 }
 
 .row-numbers {
@@ -1307,14 +1281,10 @@
   box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
 }
 
-.number-cell.has-message {
-  background: #fff3cd;
-  border-color: #ffc107;
-  color: #856404;
-}
-
 .number-cell.has-message:hover {
-  background: #ffeaa7;
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .number-cell.customized {
@@ -1581,5 +1551,55 @@
   .debug-section .section-header h2:before {
     content: "🔧";
     margin-right: 4px;
+  }
+}
+
+/* Color picker container */
+.color-picker-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-text-input {
+  width: 100px !important;
+  height: 40px;
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  text-transform: uppercase;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.color-text-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.color-text-input:invalid {
+  border-color: #dc3545;
+}
+
+.color-text-input:invalid:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+/* Color picker responsive styles for very small screens */
+@media (max-width: 360px) {
+  .color-input {
+    width: 80px !important;
+    height: 40px;
+  }
+
+  .color-text-input {
+    width: 55px !important;
+    height: 28px;
+    font-size: 10px;
   }
 }

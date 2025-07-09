@@ -6,21 +6,8 @@
   height: 100vh;
   width: 100%;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
   position: relative;
-}
-
-/* Vertical off-white sidebar */
-.select-game-page::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 80px;
-  height: 100vh;
-  background-color: #f8f9fa;
-  z-index: 1;
-  border-right: 1px solid #e9ecef;
 }
 
 /* Main Layout Container */
@@ -29,6 +16,7 @@
   flex-direction: column;
   height: 100vh;
   padding-left: 80px; /* Space for hamburger menu */
+  padding-bottom: 10.25vh; /* Space for bottom section */
 }
 
 /* Top Section - 3/4 height */
@@ -58,39 +46,25 @@
 
 /* Section 3: Bottom Section - 1/4 height */
 .bottom-section {
-  height: 24.25vh;
-  margin-top: 1vh;
-  flex-shrink: 0;
+  height: 10.25vh;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   border-top: 2px solid #e9ecef;
-  position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
   z-index: 5;
-}
-
-/* Show only top portion by default, allowing more content to be visible */
-.bottom-section::after {
-  content: '';
-  position: absolute;
-  top: 70%;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background: #f8f9fa;
-  z-index: 10;
-  transition: all 0.3s ease;
 }
 
 /* On hover, expand upward to show full content */
 .bottom-section:hover {
-  height: 43vh;
+  height: 36vh;
+  bottom: 0;
   z-index: 999;
   background: #f8f9fa;
   box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-}
-
-.bottom-section:hover::after {
-  display: none;
 }
 
 .bottom-section:hover .swiper-container {
@@ -135,7 +109,7 @@
 /* Game Info Card */
 .game-info-card {
   background: #f8f9fa;
-  padding: 20px;
+  padding: 10px;
   border-radius: 8px;
   border-left: 4px solid #007bff;
   flex-shrink: 0;
@@ -143,27 +117,19 @@
 
 .game-title {
   margin: 0 0 15px 0;
-  font-size: 2rem;
+  font-size: 4rem;
   color: #333;
   text-align: center;
   user-select: none;
+  font-weight: bold;
 }
 
 .game-rules h4 {
   margin: 0 0 10px 0;
   color: #333;
-  font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.9rem;
   user-select: none;
   text-align: center;
-}
-
-.game-rules p {
-  margin: 0;
-  line-height: 1.6;
-  color: #2c3e50;
-  font-size: 1rem;
-  user-select: none;
 }
 
 /* Free Space Toggle */
@@ -341,19 +307,10 @@
 .game-board {
   display: grid;
   grid-template-rows: repeat(5, 1fr);
-  width: 100%;
-  height: 100%;
-  max-width: 400px;
-  max-height: 400px;
-  aspect-ratio: 1;
   border: 2px solid #333;
   cursor: pointer;
   transition: transform 0.2s;
   user-select: none;
-}
-
-.game-board:hover {
-  transform: scale(1.02);
 }
 
 .game-board.selected {
@@ -373,15 +330,10 @@
   border: 1px solid #333;
   background-color: #fff;
   font-weight: bold;
-  font-size: clamp(0.8rem, 2vw, 1.5rem);
+  font-size: clamp(1.2rem, 3vw, 2.75rem);
   color: #333;
   aspect-ratio: 1;
   user-select: none;
-}
-
-.board-cell.highlighted {
-  background-color: #1E4D2B;
-  color: #FFFFFF;
 }
 
 .board-cell.free-space {
@@ -390,9 +342,21 @@
   font-weight: bold;
 }
 
-.board-cell.free-space.highlighted {
-  background-color: #1E4D2B;
-  color: #FFFFFF;
+/* Single Board Layout */
+.game-boards-container:not(.dual-board) .board-cell {
+  font-size: clamp(2.2rem, 5vw, 4.75rem);
+  aspect-ratio: 2/1;
+}
+
+/* Dual Board Layout */
+.game-boards-container.dual-board .board-cell {
+  font-size: clamp(4.12rem, 5vw, 4.75rem);
+  aspect-ratio: 1;
+}
+
+/* Double Bingo Dual Board Layout - Smaller font for better readability */
+.game-boards-container.dual-board.double-bingo-dual .board-cell {
+  font-size: clamp(1.2rem, 3vw, 2.75rem);
 }
 
 /* ==============================================
@@ -590,13 +554,14 @@ input:disabled + .slider {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  background: #f8f9fa;
 }
 
 .swiper-container {
   flex: 1;
   position: relative;
   overflow: hidden;
-  padding-bottom: 50px;
+  background: #f8f9fa;
 }
 
 .game-swiper {
@@ -682,16 +647,11 @@ input:disabled + .slider {
 }
 
 .small-game-board .board-cell {
-  font-size: 0.65rem;
+  font-size: 1.65rem;
   line-height: 1.1;
   padding: 2px;
   background-color: #fff;
   user-select: none;
-}
-
-.small-game-board .board-cell.highlighted {
-  background-color: #1E4D2B;
-  color: #FFFFFF;
 }
 
 .small-game-board .board-cell.free-space {
@@ -699,9 +659,9 @@ input:disabled + .slider {
   color: #333;
 }
 
-.small-game-board .board-cell.free-space.highlighted {
-  background-color: #1E4D2B;
-  color: #FFFFFF;
+/* Double Bingo small boards need smaller font */
+.small-game-board.double-bingo-dual .board-cell {
+  font-size: 1.2rem;
 }
 
 /* Responsive board cell sizing */
@@ -709,11 +669,21 @@ input:disabled + .slider {
   .small-game-board .board-cell {
     font-size: 0.6rem;
   }
+
+  /* Double Bingo small boards need even smaller font at tablet size */
+  .small-game-board.double-bingo-dual .board-cell {
+    font-size: 0.5rem;
+  }
 }
 
 @media (max-width: 639px) {
   .small-game-board .board-cell {
     font-size: 0.55rem;
+  }
+
+  /* Double Bingo small boards need even smaller font at mobile size */
+  .small-game-board.double-bingo-dual .board-cell {
+    font-size: 0.45rem;
   }
 }
 
@@ -835,40 +805,8 @@ input:disabled + .slider {
 
 /* ==============================================
    START GAME BUTTON
-   ============================================== */
-
-.start-game-button {
-  position: fixed;
-  top: 80px;
-  left: 12px;
-  background: #28a745;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-  transition: all 0.3s ease;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.start-game-button:hover {
-  background: #218838;
-  transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
-}
-
-.start-game-button:active {
-  transform: scale(1.02);
-}
-
-.start-game-button .play-icon {
+/* Play Icon for Start Game Button */
+.play-icon {
   width: 0;
   height: 0;
   border-left: 14px solid white;
@@ -876,23 +814,21 @@ input:disabled + .slider {
   border-bottom: 9px solid transparent;
   margin-left: 3px;
 }
+
 /* ==============================================
    RESPONSIVE DESIGN
    ============================================== */
 
 @media (max-width: 768px) {
-  .select-game-page::before {
-    width: 60px;
-  }
-
   .main-layout {
     padding-left: 60px;
+    padding-bottom: 26.5vh; /* Space for mobile bottom section */
   }
 
   .top-section {
     flex-direction: column;
     min-height: auto;
-    height: auto;
+    height: calc(100vh - 26.5vh); /* Fixed height to prevent growing into bottom section */
     flex: none;
   }
 
@@ -933,6 +869,17 @@ input:disabled + .slider {
     justify-items: center;
   }
 
+  /* Tablet Dual Board Layout */
+  .game-boards-container.dual-board .board-cell {
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    aspect-ratio: 1;
+  }
+
+  /* Tablet Double Bingo Dual Board Layout - Smaller font for better readability */
+  .game-boards-container.dual-board.double-bingo-dual .board-cell {
+    font-size: clamp(1.0rem, 2.5vw, 1.8rem);
+  }
+
   .operator-icon {
     width: 25px;
     height: 25px;
@@ -941,18 +888,17 @@ input:disabled + .slider {
 }
 
 @media (max-width: 480px) {
-  .select-game-page::before {
-    width: 50px;
-  }
-
   .main-layout {
     padding-left: 50px;
+    padding-bottom: 22.25vh; /* Space for mobile bottom section */
   }
 
   .top-section {
     padding: 10px;
     gap: 15px;
     min-height: auto;
+    height: calc(100vh - 22.25vh); /* Fixed height to prevent growing into bottom section */
+    flex: none;
   }
 
   .bottom-section {
@@ -973,8 +919,21 @@ input:disabled + .slider {
     transform: scale(0.6);
   }
 
-  .board-cell {
-    font-size: clamp(0.6rem, 1.5vw, 1rem);
+  /* Mobile Single Board Layout */
+  .game-boards-container:not(.dual-board) .board-cell {
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    aspect-ratio: 2/1;
+  }
+
+  /* Mobile Dual Board Layout */
+  .game-boards-container.dual-board .board-cell {
+    font-size: clamp(0.9rem, 2.25vw, 1.5rem);
+    aspect-ratio: 1;
+  }
+
+  /* Mobile Double Bingo Dual Board Layout - Even smaller font for mobile */
+  .game-boards-container.dual-board.double-bingo-dual .board-cell {
+    font-size: clamp(0.7rem, 1.8vw, 1.2rem);
   }
 
   .small-game-preview {
@@ -991,15 +950,8 @@ input:disabled + .slider {
     max-height: 40px;
   }
 
-  .start-game-button {
-    width:  40px;
-    height: 40px;
-    top: 75px;
-    left: 5px;
-    font-size: 18px;
-  }
-
-  .start-game-button .play-icon {
+  /* Mobile Play Icon */
+  .play-icon {
     border-left: 12px solid white;
     border-top: 7px solid transparent;
     border-bottom: 7px solid transparent;

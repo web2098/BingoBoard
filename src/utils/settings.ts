@@ -130,6 +130,10 @@ export function saveSettings(settings: { [key: string]: any }): boolean {
   try {
     localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
     localStorage.setItem(SETTINGS_VERSION_KEY, CURRENT_SETTINGS_VERSION);
+    
+    // Dispatch custom event to notify components of settings change
+    window.dispatchEvent(new CustomEvent('bingoSettingsChanged', { detail: { action: 'save', settings } }));
+    
     return true;
   } catch (error) {
     console.error('Error saving settings:', error);
@@ -144,6 +148,10 @@ export function resetSettings(): boolean {
   try {
     localStorage.removeItem(SETTINGS_STORAGE_KEY);
     localStorage.removeItem(SETTINGS_VERSION_KEY);
+
+    // Dispatch custom event to notify components of settings reset
+    window.dispatchEvent(new CustomEvent('bingoSettingsChanged', { detail: { action: 'reset' } }));
+
     return true;
   } catch (error) {
     console.error('Error resetting settings:', error);
@@ -166,7 +174,14 @@ export function setSetting(id: string, value: any): boolean {
   try {
     const settings = getSettings();
     settings[id] = value;
-    return saveSettings(settings);
+    const success = saveSettings(settings);
+
+    // Dispatch custom event to notify components of settings change
+    if (success) {
+      window.dispatchEvent(new CustomEvent('bingoSettingsChanged', { detail: { id, value } }));
+    }
+
+    return success;
   } catch (error) {
     console.error('Error setting value:', error);
     return false;
@@ -498,4 +513,57 @@ START TIME - ${timeMessage}
 Bingo Word: ${bingoWord}`;
 
   return template;
+}
+
+/**
+ * Get the color for a specific BINGO letter based on settings
+ */
+export function getLetterColor(letter: string): string {
+  const letterUpper = letter.toUpperCase();
+
+  switch (letterUpper) {
+    case 'B':
+      return getSetting('bLetterColor', '#007bff'); // Blue
+    case 'I':
+      return getSetting('iLetterColor', '#dc3545'); // Red
+    case 'N':
+      return getSetting('nLetterColor', '#ffffff'); // White
+    case 'G':
+      return getSetting('gLetterColor', '#28a745'); // Green
+    case 'O':
+      return getSetting('oLetterColor', '#ffc107'); // Yellow
+    default:
+      return '#28a745'; // Default green for fallback
+  }
+}
+
+/**
+ * Get text color that contrasts well with the given background color
+ */
+export function getContrastTextColor(backgroundColor: string): string {
+  // Convert hex to RGB if needed
+  let hex = backgroundColor.replace('#', '');
+
+  // Handle 3-digit hex
+  if (hex.length === 3) {
+    hex = hex.split('').map(char => char + char).join('');
+  }
+
+  // Parse RGB values
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+
+  // Calculate luminance using relative luminance formula
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  // Return dark text for light backgrounds, light text for dark backgrounds
+  return luminance > 0.5 ? '#333333' : '#ffffff';
+}
+
+/**
+ * Get the board highlight color from settings
+ */
+export function getBoardHighlightColor(): string {
+  return getSetting('boardHighlightColor', '#1e4d2b'); // Default green
 }

@@ -1,12 +1,12 @@
 // About.jsx
 import React from 'react';
-import HamburgerMenu from '../components/HamburgerMenu';
+import SidebarWithMenu from '../components/SidebarWithMenu';
 import './about-page.css';
 
 const About = () => {
   return (
     <div className="about-page">
-      <HamburgerMenu currentPage="about" />
+      <SidebarWithMenu currentPage="about" />
 
       <div className="about-content">
         <div className="about-header">

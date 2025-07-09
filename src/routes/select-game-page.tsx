@@ -3,10 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './select-game-page.css';
 import games from '../data/games';
-import HamburgerMenu from '../components/HamburgerMenu';
+import SidebarWithMenu from '../components/SidebarWithMenu';
 import QRCode from '../components/QRCode';
-import AudienceInteractionButtons from '../components/AudienceInteractionButtons';
-import { generateWelcomeMessage, getSetting } from '../utils/settings';
+import { generateWelcomeMessage, getSetting, getBoardHighlightColor, getContrastTextColor } from '../utils/settings';
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -71,12 +70,14 @@ const GameBoard = ({
   board,
   freeSpace,
   isSelected = false,
-  onClick
+  onClick,
+  colorVersion = 0
 }: {
   board: number[][],
   freeSpace: boolean,
   isSelected?: boolean,
-  onClick?: () => void
+  onClick?: () => void,
+  colorVersion?: number
 }) => {
   const letters = ['B', 'I', 'N', 'G', 'O'];
 
@@ -89,6 +90,9 @@ const GameBoard = ({
     return board.some(coord => coord[0] === row && coord[1] === col);
   };
 
+  const boardHighlightColor = getBoardHighlightColor();
+  const highlightTextColor = getContrastTextColor(boardHighlightColor);
+
   return (
     <div className={`game-board ${isSelected ? 'selected' : ''}`} onClick={handleClick}>
       {[0, 1, 2, 3, 4].map((rowIndex) => (
@@ -97,10 +101,17 @@ const GameBoard = ({
             const isHighlightedCell = isHighlighted(rowIndex, colIndex);
             const isFreeSpace = rowIndex === 2 && colIndex === 2;
 
+            // Dynamic styling for highlighted cells
+            const cellStyle = isHighlightedCell ? {
+              backgroundColor: boardHighlightColor,
+              color: highlightTextColor
+            } : {};
+
             return (
               <div
-                key={`${rowIndex}-${colIndex}`}
+                key={`${rowIndex}-${colIndex}-${colorVersion}`}
                 className={`board-cell ${isHighlightedCell ? 'highlighted' : ''} ${isFreeSpace ? 'free-space' : ''}`}
+                style={cellStyle}
               >
                 {isFreeSpace ? (freeSpace ? 'FREE' : letters[colIndex]) : letters[colIndex]}
               </div>
@@ -238,11 +249,13 @@ const WelcomePanel = () => {
 const GamePreviewSection = ({
   games,
   settings,
-  onSettingsChange
+  onSettingsChange,
+  colorVersion = 0
 }: {
   games: any[],
   settings: GameSettings,
-  onSettingsChange: (settings: GameSettings) => void
+  onSettingsChange: (settings: GameSettings) => void,
+  colorVersion?: number
 }) => {
   const currentGame = games[settings.id];
   const currentVariant = currentGame.variants[settings.variant];
@@ -367,6 +380,7 @@ const GamePreviewSection = ({
   const renderGameBoards = () => {
     // All boards are now functions that return arrays of possible patterns
     const isDualBoard = currentVariant.boards.length > 1;
+    const isDoubleBingo = currentGame.name === "Double Bingo";
 
     // Use cached patterns to avoid regenerating them on every render
     if (!cachedPatterns) {
@@ -374,7 +388,7 @@ const GamePreviewSection = ({
     }
 
     return (
-      <div className={`game-boards-container ${isDualBoard ? 'dual-board' : 'single-board'}`}>
+      <div className={`game-boards-container ${isDualBoard ? 'dual-board' : 'single-board'} ${isDoubleBingo && isDualBoard ? 'double-bingo-dual' : ''}`}>
         {cachedPatterns.map((possiblePatterns: number[][][], index: number) => {
           // Use rotation index to pick which pattern to display (with wrap-around)
           const selectedPattern = possiblePatterns[rotationIndex % possiblePatterns.length];
@@ -385,6 +399,7 @@ const GamePreviewSection = ({
                 board={selectedPattern}
                 freeSpace={settings.freeSpace}
                 onClick={handleGameBoardClick}
+                colorVersion={colorVersion}
               />
               {index < cachedPatterns.length - 1 && currentVariant.op && (
                 <OperatorIcon operator={currentVariant.op} />
@@ -430,9 +445,21 @@ const GamePreviewSection = ({
 };
 
 // Small Game Preview for Swiper
-const SmallGamePreview = ({ game, gameIndex, onClick }: { game: any, gameIndex: number, onClick: () => void }) => {
+const SmallGamePreview = ({
+  game,
+  gameIndex,
+  onClick,
+  colorVersion = 0
+}: {
+  game: any,
+  gameIndex: number,
+  onClick: () => void,
+  colorVersion?: number
+}) => {
   const firstVariant = game.variants[0];
   const firstBoardFunction = firstVariant.boards[0];
+  const isDualBoard = firstVariant.boards.length > 1;
+  const isDoubleBingo = game.name === "Double Bingo";
 
   // Call the board function to get the first pattern using preview mode for consistency
   const firstPattern = typeof firstBoardFunction === 'function'
@@ -444,8 +471,8 @@ const SmallGamePreview = ({ game, gameIndex, onClick }: { game: any, gameIndex: 
       <div className="game-preview-label">
         {game.name} [{firstVariant.length || 'Standard'}]
       </div>
-      <div className="small-game-board">
-        <GameBoard board={firstPattern} freeSpace={true} />
+      <div className={`small-game-board ${isDualBoard && isDoubleBingo ? 'double-bingo-dual' : ''}`}>
+        <GameBoard board={firstPattern} freeSpace={true} colorVersion={colorVersion} />
       </div>
     </div>
   );
@@ -455,11 +482,13 @@ const SmallGamePreview = ({ game, gameIndex, onClick }: { game: any, gameIndex: 
 const GameSelectionSection = ({
   games,
   currentGameId,
-  onGameSelect
+  onGameSelect,
+  colorVersion = 0
 }: {
   games: any[],
   currentGameId: number,
-  onGameSelect: (gameId: number) => void
+  onGameSelect: (gameId: number) => void,
+  colorVersion?: number
 }) => {
   return (
     <div className="game-selection-section">
@@ -503,6 +532,7 @@ const GameSelectionSection = ({
                 game={game}
                 gameIndex={index}
                 onClick={() => onGameSelect(index)}
+                colorVersion={colorVersion}
               />
             </SwiperSlide>
           ))}
@@ -520,8 +550,44 @@ const GameSelectionSection = ({
 
 // Main Component
 const SelectGamePage = () => {
-  const gameList = games();
   const navigate = useNavigate();
+  const [gameList, setGameList] = useState(games());
+  const [settingsUpdateTrigger, setSettingsUpdateTrigger] = useState(0);
+  const [highlightColorVersion, setHighlightColorVersion] = useState(0);
+
+  // Update game list when settings change
+  useEffect(() => {
+    setGameList(games());
+  }, [settingsUpdateTrigger]);
+
+  // Listen for storage changes to detect settings updates
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'bingoSettings' && e.newValue !== e.oldValue) {
+        setSettingsUpdateTrigger(prev => prev + 1);
+        setHighlightColorVersion(prev => prev + 1);
+      }
+    };
+
+    // Listen for custom settings change events
+    const handleSettingsChange = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      setSettingsUpdateTrigger(prev => prev + 1);
+
+      // Update highlight color version if board highlight color changed
+      if (customEvent.detail && customEvent.detail.id === 'boardHighlightColor') {
+        setHighlightColorVersion(prev => prev + 1);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('bingoSettingsChanged', handleSettingsChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('bingoSettingsChanged', handleSettingsChange);
+    };
+  }, []);
 
   // Helper function to determine default freeSpace value for a variant
   const getDefaultFreeSpace = (game: any, variantIndex: number): boolean => {
@@ -564,7 +630,18 @@ const SelectGamePage = () => {
 
   return (
     <div className="select-game-page">
-      <HamburgerMenu currentPage="select-game" />
+      <SidebarWithMenu
+        currentPage="select-game"
+        pageButtons={[
+          {
+            id: 'start-game',
+            label: 'Start Game',
+            icon: <div className="play-icon"></div>,
+            onClick: handlePlayGame,
+            className: 'start-game-button'
+          }
+        ]}
+      />
 
       <div className="main-layout">
         <div className="top-section">
@@ -573,6 +650,7 @@ const SelectGamePage = () => {
               games={gameList}
               settings={gameSettings}
               onSettingsChange={setGameSettings}
+              colorVersion={highlightColorVersion}
             />
           </div>
 
@@ -586,15 +664,10 @@ const SelectGamePage = () => {
             games={gameList}
             currentGameId={gameSettings.id}
             onGameSelect={handleGameSelect}
+            colorVersion={highlightColorVersion}
           />
         </div>
       </div>
-
-      <button className="start-game-button" onClick={handlePlayGame} title="Start Game">
-        <div className="play-icon"></div>
-      </button>
-
-      <AudienceInteractionButtons currentPage="select-game" />
     </div>
   );
 };

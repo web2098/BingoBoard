@@ -40,6 +40,20 @@
     "default": 3
   },
   {
+    "section": "Welcome Customizations",
+    "Label": "Game Display Order",
+    "id": "gameDisplayOrder",
+    "description": "Order in which games are displayed in the game selection",
+    "type": "select",
+    "options": [
+      "Default",
+      "Length",
+      "Alphabetical",
+      "Random"
+    ],
+    "default": "Default"
+  },
+  {
     "section": "Board Customizations",
     "Label": "Show Last Number Played",
     "id": "showLastNumberPlayed",
@@ -88,6 +102,54 @@
     "description": "Background color for the bingo board",
     "type": "colorpicker",
     "default": "#ffffff"
+  },
+  {
+    "section": "Board Theme",
+    "Label": "B Letter Card Color",
+    "id": "bLetterColor",
+    "description": "Background color for the B letter cards",
+    "type": "colorpicker",
+    "default": "#000000"
+  },
+  {
+    "section": "Board Theme",
+    "Label": "I Letter Card Color",
+    "id": "iLetterColor",
+    "description": "Background color for the I letter cards",
+    "type": "colorpicker",
+    "default": "#000000"
+  },
+  {
+    "section": "Board Theme",
+    "Label": "N Letter Card Color",
+    "id": "nLetterColor",
+    "description": "Background color for the N letter cards",
+    "type": "colorpicker",
+    "default": "#000000"
+  },
+  {
+    "section": "Board Theme",
+    "Label": "G Letter Card Color",
+    "id": "gLetterColor",
+    "description": "Background color for the G letter cards",
+    "type": "colorpicker",
+    "default": "#000000"
+  },
+  {
+    "section": "Board Theme",
+    "Label": "O Letter Card Color",
+    "id": "oLetterColor",
+    "description": "Background color for the O letter cards",
+    "type": "colorpicker",
+    "default": "#000000"
+  },
+  {
+    "section": "Board Theme",
+    "Label": "Board Highlight Color",
+    "id": "boardHighlightColor",
+    "description": "Background color for highlighted/called numbers on the bingo board",
+    "type": "colorpicker",
+    "default": "#1e4d2b"
   },
   {
     "section": "Bingo Server Settings",

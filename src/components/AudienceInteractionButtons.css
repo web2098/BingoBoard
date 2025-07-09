@@ -117,3 +117,38 @@
     height: 22px;
   }
 }
+
+/* When inside sidebar, override the fixed positioning */
+.audience-interaction-section .audience-interaction-buttons {
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: auto;
+  pointer-events: auto;
+  width: 100%;
+  align-items: center;
+}
+
+.audience-interaction-section .audience-interaction-btn {
+  width: 56px;
+  height: 56px;
+  margin: 0;
+}
+
+/* Responsive styles for sidebar integration */
+@media (max-width: 768px) {
+  .audience-interaction-section .audience-interaction-btn {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .audience-interaction-section .audience-interaction-btn {
+    width: 40px;
+    height: 40px;
+  }
+}

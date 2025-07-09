@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './settings-page.css';
-import HamburgerMenu from '../components/HamburgerMenu';
+import SidebarWithMenu from '../components/SidebarWithMenu';
 import {
   getSettingsSections,
   getSettings,
@@ -15,7 +15,10 @@ import {
   revertNumberMessage,
   formatDebugSettings,
   SettingsSection,
-  SettingProperty
+  SettingProperty,
+  getLetterColor,
+  getContrastTextColor,
+  getBoardHighlightColor
 } from '../utils/settings';
 
 // Import modal components
@@ -25,6 +28,117 @@ import { TextModal, ImageModal, AnimatedModal } from '../components/modals';
 import { getMappedAsset } from '../utils/assetMapping';
 
 interface SettingsPageProps {}
+
+// Color Picker Component with Undo/Redo functionality
+const ColorPickerWithHistory: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => {
+  const [colorHistory, setColorHistory] = useState<string[]>([value]);
+  const [historyIndex, setHistoryIndex] = useState(0);
+
+  // Update history when value changes externally
+  useEffect(() => {
+    if (value !== colorHistory[historyIndex]) {
+      const newHistory = colorHistory.slice(0, historyIndex + 1);
+      newHistory.push(value);
+      setColorHistory(newHistory);
+      setHistoryIndex(newHistory.length - 1);
+    }
+  }, [value, colorHistory, historyIndex]);
+
+  const addToHistory = (newValue: string) => {
+    if (newValue !== colorHistory[historyIndex]) {
+      const newHistory = colorHistory.slice(0, historyIndex + 1);
+      newHistory.push(newValue);
+      setColorHistory(newHistory);
+      setHistoryIndex(newHistory.length - 1);
+    }
+  };
+
+  const handleColorTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let inputValue = e.target.value.toUpperCase();
+    // Ensure it starts with # if user is typing
+    if (inputValue.length > 0 && !inputValue.startsWith('#')) {
+      inputValue = '#' + inputValue;
+    }
+    // Allow empty value or valid hex color format
+    if (inputValue === '' || /^#[0-9A-F]{0,6}$/.test(inputValue)) {
+      // If it's a complete hex color (7 characters including #), update the property
+      if (inputValue.length === 7) {
+        addToHistory(inputValue);
+        onChange(inputValue);
+      } else if (inputValue === '') {
+        const defaultColor = '#000000';
+        addToHistory(defaultColor);
+        onChange(defaultColor);
+      }
+    }
+  };
+
+  const handleColorTextBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    // If incomplete hex, pad with zeros or revert to current value
+    if (inputValue.length > 0 && inputValue.length < 7) {
+      const paddedValue = inputValue.padEnd(7, '0');
+      addToHistory(paddedValue);
+      onChange(paddedValue);
+    } else if (inputValue === '') {
+      const defaultColor = '#000000';
+      addToHistory(defaultColor);
+      onChange(defaultColor);
+    }
+  };
+
+  const handleColorPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    addToHistory(newValue);
+    onChange(newValue);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.ctrlKey && e.key === 'z') {
+      e.preventDefault();
+      if (historyIndex > 0) {
+        const newIndex = historyIndex - 1;
+        const previousValue = colorHistory[newIndex];
+        setHistoryIndex(newIndex);
+        onChange(previousValue);
+      }
+    } else if (e.ctrlKey && e.key === 'y') {
+      e.preventDefault();
+      if (historyIndex < colorHistory.length - 1) {
+        const newIndex = historyIndex + 1;
+        const nextValue = colorHistory[newIndex];
+        setHistoryIndex(newIndex);
+        onChange(nextValue);
+      }
+    }
+  };
+
+  return (
+    <div className="color-picker-container">
+      <input
+        type="text"
+        value={value}
+        onChange={handleColorTextChange}
+        onBlur={handleColorTextBlur}
+        onKeyDown={handleKeyDown}
+        className="color-text-input"
+        placeholder="#FFFFFF"
+        maxLength={7}
+        title="Hex color code (Ctrl+Z to undo, Ctrl+Y to redo)"
+      />
+      <input
+        type="color"
+        value={value}
+        onChange={handleColorPickerChange}
+        className="color-input"
+        title="Color picker"
+      />
+    </div>
+  );
+};
 
 // Audience Interactions Component
 interface AudienceInteractionsProps {
@@ -400,9 +514,10 @@ const AudienceInteractions: React.FC<AudienceInteractionsProps> = ({ onChange })
 interface SpecialNumbersGridProps {
   property: SettingProperty;
   onChange: (value: any) => void;
+  colorVersion?: number;
 }
 
-const SpecialNumbersGrid: React.FC<SpecialNumbersGridProps> = ({ property, onChange }) => {
+const SpecialNumbersGrid: React.FC<SpecialNumbersGridProps> = ({ property, onChange, colorVersion = 0 }) => {
   const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
   const [textareaValue, setTextareaValue] = useState<string>('');
 
@@ -502,32 +617,55 @@ const SpecialNumbersGrid: React.FC<SpecialNumbersGridProps> = ({ property, onCha
 
   const numberGrid = generateNumberGrid();
   const rowHeaders = ['B', 'I', 'N', 'G', 'O'];
+  const boardHighlightColor = getBoardHighlightColor();
+  const boardHighlightTextColor = getContrastTextColor(boardHighlightColor);
 
   return (
     <div className="special-numbers-grid-container">
       <div className="bingo-grid-horizontal">
-        {rowHeaders.map((header, rowIndex) => (
-          <div key={header} className="bingo-row">
-            <div className="row-header">{header}</div>
-            <div className="row-numbers">
-              {numberGrid[rowIndex].map(number => {
-                const messageState = getNumberMessageState(number);
-                const hasMessage = specialNumbers[number.toString()];
-                const isSelected = selectedNumber === number;
+        {rowHeaders.map((header, rowIndex) => {
+          const letterColor = getLetterColor(header);
+          const letterTextColor = getContrastTextColor(letterColor);
 
-                return (
-                  <button
-                    key={number}
-                    className={`number-cell ${messageState} ${hasMessage ? 'has-message' : ''} ${isSelected ? 'selected' : ''}`}
-                    onClick={() => handleNumberClick(number)}
-                  >
-                    {number}
-                  </button>
-                );
-              })}
+          return (
+            <div key={`${header}-${colorVersion}`} className="bingo-row">
+              <div
+                className="row-header"
+                style={{
+                  backgroundColor: letterColor,
+                  color: letterTextColor
+                }}
+              >
+                {header}
+              </div>
+              <div className="row-numbers">
+                {numberGrid[rowIndex].map(number => {
+                  const messageState = getNumberMessageState(number);
+                  const hasMessage = specialNumbers[number.toString()];
+                  const isSelected = selectedNumber === number;
+
+                  // Dynamic styling for cells with messages
+                  const cellStyle = hasMessage ? {
+                    backgroundColor: boardHighlightColor,
+                    borderColor: boardHighlightColor,
+                    color: boardHighlightTextColor
+                  } : {};
+
+                  return (
+                    <button
+                      key={`${number}-${colorVersion}`}
+                      className={`number-cell ${messageState} ${hasMessage ? 'has-message' : ''} ${isSelected ? 'selected' : ''}`}
+                      style={!isSelected ? cellStyle : {}}
+                      onClick={() => handleNumberClick(number)}
+                    >
+                      {number}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="number-message-editor">
@@ -589,6 +727,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
   const [settingsSections, setSettingsSections] = useState<SettingsSection[]>([]);
   const [debugCollapsed, setDebugCollapsed] = useState<boolean>(true); // Debug section collapsed by default
   const [currentSettings, setCurrentSettings] = useState<{ [key: string]: any }>({});
+  const [colorVersion, setColorVersion] = useState<number>(0);
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -605,6 +744,58 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
       if (autoSaveTimeoutRef.current) {
         clearTimeout(autoSaveTimeoutRef.current);
       }
+    };
+  }, []);
+
+  // Listen for color setting changes
+  useEffect(() => {
+    const handleSettingsChange = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      
+      // Handle reset action
+      if (customEvent.detail && customEvent.detail.action === 'reset') {
+        setColorVersion(prev => prev + 1);
+        return;
+      }
+      
+      // Handle save action - check if any color settings were changed
+      if (customEvent.detail && customEvent.detail.action === 'save' && customEvent.detail.settings) {
+        const settings = customEvent.detail.settings;
+        const colorSettings = [
+          'boardHighlightColor',
+          'bingoLetterColorB',
+          'bingoLetterColorI',
+          'bingoLetterColorN',
+          'bingoLetterColorG',
+          'bingoLetterColorO'
+        ];
+        
+        // Check if any color settings exist in the saved settings
+        const hasColorChanges = colorSettings.some(setting => settings.hasOwnProperty(setting));
+        
+        if (hasColorChanges) {
+          setColorVersion(prev => prev + 1);
+        }
+        return;
+      }
+      
+      // Handle specific setting changes (legacy support)
+      if (customEvent.detail && customEvent.detail.id && (
+        customEvent.detail.id === 'boardHighlightColor' ||
+        customEvent.detail.id === 'bingoLetterColorB' ||
+        customEvent.detail.id === 'bingoLetterColorI' ||
+        customEvent.detail.id === 'bingoLetterColorN' ||
+        customEvent.detail.id === 'bingoLetterColorG' ||
+        customEvent.detail.id === 'bingoLetterColorO'
+      )) {
+        setColorVersion(prev => prev + 1);
+      }
+    };
+
+    window.addEventListener('bingoSettingsChanged', handleSettingsChange);
+
+    return () => {
+      window.removeEventListener('bingoSettingsChanged', handleSettingsChange);
     };
   }, []);
 
@@ -648,7 +839,8 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
       // Set a new timeout for debounced auto-save
       autoSaveTimeoutRef.current = setTimeout(() => {
         saveSettingsUtil(allSettings);
-        // Removed notifications - settings save silently in background
+        // Settings save silently in background
+        // Event dispatching is handled by saveSettings function
       }, 500); // 500ms debounce delay
 
       return updatedSections;
@@ -699,11 +891,9 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
         );
       case 'colorpicker':
         return (
-          <input
-            type="color"
+          <ColorPickerWithHistory
             value={property.value}
-            onChange={(e) => onChange(e.target.value)}
-            className="color-input"
+            onChange={onChange}
           />
         );
       case 'select':
@@ -845,26 +1035,26 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
 
   return (
     <div className="settings-page">
-      <HamburgerMenu
+      <SidebarWithMenu
         currentPage="settings"
         onReset={handleReset}
+        pageButtons={[
+          {
+            id: 'reset-settings',
+            label: 'Reset',
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="23,4 23,10 17,10"/>
+                <polyline points="1,20 1,14 7,14"/>
+                <path d="M20.49,9A9,9,0,0,0,5.64,5.64L1,10"/>
+                <path d="M3.51,15a9,9,0,0,0,14.85,3.36L23,14"/>
+              </svg>
+            ),
+            onClick: handleReset,
+            className: 'reset-settings-button'
+          }
+        ]}
       />
-
-      {/* Floating Action Buttons */}
-      <div className="floating-actions">
-        <button
-          className="floating-action-btn reset-btn"
-          onClick={handleReset}
-          title="Reset to Defaults"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="23,4 23,10 17,10"/>
-            <polyline points="1,20 1,14 7,14"/>
-            <path d="M20.49,9A9,9,0,0,0,5.64,5.64L1,10"/>
-            <path d="M3.51,15a9,9,0,0,0,14.85,3.36L23,14"/>
-          </svg>
-        </button>
-      </div>
 
       <div className="settings-content">
         <div className="settings-main-header">
@@ -943,6 +1133,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
                 currentSettings['specialNumbers'] = value;
                 localStorage.setItem('bingoSettings', JSON.stringify(currentSettings));
               }}
+              colorVersion={colorVersion}
             />
 
             {/* Audience Interactions Section */}

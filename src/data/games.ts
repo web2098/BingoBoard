@@ -174,7 +174,7 @@ function generateCandyCanePattern(freeSpace: boolean = true, previewMode: boolea
             [0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]
         ]];
     }
-    
+
     return [
         [[0,0],[0,1],[0,2],[1,0],[1,2],[2,2],[3,2],[4,2]],
         [[0,1],[0,2],[0,3],[1,1],[1,3],[2,3],[3,3],[4,3]],
@@ -368,8 +368,7 @@ function largeX(){
                     (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]]]
                 ],
                 rules: "Must match exact pattern on one board",
-                length: "Not Set",
-                dynamicFreeSpace: true
+                length: "Not Set"
             },
             {
                 boards: [
@@ -718,7 +717,7 @@ function diamond(){
         variants:[
             {
                 boards: [
-                    (freeSpace: boolean, previewMode: boolean = false) => 
+                    (freeSpace: boolean, previewMode: boolean = false) =>
                         [[[0,2],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[2,4],[3,1],[3,2],[3,3],[4,2]]]
                 ],
                 rules: "Must match exact pattern on one board",
@@ -726,9 +725,9 @@ function diamond(){
             },
             {
                 boards: [
-                        (freeSpace: boolean, previewMode: boolean = false) => 
+                        (freeSpace: boolean, previewMode: boolean = false) =>
                             [[[0,2],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[2,4],[3,1],[3,2],[3,3],[4,2]]],
-                        (freeSpace: boolean, previewMode: boolean = false) => 
+                        (freeSpace: boolean, previewMode: boolean = false) =>
                             [[[0,2],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[2,4],[3,1],[3,2],[3,3],[4,2]]]
                 ],
                 op: "and",
@@ -902,7 +901,7 @@ function valentinesDay(){
     }
 }
 
-function games(){
+function gameList(){
     return [
         bingo(),
         doubleBingo(),
@@ -928,15 +927,94 @@ function games(){
     ]
 }
 
-export default games;
-
-
-export function boardContainsPoint( board: any, x: number, y: number )
+function applyOrder( gameList: any[] )
 {
-    for( var i = 0; i < board.length; i++ ){
-        if( board[i][0] === x && board[i][1] === y ){
-            return true;
-        }
+    let gameDisplayOrder: string = 'Default'; // Default fallback
+
+    try {
+        // Import settings utility to get the current game display order
+        const { getSetting } = require('../utils/settings');
+        gameDisplayOrder = getSetting('gameDisplayOrder') || 'Default';
+    } catch (error) {
+        // If settings can't be loaded, use default
+        console.warn('Could not load game display order setting, using default:', error);
     }
-    return false;
+
+    const gameCopy = [...gameList];
+
+    switch(gameDisplayOrder) {
+        case 'Default':
+            // Return the game list in its original order as defined in gameList()
+            return gameCopy;
+
+        case 'Length':
+            // Define the order priority for length
+            const lengthOrder = ['Fast', 'Average', 'Slow', 'Not Set'];
+
+            // First sort alphabetically to ensure consistent ordering within each length group
+            const alphabeticallySorted = gameCopy.sort((a, b) => a.name.localeCompare(b.name));
+
+            return alphabeticallySorted.sort((a, b) => {
+                // Get the primary length from each game's variants
+                const getGameLength = (game: any) => {
+                    if (!game.variants || game.variants.length === 0) return 'Not Set';
+
+                    const lengths = game.variants.map((v: any) => v.length || 'Not Set');
+
+                    // Count occurrences of each length
+                    const lengthCounts = lengths.reduce((acc: any, length: string) => {
+                        acc[length] = (acc[length] || 0) + 1;
+                        return acc;
+                    }, {});
+
+                    // Return the most frequent length, prioritizing by lengthOrder if tie
+                    const sortedLengths = Object.keys(lengthCounts).sort((a, b) => {
+                        const countDiff = lengthCounts[b] - lengthCounts[a];
+                        if (countDiff !== 0) return countDiff;
+                        // If tie, prefer earlier in lengthOrder
+                        return lengthOrder.indexOf(a) - lengthOrder.indexOf(b);
+                    });
+
+                    return sortedLengths[0] || 'Not Set';
+                };
+
+                const aLength = getGameLength(a);
+                const bLength = getGameLength(b);
+
+                const aIndex = lengthOrder.indexOf(aLength);
+                const bIndex = lengthOrder.indexOf(bLength);
+
+                // If either length is not found, put it at the end
+                const aPriority = aIndex === -1 ? lengthOrder.length : aIndex;
+                const bPriority = bIndex === -1 ? lengthOrder.length : bIndex;
+
+                // Primary sort by length priority
+                const lengthComparison = aPriority - bPriority;
+
+                // If lengths are the same, maintain alphabetical order (stable sort)
+                if (lengthComparison === 0) {
+                    return a.name.localeCompare(b.name);
+                }
+
+                return lengthComparison;
+            });
+
+        case 'Alphabetical':
+            return gameCopy.sort((a, b) => a.name.localeCompare(b.name));
+
+        case 'Random':
+            // Use Fisher-Yates shuffle for random order
+            return shuffleArray(gameCopy);
+
+        default:
+            // Fallback to default order
+            return gameCopy;
+    }
 }
+
+function games()
+{
+    return applyOrder(gameList());
+}
+
+export default games;
