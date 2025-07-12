@@ -54,14 +54,14 @@ const generateRandomWinners = (numberCallsCount: number): Winner[] => {
  */
 const generateRandomGameSession = (baseTime: Date, sessionIndex: number): GameSession => {
   const gameNames = [
-    'Traditional Bingo',
-    'Four Corners',
+    'Bingo',
+    'Corners',
     'Blackout',
     'Railroad Tracks',
-    'Letter X',
-    'Diamond Pattern',
+    'Large X',
+    'Diamond',
     'Postage Stamp',
-    'Crazy T',
+    'TheT',
     'Survivor',
     'Double Bingo'
   ];
@@ -128,12 +128,12 @@ export const generateSampleLongTermStats = (): LongTermTelemetry => {
   }
 
   const gameTypes = [
-    'Traditional Bingo_v0',
-    'Four Corners_v0',
+    'Bingo_v0',
+    'Corners_v0',
     'Blackout_v0',
     'Railroad Tracks_v1',
-    'Letter X_v0',
-    'Diamond Pattern_v0'
+    'Large X_v0',
+    'Diamond_v0'
   ];
 
   const gameTypeStats: LongTermTelemetry['gameTypeStats'] = {};

@@ -5,7 +5,7 @@
   background-color: #f5f5f5;
 }
 
-.telemetry-content {
+.telemetry-page .telemetry-content {
   flex: 1;
   padding: 2rem;
   margin-left: 80px; /* Account for sidebar */
@@ -14,11 +14,11 @@
 }
 
 /* Section Headers */
-.section-header {
+.telemetry-page .section-header {
   margin-bottom: 2rem;
 }
 
-.section-header h2 {
+.telemetry-page .section-header h2 {
   color: #333;
   margin-bottom: 0;
   font-size: 2rem;
@@ -28,14 +28,14 @@
 }
 
 /* Summary Cards */
-.summary-section {
+.telemetry-page .summary-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
   margin-bottom: 1rem;
 }
 
-.summary-card {
+.telemetry-page .summary-card {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -43,25 +43,25 @@
   border-left: 4px solid #42a5f5;
 }
 
-.summary-card h3 {
+.telemetry-page .summary-card h3 {
   color: #666;
   margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
 }
 
-.stat-number {
+.telemetry-page .stat-number {
   font-size: 2.5rem;
   font-weight: bold;
   color: #42a5f5;
 }
 
 /* Number Statistics */
-.numbers-section {
+.telemetry-page .numbers-section {
   margin-bottom: 3rem;
 }
 
-.numbers-section h2 {
+.telemetry-page .numbers-section h2 {
   color: #333;
   margin-bottom: 2rem;
   font-size: 2rem;
@@ -69,7 +69,7 @@
   padding-bottom: 0.5rem;
 }
 
-.stats-group {
+.telemetry-page .stats-group {
   margin-bottom: 0.5rem;
   background: white;
   padding: 1.5rem;
@@ -77,18 +77,18 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.stats-group h3 {
+.telemetry-page .stats-group h3 {
   color: #333;
   margin: 0;
   font-size: 1.3rem;
 }
 
-.stats-row {
+.telemetry-page .stats-row {
   display: flex;
   flex-direction: column;
 }
 
-.number-list h4 {
+.telemetry-page .number-list h4 {
   color: #42a5f5;
   margin-bottom: 1rem;
   font-size: 1.1rem;
@@ -96,14 +96,14 @@
   padding-bottom: 0.5rem;
 }
 
-.number-grid {
+.telemetry-page .number-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, 60px);
   gap: 1.5rem;
   justify-content: start;
 }
 
-.number-item {
+.telemetry-page .number-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -115,23 +115,23 @@
   width: 100%;
 }
 
-.number-item .number {
+.telemetry-page .number-item .number {
   font-weight: bold;
   color: #333;
   font-size: 1.1rem;
 }
 
-.number-item .count {
+.telemetry-page .number-item .count {
   font-size: 0.9rem;
   color: #666;
 }
 
 /* Games Table */
-.games-section {
+.telemetry-page .games-section {
   margin-bottom: 3rem;
 }
 
-.games-section h2 {
+.telemetry-page .games-section h2 {
   color: #333;
   margin-bottom: 2rem;
   font-size: 2rem;
@@ -139,7 +139,7 @@
   padding-bottom: 0.5rem;
 }
 
-.games-table-container {
+.telemetry-page .games-table-container {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -147,13 +147,13 @@
   overflow-x: auto;
 }
 
-.games-table {
+.telemetry-page .games-table {
   width: 100%;
   border-collapse: collapse;
   min-width: 1000px;
 }
 
-.games-table th {
+.telemetry-page .games-table th {
   background: #42a5f5;
   color: white;
   padding: 1rem;
@@ -162,39 +162,39 @@
   white-space: nowrap;
 }
 
-.games-table td {
+.telemetry-page .games-table td {
   padding: 1rem;
   border-bottom: 1px solid #e0e0e0;
   vertical-align: top;
 }
 
 /* N/A value styling */
-.games-table td:has-text("N/A") {
+.telemetry-page .games-table td:has-text("N/A") {
   color: #999;
   font-style: italic;
 }
 
 /* Alternative approach for N/A styling */
-.na-value {
+.telemetry-page .na-value {
   color: #999;
   font-style: italic;
 }
 
-.games-table tr:hover {
+.telemetry-page .games-table tr:hover {
   background: #f8f9fa;
 }
 
 /* Expandable row styles */
-.game-row.expandable {
+.telemetry-page .game-row.expandable {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-.game-row.expandable:hover {
+.telemetry-page .game-row.expandable:hover {
   background: #e3f2fd !important;
 }
 
-.expand-icon {
+.telemetry-page .expand-icon {
   display: inline-block;
   transition: transform 0.2s ease;
   color: #42a5f5;
@@ -202,26 +202,26 @@
   user-select: none;
 }
 
-.expand-icon.expanded {
+.telemetry-page .expand-icon.expanded {
   transform: rotate(90deg);
 }
 
-.game-name {
+.telemetry-page .game-name {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.variant-row {
+.telemetry-page .variant-row {
   background: #f8f9fa;
   border-left: 3px solid #42a5f5;
 }
 
-.variant-row:hover {
+.telemetry-page .variant-row:hover {
   background: #f0f0f0 !important;
 }
 
-.variant-name {
+.telemetry-page .variant-name {
   font-size: 0.9rem;
   color: #555;
   padding-left: 1rem;
@@ -229,7 +229,7 @@
 }
 
 /* Heat Maps */
-.heatmaps-section h2 {
+.telemetry-page .heatmaps-section h2 {
   color: #333;
   margin-bottom: 2rem;
   font-size: 2rem;
@@ -237,13 +237,13 @@
   padding-bottom: 0.5rem;
 }
 
-.heatmaps-container {
+.telemetry-page .heatmaps-container {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-.heatmap-container {
+.telemetry-page .heatmap-container {
   background: white;
   padding: 2rem;
   border-radius: 8px;
@@ -251,7 +251,7 @@
   overflow-x: auto;
 }
 
-.heatmap-container h3 {
+.telemetry-page .heatmap-container h3 {
   color: #333;
   margin-bottom: 1rem;
   text-align: center;
@@ -259,7 +259,7 @@
 }
 
 /* Row-based heatmap styles */
-.heatmap-grid-rows {
+.telemetry-page .heatmap-grid-rows {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -269,7 +269,7 @@
   margin: 0 auto;
 }
 
-.heatmap-row {
+.telemetry-page .heatmap-row {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -277,7 +277,7 @@
   width: 100%;
 }
 
-.heatmap-letter-row {
+.telemetry-page .heatmap-letter-row {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -291,26 +291,26 @@
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
 
-.heatmap-numbers-row {
+.telemetry-page .heatmap-numbers-row {
   display: flex;
   gap: 3px;
   flex-wrap: nowrap;
 }
 
 /* Original column-based styles (kept for backwards compatibility) */
-.heatmap-grid {
+.telemetry-page .heatmap-grid {
   display: flex;
   gap: 2px;
   justify-content: center;
 }
 
-.heatmap-column {
+.telemetry-page .heatmap-column {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.heatmap-letter {
+.telemetry-page .heatmap-letter {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -322,7 +322,7 @@
   border-radius: 4px;
 }
 
-.heatmap-cell {
+.telemetry-page .heatmap-cell {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -338,13 +338,13 @@
   overflow: hidden;
 }
 
-.heatmap-cell:hover {
+.telemetry-page .heatmap-cell:hover {
   transform: scale(1.05);
   z-index: 1;
   border-color: #333;
 }
 
-.heatmap-fill {
+.telemetry-page .heatmap-fill {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -353,7 +353,7 @@
   border-radius: 0 0 4px 4px;
 }
 
-.heatmap-content {
+.telemetry-page .heatmap-content {
   position: relative;
   z-index: 1;
   display: flex;
@@ -363,21 +363,21 @@
   height: 100%;
 }
 
-.heatmap-number {
+.telemetry-page .heatmap-number {
   font-weight: bold;
   font-size: 1.3rem;
   line-height: 1;
   color: black;
 }
 
-.heatmap-count {
+.telemetry-page .heatmap-count {
   font-size: 1rem;
   line-height: 1;
   margin-top: 2px;
   color: black;
 }
 
-.heatmap-text-overlay {
+.telemetry-page .heatmap-text-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -390,14 +390,14 @@
   pointer-events: none;
 }
 
-.heatmap-number-white {
+.telemetry-page .heatmap-number-white {
   font-weight: bold;
   font-size: 1.3rem;
   line-height: 1;
   color: white;
 }
 
-.heatmap-count-white {
+.telemetry-page .heatmap-count-white {
   font-size: 1rem;
   line-height: 1;
   margin-top: 2px;
@@ -405,67 +405,67 @@
 }
 
 /* Tonight's Section - Side by Side Layout */
-.tonight-section {
+.telemetry-page .tonight-section {
   display: flex;
   gap: 2rem;
   margin-bottom: 3rem;
   align-items: flex-start;
 }
 
-.tonight-numbers {
+.telemetry-page .tonight-numbers {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-.tonight-games {
+.telemetry-page .tonight-games {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 /* Ensure equal height for both sides */
-.tonight-numbers,
-.tonight-games {
+.telemetry-page .tonight-numbers,
+.telemetry-page .tonight-games {
   min-height: 400px;
 }
 
 /* All Time Section - Side by Side Layout */
-.alltime-section {
+.telemetry-page .alltime-section {
   display: flex;
   gap: 2rem;
   margin-bottom: 3rem;
   align-items: flex-start;
 }
 
-.alltime-numbers {
+.telemetry-page .alltime-numbers {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-.alltime-games {
+.telemetry-page .alltime-games {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.alltime-games h3 {
+.telemetry-page .alltime-games h3 {
   color: #333;
   margin-bottom: 1rem;
   font-size: 1.3rem;
 }
 
 /* Ensure equal height for both sides */
-.alltime-numbers,
-.alltime-games {
+.telemetry-page .alltime-numbers,
+.telemetry-page .alltime-games {
   min-height: 400px;
 }
 
 /* Session time styling for all games table */
-.session-time {
+.telemetry-page .session-time {
   font-size: 0.8rem;
   color: #666;
   margin-top: 0.25rem;
@@ -473,130 +473,130 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .telemetry-content {
+  .telemetry-page .telemetry-content {
     margin-left: 60px;
     max-width: calc(100vw - 60px);
     padding: 1rem;
   }
 
-  .telemetry-header h1 {
+  .telemetry-page .telemetry-header h1 {
     font-size: 2rem;
   }
 
-  .summary-section {
+  .telemetry-page .summary-section {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
   }
 
-  .stat-number {
+  .telemetry-page .stat-number {
     font-size: 2rem;
   }
 
-  .stats-row {
+  .telemetry-page .stats-row {
     flex-direction: column;
     gap: 1rem;
   }
 
-  .number-grid {
+  .telemetry-page .number-grid {
     grid-template-columns: repeat(auto-fill, 50px);
   }
 
-  .games-table-container {
+  .telemetry-page .games-table-container {
     overflow-x: auto;
   }
 
-  .heatmaps-container {
+  .telemetry-page .heatmaps-container {
     grid-template-columns: 1fr;
   }
 
-  .heatmap-letter-row {
+  .telemetry-page .heatmap-letter-row {
     min-width: 30px;
     height: 30px;
     font-size: 1rem;
   }
 
   /* Stack tonight's section vertically on mobile */
-  .tonight-section {
+  .telemetry-page .tonight-section {
     flex-direction: column;
     gap: 1rem;
   }
 
-  .tonight-numbers,
-  .tonight-games {
+  .telemetry-page .tonight-numbers,
+  .telemetry-page .tonight-games {
     min-height: auto;
   }
 
   /* Stack all-time section vertically on mobile */
-  .alltime-section {
+  .telemetry-page .alltime-section {
     flex-direction: column;
     gap: 1rem;
   }
 
-  .alltime-numbers,
-  .alltime-games {
+  .telemetry-page .alltime-numbers,
+  .telemetry-page .alltime-games {
     min-height: auto;
   }
 }
 
 @media (max-width: 480px) {
-  .telemetry-content {
+  .telemetry-page .telemetry-content {
     margin-left: 50px;
     max-width: calc(100vw - 50px);
     padding: 0.5rem;
   }
 
-  .summary-section {
+  .telemetry-page .summary-section {
     grid-template-columns: 1fr;
   }
 
-  .heatmap-letter-row {
+  .telemetry-page .heatmap-letter-row {
     min-width: 25px;
     height: 25px;
     font-size: 0.9rem;
   }
 
-  .heatmap-letter {
+  .telemetry-page .heatmap-letter {
     height: 25px;
     font-size: 1rem;
   }
 
   /* Ensure tonight's section stays stacked on small screens */
-  .tonight-section {
+  .telemetry-page .tonight-section {
     flex-direction: column;
     gap: 1rem;
   }
 
   /* Ensure all-time section stays stacked on small screens */
-  .alltime-section {
+  .telemetry-page .alltime-section {
     flex-direction: column;
     gap: 1rem;
   }
 }
 
 /* Back button styling */
-.back-button {
+.telemetry-page .back-button {
   background: #42a5f5 !important;
   color: white !important;
 }
 
-.back-button:hover {
+.telemetry-page .back-button:hover {
   background: #1976d2 !important;
 }
 
 /* Sample Data Button Styles */
-.sample-data-button {
+.telemetry-page .sample-data-button {
   background: #ff9800 !important;
   color: white !important;
 }
 
-.sample-data-button:hover {
+.telemetry-page .sample-data-button:hover {
   background: #f57c00 !important;
 }
 
-.sample-data-button.active {
+.telemetry-page .sample-data-button.active {
   background: #4caf50 !important;
 }
 
-.sample-data-button.active:hover {
+.telemetry-page .sample-data-button.active:hover {
   background: #388e3c !important;
 }
