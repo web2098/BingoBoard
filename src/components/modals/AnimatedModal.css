@@ -14,11 +14,75 @@
 
 .animated-modal-content {
   position: relative;
-  width: 90vw;
-  height: 90vh;
+  width: 75vw; /* 75% of viewport width as specified */
+  height: 75vh; /* 75% of viewport height as specified */
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* Modal countdown timer */
+.modal-countdown {
+  position: fixed;
+  top: 50%;
+  right: 30px;
+  transform: translateY(-50%);
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  z-index: 10001;
+}
+
+.countdown-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.countdown-circle-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 4;
+}
+
+.countdown-circle-progress {
+  fill: none;
+  stroke: #ffcc00;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 201.06; /* 2 * π * 32 (radius) */
+  stroke-dashoffset: 0;
+  animation: countdown-progress linear var(--countdown-duration, 3000ms) forwards;
+}
+
+.countdown-number {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes countdown-progress {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 201.06;
+  }
 }
 
 .animated-modal-img {

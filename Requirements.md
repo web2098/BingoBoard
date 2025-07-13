@@ -357,3 +357,62 @@ This page is used to show all telemetry in the current session and long term tel
             - Date it occured
 - The page should have a heat map of all 75 numbers, and their count call, for how often they were called
     - There should be one for the current session, and one for the all time
+
+# Audience Interactions
+- There are 3 audience interactions
+    - Flash Message
+    - Popup Message
+    - Video Message
+- Audience interactions should be defined in a json data file
+- The audience interactions should use the format
+```json
+    {
+        "id": "ID_OF_INTERACTION",
+        "content":{
+            "text": "OPTIONAL_TEXT",
+            "img": "OPTIONAL_IMAGE",
+            "audio": "OPTIONAL_AUDIO"
+        },
+        "icon": {
+            "emoji": "OPTIONAL_EMOJI_ICON",
+            "img": "OPTIONAL_IMG_ICON"
+        },
+        "action": {
+            "function": "FUNCITON_TO_CALL",
+            "args": ["PROPERTY_TO_PASS_TO_ARGS"]
+        },
+        "description": "DESCRIPTION_OF_INTERACTION",
+        "pages": ["LIST_OF_BOARDS_TO_SHOW_ON"],
+        "shortcuts":["ASCII_KEY_LIST_TO_ACTIVATE_ON"]
+    }
+```
+- All Audience interactions should have a semi-transparent black background
+- Flash Message
+    - Defined by having only "text" field in "content"
+    - Flash message should show up for timeout
+    - Timeout is configured as a setting
+    - Clicking should not disable the timeout
+    - At the top right of a page there should be a countdown for the timeout
+    - The coundown should have a circle around the timeout number that rotates counterclockwise until its empty
+    - The flash message should show a text message
+    - The text message should be shown in the middle of the page
+    - The text message should be surronded with a rectangle
+    - The text rectangle should use a color that can be customized by a setting, and be set to #F5F0B9
+    - The text rectangle should have a border color that can be customized by a setting, and be set to #307743
+    - The text rectangle border should have flashing light emojis, or a filled circle that changes back and forth between two colors that can be customized vi a setting. Default to #F5CE17 -> #FFFF00
+- Popup Message
+    - Defined by having only "text" OR "img" field in "content"
+    - A popup message can be text or an image
+    - If it is an image, it should fill the entire page
+    - There should be a an indicator that this page requires clicking on the page, or pressing the shortcut, or escape to make it non-visible
+    ```js
+        <div className="image-modal-close-hint">
+          Click image{closeOnShortcut ? ` or press "${closeOnShortcut.toUpperCase()}"` : ''} to close
+        </div>
+    ```
+- Animated Message
+    - Defined by having only "audio" AND "img" field in "content"
+    - A animated message shows a gif and audio
+    - The message should hide when the audio finishes, or a timeout set to 3.5 seconds
+    - The gif should take up the entire 75% of the page
+

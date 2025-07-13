@@ -1,5 +1,5 @@
-/* Text Modal Styles */
-.text-modal-overlay {
+/* Flash Modal Styles */
+.flash-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -10,40 +10,35 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  cursor: pointer;
+  pointer-events: none; /* Allow clicking to pass through to prevent accidental closure */
 }
 
-.text-modal-content {
+.flash-message-content {
   position: relative;
   text-align: center;
   font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: #000000; /* Dark text on light background */
   padding: 40px;
   max-width: 80vw;
   word-wrap: break-word;
-  cursor: default;
-}
-
-/* Flash Message Specific Styling */
-.text-modal-content.flash-message {
-  background-color: var(--flash-bg-color, #F5F0B9);
-  border: 3px solid var(--flash-border-color, #307743);
+  border: 3px solid;
   border-radius: 8px;
-  color: #000000; /* Dark text on light background */
-  text-shadow: none;
+  pointer-events: auto; /* Re-enable pointer events for the content */
+  cursor: default;
   position: relative;
   overflow: hidden;
 }
 
-.text-modal-content.flash-message::before {
+/* Flashing border animation using pseudo-element */
+.flash-message-content::before {
   content: '';
   position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  border: 4px solid var(--flash-color-1, #F5CE17);
-  border-radius: 12px;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border: 6px solid var(--flash-color-1, #F5CE17);
+  border-radius: 14px;
   animation: flash-border 1s infinite alternate;
   z-index: -1;
 }
@@ -51,20 +46,19 @@
 @keyframes flash-border {
   0% {
     border-color: var(--flash-color-1, #F5CE17);
-    box-shadow: 0 0 10px var(--flash-color-1, #F5CE17);
+    box-shadow: 0 0 15px var(--flash-color-1, #F5CE17);
   }
   100% {
     border-color: var(--flash-color-2, #FFFF00);
-    box-shadow: 0 0 10px var(--flash-color-2, #FFFF00);
+    box-shadow: 0 0 15px var(--flash-color-2, #FFFF00);
   }
 }
 
-/* Modal countdown timer */
-.modal-countdown {
+/* Countdown timer positioned at top right */
+.flash-countdown {
   position: fixed;
-  top: 50%;
+  top: 30px;
   right: 30px;
-  transform: translateY(-50%);
   width: 70px;
   height: 70px;
   display: flex;
@@ -124,60 +118,86 @@
 }
 
 /* Font size variations */
-.text-modal-content.small {
+.flash-message-content.small {
   font-size: 2rem;
 }
 
-.text-modal-content.medium {
+.flash-message-content.medium {
   font-size: 3rem;
 }
 
-.text-modal-content.large {
+.flash-message-content.large {
   font-size: 4rem;
 }
 
-.text-modal-content.xlarge {
+.flash-message-content.xlarge {
   font-size: 6rem;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .text-modal-content.small {
+  .flash-countdown {
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    font-size: 1.4rem;
+  }
+
+  .countdown-number {
+    width: 40px;
+    height: 40px;
+  }
+
+  .flash-message-content.small {
     font-size: 1.5rem;
   }
 
-  .text-modal-content.medium {
+  .flash-message-content.medium {
     font-size: 2rem;
   }
 
-  .text-modal-content.large {
+  .flash-message-content.large {
     font-size: 2.5rem;
   }
 
-  .text-modal-content.xlarge {
+  .flash-message-content.xlarge {
     font-size: 3.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .text-modal-content {
+  .flash-message-content {
     padding: 20px;
     max-width: 90vw;
   }
 
-  .text-modal-content.small {
+  .flash-countdown {
+    top: 15px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
     font-size: 1.2rem;
   }
 
-  .text-modal-content.medium {
+  .countdown-number {
+    width: 35px;
+    height: 35px;
+  }
+
+  .flash-message-content.small {
+    font-size: 1.2rem;
+  }
+
+  .flash-message-content.medium {
     font-size: 1.5rem;
   }
 
-  .text-modal-content.large {
+  .flash-message-content.large {
     font-size: 2rem;
   }
 
-  .text-modal-content.xlarge {
+  .flash-message-content.xlarge {
     font-size: 2.5rem;
   }
 }

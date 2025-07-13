@@ -21,9 +21,6 @@ import {
   getBoardHighlightColor
 } from '../../utils/settings';
 
-// Import modal components
-import { TextModal, ImageModal, AnimatedModal } from '../../components/modals';
-
 // Import centralized asset mapping
 import { getMappedAsset } from '../../utils/assetMapping';
 
@@ -167,10 +164,7 @@ const AudienceInteractions: React.FC<AudienceInteractionsProps> = ({ onChange })
   const [autoEnabled, setAutoEnabled] = useState<boolean>(false);
   const [audienceInteractions, setAudienceInteractions] = useState<any[]>([]);
 
-  // Modal states
-  const [textModalVisible, setTextModalVisible] = useState<boolean>(false);
-  const [imageModalVisible, setImageModalVisible] = useState<boolean>(false);
-  const [animatedModalVisible, setAnimatedModalVisible] = useState<boolean>(false);
+  // Modal states - removed since we use global showAudienceInteraction
 
   useEffect(() => {
     // Load audience interactions
@@ -286,54 +280,21 @@ const AudienceInteractions: React.FC<AudienceInteractionsProps> = ({ onChange })
   const handlePreview = () => {
     if (!selectedInteractionData) return;
 
-    const hasText = selectedInteractionData.content?.text || interactionText;
-    const hasImage = selectedInteractionData.content?.img;
-    const hasAudio = selectedInteractionData.content?.audio;
-
-    // Check if this is a dual-support interaction (has both text and image)
-    if (hasText && hasImage && !hasAudio) {
-      // Check the {id}_enableImage setting to determine which modal to show
-      const currentSettings = JSON.parse(localStorage.getItem('bingoSettings') || '{}');
-      const imageKey = `${selectedInteractionData.id}_enableImage`;
-      const enableImage = currentSettings[imageKey] || false;
-
-      if (enableImage) {
-        // Show image modal
-        setImageModalVisible(true);
-      } else {
-        // Show text modal
-        setTextModalVisible(true);
+    // Create a preview interaction object with current settings
+    const previewInteraction = {
+      ...selectedInteractionData,
+      content: {
+        ...selectedInteractionData.content,
+        text: interactionText || selectedInteractionData.content?.text
       }
-      return;
+    };
+
+    // Use the global showAudienceInteraction function
+    if ((window as any).showAudienceInteraction) {
+      (window as any).showAudienceInteraction(previewInteraction);
+    } else {
+      console.warn('AudienceInteractionModalManager not available');
     }
-
-    // Original logic for single-content interactions
-    if (hasText && !hasImage) {
-      // Text-only modal
-      setTextModalVisible(true);
-    } else if (hasImage && !hasAudio && !hasText) {
-      // Image-only modal
-      setImageModalVisible(true);
-    } else if (hasImage && hasAudio) {
-      // Animated modal with audio
-      setAnimatedModalVisible(true);
-    }
-  };
-
-  const getPreviewText = () => {
-    if (interactionText) return interactionText;
-    if (selectedInteractionData?.content?.text) return selectedInteractionData.content.text;
-    return 'Preview';
-  };
-
-  const getMappedImageSrc = () => {
-    if (!selectedInteractionData?.content?.img) return '';
-    return getMappedAsset(selectedInteractionData.content.img);
-  };
-
-  const getMappedAudioSrc = () => {
-    if (!selectedInteractionData?.content?.audio) return '';
-    return getMappedAsset(selectedInteractionData.content.audio);
   };
 
   const renderContent = () => {
@@ -486,40 +447,6 @@ const AudienceInteractions: React.FC<AudienceInteractionsProps> = ({ onChange })
       </div>
 
       {renderContent()}
-
-      {/* Modal Components */}
-      <TextModal
-        isVisible={textModalVisible}
-        text={getPreviewText()}
-        timeout={3000}
-        fontSize="xlarge"
-        onClose={() => setTextModalVisible(false)}
-      />
-
-      <ImageModal
-        isVisible={imageModalVisible}
-        imageSrc={getMappedImageSrc()}
-        alt={selectedInteractionData?.description || 'Interaction Image'}
-        closeOnShortcut={selectedInteractionData?.shortcuts?.[0]}
-        onClose={() => setImageModalVisible(false)}
-      />
-
-      <AnimatedModal
-        isVisible={animatedModalVisible}
-        imageSrc={getMappedImageSrc()}
-        audioSrc={getMappedAudioSrc()}
-        alt={selectedInteractionData?.description || 'Animated Interaction'}
-        timeout={6000}
-        autoPlay={(() => {
-          if (!selectedInteractionData?.content?.audio) return false;
-          const currentSettings = JSON.parse(localStorage.getItem('bingoSettings') || '{}');
-          const audioKey = `${selectedInteractionData.id}_enableAudio`;
-          const individualAudioEnabled = currentSettings[audioKey] !== undefined ? currentSettings[audioKey] : true;
-          const globalSoundEffects = currentSettings.soundEffects !== undefined ? currentSettings.soundEffects : true;
-          return individualAudioEnabled && globalSoundEffects;
-        })()}
-        onClose={() => setAnimatedModalVisible(false)}
-      />
     </div>
   );
 };

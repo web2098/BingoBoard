@@ -44,3 +44,10 @@ declare module '*.webp' {
   const src: string;
   export default src;
 }
+
+// Global function declarations
+declare global {
+  interface Window {
+    showAudienceInteraction: (interaction: any) => void;
+  }
+}

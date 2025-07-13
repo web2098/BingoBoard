@@ -192,6 +192,46 @@
     "default": 5000
   },
   {
+    "section": "Audience Interactions",
+    "Label": "Flash Message Timeout (seconds)",
+    "id": "flashMessageTimeout",
+    "description": "How long flash messages are displayed before automatically closing",
+    "type": "number",
+    "default": 3
+  },
+  {
+    "section": "Audience Interactions",
+    "Label": "Flash Message Background Color",
+    "id": "flashMessageBackgroundColor",
+    "description": "Background color for the flash message rectangle",
+    "type": "colorpicker",
+    "default": "#F5F0B9"
+  },
+  {
+    "section": "Audience Interactions",
+    "Label": "Flash Message Border Color",
+    "id": "flashMessageBorderColor",
+    "description": "Border color for the flash message rectangle",
+    "type": "colorpicker",
+    "default": "#307743"
+  },
+  {
+    "section": "Audience Interactions",
+    "Label": "Flash Message Animation Color 1",
+    "id": "flashMessageAnimationColor1",
+    "description": "First color for the flashing border animation",
+    "type": "colorpicker",
+    "default": "#F5CE17"
+  },
+  {
+    "section": "Audience Interactions",
+    "Label": "Flash Message Animation Color 2",
+    "id": "flashMessageAnimationColor2",
+    "description": "Second color for the flashing border animation",
+    "type": "colorpicker",
+    "default": "#FFFF00"
+  },
+  {
     "section": "Website Version",
     "Label": "Default Version",
     "id": "defaultVersion",

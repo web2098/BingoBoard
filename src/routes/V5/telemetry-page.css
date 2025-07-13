@@ -8,6 +8,7 @@
 .telemetry-page .telemetry-content {
   flex: 1;
   padding: 2rem;
+  padding-top: .3rem;
   margin-left: 80px; /* Account for sidebar */
   max-width: calc(100vw - 80px);
   overflow-x: auto;
@@ -35,12 +36,21 @@
   margin-bottom: 1rem;
 }
 
+/* Embedded Summary Cards - 2x2 Grid */
+.telemetry-page .summary-section-embedded {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
 .telemetry-page .summary-card {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   border-left: 4px solid #42a5f5;
+  padding: 1rem;
 }
 
 .telemetry-page .summary-card h3 {
@@ -96,34 +106,11 @@
   padding-bottom: 0.5rem;
 }
 
-.telemetry-page .number-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 60px);
-  gap: 1.5rem;
-  justify-content: start;
-}
-
-.telemetry-page .number-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.3rem 0.5rem;
-  background: #f8f9fa;
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  white-space: nowrap;
-  width: 100%;
-}
-
-.telemetry-page .number-item .number {
-  font-weight: bold;
+.telemetry-page .number-text-list {
+  font-size: 1rem;
+  line-height: 1.6;
   color: #333;
-  font-size: 1.1rem;
-}
-
-.telemetry-page .number-item .count {
-  font-size: 0.9rem;
-  color: #666;
+  word-wrap: break-word;
 }
 
 /* Games Table */
@@ -245,7 +232,7 @@
 
 .telemetry-page .heatmap-container {
   background: white;
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
@@ -431,11 +418,18 @@
   min-height: 400px;
 }
 
-/* All Time Section - Side by Side Layout */
+/* All Time Section - Updated Layout */
 .telemetry-page .alltime-section {
   display: flex;
+  flex-direction: column;
   gap: 2rem;
   margin-bottom: 3rem;
+}
+
+/* Top section - Numbers and Heatmap side by side */
+.telemetry-page .alltime-numbers-section {
+  display: flex;
+  gap: 2rem;
   align-items: flex-start;
 }
 
@@ -446,8 +440,15 @@
   gap: 0;
 }
 
-.telemetry-page .alltime-games {
+.telemetry-page .alltime-heatmap {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bottom section - Games table full width */
+.telemetry-page .alltime-games-full {
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -458,10 +459,11 @@
   font-size: 1.3rem;
 }
 
-/* Ensure equal height for both sides */
-.telemetry-page .alltime-numbers,
+/* Remove old styles that are no longer needed */
 .telemetry-page .alltime-games {
-  min-height: 400px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Session time styling for all games table */
@@ -488,6 +490,11 @@
     gap: 1rem;
   }
 
+  .telemetry-page .summary-section-embedded {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
   .telemetry-page .stat-number {
     font-size: 2rem;
   }
@@ -495,10 +502,6 @@
   .telemetry-page .stats-row {
     flex-direction: column;
     gap: 1rem;
-  }
-
-  .telemetry-page .number-grid {
-    grid-template-columns: repeat(auto-fill, 50px);
   }
 
   .telemetry-page .games-table-container {
@@ -527,13 +530,13 @@
   }
 
   /* Stack all-time section vertically on mobile */
-  .telemetry-page .alltime-section {
+  .telemetry-page .alltime-numbers-section {
     flex-direction: column;
     gap: 1rem;
   }
 
   .telemetry-page .alltime-numbers,
-  .telemetry-page .alltime-games {
+  .telemetry-page .alltime-heatmap {
     min-height: auto;
   }
 }
@@ -546,6 +549,10 @@
   }
 
   .telemetry-page .summary-section {
+    grid-template-columns: 1fr;
+  }
+
+  .telemetry-page .summary-section-embedded {
     grid-template-columns: 1fr;
   }
 
@@ -566,8 +573,8 @@
     gap: 1rem;
   }
 
-  /* Ensure all-time section stays stacked on small screens */
-  .telemetry-page .alltime-section {
+  /* Ensure all-time numbers and heatmap stay stacked on small screens */
+  .telemetry-page .alltime-numbers-section {
     flex-direction: column;
     gap: 1rem;
   }

@@ -216,7 +216,7 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
   ];
 
   // Number heat map component
-  const NumberHeatMap = ({ numberCounts, title }: { numberCounts: { [key: number]: number }, title: string }) => {
+  const NumberHeatMap = ({ numberCounts }: { numberCounts: { [key: number]: number } }) => {
     const maxCount = Math.max(...Object.values(numberCounts));
     const letters = ['B', 'I', 'N', 'G', 'O'];    // Get color settings for each letter and highlight color
     const letterColors = {
@@ -230,7 +230,6 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
 
     return (
       <div className="heatmap-container">
-        <h3>{title}</h3>
         <div className="heatmap-grid-rows">
           {letters.map((letter, letterIndex) => (
             <div key={letter} className="heatmap-row">
@@ -297,12 +296,11 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
   const NumberList = ({ numbers, title }: { numbers: Array<{ number: number, count: number }>, title: string }) => (
     <div className="number-list">
       <h4>{title}</h4>
-      <div className="number-grid">
-        {numbers.map(({ number, count }: { number: number, count: number }) => (
-          <div key={number} className="number-item">
-            <span className="number">{number}</span>
-            <span className="count">({count})</span>
-          </div>
+      <div className="number-text-list">
+        {numbers.map(({ number, count }: { number: number, count: number }, index: number) => (
+          <span key={number}>
+            {number}({count}){index < numbers.length - 1 ? ', ' : ''}
+          </span>
         ))}
       </div>
     </div>
@@ -316,33 +314,33 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
       />
 
       <div className="telemetry-content">
-        {/* Summary Stats */}
-        <div className="summary-section">
-          <div className="summary-card">
-            <h3>Games This Session</h3>
-            <div className="stat-number">{activeTonightStats?.totalGames || 0}</div>
-          </div>
-          <div className="summary-card">
-            <h3>Games All Time</h3>
-            <div className="stat-number">{activeLongTermStats.totalGamesPlayed}</div>
-          </div>
-          <div className="summary-card">
-            <h3>Numbers Called All Time</h3>
-            <div className="stat-number">{
-              activeLongTermStats.numberCallFrequency ?
-                Object.values(activeLongTermStats.numberCallFrequency).reduce((sum: number, count: unknown) => sum + (count as number), 0) : 0
-            }</div>
-          </div>
-          <div className="summary-card">
-            <h3>Numbers Called Tonight</h3>
-            <div className="stat-number">{activeTonightStats?.totalNumbersCalled || 0}</div>
-          </div>
-        </div>
-
         {/* Tonight's Stats and Games Side by Side */}
         <div className="tonight-section">
-          {/* Left Side - Tonight's Numbers */}
+          {/* Left Side - Summary Cards and Tonight's Numbers */}
           <div className="tonight-numbers">
+            {/* Summary Stats - 2x2 Grid */}
+            <div className="summary-section-embedded">
+              <div className="summary-card">
+                <h3>Games This Session</h3>
+                <div className="stat-number">{activeTonightStats?.totalGames || 0}</div>
+              </div>
+              <div className="summary-card">
+                <h3>Games All Time</h3>
+                <div className="stat-number">{activeLongTermStats.totalGamesPlayed}</div>
+              </div>
+              <div className="summary-card">
+                <h3>Numbers Called All Time</h3>
+                <div className="stat-number">{
+                  activeLongTermStats.numberCallFrequency ?
+                    Object.values(activeLongTermStats.numberCallFrequency).reduce((sum: number, count: unknown) => sum + (count as number), 0) : 0
+                }</div>
+              </div>
+              <div className="summary-card">
+                <h3>Numbers Called Tonight</h3>
+                <div className="stat-number">{activeTonightStats?.totalNumbersCalled || 0}</div>
+              </div>
+            </div>
+
             <div className="stats-group">
               <h3>Tonight's Numbers</h3>
               <div className="stats-row">
@@ -436,10 +434,9 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
             </div>
 
             {/* Tonight's Heatmap moved here */}
-            <div style={{ marginTop: '2rem' }}>
+            <div style={{ marginTop: '1rem' }}>
               <NumberHeatMap
                 numberCounts={tonightStats_calc.numberCounts}
-                title="Tonight's Session"
               />
             </div>
           </div>
@@ -451,29 +448,30 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
             <h2>All Time Statistics</h2>
           </div>
           <div className="alltime-section">
-            {/* Left Side - All Time Numbers and Heatmap */}
-            <div className="alltime-numbers">
-              <div className="stats-group">
-                <h3>All Time Numbers</h3>
-                <div className="stats-row">
-                  <NumberList numbers={allTimeStats_calc.top10} title="Top 10 Called" />
-                  <NumberList numbers={allTimeStats_calc.bottom10} title="Bottom 10 Called" />
-                  {allTimeStats_calc.notCalled.length > 0 && (
-                    <NumberList numbers={allTimeStats_calc.notCalled} title="Not Called" />
-                  )}
+            {/* Top Section - All Time Numbers and Heatmap Side by Side */}
+            <div className="alltime-numbers-section">
+              <div className="alltime-numbers">
+                <div className="stats-group">
+                  <h3>All Time Numbers</h3>
+                  <div className="stats-row">
+                    <NumberList numbers={allTimeStats_calc.top10} title="Top 10 Called" />
+                    <NumberList numbers={allTimeStats_calc.bottom10} title="Bottom 10 Called" />
+                    {allTimeStats_calc.notCalled.length > 0 && (
+                      <NumberList numbers={allTimeStats_calc.notCalled} title="Not Called" />
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div style={{ marginTop: '2rem' }}>
+              <div className="alltime-heatmap">
                 <NumberHeatMap
                   numberCounts={allTimeStats_calc.numberCounts}
-                  title="All Time"
                 />
               </div>
             </div>
 
-            {/* Right Side - All Games Table */}
-            <div className="alltime-games">
+            {/* Bottom Section - All Games Table (Full Width) */}
+            <div className="alltime-games-full">
               <div className="games-table-container">
                 <table className="games-table">
                   <thead>

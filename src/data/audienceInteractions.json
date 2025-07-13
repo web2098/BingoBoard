@@ -3,10 +3,6 @@
         "id": "applause",
         "content":{"text": "Applause"},
         "icon": {"emoji": "👏"},
-        "action": {
-            "function": "showAudienceInteraction",
-            "args": ["audienceApplause"]
-        },
         "description": "Show Audience Applause Modal",
         "pages": ["select-game", "game-board"],
         "shortcuts":["a", "1"]
@@ -15,10 +11,6 @@
         "id": "boo",
         "content":{"text": "Booooooo"},
         "icon": {"emoji": "👻"},
-        "action": {
-            "function": "showAudienceInteraction",
-            "args": ["audienceBoo"]
-        },
         "description": "Show Audience Boo Modal",
         "pages": ["select-game", "game-board"],
         "shortcuts":["b", "2"]
@@ -27,10 +19,6 @@
         "id": "drink",
         "content":{"text": "Drink"},
         "icon": {"emoji": "🍺"},
-        "action": {
-            "function": "showAudienceInteraction",
-            "args": ["audienceDrink"]
-        },
         "description": "Show Audience Drink Modal",
         "pages": ["select-game", "game-board"],
         "shortcuts":["d", "3"]
@@ -39,10 +27,6 @@
         "id": "welcomeCard",
         "content":{"text": "Welcome Card"},
         "icon": {"emoji": "👋"},
-        "action": {
-            "function": "showWelcomeCard",
-            "args": ["welcomeModal"]
-        },
         "description": "Show Welcome Card Modal",
         "pages": ["select-game"],
         "shortcuts":["h", "0"]
@@ -51,10 +35,6 @@
         "id": "winner",
         "content":{"text": "Winner"},
         "icon": {"emoji": "🎉"},
-        "action": {
-            "function": "showAudienceInteraction",
-            "args": ["audienceWinner"]
-        },
         "description": "Show Winner Applause Modal",
         "pages": ["game-board"],
         "shortcuts":["w", "4"]
@@ -66,10 +46,6 @@
             "text": "To The Death!",
             "img": "/images/audience-interactions/battle.jpg"
         },
-        "action": {
-            "function": "showBattleToTheDeath",
-            "args": ["enableGraphicBattleImagery"]
-        },
         "description": "Show Audience Battle Modal",
         "pages": ["game-board"],
         "shortcuts":["x", "5"]
@@ -80,10 +56,6 @@
         "content":{
             "img": "/images/audience-interactions/order66.gif",
             "audio": "/audio/audience-interactions/order66.mp3"
-        },
-        "action": {
-            "function": "executeOrder66",
-            "args": ["soundEffects"]
         },
         "auto":{
             "number": 66

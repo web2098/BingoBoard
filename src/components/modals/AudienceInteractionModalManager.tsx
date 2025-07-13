@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { TextModal, ImageModal, AnimatedModal } from '../modals';
+import { FlashModal, PopupModal, AnimatedModal } from '../modals';
+import { getSetting } from '../../utils/settings';
 
 // Import the assets
 import battleImg from '../../assets/images/audience-interactions/battle.jpg';
@@ -18,28 +19,33 @@ interface AudienceInteractionModalManagerProps {
 }
 
 const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerProps> = ({ children }) => {
-  const [textModal, setTextModal] = useState<{
+  const [flashModal, setFlashModal] = useState<{
     isVisible: boolean;
     text: string;
     timeout?: number;
     fontSize?: 'small' | 'medium' | 'large' | 'xlarge';
+    backgroundColor?: string;
+    borderColor?: string;
+    animationColors?: [string, string];
   }>({
     isVisible: false,
     text: '',
-    timeout: 3000,
+    timeout: 5000,
     fontSize: 'large'
   });
 
-  const [imageModal, setImageModal] = useState<{
+  const [popupModal, setPopupModal] = useState<{
     isVisible: boolean;
-    imageSrc: string;
+    content: { text?: string; img?: string };
     alt?: string;
     closeOnShortcut?: string;
+    fontSize?: 'small' | 'medium' | 'large' | 'xlarge';
   }>({
     isVisible: false,
-    imageSrc: '',
+    content: {},
     alt: '',
-    closeOnShortcut: undefined
+    closeOnShortcut: undefined,
+    fontSize: 'large'
   });
 
   const [animatedModal, setAnimatedModal] = useState<{
@@ -68,48 +74,53 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
     // Check if this is a dual-support interaction (has both text and image)
     if (hasText && hasImage && !hasAudio) {
       // Check the {id}_enableImage setting to determine which modal to show
-      const currentSettings = JSON.parse(localStorage.getItem('bingoSettings') || '{}');
       const imageKey = `${interaction.id}_enableImage`;
-      const enableImage = currentSettings[imageKey] || false;
+      const enableImage = getSetting(imageKey, false);
 
-      if (enableImage) {
-        // Show image modal
-        const mappedImage = assetMap[interaction.content.img] || interaction.content.img;
-        setImageModal({
-          isVisible: true,
-          imageSrc: mappedImage,
-          alt: interaction.description,
-          closeOnShortcut: shortcuts[0]
-        });
-      } else {
-        // Show text modal
-        setTextModal({
-          isVisible: true,
-          text: customText || interaction.content.text,
-          timeout: 3000,
-          fontSize: 'xlarge'
-        });
-      }
+      // Show popup modal with image
+      const mappedImage = assetMap[interaction.content.img] || interaction.content.img;
+      setPopupModal({
+        isVisible: true,
+        content: {
+          img: enableImage ? mappedImage : undefined,
+          text: customText || interaction.content?.text
+        },
+        alt: interaction.description,
+        closeOnShortcut: shortcuts[0],
+        fontSize: 'xlarge'
+      });
       return;
     }
 
     // Original logic for single-content interactions
     if (hasText && !hasImage) {
-      // Text-only modal
-      setTextModal({
+      // Text-only modal - use FlashModal instead
+      const timeout = getSetting('flashMessageTimeout', 3) * 1000;
+      const backgroundColor = getSetting('flashMessageBackgroundColor', '#F5F0B9');
+      const borderColor = getSetting('flashMessageBorderColor', '#307743');
+      const animationColor1 = getSetting('flashMessageAnimationColor1', '#F5CE17');
+      const animationColor2 = getSetting('flashMessageAnimationColor2', '#FFFF00');
+
+      setFlashModal({
         isVisible: true,
         text: customText || interaction.content.text,
-        timeout: 3000,
-        fontSize: 'xlarge'
+        timeout: timeout,
+        fontSize: 'xlarge',
+        backgroundColor: backgroundColor,
+        borderColor: borderColor,
+        animationColors: [animationColor1, animationColor2]
       });
     } else if (hasImage && !hasAudio && !hasText) {
-      // Image-only modal
+      // Image-only modal - use PopupModal
       const mappedImage = assetMap[interaction.content.img] || interaction.content.img;
-      setImageModal({
+      setPopupModal({
         isVisible: true,
-        imageSrc: mappedImage,
+        content: {
+          img: mappedImage
+        },
         alt: interaction.description,
-        closeOnShortcut: shortcuts[0]
+        closeOnShortcut: shortcuts[0],
+        fontSize: 'xlarge'
       });
     } else if (hasImage && hasAudio) {
       // Animated modal with audio
@@ -117,18 +128,18 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
       const mappedAudio = assetMap[interaction.content.audio] || interaction.content.audio;
 
       // Calculate if audio should play (individual setting AND global sound effects)
-      const currentSettings = JSON.parse(localStorage.getItem('bingoSettings') || '{}');
       const audioKey = `${interaction.id}_enableAudio`;
-      const individualAudioEnabled = currentSettings[audioKey] !== undefined ? currentSettings[audioKey] : true;
-      const globalSoundEffects = currentSettings.soundEffects !== undefined ? currentSettings.soundEffects : true;
+      const individualAudioEnabled = getSetting(audioKey, true);
+      const globalSoundEffects = getSetting('soundEffects', true);
       const shouldPlayAudio = individualAudioEnabled && globalSoundEffects;
+      const timeout = getSetting('flashMessageTimeout', 3) * 1000;
 
       setAnimatedModal({
         isVisible: true,
         imageSrc: mappedImage,
         audioSrc: mappedAudio,
         alt: interaction.description,
-        timeout: 6000,
+        timeout: timeout,
         autoPlay: shouldPlayAudio
       });
     }
@@ -146,22 +157,26 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
     <>
       {children}
 
-      {/* Text Modal */}
-      <TextModal
-        isVisible={textModal.isVisible}
-        text={textModal.text}
-        timeout={textModal.timeout}
-        fontSize={textModal.fontSize}
-        onClose={() => setTextModal(prev => ({ ...prev, isVisible: false }))}
+      {/* Flash Modal (replaces TextModal) */}
+      <FlashModal
+        isVisible={flashModal.isVisible}
+        text={flashModal.text}
+        timeout={flashModal.timeout}
+        fontSize={flashModal.fontSize}
+        backgroundColor={flashModal.backgroundColor}
+        borderColor={flashModal.borderColor}
+        animationColors={flashModal.animationColors}
+        onClose={() => setFlashModal(prev => ({ ...prev, isVisible: false }))}
       />
 
-      {/* Image Modal */}
-      <ImageModal
-        isVisible={imageModal.isVisible}
-        imageSrc={imageModal.imageSrc}
-        alt={imageModal.alt}
-        closeOnShortcut={imageModal.closeOnShortcut}
-        onClose={() => setImageModal(prev => ({ ...prev, isVisible: false }))}
+      {/* Popup Modal */}
+      <PopupModal
+        isVisible={popupModal.isVisible}
+        content={popupModal.content}
+        alt={popupModal.alt}
+        closeOnShortcut={popupModal.closeOnShortcut}
+        fontSize={popupModal.fontSize}
+        onClose={() => setPopupModal(prev => ({ ...prev, isVisible: false }))}
       />
 
       {/* Animated Modal */}

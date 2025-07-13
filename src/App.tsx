@@ -12,6 +12,7 @@ import TelemetryPage from './routes/V5/telemetry-page';
 import ErrorPage from "./routes/error-page";
 import { getSetting } from './utils/settings';
 import { getVersionRoute, getVersionConfig, getAvailableVersions } from './config/versions';
+import { AudienceInteractionModalManager } from './components/modals';
 
 // Component to handle version-based redirection
 function VersionRedirect() {
@@ -116,7 +117,9 @@ export default function MyApp() {
   const router = createBrowserRouter(routes);
 
   return (
-    <RouterProvider router={router} />
+    <AudienceInteractionModalManager>
+      <RouterProvider router={router} />
+    </AudienceInteractionModalManager>
   );
 }
 

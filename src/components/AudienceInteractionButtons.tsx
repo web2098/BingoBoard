@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import audienceInteractionsData from '../data/audienceInteractions.json';
-import { TextModal, ImageModal, AnimatedModal, WelcomeModal } from './modals';
 import { getMappedAsset } from '../utils/assetMapping';
 import { recordAudienceWinner } from '../utils/telemetry';
 import './AudienceInteractionButtons.css';
@@ -15,10 +14,6 @@ interface AudienceInteraction {
   icon: {
     emoji?: string;
     img?: string;
-  };
-  action: {
-    function: string;
-    args: string[];
   };
   auto?: {
     number: number;
@@ -39,17 +34,6 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
 }) => {
   const [interactions, setInteractions] = useState<AudienceInteraction[]>([]);
 
-  // Modal states
-  const [textModal, setTextModal] = useState({ isVisible: false, text: '' });
-  const [imageModal, setImageModal] = useState({ isVisible: false, imageSrc: '', text: '' });
-  const [animatedModal, setAnimatedModal] = useState({
-    isVisible: false,
-    imageSrc: '',
-    audioSrc: '',
-    alt: ''
-  });
-  const [welcomeModal, setWelcomeModal] = useState({ isVisible: false });
-
   useEffect(() => {
     // Filter interactions for current page
     const pageInteractions = audienceInteractionsData.filter(
@@ -59,84 +43,18 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
   }, [currentPage]);
 
   const handleInteractionClick = React.useCallback((interaction: AudienceInteraction) => {
-    console.log(`Triggered interaction: ${interaction.id}`, interaction);
-
     // Record winner if this is a winner interaction
     if (interaction.id === 'winner') {
       recordAudienceWinner();
     }
 
-    // Use proper modals based on interaction type
-    switch (interaction.action.function) {
-      case 'showAudienceInteraction':
-        showTextModal(interaction.content.text || interaction.description);
-        break;
-      case 'showBattleToTheDeath':
-        if (imageModal.isVisible) {
-          // If modal is already visible, close it
-          closeImageModal();
-        } else {
-          // If modal is not visible, show it
-          if (interaction.content.img) {
-            showImageModal(interaction.content.img, interaction.content.text);
-          } else {
-            showTextModal(interaction.content.text || interaction.description);
-          }
-        }
-        break;
-      case 'executeOrder66':
-        showAnimatedModal(interaction);
-        break;
-      case 'showWelcomeCard':
-        if (welcomeModal.isVisible) {
-          // If modal is already visible, close it
-          closeWelcomeModal();
-        } else {
-          // If modal is not visible, show it
-          showWelcomeModal();
-        }
-        break;
-      default:
-        console.log('Unknown interaction function:', interaction.action.function);
+    // Use the global showAudienceInteraction function
+    if ((window as any).showAudienceInteraction) {
+      (window as any).showAudienceInteraction(interaction);
+    } else {
+      console.warn('AudienceInteractionModalManager not available');
     }
-  }, [imageModal.isVisible, welcomeModal.isVisible]);
-
-  // Modal handler functions
-  const showTextModal = (text: string) => {
-    setTextModal({ isVisible: true, text });
-  };
-
-  const showImageModal = (imageSrc: string, text?: string) => {
-    setImageModal({
-      isVisible: true,
-      imageSrc: getMappedAsset(imageSrc),
-      text: text || ''
-    });
-  };
-
-  const showAnimatedModal = (interaction: AudienceInteraction) => {
-    setAnimatedModal({
-      isVisible: true,
-      imageSrc: getMappedAsset(interaction.content.img || ''),
-      audioSrc: getMappedAsset(interaction.content.audio || ''),
-      alt: interaction.description
-    });
-  };
-
-  const showWelcomeModal = () => {
-    setWelcomeModal({ isVisible: true });
-  };
-
-  // Modal close handlers
-  const closeTextModal = () => setTextModal({ isVisible: false, text: '' });
-  const closeImageModal = () => setImageModal({ isVisible: false, imageSrc: '', text: '' });
-  const closeAnimatedModal = () => setAnimatedModal({
-    isVisible: false,
-    imageSrc: '',
-    audioSrc: '',
-    alt: ''
-  });
-  const closeWelcomeModal = () => setWelcomeModal({ isVisible: false });
+  }, []);
 
   useEffect(() => {
     // Set up keyboard shortcuts
@@ -192,39 +110,6 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
           </button>
         ))}
       </div>
-
-      {/* Modal Components */}
-      <TextModal
-        isVisible={textModal.isVisible}
-        text={textModal.text}
-        onClose={closeTextModal}
-        fontSize="xlarge"
-        timeout={3000}
-      />
-
-      <ImageModal
-        isVisible={imageModal.isVisible}
-        imageSrc={imageModal.imageSrc}
-        alt={imageModal.text || "Audience Interaction"}
-        onClose={closeImageModal}
-        closeOnShortcut="esc"
-      />
-
-      <AnimatedModal
-        isVisible={animatedModal.isVisible}
-        imageSrc={animatedModal.imageSrc}
-        audioSrc={animatedModal.audioSrc}
-        alt={animatedModal.alt}
-        onClose={closeAnimatedModal}
-        timeout={6000}
-        autoPlay={true}
-      />
-
-      <WelcomeModal
-        isVisible={welcomeModal.isVisible}
-        onClose={closeWelcomeModal}
-        timeout={0}
-      />
     </>
   );
 };

@@ -22,8 +22,6 @@ export interface SettingsSection {
 }
 
 const SETTINGS_STORAGE_KEY = 'bingoSettings';
-const SETTINGS_VERSION_KEY = 'bingoSettingsVersion';
-const CURRENT_SETTINGS_VERSION = '2.0.0';
 
 /**
  * Get settings properties from JSON data
@@ -83,18 +81,15 @@ export function buildSectionsFromProperties(): SettingsSection[] {
 export function getSettings(): { [key: string]: any } {
   try {
     const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
-    const savedVersion = localStorage.getItem(SETTINGS_VERSION_KEY);
 
-    // If no saved settings or version mismatch, return defaults
-    if (!savedSettings || savedVersion !== CURRENT_SETTINGS_VERSION) {
-      return getDefaultSettings();
-    }
-
-    const parsed = JSON.parse(savedSettings);
+    const parsed = JSON.parse(savedSettings ? savedSettings : '{}');
+    console.log(`Returning settings from localStorage:`, parsed);
 
     // Merge with defaults to ensure all settings exist
     const defaults = getDefaultSettings();
-    return { ...defaults, ...parsed };
+    const f = { ...defaults, ...parsed };
+    console.log(`Returning settings from localStorage:`, f);
+    return f;
   } catch (error) {
     console.error('Error loading settings:', error);
     return getDefaultSettings();
@@ -129,7 +124,6 @@ export function getDefaultSettings(): { [key: string]: any } {
 export function saveSettings(settings: { [key: string]: any }): boolean {
   try {
     localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
-    localStorage.setItem(SETTINGS_VERSION_KEY, CURRENT_SETTINGS_VERSION);
 
     // Dispatch custom event to notify components of settings change
     window.dispatchEvent(new CustomEvent('bingoSettingsChanged', { detail: { action: 'save', settings } }));
@@ -147,7 +141,6 @@ export function saveSettings(settings: { [key: string]: any }): boolean {
 export function resetSettings(): boolean {
   try {
     localStorage.removeItem(SETTINGS_STORAGE_KEY);
-    localStorage.removeItem(SETTINGS_VERSION_KEY);
 
     // Dispatch custom event to notify components of settings reset
     window.dispatchEvent(new CustomEvent('bingoSettingsChanged', { detail: { action: 'reset' } }));
@@ -505,7 +498,6 @@ export function formatDebugSettings(settings: { [key: string]: any }): string {
   const debugInfo = {
     settingsCount: Object.keys(settings).length,
     lastModified: new Date().toISOString(),
-    version: localStorage.getItem(SETTINGS_VERSION_KEY) || 'unknown',
     settings: settings
   };
 

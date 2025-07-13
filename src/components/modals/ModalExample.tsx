@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextModal, ImageModal, AnimatedModal } from './index';
+import { FlashModal, PopupModal, AnimatedModal } from './index';
 
 // Import the assets we moved to src/assets
 import battleImg from '../../assets/images/audience-interactions/battle.jpg';
@@ -7,8 +7,8 @@ import order66Gif from '../../assets/images/audience-interactions/order66.gif';
 import order66Audio from '../../assets/audio/audience-interactions/order66.mp3';
 
 const ModalExample: React.FC = () => {
-  const [textModalVisible, setTextModalVisible] = useState(false);
-  const [imageModalVisible, setImageModalVisible] = useState(false);
+  const [flashModalVisible, setFlashModalVisible] = useState(false);
+  const [popupModalVisible, setPopupModalVisible] = useState(false);
   const [animatedModalVisible, setAnimatedModalVisible] = useState(false);
 
   return (
@@ -16,12 +16,12 @@ const ModalExample: React.FC = () => {
       <h2>Modal Components Demo</h2>
 
       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-        <button onClick={() => setTextModalVisible(true)}>
-          Show Text Modal
+        <button onClick={() => setFlashModalVisible(true)}>
+          Show Flash Modal
         </button>
 
-        <button onClick={() => setImageModalVisible(true)}>
-          Show Image Modal
+        <button onClick={() => setPopupModalVisible(true)}>
+          Show Popup Modal
         </button>
 
         <button onClick={() => setAnimatedModalVisible(true)}>
@@ -29,23 +29,24 @@ const ModalExample: React.FC = () => {
         </button>
       </div>
 
-      {/* Text Modal Example */}
-      <TextModal
-        isVisible={textModalVisible}
+      {/* Flash Modal Example */}
+      <FlashModal
+        isVisible={flashModalVisible}
         text="APPLAUSE!"
         timeout={3000}
-        onClose={() => setTextModalVisible(false)}
+        onClose={() => setFlashModalVisible(false)}
         fontSize="xlarge"
-        textColor="#ffffff"
       />
 
-      {/* Image Modal Example */}
-      <ImageModal
-        isVisible={imageModalVisible}
-        imageSrc={battleImg}
+      {/* Popup Modal Example */}
+      <PopupModal
+        isVisible={popupModalVisible}
+        content={{
+          img: battleImg,
+          text: "Battle to the Death!"
+        }}
         alt="Battle to the Death"
-        onClose={() => setImageModalVisible(false)}
-        closeOnShortcut="x"
+        onClose={() => setPopupModalVisible(false)}
       />
 
       {/* Animated Modal Example */}

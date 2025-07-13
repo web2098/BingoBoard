@@ -360,18 +360,20 @@ export const endCurrentSession = (): void => {
 
   // Detect statistical winners before saving
   const statisticalWinners = determineStatisticalWinners(currentSession);
-  currentSession.winners.push(...statisticalWinners);
+
+  // Add statistical winners using priority system
+  for (const statWinner of statisticalWinners) {
+    addWinnerWithPriority(currentSession, statWinner);
+  }
 
   // Add manual winner if game ended with numbers called
   if (numbersCalled > 0) {
-    const hasManualWinner = currentSession.winners.some(w => w.detectionMethod === 'manual');
-    if (!hasManualWinner) {
-      currentSession.winners.push({
-        numberIndex: numbersCalled - 1,
-        detectionMethod: 'manual',
-        timestamp: currentSession.endTime
-      });
-    }
+    const manualWinner: Winner = {
+      numberIndex: numbersCalled - 1,
+      detectionMethod: 'manual',
+      timestamp: currentSession.endTime
+    };
+    addWinnerWithPriority(currentSession, manualWinner);
   }
 
   // Only save to history if at least one number was called
@@ -624,7 +626,7 @@ const determineStatisticalWinners = (session: GameSession): Winner[] => {
   for (const outlier of outliers) {
     const index = timeBetweenNumbers.indexOf(outlier);
     if (index !== -1) {
-      outlierIndices.push(index + 1); // +1 because we're looking at the number after the gap
+      outlierIndices.push(index); // The index represents the number before the gap (the winner)
     }
   }
 
@@ -658,10 +660,14 @@ export const recordManualWinner = (): void => {
     timestamp: new Date()
   };
 
-  currentSession.winners.push(winner);
-  saveCurrentSession(currentSession);
+  const added = addWinnerWithPriority(currentSession, winner);
 
-  console.log('Recorded manual winner at number:', currentSession.numbersCalled.length);
+  if (added) {
+    saveCurrentSession(currentSession);
+    console.log('Recorded manual winner at number:', currentSession.numbersCalled.length);
+  } else {
+    console.log('Manual winner not recorded - higher priority winner already exists');
+  }
 };
 
 /**
@@ -677,10 +683,70 @@ export const recordAudienceWinner = (): void => {
     timestamp: new Date()
   };
 
-  currentSession.winners.push(winner);
-  saveCurrentSession(currentSession);
+  const added = addWinnerWithPriority(currentSession, winner);
 
-  console.log('Recorded audience interaction winner at number:', currentSession.numbersCalled.length);
+  if (added) {
+    saveCurrentSession(currentSession);
+    console.log('Recorded audience interaction winner at number:', currentSession.numbersCalled.length);
+  } else {
+    console.log('Audience interaction winner not recorded - already exists');
+  }
+};
+
+/**
+ * Utility function to add a winner while respecting priority hierarchy
+ * Priority: audience_interaction > statistical_outlier > manual
+ */
+const addWinnerWithPriority = (session: GameSession, newWinner: Winner): boolean => {
+  const { numberIndex, detectionMethod } = newWinner;
+
+  // Find existing winners at the same position
+  const existingWinnersAtPosition = session.winners.filter(w => w.numberIndex === numberIndex);
+
+  if (existingWinnersAtPosition.length === 0) {
+    // No existing winners at this position, safe to add
+    session.winners.push(newWinner);
+    return true;
+  }
+
+  // Check if any existing winner has higher or equal priority
+  const hasAudienceWinner = existingWinnersAtPosition.some(w => w.detectionMethod === 'audience_interaction');
+  const hasStatisticalWinner = existingWinnersAtPosition.some(w => w.detectionMethod === 'statistical_outlier');
+  const hasManualWinner = existingWinnersAtPosition.some(w => w.detectionMethod === 'manual');
+
+  switch (detectionMethod) {
+    case 'audience_interaction':
+      if (hasAudienceWinner) {
+        return false; // Already have audience winner at this position
+      }
+      // Remove lower priority winners at this position
+      session.winners = session.winners.filter(w =>
+        !(w.numberIndex === numberIndex && (w.detectionMethod === 'statistical_outlier' || w.detectionMethod === 'manual'))
+      );
+      session.winners.push(newWinner);
+      return true;
+
+    case 'statistical_outlier':
+      if (hasAudienceWinner || hasStatisticalWinner) {
+        return false; // Already have higher or equal priority winner
+      }
+      // Remove manual winners at this position
+      session.winners = session.winners.filter(w =>
+        !(w.numberIndex === numberIndex && w.detectionMethod === 'manual')
+      );
+      session.winners.push(newWinner);
+      return true;
+
+    case 'manual':
+      if (hasAudienceWinner || hasStatisticalWinner || hasManualWinner) {
+        return false; // Already have higher or equal priority winner
+      }
+      session.winners.push(newWinner);
+      return true;
+
+    default:
+      return false;
+  }
 };
 
 /**
