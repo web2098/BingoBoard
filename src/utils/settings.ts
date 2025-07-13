@@ -83,13 +83,10 @@ export function getSettings(): { [key: string]: any } {
     const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
 
     const parsed = JSON.parse(savedSettings ? savedSettings : '{}');
-    console.log(`Returning settings from localStorage:`, parsed);
 
     // Merge with defaults to ensure all settings exist
     const defaults = getDefaultSettings();
-    const f = { ...defaults, ...parsed };
-    console.log(`Returning settings from localStorage:`, f);
-    return f;
+    return { ...defaults, ...parsed };
   } catch (error) {
     console.error('Error loading settings:', error);
     return getDefaultSettings();
