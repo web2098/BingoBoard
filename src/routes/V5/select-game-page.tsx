@@ -5,6 +5,7 @@ import './select-game-page.css';
 import games from '../../data/games';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
 import QRCode from '../../components/QRCode';
+import { useServerInteraction } from '../../serverInteractions/ServerInteractionContext';
 import { generateWelcomeMessage, getSetting, getBoardHighlightColor, getContrastTextColor } from '../../utils/settings';
 import { switchToNewGame } from '../../utils/telemetry';
 
@@ -225,6 +226,69 @@ const VariantControls = ({
 // Welcome Panel Component
 const WelcomePanel = () => {
   const welcomeText = generateWelcomeMessage();
+  const { isConnected, roomId, connectionError } = useServerInteraction();
+  // Check server settings
+  const serverUrl = getSetting('serverUrl', '');
+  const authToken = getSetting('serverAuthToken', '');
+
+  const hasServerSettings = serverUrl.trim() !== '' && authToken.trim() !== '';
+
+  const renderQRCodeContent = () => {
+    if (!hasServerSettings) {
+      return (
+        <div className="qr-code-message">
+          <div className="status-icon">⚠️</div>
+          <p>Server settings missing</p>
+          <p className="status-detail">Configure server URL and auth token to enable multiplayer</p>
+          <a href="/BingoBoard/settings?expand=bingo-server-settings" className="settings-link">Configure Server Settings</a>
+        </div>
+      );
+    }
+
+    if (connectionError) {
+      return (
+        <div className="qr-code-message error">
+          <div className="status-icon">❌</div>
+          <p>Server connection failed</p>
+          <p className="status-detail">{connectionError}</p>
+          <p className="status-hint">Check if server is running and settings are correct</p>
+        </div>
+      );
+    }
+
+    if (!isConnected) {
+      return (
+        <div className="qr-code-message connecting">
+          <div className="status-icon">🔄</div>
+          <p>Connecting to server...</p>
+          <p className="status-detail">Attempting to establish connection</p>
+        </div>
+      );
+    }
+
+    if (isConnected && roomId) {
+      return (
+        <div className="qr-code-success">
+          <div className="qr-code-container">
+            <QRCode
+              value={`${window.location.origin}/BingoBoard/board?roomId=${roomId}`}
+              size={200}
+              className="game-qr-code"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // Connected but no room ID yet
+    return (
+      <div className="qr-code-message connecting">
+        <div className="status-icon">🔄</div>
+        <p>Setting up room...</p>
+        <p className="status-detail">Connected to server, creating room</p>
+      </div>
+    );
+  };
 
   return (
     <div className="welcome-panel">
@@ -233,14 +297,8 @@ const WelcomePanel = () => {
         <pre className="welcome-template">{welcomeText}</pre>
       </div>
       <div className="qr-code-card">
-        <h4>View On Your Device</h4>
-        <div className="qr-code-container">
-          <QRCode
-            value={`${window.location.origin}/BingoBoard/board`}
-            size={200}
-            className="game-qr-code"
-          />
-        </div>
+        <h4>User Board View</h4>
+        {renderQRCodeContent()}
       </div>
     </div>
   );
@@ -555,6 +613,7 @@ const SelectGamePage = () => {
   const [gameList, setGameList] = useState(games());
   const [settingsUpdateTrigger, setSettingsUpdateTrigger] = useState(0);
   const [highlightColorVersion, setHighlightColorVersion] = useState(0);
+
 
   // Update game list when settings change
   useEffect(() => {

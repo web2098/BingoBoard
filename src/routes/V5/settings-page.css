@@ -109,6 +109,23 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Highlight effect for auto-expanded sections */
+.settings-section.highlight-expanded {
+  animation: expandHighlight 2s ease-out;
+}
+
+@keyframes expandHighlight {
+  0% {
+    background-color: rgba(0, 123, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+  }
+  100% {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 }
 
 .section-header {
@@ -459,6 +476,26 @@
 .auto-save-indicator:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+/* Server Connection Status Styling */
+.server-connection-status {
+  max-width: 300px;
+}
+
+.server-connection-status .status-indicator {
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.server-connection-status .status-indicator:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.server-connection-status .error-details,
+.server-connection-status .config-hint {
+  line-height: 1.4;
 }
 
 /* Responsive Design */
@@ -1219,7 +1256,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  background: #f8f9fa;
+  background: #FFFFFF;
   padding: 12px;
   border-radius: 8px;
   border: 2px solid #e9ecef;
@@ -1244,7 +1281,6 @@
   border-radius: 4px;
   min-width: 32px;
   flex-shrink: 0;
-  border: 1px solid #000000;
   /* Background and color now set dynamically via inline styles */
 }
 

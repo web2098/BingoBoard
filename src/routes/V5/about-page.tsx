@@ -1,21 +1,21 @@
 // About.jsx
 import React from 'react';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
-import './about-page.css';
+import styles from './about-page.module.css';
 
 const About = () => {
   return (
-    <div className="about-page">
+    <div className={styles.aboutPage}>
       <SidebarWithMenu currentPage="about" />
 
-      <div className="about-content">
-        <div className="about-header">
+      <div className={styles.aboutContent}>
+        <div className={styles.aboutHeader}>
           <h1>About Bingo App</h1>
           <p>A modern, interactive bingo game application</p>
         </div>
 
-        <div className="about-sections">
-          <section className="about-section">
+        <div className={styles.aboutSections}>
+          <section className={styles.aboutSection}>
             <h2>Features</h2>
             <ul>
               <li>Multiple game variants and patterns</li>
@@ -26,14 +26,14 @@ const About = () => {
             </ul>
           </section>
 
-          <section className="about-section">
+          <section className={styles.aboutSection}>
             <h2>Version Information</h2>
             <p><strong>Version:</strong> 1.0.0</p>
             <p><strong>Last Updated:</strong> July 2025</p>
             <p><strong>License:</strong> MIT</p>
           </section>
 
-          <section className="about-section">
+          <section className={styles.aboutSection}>
             <h2>Technology Stack</h2>
             <ul>
               <li>React 18 with TypeScript</li>

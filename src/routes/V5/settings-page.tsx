@@ -38,7 +38,88 @@ import {
   getTonightSessionStats
 } from '../../utils/telemetry';
 
+// Import server interaction context
+import { useServerInteraction } from '../../serverInteractions/ServerInteractionContext';
+
 interface SettingsPageProps {}
+
+// Server Connection Status Component
+const ServerConnectionStatus: React.FC = () => {
+  const { isConnected, connectionError, roomId } = useServerInteraction();
+  const serverUrl = getSetting('serverUrl', '');
+  const authToken = getSetting('serverAuthToken', '');
+
+  const hasServerSettings = serverUrl.trim() !== '' && authToken.trim() !== '';
+
+  const getStatusColor = () => {
+    if (!hasServerSettings) return '#6c757d'; // Gray for no settings
+    if (connectionError) return '#dc3545'; // Red for error
+    if (isConnected) return '#28a745'; // Green for connected
+    return '#ffc107'; // Yellow for connecting
+  };
+
+  const getStatusText = () => {
+    if (!hasServerSettings) return 'Not Configured';
+    if (connectionError) return 'Connection Failed';
+    if (isConnected) return roomId ? `Connected (Room: ${roomId})` : 'Connected';
+    return 'Connecting...';
+  };
+
+  const getStatusIcon = () => {
+    if (!hasServerSettings) return '⚙️';
+    if (connectionError) return '❌';
+    if (isConnected) return '✅';
+    return '🔄';
+  };
+
+  return (
+    <div className="server-connection-status">
+      <div
+        className="status-indicator"
+        style={{
+          backgroundColor: getStatusColor(),
+          color: 'white',
+          padding: '8px 12px',
+          borderRadius: '6px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          fontWeight: 'bold',
+          fontSize: '0.9rem'
+        }}
+      >
+        <span>{getStatusIcon()}</span>
+        <span>{getStatusText()}</span>
+      </div>
+      {connectionError && (
+        <div
+          className="error-details"
+          style={{
+            fontSize: '0.8rem',
+            color: '#dc3545',
+            marginTop: '4px',
+            fontStyle: 'italic'
+          }}
+        >
+          {connectionError}
+        </div>
+      )}
+      {!hasServerSettings && (
+        <div
+          className="config-hint"
+          style={{
+            fontSize: '0.8rem',
+            color: '#6c757d',
+            marginTop: '4px',
+            fontStyle: 'italic'
+          }}
+        >
+          Configure server URL and auth token to enable multiplayer
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Color Picker Component with Undo/Redo functionality
 const ColorPickerWithHistory: React.FC<{
@@ -671,6 +752,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
   const [currentSettings, setCurrentSettings] = useState<{ [key: string]: any }>({});
   const [colorVersion, setColorVersion] = useState<number>(0);
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const urlParameterProcessedRef = useRef<boolean>(false);
 
   useEffect(() => {
     // Load settings on component mount
@@ -688,6 +770,58 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
       }
     };
   }, []);
+
+  // Separate effect for handling URL parameters after sections are loaded
+  useEffect(() => {
+    if (settingsSections.length === 0 || urlParameterProcessedRef.current) return; // Wait for sections to be loaded and avoid reprocessing
+
+    // Check for URL parameters to expand specific sections
+    const urlParams = new URLSearchParams(window.location.search);
+    const expandSection = urlParams.get('expand');
+
+    if (expandSection) {
+      console.log('Expand section requested:', expandSection);
+      urlParameterProcessedRef.current = true; // Mark as processed
+
+      // Find and expand the specified section
+      const updatedSections = settingsSections.map(section => {
+        const sectionKey = section.title.toLowerCase().replace(/\s+/g, '-');
+
+        if (sectionKey === expandSection.toLowerCase()) {
+          console.log('Found matching section, expanding:', section.title);
+          return { ...section, collapsed: false };
+        }
+        return section;
+      });
+
+      setSettingsSections(updatedSections);
+
+      // Clear the URL parameter after processing
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('expand');
+      window.history.replaceState({}, '', newUrl.toString());
+
+      // Scroll to the expanded section after a brief delay
+      setTimeout(() => {
+        const targetSection = document.querySelector(`[data-section="${expandSection}"]`);
+        if (targetSection) {
+          // Add highlight class for visual feedback
+          targetSection.classList.add('highlight-expanded');
+
+          targetSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+          });
+
+          // Remove highlight class after animation completes
+          setTimeout(() => {
+            targetSection.classList.remove('highlight-expanded');
+          }, 2000);
+        }
+      }, 100);
+    }
+  }, [settingsSections]); // Run when sections change
 
   // Listen for color setting changes
   useEffect(() => {
@@ -1315,7 +1449,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
               if (section.title === 'Debug Settings') return null;
 
               return (
-                <div key={section.title} className="settings-section">
+                <div key={section.title} className="settings-section" data-section={section.title.toLowerCase().replace(/\s+/g, '-')}>
                   <div
                     className="section-header"
                     onClick={() => toggleSection(sectionIndex)}
@@ -1329,6 +1463,19 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
                   {!section.collapsed && (
                     <div className="section-content">
                       <div className="section-content-wrapper">
+                        {/* Add server connection status for Bingo Server Settings */}
+                        {section.title === 'Bingo Server Settings' && (
+                          <div className="setting-item">
+                            <div className="setting-info">
+                              <label className="setting-label">Connection Status</label>
+                              <p className="setting-description">Real-time status of server connection. Auto-reconnect attempts at configurable intervals.</p>
+                            </div>
+                            <div className="setting-control">
+                              <ServerConnectionStatus />
+                            </div>
+                          </div>
+                        )}
+
                         {section.properties.map((property) => (
                           <div key={property.id} className="setting-item">
                             <div className="setting-info">

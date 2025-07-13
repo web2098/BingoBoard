@@ -153,14 +153,6 @@
   },
   {
     "section": "Bingo Server Settings",
-    "Label": "Auto Connect",
-    "id": "autoConnect",
-    "description": "Automatically connect to server on startup",
-    "type": "boolean",
-    "default": true
-  },
-  {
-    "section": "Bingo Server Settings",
     "Label": "Bingo Server URL",
     "id": "serverUrl",
     "description": "URL of the bingo server for multiplayer games",
@@ -177,19 +169,11 @@
   },
   {
     "section": "Bingo Server Settings",
-    "Label": "Player Name",
-    "id": "playerName",
-    "description": "Default name for multiplayer games",
-    "type": "text",
-    "default": "Player1"
-  },
-  {
-    "section": "Bingo Server Settings",
-    "Label": "Connection Timeout (ms)",
+    "Label": "Connection Retry Interval (seconds)",
     "id": "connectionTimeout",
-    "description": "Timeout for server connections",
+    "description": "How often to retry server connections (auto-reconnect every 10 seconds)",
     "type": "number",
-    "default": 5000
+    "default": 10
   },
   {
     "section": "Audience Interactions",

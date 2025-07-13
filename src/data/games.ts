@@ -242,25 +242,6 @@ function doubleBingo(){
         name: "Double Bingo",
         variants:[
             {
-                rules: 'Must get a two bingos on one board',
-                op: "none",
-                boards: [
-                    (freeSpace: boolean, previewMode: boolean = false) => generateDoubleBingoRotations(freeSpace, previewMode)
-                ],
-                length: "Average",
-                dynamicFreeSpace: true
-            },
-            {
-                rules: 'Must get a one bingo on both boards',
-                op: "and",
-                boards: [
-                    (freeSpace: boolean, previewMode: boolean = false) => generateSingleBoardRotations(freeSpace, true, previewMode),
-                    (freeSpace: boolean, previewMode: boolean = false) => generateSingleBoardRotations(freeSpace, true, previewMode)
-                ],
-                length: "Average",
-                dynamicFreeSpace: true
-            },
-            {
                 rules: 'Must get two bingos on one or both boards',
                 op: "or",
                 boards: [
@@ -329,6 +310,25 @@ function doubleBingo(){
 
                     return output;
                 }
+            },
+            {
+                rules: 'Must get a two bingos on one board',
+                op: "none",
+                boards: [
+                    (freeSpace: boolean, previewMode: boolean = false) => generateDoubleBingoRotations(freeSpace, previewMode)
+                ],
+                length: "Average",
+                dynamicFreeSpace: true
+            },
+            {
+                rules: 'Must get a one bingo on both boards',
+                op: "and",
+                boards: [
+                    (freeSpace: boolean, previewMode: boolean = false) => generateSingleBoardRotations(freeSpace, true, previewMode),
+                    (freeSpace: boolean, previewMode: boolean = false) => generateSingleBoardRotations(freeSpace, true, previewMode)
+                ],
+                length: "Average",
+                dynamicFreeSpace: true
             },
         ]
     }

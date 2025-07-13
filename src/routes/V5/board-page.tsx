@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './board-page.css';
+import styles from './board-page.module.css';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
 import QRCode from '../../components/QRCode';
+import { useServerInteraction } from '../../serverInteractions/ServerInteractionContext';
+import { GameState, StyleConfig, SessionConfig } from '../../serverInteractions/types';
 import { getNumberMessage, getSetting, getLetterColor, getContrastTextColor, getBoardHighlightColor } from '../../utils/settings';
 import games from '../../data/games';
 import {
@@ -45,9 +47,9 @@ const GameBoard = ({
   const highlightTextColor = getContrastTextColor(boardHighlightColor);
 
   return (
-    <div className={`game-board ${isSelected ? 'selected' : ''}`} onClick={handleClick}>
+    <div className={`${styles.gameBoard} ${isSelected ? styles.selected : ''}`} onClick={handleClick}>
       {[0, 1, 2, 3, 4].map((rowIndex) => (
-        <div key={rowIndex} className="board-row">
+        <div key={rowIndex} className={styles.boardRow}>
           {[0, 1, 2, 3, 4].map((colIndex) => {
             const isHighlightedCell = isHighlighted(rowIndex, colIndex);
             const isFreeSpace = rowIndex === 2 && colIndex === 2;
@@ -61,7 +63,7 @@ const GameBoard = ({
             return (
               <div
                 key={`${rowIndex}-${colIndex}`}
-                className={`board-cell ${isHighlightedCell ? 'highlighted' : ''} ${isFreeSpace ? 'free-space' : ''}`}
+                className={`${styles.boardCell} ${isHighlightedCell ? styles.highlighted : ''} ${isFreeSpace ? styles.freeSpace : ''}`}
                 style={cellStyle}
               >
                 {isFreeSpace ? (freeSpace ? 'FREE' : letters[colIndex]) : letters[colIndex]}
@@ -86,7 +88,7 @@ const OperatorIcon = ({ operator }: { operator: string }) => {
   };
 
   return (
-    <div className="operator-icon">
+    <div className={styles.operatorIcon}>
       {getOperatorSymbol()}
     </div>
   );
@@ -110,17 +112,17 @@ const FreeSpaceToggle = ({
   }
 
   return (
-    <div className="free-space-toggle-mini" onClick={(e) => e.stopPropagation()}>
-      <span className="toggle-label">Free Space:</span>
-      <label className="toggle-switch">
+    <div className={styles.freeSpaceToggleMini} onClick={(e) => e.stopPropagation()}>
+      <span className={styles.toggleLabel}>Free Space:</span>
+      <label className={styles.toggleSwitch}>
         <input
           type="checkbox"
           checked={freeSpace}
           onChange={(e) => onChange(e.target.checked)}
         />
-        <span className="slider"></span>
+        <span className={styles.slider}></span>
       </label>
-      <span className="toggle-state">{freeSpace ? 'ON' : 'OFF'}</span>
+      <span className={styles.toggleState}>{freeSpace ? 'ON' : 'OFF'}</span>
     </div>
   );
 };
@@ -162,9 +164,9 @@ const BoardPreviewModal = ({
 
       if (!currentGame || !currentGame.variants || !currentGame.variants[gameData.variant]) {
         return (
-          <div className="modal-mini-grid">
+          <div className={styles.modalMiniGrid}>
             {['B', 'I', 'N', 'G', 'O'].map((letter, index) => (
-              <div key={letter} className="modal-mini-cell">
+              <div key={letter} className={styles.modalMiniCell}>
                 {letter}
               </div>
             ))}
@@ -199,7 +201,7 @@ const BoardPreviewModal = ({
       const isDualBoard = filteredPatterns.length > 1;
 
       return (
-        <div className={`modal-game-boards-container ${isDualBoard ? 'dual-board' : 'single-board'}`}>
+        <div className={`${styles.modalGameBoardsContainer} ${isDualBoard ? styles.dualBoard : styles.singleBoard}`}>
           {filteredPatterns.map((pattern: number[][], index: number) => (
             <React.Fragment key={`modal-${index}-${settingsVersion}`}>
               <GameBoard
@@ -216,9 +218,9 @@ const BoardPreviewModal = ({
     } catch (error) {
       console.error('Error rendering modal board preview:', error);
       return (
-        <div className="modal-mini-grid">
+        <div className={styles.modalMiniGrid}>
           {['B', 'I', 'N', 'G', 'O'].map((letter, index) => (
-            <div key={letter} className="modal-mini-cell">
+            <div key={letter} className={styles.modalMiniCell}>
               {letter}
             </div>
           ))}
@@ -236,7 +238,7 @@ const BoardPreviewModal = ({
 
         if (hasDynamicFreeSpace) {
           return (
-            <div className="modal-free-space-toggle" onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalFreeSpaceToggle} onClick={(e) => e.stopPropagation()}>
               <FreeSpaceToggle
                 freeSpace={gameData.freeSpace}
                 onChange={onFreeSpaceToggle}
@@ -252,18 +254,49 @@ const BoardPreviewModal = ({
     return null;
   };
 
+  const renderRulesCard = () => {
+    try {
+      const gamesList = games();
+      const currentGame = gamesList[gameData.id];
+
+      if (!currentGame || !currentGame.variants || !currentGame.variants[gameData.variant]) {
+        return null;
+      }
+
+      const currentVariant = currentGame.variants[gameData.variant];
+      const rules = currentVariant.rules;
+
+      if (!rules) {
+        return null;
+      }
+
+      return (
+        <div className={styles.modalRulesCard} onClick={(e) => e.stopPropagation()}>
+          <div className={styles.modalRulesHeader}>
+            <h3>Game Rules</h3>
+          </div>
+          <div className={styles.modalRulesContent}>
+            <p>{rules}</p>
+          </div>
+        </div>
+      );
+    } catch (error) {
+      console.error('Error rendering rules card:', error);
+      return null;
+    }
+  };
+
   return (
-    <div className="board-preview-modal-overlay" onClick={handleBackdropClick}>
-      <div className="board-preview-modal-content" onClick={handleModalContentClick}>
-        <div className="modal-header" onClick={handleBackdropClick}>
-          <div className="modal-header-left" onClick={(e) => e.stopPropagation()}>
+    <div className={styles.boardPreviewModalOverlay} onClick={handleBackdropClick}>
+      <div className={styles.boardPreviewModalContent} onClick={handleModalContentClick}>
+        <div className={styles.modalHeader} onClick={handleBackdropClick}>
+          <div className={styles.modalHeaderLeft} onClick={(e) => e.stopPropagation()}>
             <h2 onClick={handleBackdropClick}>{gameData.name}</h2>
             {renderFreeSpaceToggle()}
-          </div>
-          <button className="modal-close-button" onClick={onClose}>×</button>
+          </div>          <button className={styles.modalCloseButton} onClick={onClose}>×</button>
         </div>
-
-        <div className="modal-preview-area" onClick={handleBackdropClick}>
+        {renderRulesCard()}
+        <div className={styles.modalPreviewArea} onClick={handleBackdropClick}>
           {renderModalBoardPreview()}
         </div>
       </div>
@@ -273,6 +306,16 @@ const BoardPreviewModal = ({
 
 const BoardPage: React.FC<BoardPageProps> = () => {
   const navigate = useNavigate();
+  const {
+    isConnected,
+    roomId,
+    isHost,
+    connectionError,
+    sendNumberActivated,
+    sendNumberDeactivated,
+    sendGameSetup,
+    sendFreeSpaceUpdate
+  } = useServerInteraction();
   const [calledNumbers, setCalledNumbers] = useState<number[]>([]);
   const [lastNumber, setLastNumber] = useState<number | null>(null);
   const [gameData, setGameData] = useState({
@@ -403,6 +446,32 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       startGameSession(0, "Traditional Bingo", 0, true, 75);
     }
   }, []);
+
+  // Sync game state with server when connected as host
+  useEffect(() => {
+    if (isConnected && isHost && gameData && calledNumbers) {
+      // Send current game state to all clients
+      const gameState: GameState = {
+        name: gameData.name,
+        freeSpaceOn: gameData.freeSpace,
+        calledNumbers: calledNumbers,
+        lastNumber: lastNumber || undefined
+      };
+
+      const styleConfig: StyleConfig = {
+        selectedColor: getSetting('boardHighlightColor', '#1e4d2b'),
+        selectedTextColor: getSetting('highlightTextColor', '#ffffff'),
+        unselectedColor: getSetting('backgroundColor', '#ffffff'),
+        unselectedTextColor: getSetting('textColor', '#000000')
+      };
+
+      const sessionConfig: SessionConfig = {
+        specialNumbers: JSON.parse(localStorage.getItem('specialNumbers') || '{}')
+      };
+
+      sendGameSetup(gameState, styleConfig, sessionConfig);
+    }
+  }, [isConnected, isHost, gameData, calledNumbers, lastNumber, sendGameSetup]);
 
   // Cleanup effect to end session when component unmounts
   useEffect(() => {
@@ -547,6 +616,14 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   const bingoGrid = generateBingoGrid();
 
   const handleNumberClick = (number: number) => {
+    // Only hosts can click numbers when connected to server
+    if (isConnected && !isHost) {
+      return; // Clients cannot click numbers
+    }
+
+    // Check if number was already called before the action
+    const wasAlreadyCalled = isNumberCalled(number);
+
     // Record in telemetry (handles both adding and removing)
     recordNumberCall(number);
 
@@ -556,6 +633,19 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
     setCalledNumbers(updatedNumbers);
     setLastNumber(lastTelemetryNumber);
+
+    // Send server updates if connected and host
+    if (isConnected && isHost) {
+      const totalSpots = updatedNumbers.length;
+
+      if (wasAlreadyCalled) {
+        // Number was uncalled
+        sendNumberDeactivated(number, totalSpots);
+      } else {
+        // Number was called
+        sendNumberActivated(number, totalSpots);
+      }
+    }
   };
 
   const getSpecialCallout = (number: number | null) => {
@@ -595,11 +685,21 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
   // Handle free space toggle
   const handleFreeSpaceToggle = (freeSpace: boolean) => {
+    // Only hosts can change free space when connected to server
+    if (isConnected && !isHost) {
+      return; // Clients cannot change settings
+    }
+
     const newGameData = { ...gameData, freeSpace };
     setGameData(newGameData);
 
     // Update localStorage to persist the change
     localStorage.setItem('gameSettings', JSON.stringify(newGameData));
+
+    // Send server update if connected and host
+    if (isConnected && isHost) {
+      sendFreeSpaceUpdate(freeSpace);
+    }
   };
 
   // Render the board preview based on current game selection
@@ -611,9 +711,9 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       if (!currentGame || !currentGame.variants || !currentGame.variants[gameData.variant]) {
         // Fallback to simple grid if game data is not available
         return (
-          <div className="mini-grid clickable-preview" onClick={handlePreviewClick}>
+          <div className={`${styles.miniGrid} ${styles.clickablePreview}`} onClick={handlePreviewClick}>
             {['B', 'I', 'N', 'G', 'O'].map((letter, index) => (
-              <div key={letter} className="mini-cell">
+              <div key={letter} className={styles.miniCell}>
                 {letter}
               </div>
             ))}
@@ -676,7 +776,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
       return (
         <div
-          className={`game-boards-container ${isDualBoard ? 'dual-board' : 'single-board'} clickable-preview`}
+          className={`${styles.gameBoardsContainer} ${isDualBoard ? styles.dualBoard : styles.singleBoard} ${styles.clickablePreview}`}
           onClick={handlePreviewClick}
         >
           {filteredPatterns.map((pattern: number[][], index: number) => (
@@ -696,9 +796,9 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       console.error('Error rendering board preview:', error);
       // Fallback to simple grid on error
       return (
-        <div className="mini-grid clickable-preview" onClick={handlePreviewClick}>
+        <div className={`${styles.miniGrid} ${styles.clickablePreview}`} onClick={handlePreviewClick}>
           {['B', 'I', 'N', 'G', 'O'].map((letter, index) => (
-            <div key={letter} className="mini-cell">
+            <div key={letter} className={styles.miniCell}>
               {letter}
             </div>
           ))}
@@ -708,7 +808,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   };
 
   return (
-    <div className="board-page">
+    <div className={styles.boardPage}>
       <SidebarWithMenu
         currentPage="game-board"
         onReset={resetGame}
@@ -716,11 +816,11 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       />
 
       {/* Section 1: Header */}
-      <div className="board-header">
-        <div className="header-left">
+      <div className={styles.boardHeader}>
+        <div className={styles.headerLeft}>
           {/* Game Preview */}
-          <div className="game-preview-mini">
-            <div className="game-preview-header">
+          <div className={styles.gamePreviewMini}>
+            <div className={styles.gamePreviewHeader}>
               <h3>{gameData.name}</h3>
               {(() => {
                 try {
@@ -742,66 +842,134 @@ const BoardPage: React.FC<BoardPageProps> = () => {
                 return null;
               })()}
             </div>
-            <div className="mini-board">
+            <div className={styles.miniBoard}>
               {renderBoardPreview()}
             </div>
-            <p className="number-count">
-              {calledNumbers.length}/{gameData.totalNumbers} numbers called
+            <p className={styles.numberCount}>
+              {calledNumbers.length}/{gameData.totalNumbers} ({gameData.totalNumbers - calledNumbers.length} Left)
             </p>
           </div>
         </div>
 
-        <div className="header-center">
-          <div className="last-number-section">
-            <div className="last-number-display">
-              <div className="bingo-cards-group">
+        <div className={styles.headerCenter}>
+          <div className={styles.lastNumberSection}>
+            <div className={styles.lastNumberDisplay}>
+              <div className={styles.bingoCardsGroup}>
                 {lastNumber ? (
                   <>
-                    <span className="last-number-text">The Last Number Was</span>
-                    <div className="bingo-letter-card" style={getLetterStyle(lastNumber)}>
+                    <span className={styles.lastNumberText}>The Last Number Was</span>
+                    <div className={styles.bingoLetterCard} style={getLetterStyle(lastNumber)}>
                       {getBingoLetter(lastNumber)}
                     </div>
-                    <div className="bingo-number-card">
+                    <div className={styles.bingoNumberCard}>
                       {lastNumber}
                     </div>
                   </>
                 ) : (
-                  <span className="last-number-text">Waiting For First Number</span>
+                  <span className={styles.lastNumberText}>Waiting For First Number</span>
                 )}
               </div>
             </div>
-            <div className="special-callout-section">
-                <p className="special-callout">{getSpecialCallout(lastNumber)}</p>
+            <div className={styles.specialCalloutSection}>
+                <p className={styles.specialCallout}>{getSpecialCallout(lastNumber)}</p>
             </div>
           </div>
         </div>
 
-        <div className="header-right">
-          {/* QR Code */}
-          <div className="qr-code-header">
-            <h4>View On Your Device</h4>
-            <QRCode
-              value={`${window.location.origin}/BingoBoard/board`}
-              size={170}
-              className="board-qr-code"
-            />
-          </div>
+        <div className={styles.headerRight}>
+          {/* QR Code section with server status logic */}
+          {(() => {
+            // Check server settings
+            const serverUrl = getSetting('serverUrl', '');
+            const authToken = getSetting('serverAuthToken', '');
+            const hasServerSettings = serverUrl.trim() !== '' && authToken.trim() !== '';
+
+            if (!hasServerSettings) {
+              return (
+                <div className={styles.qrCodeHeader}>
+                  <h4>View On Your Device</h4>
+                  <div className={styles.qrCodeMessage}>
+                    <div className={styles.statusIcon}>⚠️</div>
+                    <p>Server settings missing</p>
+                    <p className={styles.statusDetail}>Configure server URL and auth token to enable multiplayer</p>
+                    <a href="/BingoBoard/settings?expand=bingo-server-settings" className={styles.settingsLink}>Configure Server Settings</a>
+                  </div>
+                </div>
+              );
+            }
+
+            if (connectionError) {
+              return (
+                <div className={styles.qrCodeHeader}>
+                  <h4>View On Your Device</h4>
+                  <div className={`${styles.qrCodeMessage} ${styles.error}`}>
+                    <div className={styles.statusIcon}>❌</div>
+                    <p>Server connection failed</p>
+                    <p className={styles.statusDetail}>{connectionError}</p>
+                    <p className={styles.statusHint}>Check if server is running and settings are correct</p>
+                  </div>
+                </div>
+              );
+            }
+
+            if (!isConnected) {
+              return (
+                <div className={styles.qrCodeHeader}>
+                  <h4>View On Your Device</h4>
+                  <div className={`${styles.qrCodeMessage} ${styles.connecting}`}>
+                    <div className={styles.statusIcon}>🔄</div>
+                    <p>Connecting to server...</p>
+                    <p className={styles.statusDetail}>Attempting to establish connection</p>
+                  </div>
+                </div>
+              );
+            }
+
+            if (isConnected && roomId) {
+              return (
+                <div className={styles.qrCodeHeader}>
+                  <h4>View On Your Device</h4>
+                  <div className={styles.qrCodeSuccess}>
+                    <div className={styles.qrCodeContainer}>
+                      <QRCode
+                        value={`${window.location.origin}/BingoBoard/board?roomId=${roomId}`}
+                        size={170}
+                        className={styles.boardQrCode}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // Connected but no room ID yet
+            return (
+              <div className={styles.qrCodeHeader}>
+                <h4>View On Your Device</h4>
+                <div className={`${styles.qrCodeMessage} ${styles.connecting}`}>
+                  <div className={styles.statusIcon}>🔄</div>
+                  <p>Setting up room...</p>
+                  <p className={styles.statusDetail}>Connected to server, creating room</p>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
 
       {/* Section 2: Bingo Numbers Grid */}
-      <div className="bingo-grid-section">
-        <div className="grid-and-history-container">
-          <div className="bingo-grid">
+      <div className={styles.bingoGridSection}>
+        <div className={styles.gridAndHistoryContainer}>
+          <div className={styles.bingoGrid}>
             {bingoGrid.map((row, rowIndex) => {
               const letter = row[0].letter;
               const backgroundColor = getLetterColor(letter);
               const textColor = getContrastTextColor(backgroundColor);
 
               return (
-                <div key={`${rowIndex}-${settingsVersion}`} className="bingo-row">
+                <div key={`${rowIndex}-${settingsVersion}`} className={styles.bingoRow}>
                   <div
-                    className="row-letter"
+                    className={styles.rowLetter}
                     style={{
                       backgroundColor: backgroundColor,
                       color: textColor
@@ -829,7 +997,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
                     return (
                       <div
                         key={cell.number}
-                        className={`bingo-cell ${cell.called ? 'called' : ''}`}
+                        className={`${styles.bingoCell} ${cell.called ? styles.called : ''}`}
                         style={cellStyle}
                         onClick={() => handleNumberClick(cell.number)}
                       >
@@ -842,19 +1010,19 @@ const BoardPage: React.FC<BoardPageProps> = () => {
             })}
           </div>
 
-          <div className="number-history">
+          <div className={styles.numberHistory}>
             <h4>Last Numbers Called</h4>
-            <div className="history-list">
+            <div className={styles.historyList}>
               {calledNumbers.slice().reverse().map((number, index) => (
                 <div
                   key={number}
-                  className={`history-item ${index === 0 ? 'most-recent' : ''}`}
+                  className={`${styles.historyItem} ${index === 0 ? styles.mostRecent : ''}`}
                 >
                   {number}
                 </div>
               ))}
               {calledNumbers.length === 0 && (
-                <div className="no-numbers">No numbers called yet</div>
+                <div className={styles.noNumbers}>No numbers called yet</div>
               )}
             </div>
           </div>

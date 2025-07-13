@@ -427,70 +427,117 @@
   height: auto;
 }
 
-.toggle-switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 34px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  transform: translateX(26px);
-}
-
-input:disabled + .slider {
-  background-color: #ddd;
-  cursor: not-allowed;
-}
-
-.toggle-label {
-  font-size: 1.2em;
+.room-id-display {
+  margin-top: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 1.4rem;
   font-weight: bold;
+  color: #007bff;
+  background: rgba(0, 123, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 123, 255, 0.2);
+}
+
+/* QR Code Card Message States */
+.qr-code-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 20px;
+  text-align: center;
+}
+
+.qr-code-message .status-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.qr-code-message p {
+  margin: 5px 0;
   color: #333;
 }
 
-/* ==============================================
-   TOGGLE SWITCH STYLES
-   ============================================== */
+.qr-code-message p:first-of-type {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
+.qr-code-message .status-detail {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.qr-code-message .status-hint {
+  font-size: 1.1rem;
+  color: #888;
+  font-style: italic;
+}
+
+/* Error state styling */
+.qr-code-message.error {
+  border-left-color: #dc3545;
+}
+
+.qr-code-message.error .status-icon {
+  color: #dc3545;
+}
+
+.qr-code-message.error p:first-of-type {
+  color: #dc3545;
+}
+
+/* Connecting state styling */
+.qr-code-message.connecting .status-icon {
+  color: #ffc107;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Settings link styling */
+.settings-link {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: background-color 0.3s ease;
+}
+
+.settings-link:hover {
+  background: #0056b3;
+  color: white;
+  text-decoration: none;
+}
+
+/* QR Code Success State */
+.qr-code-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-code-instruction {
+  margin-top: 5px;
+  font-size: 1.1rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Toggle Switch Styles */
 .toggle-switch {
   position: relative;
   display: inline-block;

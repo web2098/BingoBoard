@@ -284,7 +284,6 @@ export const recordNumberCall = (number: number): void => {
   } else {
     // Add the new call
     currentSession.numbersCalled.push(call);
-    console.log('Recorded number call:', number, letter);
   }
 
   // Update statistics

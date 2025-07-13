@@ -48,21 +48,6 @@ export function buildSectionsFromProperties(): SettingsSection[] {
   // Convert to sections array with specific ordering
   const sections: SettingsSection[] = [];
 
-  // Define the preferred order for sections
-  const sectionOrder = ['Welcome Customizations', 'Board Customizations', 'Display Settings', 'Bingo Server Settings'];
-
-  // Add sections in preferred order
-  sectionOrder.forEach(sectionTitle => {
-    if (sectionsMap.has(sectionTitle)) {
-      sections.push({
-        title: sectionTitle,
-        properties: sectionsMap.get(sectionTitle)!,
-        collapsed: sectionTitle !== 'Game Settings' // Only Game Settings open by default
-      });
-      sectionsMap.delete(sectionTitle);
-    }
-  });
-
   // Add any remaining sections
   sectionsMap.forEach((properties, sectionTitle) => {
     sections.push({

@@ -13,6 +13,7 @@ import ErrorPage from "./routes/error-page";
 import { getSetting } from './utils/settings';
 import { getVersionRoute, getVersionConfig, getAvailableVersions } from './config/versions';
 import { AudienceInteractionModalManager } from './components/modals';
+import { ServerInteractionProvider } from './serverInteractions/ServerInteractionContext';
 
 // Component to handle version-based redirection
 function VersionRedirect() {
@@ -117,9 +118,11 @@ export default function MyApp() {
   const router = createBrowserRouter(routes);
 
   return (
-    <AudienceInteractionModalManager>
-      <RouterProvider router={router} />
-    </AudienceInteractionModalManager>
+    <ServerInteractionProvider>
+      <AudienceInteractionModalManager>
+        <RouterProvider router={router} />
+      </AudienceInteractionModalManager>
+    </ServerInteractionProvider>
   );
 }
 

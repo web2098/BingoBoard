@@ -1,6 +1,6 @@
 /* Board Page Styles */
 
-.board-page {
+.boardPage {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -11,7 +11,7 @@
 }
 
 /* Vertical off-white sidebar */
-.board-page::before {
+.boardPage::before {
   content: '';
   position: fixed;
   top: 0;
@@ -24,7 +24,7 @@
 }
 
 /* Header Section */
-.board-header {
+.boardHeader {
   display: flex;
   background: white;
   border-bottom: 2px solid #ccc;
@@ -35,37 +35,41 @@
   flex-shrink: 0;
 }
 
-.header-left, .header-right {
+.headerLeft {
+  flex: .6;
+  overflow: auto;
+}
+
+.headerRight {
   flex: .5;
-  padding: 0 15px;
+  overflow: auto;
 }
 
 
-.header-center {
+.headerCenter {
   flex: 2; /* Give more space to the center section */
   text-align: center;
 }
 
-.number-count{
+.numberCount{
   margin: 0;
   font-size: 1.5rem;
 }
 
 /* Game Preview Mini */
-.game-preview-mini {
+.gamePreviewMini {
   text-align: center;
 }
 
-.game-preview-header {
+.gamePreviewHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.game-preview-mini h3 {
+.gamePreviewMini h3 {
   margin: 0;
   color: #333;
   font-size: 1.2em;
@@ -74,7 +78,7 @@
 }
 
 /* Free Space Toggle Mini */
-.free-space-toggle-mini {
+.freeSpaceToggleMini {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -82,25 +86,25 @@
   white-space: nowrap;
 }
 
-.free-space-toggle-mini .toggle-label {
+.freeSpaceToggleMini .toggleLabel {
   color: #666;
   font-size: 0.8em;
 }
 
-.free-space-toggle-mini .toggle-switch {
+.freeSpaceToggleMini .toggleSwitch {
   position: relative;
   display: inline-block;
   width: 40px;
   height: 20px;
 }
 
-.free-space-toggle-mini .toggle-switch input {
+.freeSpaceToggleMini .toggleSwitch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.free-space-toggle-mini .slider {
+.freeSpaceToggleMini .slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -112,11 +116,11 @@
   border-radius: 20px;
 }
 
-.free-space-toggle-mini .slider:hover {
+.freeSpaceToggleMini .slider:hover {
   background-color: #bbb;
 }
 
-.free-space-toggle-mini .slider:before {
+.freeSpaceToggleMini .slider:before {
   position: absolute;
   content: "";
   height: 16px;
@@ -129,117 +133,44 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.free-space-toggle-mini input:checked + .slider {
+.freeSpaceToggleMini input:checked + .slider {
   background-color: #007bff;
 }
 
-.free-space-toggle-mini input:checked + .slider:hover {
+.freeSpaceToggleMini input:checked + .slider:hover {
   background-color: #0056b3;
 }
 
-.free-space-toggle-mini input:focus + .slider {
+.freeSpaceToggleMini input:focus + .slider {
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-.free-space-toggle-mini input:checked + .slider:before {
+.freeSpaceToggleMini input:checked + .slider:before {
   transform: translateX(20px);
 }
 
-.free-space-toggle-mini .toggle-state {
+.freeSpaceToggleMini .toggleState {
   color: #666;
   font-size: 0.8em;
   font-weight: bold;
   min-width: 24px;
 }
 
-.mini-board {
+.miniBoard {
   background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px;
+  padding-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Game Board Preview Styles - Scoped to Board Page */
-.board-page .game-boards-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
-}
-
-.board-page .game-boards-container.dual-board {
-  gap: 8px;
-}
-
-.board-page .game-board {
-  display: grid;
-  grid-template-rows: repeat(5, 1fr);
-  border: 2px solid #333;
-  user-select: none;
-}
-
-.board-page .board-row {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-}
-
-.board-page .board-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #333;
-  background-color: #fff;
-  font-weight: bold;
-  color: #333;
-  aspect-ratio: 1;
-  user-select: none;
-  font-size: 0.6em;
-}
-
-
-.board-page .board-cell.free-space {
-  background-color: #fff;
-  color: #333;
-  font-weight: bold;
-}
-
-
-
-/* Single Board Layout */
-.board-page .game-boards-container:not(.dual-board) .board-cell {
-  font-size: 0.8em;
-}
-
-/* Dual Board Layout */
-.board-page .game-boards-container.dual-board .board-cell {
-  font-size: 0.6em;
-}
-
-/* Operator Icon */
-.board-page .operator-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #007bff;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.7em;
-  font-weight: bold;
-  min-width: 30px;
-  text-align: center;
-}
-
-.mini-grid {
+.miniGrid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 2px;
 }
 
-.mini-cell {
+.miniCell {
   background: #f0f0f0;
   border: 1px solid #999;
   padding: 5px;
@@ -249,14 +180,14 @@
 }
 
 /* Last Number Section */
-.last-number-section{
+.lastNumberSection{
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: space-between;
 }
 
-.last-number-display {
+.lastNumberDisplay {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -264,7 +195,7 @@
   flex-grow: 1;
 }
 
-.last-number-text {
+.lastNumberText {
   font-size: 1.5em;
   color: #333;
   margin: 0;
@@ -273,14 +204,14 @@
   font-weight: bold;
 }
 
-.bingo-cards-group {
+.bingoCardsGroup {
   display: flex;
   align-items: center;
   gap: 15px;
   flex-shrink: 0;
 }
 
-.special-callout-section {
+.specialCalloutSection {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -292,7 +223,7 @@
   z-index: 1;
 }
 
-.bingo-letter-card {
+.bingoLetterCard {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -307,7 +238,7 @@
   flex-shrink: 0;
 }
 
-.bingo-number-card {
+.bingoNumberCard {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -322,7 +253,7 @@
   border: 1px solid #333;
 }
 
-.special-callout {
+.specialCallout {
   margin: 0;
   font-size: 1.1em;
   color: #e74c3c;
@@ -331,7 +262,7 @@
 }
 
 /* QR Code Header */
-.qr-code-header {
+.qrCodeHeader {
   background: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -346,7 +277,7 @@
   gap: 15px;
 }
 
-.qr-code-header h4 {
+.qrCodeHeader h4 {
   margin: 0;
   color: #333;
   text-align: left;
@@ -357,7 +288,7 @@
 }
 
 /* QR Code */
-.qr-placeholder {
+.qrPlaceholder {
   flex: 0 0 auto;
   width: 100px;
   height: 100px;
@@ -373,12 +304,24 @@
 }
 
 /* QR Code Component Styles */
-.board-qr-code {
+.boardQrCode {
   flex-grow: 1;
 }
 
+.qrCodeHeader .roomIdDisplay {
+  margin-top: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #007bff;
+  background: rgba(0, 123, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 123, 255, 0.2);
+}
+
 /* Bingo Grid Section */
-.bingo-grid-section {
+.bingoGridSection {
   height: calc((100vh - 17.5vh - 20px) * 0.95); /* Reduced by 5% from full available height */
   padding: 20px;
   padding-left: 100px; /* Space for sidebar */
@@ -387,14 +330,14 @@
   flex-shrink: 0;
 }
 
-.bingo-row {
+.bingoRow {
   display: flex;
   align-items: center;
   flex: 1;
   margin-bottom: 5px;
 }
 
-.row-letter {
+.rowLetter {
   width: 7.2%;
   height: 100%;
   min-height: 60px;
@@ -405,10 +348,9 @@
   font-weight: bold;
   margin-right: 10px;
   border-radius: 8px;
-  border: 1px solid #333;
 }
 
-.bingo-cell {
+.bingoCell {
   flex: 1;
   height: 100%;
   min-height: 60px;
@@ -426,25 +368,25 @@
   user-select: none;
 }
 
-.bingo-cell:hover {
+.bingoCell:hover {
   background: #e9ecef;
   border-color: #adb5bd;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-.bingo-cell.called {
+.bingoCell.called {
   /* Background color, text color, and border color are now handled dynamically in the component */
   transform: scale(0.95);
 }
 
-.bingo-cell.called:hover {
+.bingoCell.called:hover {
   /* Background color handled dynamically, keep hover transform */
   transform: scale(0.95);
 }
 
 /* Grid and History Container */
-.grid-and-history-container {
+.gridAndHistoryContainer {
   display: flex;
   width: 100%;
   height: 100%;
@@ -454,7 +396,7 @@
 }
 
 /* Bingo Grid - takes up most of the available space */
-.bingo-grid {
+.bingoGrid {
   flex: 1;
   height: 100%;
   background: white;
@@ -467,7 +409,7 @@
 }
 
 /* History Section - takes up 25% of width */
-.history-section {
+.historySection {
   flex: 0 0 25%;
   background: #fff;
   border-radius: 8px;
@@ -478,7 +420,7 @@
 }
 
 /* Number History - compact sidebar aligned to the right */
-.number-history {
+.numberHistory {
   flex: 0 0 180px;
   height: 100%;
   background: white;
@@ -491,7 +433,7 @@
   min-height: 0; /* Allow flex child to shrink */
 }
 
-.number-history h4 {
+.numberHistory h4 {
   margin: 0 0 15px 0;
   color: #333;
   font-size: 1.2em;
@@ -500,7 +442,7 @@
   padding-bottom: 10px;
 }
 
-.history-list {
+.historyList {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -509,25 +451,25 @@
 }
 
 /* Scrollbar styling for webkit browsers */
-.history-list::-webkit-scrollbar {
+.historyList::-webkit-scrollbar {
   width: 6px;
 }
 
-.history-list::-webkit-scrollbar-track {
+.historyList::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 3px;
 }
 
-.history-list::-webkit-scrollbar-thumb {
+.historyList::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 3px;
 }
 
-.history-list::-webkit-scrollbar-thumb:hover {
+.historyList::-webkit-scrollbar-thumb:hover {
   background: #a1a1a1;
 }
 
-.history-item {
+.historyItem {
   background: #f8f9fa;
   border: 2px solid #dee2e6;
   border-radius: 8px;
@@ -540,141 +482,197 @@
   box-sizing: border-box;
 }
 
-.history-item.most-recent {
+.historyItem.mostRecent {
   background: #f8f9fa;
   color: #333;
   border-color: #dee2e6;
 }
 
-.no-numbers {
+.noNumbers {
   text-align: center;
   color: #6c757d;
   font-style: italic;
   padding: 20px;
 }
 
+/* QR Code Message States */
+.qrCodeMessage {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.qrCodeMessage.error {
+  color: #dc3545;
+}
+
+.qrCodeMessage.connecting {
+  color: #ffc107;
+}
+
+.qrCodeSuccess {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.qrCodeContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.statusIcon {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+}
+
+.statusDetail {
+  margin: 4px 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.statusHint {
+  margin: 4px 0;
+  font-size: 0.8em;
+  color: #999;
+}
+
+.settingsLink {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+
+.settingsLink:hover {
+  text-decoration: underline;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .board-header {
+  .boardHeader {
     flex-direction: column;
     gap: 20px;
   }
 
-  .header-left, .header-center, .header-right {
+  .headerLeft, .headerCenter, .headerRight {
     flex: none;
   }
 
-  .qr-code-header {
+  .qrCodeHeader {
     padding: 12px;
     gap: 12px;
   }
 
-  .qr-code-header h4 {
+  .qrCodeHeader h4 {
     font-size: 1em;
   }
 
-  .qr-placeholder {
+  .qrPlaceholder {
     width: 85px;
     height: 85px;
     max-width: 85px;
     max-height: 85px;
   }
 
-  .board-qr-code {
+  .boardQrCode {
     width: 85px !important;
     height: 85px !important;
     max-width: 85px !important;
     max-height: 85px !important;
   }
 
-  .game-preview-mini h3 {
+  .gamePreviewMini h3 {
     font-size: 1em;
   }
 
-  .game-preview-header {
+  .gamePreviewHeader {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
 
-  .game-preview-mini h3 {
+  .gamePreviewMini h3 {
     text-align: center;
     flex: none;
   }
 
-  .free-space-toggle-mini {
+  .freeSpaceToggleMini {
     align-self: center;
     font-size: 0.8em;
   }
 
-  .free-space-toggle-mini .toggle-switch {
+  .freeSpaceToggleMini .toggleSwitch {
     width: 36px;
     height: 18px;
   }
 
-  .free-space-toggle-mini .slider:before {
+  .freeSpaceToggleMini .slider:before {
     height: 14px;
     width: 14px;
   }
 
-  .free-space-toggle-mini input:checked + .slider:before {
+  .freeSpaceToggleMini input:checked + .slider:before {
     transform: translateX(18px);
   }
 
-  .mini-board {
+  .miniBoard {
     padding: 8px;
   }
 
-  .board-page .board-cell {
+  .boardCell {
     font-size: 0.5em;
   }
 
-  .board-page .game-boards-container:not(.dual-board) .board-cell {
+  .gameBoardsContainer:not(.dualBoard) .boardCell {
     font-size: 0.6em;
   }
 
-  .board-page .game-boards-container.dual-board .board-cell {
+  .gameBoardsContainer.dualBoard .boardCell {
     font-size: 0.4em;
   }
 
-  .board-page .operator-icon {
+  .operatorIcon {
     font-size: 0.6em;
     padding: 3px 6px;
     min-width: 24px;
   }
 
-  .bingo-cell {
+  .bingoCell {
     font-size: 1.2em;
     height: 50px;
   }
 
-  .row-letter {
+  .rowLetter {
     width: 50px;
     height: 50px;
     font-size: 1.5em;
   }
 
-  .last-number-section h2 {
+  .lastNumberSection h2 {
     font-size: 1.5em;
   }
 
-  .last-number-text {
+  .lastNumberText {
     font-size: 1.1em;
   }
 
-  .bingo-letter-card {
+  .bingoLetterCard {
     min-width: 40px;
     height: 40px;
     font-size: 1.5em;
   }
 
-  .bingo-number-card {
+  .bingoNumberCard {
     min-width: 130px;
     height: 130px;
     font-size: 3.6em;
   }
 
-  .number-history {
+  .numberHistory {
     flex: 0 0 140px;
     padding: 10px;
     min-height: 0;
@@ -682,166 +680,166 @@
 }
 
 @media (max-width: 768px) {
-  .board-header {
+  .boardHeader {
     padding: 10px;
     padding-left: 100px; /* Maintain sidebar space */
   }
 
-  .qr-code-header {
+  .qrCodeHeader {
     padding: 10px;
     gap: 10px;
   }
 
-  .qr-code-header h4 {
+  .qrCodeHeader h4 {
     font-size: 0.9em;
   }
 
-  .qr-placeholder {
+  .qrPlaceholder {
     width: 70px;
     height: 70px;
     max-width: 70px;
     max-height: 70px;
   }
 
-  .board-qr-code {
+  .boardQrCode {
     width: 70px !important;
     height: 70px !important;
     max-width: 70px !important;
     max-height: 70px !important;
   }
 
-  .board-qr-code {
+  .boardQrCode {
     max-width: 80px !important;
     max-height: 80px !important;
   }
 
-  .game-preview-mini h3 {
+  .gamePreviewMini h3 {
     font-size: 0.9em;
     margin-bottom: 8px;
   }
 
-  .game-preview-header {
+  .gamePreviewHeader {
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
     margin-bottom: 8px;
   }
 
-  .game-preview-mini h3 {
+  .gamePreviewMini h3 {
     text-align: center;
     flex: none;
     margin-bottom: 0;
   }
 
-  .free-space-toggle-mini {
+  .freeSpaceToggleMini {
     align-self: center;
     font-size: 0.75em;
   }
 
-  .free-space-toggle-mini .toggle-switch {
+  .freeSpaceToggleMini .toggleSwitch {
     width: 32px;
     height: 16px;
   }
 
-  .free-space-toggle-mini .slider:before {
+  .freeSpaceToggleMini .slider:before {
     height: 12px;
     width: 12px;
   }
 
-  .free-space-toggle-mini input:checked + .slider:before {
+  .freeSpaceToggleMini input:checked + .slider:before {
     transform: translateX(16px);
   }
 
-  .mini-board {
+  .miniBoard {
     padding: 6px;
   }
 
-  .board-page .board-cell {
+  .boardCell {
     font-size: 0.4em;
   }
 
-  .board-page .game-boards-container:not(.dual-board) .board-cell {
+  .gameBoardsContainer:not(.dualBoard) .boardCell {
     font-size: 0.5em;
   }
 
-  .board-page .game-boards-container.dual-board .board-cell {
+  .gameBoardsContainer.dualBoard .boardCell {
     font-size: 0.35em;
   }
 
-  .board-page .operator-icon {
+  .operatorIcon {
     font-size: 0.5em;
     padding: 2px 4px;
     min-width: 20px;
   }
 
-  .bingo-grid {
+  .bingoGrid {
     padding: 10px;
   }
 
-  .bingo-cell {
+  .bingoCell {
     font-size: 1em;
     height: 40px;
   }
 
-  .row-letter {
+  .rowLetter {
     width: 40px;
     height: 40px;
     font-size: 1.2em;
     margin-right: 5px;
   }
 
-  .last-number-section h2 {
+  .lastNumberSection h2 {
     font-size: 1.5em;
   }
 
-  .last-number-text {
+  .lastNumberText {
     font-size: 1.1em;
   }
 
-  .bingo-letter-card {
+  .bingoLetterCard {
     min-width: 40px;
     height: 40px;
     font-size: 1.5em;
   }
 
-  .bingo-number-card {
+  .bingoNumberCard {
     min-width: 130px;
     height: 130px;
     font-size: 3.6em;
   }
 
-  .number-history {
+  .numberHistory {
     flex: 0 0 140px;
     padding: 10px;
     min-height: 0;
   }
 
-  .last-number-display {
+  .lastNumberDisplay {
     flex-direction: column;
     gap: 10px;
     text-align: center;
   }
 
-  .last-number-text {
+  .lastNumberText {
     font-size: 1em;
   }
 
-  .bingo-cards-group {
+  .bingoCardsGroup {
     justify-content: center;
     gap: 10px;
   }
 
-  .special-callout-section {
+  .specialCalloutSection {
     height: 45px;
   }
 
-  .bingo-letter-card {
+  .bingoLetterCard {
     min-width: 35px;
     height: 35px;
     font-size: 1.3em;
   }
 
-  .bingo-number-card {
+  .bingoNumberCard {
     min-width: 110px;
     height: 110px;
     font-size: 3.0em;
@@ -850,109 +848,109 @@
 
 /* Very small screens */
 @media (max-width: 480px) {
-  .board-header {
+  .boardHeader {
     padding: 8px;
     padding-left: 90px; /* Slightly smaller sidebar space */
   }
 
-  .qr-code-header {
+  .qrCodeHeader {
     padding: 8px;
     gap: 8px;
     flex-direction: column;
     text-align: center;
   }
 
-  .qr-code-header h4 {
+  .qrCodeHeader h4 {
     font-size: 0.8em;
     text-align: center;
   }
 
-  .qr-placeholder {
+  .qrPlaceholder {
     width: 60px;
     height: 60px;
     max-width: 60px;
     max-height: 60px;
   }
 
-  .board-qr-code {
+  .boardQrCode {
     width: 60px !important;
     height: 60px !important;
     max-width: 60px !important;
     max-height: 60px !important;
   }
 
-  .game-preview-mini h3 {
+  .gamePreviewMini h3 {
     font-size: 0.8em;
     margin-bottom: 6px;
   }
 
-  .game-preview-header {
+  .gamePreviewHeader {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
     margin-bottom: 6px;
   }
 
-  .game-preview-mini h3 {
+  .gamePreviewMini h3 {
     text-align: center;
     flex: none;
     margin-bottom: 0;
   }
 
-  .free-space-toggle-mini {
+  .freeSpaceToggleMini {
     align-self: center;
     font-size: 0.7em;
   }
 
-  .free-space-toggle-mini .toggle-switch {
+  .freeSpaceToggleMini .toggleSwitch {
     width: 28px;
     height: 14px;
   }
 
-  .free-space-toggle-mini .slider:before {
+  .freeSpaceToggleMini .slider:before {
     height: 10px;
     width: 10px;
   }
 
-  .free-space-toggle-mini input:checked + .slider:before {
+  .freeSpaceToggleMini input:checked + .slider:before {
     transform: translateX(14px);
   }
 
-  .mini-board {
+  .miniBoard {
     padding: 4px;
   }
 
-  .board-page .board-cell {
+  .boardCell {
     font-size: 0.3em;
   }
 
-  .board-page .game-boards-container:not(.dual-board) .board-cell {
+  .gameBoardsContainer:not(.dualBoard) .boardCell {
     font-size: 0.4em;
   }
 
-  .board-page .game-boards-container.dual-board .board-cell {
+  .gameBoardsContainer.dualBoard .boardCell {
     font-size: 0.25em;
   }
 
-  .board-page .operator-icon {
+  .operatorIcon {
     font-size: 0.4em;
     padding: 1px 3px;
     min-width: 16px;
   }
 
-  .grid-and-history-container {
+  .gridAndHistoryContainer {
     flex-direction: column;
     gap: 10px;
   }
 
-  .number-history {
+  .numberHistory {
     flex: none;
     height: 120px;
     padding: 8px;
     min-height: 0;
   }
 
-  .history-list {
+  .historyList {
     display: flex;
     flex-direction: row;
     gap: 8px;
@@ -962,7 +960,7 @@
     padding-bottom: 2px; /* Space for horizontal scrollbar */
   }
 
-  .history-item {
+  .historyItem {
     flex: 0 0 50px;
     padding: 8px 4px;
     font-size: 0.9em;
@@ -970,23 +968,23 @@
     white-space: nowrap;
   }
 
-  .number-history h4 {
+  .numberHistory h4 {
     font-size: 0.9em;
     margin-bottom: 8px;
   }
 
   /* Horizontal scrollbar styling for mobile */
-  .history-list::-webkit-scrollbar {
+  .historyList::-webkit-scrollbar {
     height: 3px;
     width: auto;
   }
 
-  .history-list::-webkit-scrollbar-track {
+  .historyList::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 3px;
   }
 
-  .history-list::-webkit-scrollbar-thumb {
+  .historyList::-webkit-scrollbar-thumb {
     background: #c1c1c1;
     border-radius: 3px;
   }
@@ -994,33 +992,33 @@
 
 /* Tablet and medium screens */
 @media (max-width: 1200px) and (min-width: 769px) {
-  .number-history {
+  .numberHistory {
     flex: 0 0 170px;
     min-height: 0;
   }
 
-  .history-list {
+  .historyList {
     padding-right: 2px;
   }
 
-  .history-list::-webkit-scrollbar {
+  .historyList::-webkit-scrollbar {
     width: 5px;
   }
 }
 
 /* Board Preview Modal Styles */
 
-.clickable-preview {
+.clickablePreview {
   cursor: pointer;
   transition: box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
-.clickable-preview:hover {
+.clickablePreview:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   transform: scale(1.05);
 }
 
-.board-preview-modal-overlay {
+.boardPreviewModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -1034,7 +1032,7 @@
   backdrop-filter: blur(3px);
 }
 
-.board-preview-modal-content {
+.boardPreviewModalContent {
   background: white;
   border-radius: 12px;
   padding: 30px;
@@ -1049,7 +1047,7 @@
   overflow: hidden;
 }
 
-.modal-header {
+.modalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1058,20 +1056,20 @@
   border-bottom: 2px solid #e9ecef;
 }
 
-.modal-header-left {
+.modalHeaderLeft {
   display: flex;
   align-items: center;
   gap: 20px;
   flex: 1;
 }
 
-.modal-header h2 {
+.modalHeader h2 {
   margin: 0;
   color: #333;
   font-size: 1.8em;
 }
 
-.modal-close-button {
+.modalCloseButton {
   background: none;
   border: none;
   font-size: 2em;
@@ -1086,12 +1084,12 @@
   transition: all 0.2s ease;
 }
 
-.modal-close-button:hover {
+.modalCloseButton:hover {
   background-color: #f0f0f0;
   color: #333;
 }
 
-.modal-preview-area {
+.modalPreviewArea {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -1100,7 +1098,7 @@
   overflow: hidden;
 }
 
-.modal-game-boards-container {
+.modalGameBoardsContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1109,15 +1107,15 @@
   max-height: 100%;
 }
 
-.modal-game-boards-container.single-board {
+.modalGameBoardsContainer.singleBoard {
   justify-content: center;
 }
 
-.modal-game-boards-container.dual-board {
+.modalGameBoardsContainer.dualBoard {
   justify-content: space-around;
 }
 
-.modal-game-boards-container .game-board {
+.modalGameBoardsContainer .gameBoard {
   font-size: 1.2em;
   border: 3px solid #333;
   border-radius: 8px;
@@ -1126,7 +1124,7 @@
 
 /* Single board modal styles */
 
-.modal-game-boards-container.single-board .board-cell {
+.modalGameBoardsContainer.singleBoard .boardCell {
   font-size: 400%;
   font-weight: bold;
   border: 2px solid #666;
@@ -1135,14 +1133,14 @@
 
 /* Dual board modal styles */
 
-.modal-game-boards-container.dual-board .board-cell {
+.modalGameBoardsContainer.dualBoard .boardCell {
   font-size: 200%;
   font-weight: bold;
   border: 2px solid #666;
   aspect-ratio: 1;
 }
 
-.modal-game-boards-container .operator-icon {
+.modalGameBoardsContainer .operatorIcon {
   font-size: 1.5em;
   padding: 20px;
   background: #007bff;
@@ -1151,16 +1149,54 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.modal-free-space-toggle {
+.modalFreeSpaceToggle {
   display: flex;
   align-items: center;
 }
 
-.modal-free-space-toggle .free-space-toggle-mini {
+.modalFreeSpaceToggle .freeSpaceToggleMini {
   font-size: 1.1em;
 }
 
-.modal-mini-grid {
+.modalRulesCard {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  margin: 0 20px 20px 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.modalRulesHeader {
+  background: #007bff;
+  color: white;
+  padding: 12px 20px;
+  margin: 0;
+}
+
+.modalRulesHeader h3 {
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  text-align: center;
+}
+
+.modalRulesContent {
+  padding: 15px 20px;
+  font-size: 2.0em;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.modalRulesContent p {
+  margin: 0;
+  font-size: 1em;
+  line-height: 1.5;
+  color: #333;
+}
+
+.modalMiniGrid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 4px;
@@ -1172,7 +1208,7 @@
   background: white;
 }
 
-.modal-mini-cell {
+.modalMiniCell {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1184,31 +1220,164 @@
   color: #333;
 }
 
-/* Responsive modal styles */
-@media (max-width: 768px) {
-  .board-preview-modal-content {
-    width: 95%;
-    height: 95%;
-    padding: 20px;
-  }
+/* Standalone Game Board Classes for CSS Modules */
+.gameBoard {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  border: 1px solid #333;
+  user-select: none;
+}
 
-  /* Single board mobile styles */
-  .modal-game-boards-container.single-board .board-cell {
-    font-size: 150%;
-  }
+.boardRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
 
-  /* Dual board mobile styles */
-  .modal-game-boards-container.dual-board .board-cell {
-    font-size: 100%;
-  }
+.boardCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #333;
+  background-color: #fff;
+  font-weight: bold;
+  color: #333;
+  aspect-ratio: 1;
+  user-select: none;
+  font-size: 0.6em;
+}
 
-  .modal-mini-grid {
-    width: 200px;
-    height: 200px;
-  }
+.boardCell.freeSpace {
+  background-color: #fff;
+  color: #333;
+  font-weight: bold;
+}
 
-  .modal-game-boards-container.dual-board {
-    flex-direction: column;
-    gap: 20px;
-  }
+.operatorIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7em;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
+}
+
+.gameBoardsContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+.gameBoardsContainer.dualBoard {
+  gap: 8px;
+}
+
+.gameBoardsContainer.singleBoard {
+  justify-content: center;
+}
+
+.toggleLabel {
+  color: #666;
+  font-size: 0.8em;
+}
+
+.toggleSwitch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.toggleState {
+  color: #666;
+  font-size: 0.8em;
+  font-weight: bold;
+  min-width: 24px;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 20px;
+}
+
+/* Modal Classes */
+.modalHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.modalCloseButton {
+  background: none;
+  border: none;
+  font-size: 2em;
+  cursor: pointer;
+  color: #666;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.modalPreviewArea {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.modalGameBoardsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.modalMiniGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  width: 300px;
+  height: 300px;
+  border: 3px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+  background: white;
+}
+
+.modalMiniCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #666;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1.1em;
+  background: #f8f9fa;
+  color: #333;
+}
+
+.modalFreeSpaceToggle {
+  display: flex;
+  align-items: center;
 }
