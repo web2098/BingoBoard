@@ -18,39 +18,39 @@
   text-align: center;
   font-weight: bold;
   color: #000000; /* Dark text on light background */
-  padding: 40px;
+  padding: 40px; /* Standard padding */
   max-width: 80vw;
   word-wrap: break-word;
-  border: 3px solid;
+  border: 50px solid;
   border-radius: 8px;
   pointer-events: auto; /* Re-enable pointer events for the content */
   cursor: default;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  background-clip: padding-box;
 }
 
-/* Flashing border animation using pseudo-element */
-.flash-message-content::before {
-  content: '';
+/* Flash circles will be created dynamically by JavaScript */
+.flash-circle {
   position: absolute;
-  top: -6px;
-  left: -6px;
-  right: -6px;
-  bottom: -6px;
-  border: 6px solid var(--flash-color-1, #F5CE17);
-  border-radius: 14px;
-  animation: flash-border 1s infinite alternate;
-  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  animation: flash-blink 1s infinite;
 }
 
-@keyframes flash-border {
+@keyframes flash-blink {
   0% {
-    border-color: var(--flash-color-1, #F5CE17);
-    box-shadow: 0 0 15px var(--flash-color-1, #F5CE17);
+    background-color: var(--flash-color-1, #F5CE17);
+    box-shadow: none;
+  }
+  50% {
+    background-color: var(--flash-color-2, #FFFF00);
+    box-shadow: 0 0 10px var(--flash-color-2, #FFFF00);
   }
   100% {
-    border-color: var(--flash-color-2, #FFFF00);
-    box-shadow: 0 0 15px var(--flash-color-2, #FFFF00);
+    background-color: var(--flash-color-1, #F5CE17);
+    box-shadow: none;
   }
 }
 

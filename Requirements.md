@@ -399,7 +399,7 @@ This page is used to show all telemetry in the current session and long term tel
     - The text message should be surronded with a rectangle
     - The text rectangle should use a color that can be customized by a setting, and be set to #F5F0B9
     - The text rectangle should have a border color that can be customized by a setting, and be set to #307743
-    - The text rectangle border should have flashing light emojis, or a filled circle that changes back and forth between two colors that can be customized vi a setting. Default to #F5CE17 -> #FFFF00
+    - The text rectangle border should have filled circles all repeated. The circles should changes back and forth between two colors that can be customized vi a setting. Default to #F5CE17 -> #FFFF00
 - Popup Message
     - Defined by having only "text" OR "img" field in "content"
     - A popup message can be text or an image

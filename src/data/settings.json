@@ -217,17 +217,17 @@
   },
   {
     "section": "Audience Interactions",
-    "Label": "Flash Message Animation Color 1",
+    "Label": "Flash Message Unlit Color",
     "id": "flashMessageAnimationColor1",
-    "description": "First color for the flashing border animation",
+    "description": "Unlit color for the flashing border animation",
     "type": "colorpicker",
     "default": "#F5CE17"
   },
   {
     "section": "Audience Interactions",
-    "Label": "Flash Message Animation Color 2",
+    "Label": "Flash Message Lit Color",
     "id": "flashMessageAnimationColor2",
-    "description": "Second color for the flashing border animation",
+    "description": "Lit color for the flashing border animation",
     "type": "colorpicker",
     "default": "#FFFF00"
   },
