@@ -19,7 +19,7 @@
 }
 
 /* Hamburger Menu Button */
-.hamburger-button {
+.hamburgerButton {
   background: #007bff;
   border: none;
   border-radius: 6px;
@@ -36,12 +36,12 @@
   flex-shrink: 0;
 }
 
-.hamburger-button:hover {
+.hamburgerButton:hover {
   background: #0056b3;
   transform: scale(1.05);
 }
 
-.hamburger-line {
+.hamburgerLine {
   width: 28px;
   height: 3px;
   background-color: white;
@@ -49,12 +49,12 @@
   border-radius: 2px;
 }
 
-.hamburger-button:hover .hamburger-line {
+.hamburgerButton:hover .hamburgerLine {
   background-color: #ccc;
 }
 
 /* Page-specific buttons section */
-.page-buttons {
+.pageButtons {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -64,7 +64,7 @@
   flex-shrink: 0;
 }
 
-.sidebar-button {
+.sidebarButton {
   background: #28a745;
   color: white;
   border: none;
@@ -82,53 +82,53 @@
   flex-shrink: 0;
 }
 
-.sidebar-button:hover {
+.sidebarButton:hover {
   background: #218838;
   transform: scale(1.05);
   box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
 }
 
-.sidebar-button:active {
+.sidebarButton:active {
   transform: scale(1.02);
 }
 
 /* Specific button styles for game options */
-.sidebar-button.reset-settings-button {
+.sidebarButton.resetSettingsButton {
   background: #dc3545 !important;
   box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3) !important;
 }
 
-.sidebar-button.reset-settings-button:hover {
+.sidebarButton.resetSettingsButton:hover {
   background: #c82333 !important;
   box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4) !important;
 }
 
-.sidebar-button.reset-settings-button:active {
+.sidebarButton.resetSettingsButton:active {
   transform: scale(1.02) !important;
 }
 
-.sidebar-button.new-game-button {
+.sidebarButton.newGameButton {
   background: #007bff;
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
-.sidebar-button.new-game-button:hover {
+.sidebarButton.newGameButton:hover {
   background: #0056b3;
   box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
 }
 
-.sidebar-button.end-night-button {
+.sidebarButton.endNightButton {
   background: #6c757d;
   box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
 }
 
-.sidebar-button.end-night-button:hover {
+.sidebarButton.endNightButton:hover {
   background: #545b62;
   box-shadow: 0 6px 16px rgba(108, 117, 125, 0.4);
 }
 
 /* Custom content area */
-.sidebar-custom-content {
+.sidebarCustomContent {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -139,7 +139,7 @@
 }
 
 /* Audience interaction section */
-.audience-interaction-section {
+.audienceInteractionSection {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -149,7 +149,7 @@
 }
 
 /* Menu Overlay */
-.sidebar-menu-overlay {
+.sidebarMenuOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -162,7 +162,7 @@
   align-items: flex-start;
 }
 
-.sidebar-menu-panel {
+.sidebarMenuPanel {
   background: white;
   width: 300px;
   height: 100vh;
@@ -181,26 +181,26 @@
   }
 }
 
-.sidebar-menu-header {
+.sidebarMenuHeader {
   border-bottom: 1px solid #e9ecef;
   padding-bottom: 15px;
   margin-bottom: 20px;
 }
 
-.sidebar-menu-header-top {
+.sidebarMenuHeaderTop {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.sidebar-menu-header h2 {
+.sidebarMenuHeader h2 {
   margin: 0;
   color: #333;
   font-size: 1.5rem;
 }
 
-.sidebar-menu-back-arrow {
+.sidebarMenuBackArrow {
   background: none;
   border: none;
   cursor: pointer;
@@ -215,38 +215,38 @@
   height: 36px;
 }
 
-.sidebar-menu-back-arrow:hover {
+.sidebarMenuBackArrow:hover {
   background-color: #f8f9fa;
   color: #007bff;
   transform: translateX(-2px);
 }
 
-.sidebar-menu-back-arrow svg {
+.sidebarMenuBackArrow svg {
   width: 20px;
   height: 20px;
 }
 
-.sidebar-menu-version {
+.sidebarMenuVersion {
   margin: 0;
   color: #6c757d;
   font-size: 0.9rem;
 }
 
-.sidebar-menu-version-selector {
+.sidebarMenuVersionSelector {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-top: 12px;
 }
 
-.sidebar-menu-version-selector label {
+.sidebarMenuVersionSelector label {
   color: #6c757d;
   font-size: 0.9rem;
   font-weight: 500;
   margin: 0;
 }
 
-.version-select {
+.versionSelect {
   padding: 6px 8px;
   border: 1px solid #dee2e6;
   border-radius: 4px;
@@ -257,22 +257,22 @@
   outline: none;
 }
 
-.version-select:hover {
+.versionSelect:hover {
   border-color: #007bff;
 }
 
-.version-select:focus {
+.versionSelect:focus {
   border-color: #007bff;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-.sidebar-menu-nav {
+.sidebarMenuNav {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.sidebar-menu-link {
+.sidebarMenuLink {
   display: block;
   padding: 12px 16px;
   text-decoration: none;
@@ -282,13 +282,13 @@
   font-size: 1rem;
 }
 
-.sidebar-menu-link:hover {
+.sidebarMenuLink:hover {
   background-color: #f8f9fa;
   color: #007bff;
   transform: translateX(4px);
 }
 
-.sidebar-menu-divider {
+.sidebarMenuDivider {
   border: none;
   height: 1px;
   background-color: #e9ecef;
@@ -302,41 +302,41 @@
     padding: 15px 0;
   }
 
-  .hamburger-button {
+  .hamburgerButton {
     width: 40px;
     height: 40px;
     padding: 8px;
     margin-bottom: 15px;
   }
 
-  .hamburger-line {
+  .hamburgerLine {
     width: 22px;
     height: 2px;
   }
 
-  .sidebar-button {
+  .sidebarButton {
     width: 48px;
     height: 48px;
     font-size: 1rem;
   }
 
-  .page-buttons {
+  .pageButtons {
     margin-bottom: 15px;
     gap: 10px;
   }
 
-  .sidebar-custom-content {
+  .sidebarCustomContent {
     margin-bottom: 15px;
     gap: 10px;
   }
 
-  .sidebar-menu-back-arrow {
+  .sidebarMenuBackArrow {
     width: 32px;
     height: 32px;
     padding: 6px;
   }
 
-  .sidebar-menu-back-arrow svg {
+  .sidebarMenuBackArrow svg {
     width: 16px;
     height: 16px;
   }
@@ -348,41 +348,41 @@
     padding: 10px 0;
   }
 
-  .hamburger-button {
+  .hamburgerButton {
     width: 36px;
     height: 36px;
     padding: 6px;
     margin-bottom: 10px;
   }
 
-  .hamburger-line {
+  .hamburgerLine {
     width: 20px;
     height: 2px;
   }
 
-  .sidebar-button {
+  .sidebarButton {
     width: 40px;
     height: 40px;
     font-size: 0.9rem;
   }
 
-  .page-buttons {
+  .pageButtons {
     margin-bottom: 10px;
     gap: 8px;
   }
 
-  .sidebar-custom-content {
+  .sidebarCustomContent {
     margin-bottom: 10px;
     gap: 8px;
   }
 
-  .sidebar-menu-back-arrow {
+  .sidebarMenuBackArrow {
     width: 28px;
     height: 28px;
     padding: 5px;
   }
 
-  .sidebar-menu-back-arrow svg {
+  .sidebarMenuBackArrow svg {
     width: 14px;
     height: 14px;
   }

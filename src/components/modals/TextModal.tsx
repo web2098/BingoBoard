@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import './TextModal.css';
+import styles from './TextModal.module.css';
 
 export interface TextModalProps {
   isVisible: boolean;
@@ -114,9 +114,9 @@ const TextModal: React.FC<TextModalProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="text-modal-overlay">
+    <div className={styles.textModalOverlay}>
       <div
-        className={`text-modal-content ${fontSize} ${isFlashMessage ? 'flash-message' : ''}`}
+        className={`${styles.textModalContent} ${styles[fontSize]} ${isFlashMessage ? styles.flashMessage : ''}`}
         style={{
           color: textColor,
           backgroundColor: isFlashMessage ? flashBackgroundColor : 'transparent',
@@ -129,28 +129,28 @@ const TextModal: React.FC<TextModalProps> = ({
       >
         {timeout > 0 && countdown > 0 && (
           <div
-            className="modal-countdown"
+            className={styles.modalCountdown}
             style={{
               '--countdown-duration': `${timeout}ms`
             } as React.CSSProperties}
             key={`countdown-${modalStartTimeRef.current}`}
           >
-            <svg className="countdown-circle" viewBox="0 0 70 70">
+            <svg className={styles.countdownCircle} viewBox="0 0 70 70">
               <circle
-                className="countdown-circle-bg"
+                className={styles.countdownCircleBg}
                 cx="35"
                 cy="35"
                 r="32"
               />
               <circle
-                className="countdown-circle-progress"
+                className={styles.countdownCircleProgress}
                 cx="35"
                 cy="35"
                 r="32"
                 key={`progress-${modalStartTimeRef.current}`}
               />
             </svg>
-            <div className="countdown-number">
+            <div className={styles.countdownNumber}>
               {countdown}
             </div>
           </div>

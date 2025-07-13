@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './settings-page.css';
+import styles from './settings-page.module.css';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
 import {
   getSettingsSections,
@@ -73,9 +73,9 @@ const ServerConnectionStatus: React.FC = () => {
   };
 
   return (
-    <div className="server-connection-status">
+    <div className={styles.serverConnectionStatus}>
       <div
-        className="status-indicator"
+        className={styles.statusIndicator}
         style={{
           backgroundColor: getStatusColor(),
           color: 'white',
@@ -93,7 +93,7 @@ const ServerConnectionStatus: React.FC = () => {
       </div>
       {connectionError && (
         <div
-          className="error-details"
+          className={styles.errorDetails}
           style={{
             fontSize: '0.8rem',
             color: '#dc3545',
@@ -106,7 +106,7 @@ const ServerConnectionStatus: React.FC = () => {
       )}
       {!hasServerSettings && (
         <div
-          className="config-hint"
+          className={styles.configHint}
           style={{
             fontSize: '0.8rem',
             color: '#6c757d',
@@ -209,14 +209,14 @@ const ColorPickerWithHistory: React.FC<{
   };
 
   return (
-    <div className="color-picker-container">
+    <div className={styles.colorPickerContainer}>
       <input
         type="text"
         value={value}
         onChange={handleColorTextChange}
         onBlur={handleColorTextBlur}
         onKeyDown={handleKeyDown}
-        className="color-text-input"
+        className={styles.colorTextInput}
         placeholder="#FFFFFF"
         maxLength={7}
         title="Hex color code (Ctrl+Z to undo, Ctrl+Y to redo)"
@@ -225,7 +225,7 @@ const ColorPickerWithHistory: React.FC<{
         type="color"
         value={value}
         onChange={handleColorPickerChange}
-        className="color-input"
+        className={styles.colorInput}
         title="Color picker"
       />
     </div>
@@ -350,10 +350,10 @@ const AudienceInteractions: React.FC<AudienceInteractionsProps> = ({ onChange })
 
   const renderIcon = (interaction: any) => {
     if (interaction.icon?.emoji) {
-      return <span className="interaction-emoji">{interaction.icon.emoji}</span>;
+      return <span className={styles.interactionEmoji}>{interaction.icon.emoji}</span>;
     } else if (interaction.icon?.img) {
       const iconSrc = getMappedAsset(interaction.icon.img);
-      return <img src={iconSrc} alt="" className="interaction-img" />;
+      return <img src={iconSrc} alt="" className={styles.interactionImg} />;
     }
     return null;
   };
@@ -386,27 +386,27 @@ const AudienceInteractions: React.FC<AudienceInteractionsProps> = ({ onChange })
     const hasBothTextAndImage = hasTextContent && hasImageContent;
 
     return (
-      <div className="interaction-content">
+      <div className={styles.interactionContent}>
         {hasBothTextAndImage && (
-          <div className="interaction-toggle">
-            <label className="checkbox-label">
-              <span className="toggle-label">Show Image instead of Text</span>
+          <div className={styles.interactionToggle}>
+            <label className={styles.checkboxLabel}>
+              <span className={styles.toggleLabel}>Show Image instead of Text</span>
               <input
                 type="checkbox"
                 checked={imageEnabled}
                 onChange={(e) => handleImageToggle(e.target.checked)}
               />
-              <span className="checkmark"></span>
+              <span className={styles.checkmark}></span>
             </label>
           </div>
         )}
 
         {hasImageContent && (!hasBothTextAndImage || imageEnabled) && (
-          <div className="interaction-image-preview">
+          <div className={styles.interactionImagePreview}>
             <img
               src={getMappedAsset(selectedInteractionData.content.img)}
               alt={selectedInteractionData.description}
-              className="content-image"
+              className={styles.contentImage}
               onError={(e) => {
                 console.error('Failed to load image:', selectedInteractionData.content.img);
 
@@ -442,56 +442,56 @@ const AudienceInteractions: React.FC<AudienceInteractionsProps> = ({ onChange })
         )}
 
         {hasTextContent && (!hasBothTextAndImage || !imageEnabled) && (
-          <div className="interaction-text-editor">
-            <label className="interaction-label">Message Text:</label>
+          <div className={styles.interactionTextEditor}>
+            <label className={styles.interactionLabel}>Message Text:</label>
             <textarea
               value={interactionText}
               onChange={(e) => handleTextChange(e.target.value)}
               placeholder={`Enter custom message for ${selectedInteractionData.description}`}
-              className="interaction-textarea"
+              className={styles.interactionTextarea}
             />
           </div>
         )}
 
         {selectedInteractionData.auto && (
-          <div className="interaction-auto-toggle">
-            <label className="checkbox-label">
-              <span className="auto-label">Enable Auto Activation</span>
+          <div className={styles.interactionAutoToggle}>
+            <label className={styles.checkboxLabel}>
+              <span className={styles.autoLabel}>Enable Auto Activation</span>
               <input
                 type="checkbox"
                 checked={autoEnabled}
                 onChange={(e) => handleAutoToggle(e.target.checked)}
               />
-              <span className="checkmark"></span>
+              <span className={styles.checkmark}></span>
             </label>
-            <p className="auto-description">
+            <p className={styles.autoDescription}>
               Automatically trigger when number {selectedInteractionData.auto.number} is called
             </p>
           </div>
         )}
 
         {selectedInteractionData.content?.audio && (
-          <div className="interaction-audio-toggle">
-            <label className="checkbox-label">
-              <span className="audio-label">Enable Audio</span>
+          <div className={styles.interactionAudioToggle}>
+            <label className={styles.checkboxLabel}>
+              <span className={styles.audioLabel}>Enable Audio</span>
               <input
                 type="checkbox"
                 checked={audioEnabled}
                 onChange={(e) => handleAudioToggle(e.target.checked)}
               />
-              <span className="checkmark"></span>
+              <span className={styles.checkmark}></span>
             </label>
-            <p className="audio-description">
+            <p className={styles.audioDescription}>
               Play audio when this interaction is triggered (also requires Sound Effects to be enabled)
             </p>
           </div>
         )}
 
         {/* Preview Button */}
-        <div className="interaction-preview">
+        <div className={styles.interactionPreview}>
           <button
             onClick={handlePreview}
-            className="preview-btn"
+            className={styles.previewBtn}
           >
             🎬 Preview Interaction
           </button>
@@ -501,13 +501,13 @@ const AudienceInteractions: React.FC<AudienceInteractionsProps> = ({ onChange })
   };
 
   return (
-    <div className="audience-interactions-container">
-      <div className="interaction-selector">
-        <label className="interaction-label">Select Audience Interaction:</label>
+    <div className={styles.audienceInteractionsContainer}>
+      <div className={styles.interactionSelector}>
+        <label className={styles.interactionLabel}>Select Audience Interaction:</label>
         <select
           value={selectedInteraction}
           onChange={(e) => handleInteractionChange(e.target.value)}
-          className="interaction-select"
+          className={styles.interactionSelect}
         >
           <option value="">Choose an interaction...</option>
           {audienceInteractions.map((interaction) => (
@@ -518,10 +518,10 @@ const AudienceInteractions: React.FC<AudienceInteractionsProps> = ({ onChange })
         </select>
 
         {selectedInteractionData && (
-          <div className="selected-interaction-info">
-            <div className="interaction-header">
+          <div className={styles.selectedInteractionInfo}>
+            <div className={styles.interactionHeader}>
               {renderIcon(selectedInteractionData)}
-              <span className="interaction-name">{selectedInteractionData.description}</span>
+              <span className={styles.interactionName}>{selectedInteractionData.description}</span>
             </div>
           </div>
         )}
@@ -643,16 +643,16 @@ const SpecialNumbersGrid: React.FC<SpecialNumbersGridProps> = ({ property, onCha
   const boardHighlightTextColor = getContrastTextColor(boardHighlightColor);
 
   return (
-    <div className="special-numbers-grid-container">
-      <div className="bingo-grid-horizontal">
+    <div className={styles.specialNumbersGridContainer}>
+      <div className={styles.bingoGridHorizontal}>
         {rowHeaders.map((header, rowIndex) => {
           const letterColor = getLetterColor(header);
           const letterTextColor = getContrastTextColor(letterColor);
 
           return (
-            <div key={`${header}-${colorVersion}`} className="bingo-row">
+            <div key={`${header}-${colorVersion}`} className={styles.bingoRow}>
               <div
-                className="row-header"
+                className={styles.rowHeader}
                 style={{
                   backgroundColor: letterColor,
                   color: letterTextColor
@@ -660,7 +660,7 @@ const SpecialNumbersGrid: React.FC<SpecialNumbersGridProps> = ({ property, onCha
               >
                 {header}
               </div>
-              <div className="row-numbers">
+              <div className={styles.rowNumbers}>
                 {numberGrid[rowIndex].map(number => {
                   const messageState = getNumberMessageState(number);
                   const hasMessage = specialNumbers[number.toString()];
@@ -673,10 +673,22 @@ const SpecialNumbersGrid: React.FC<SpecialNumbersGridProps> = ({ property, onCha
                     color: boardHighlightTextColor
                   } : {};
 
+                  // Map messageState to camelCase className
+                  const getMessageStateClass = (state: string) => {
+                    switch (state) {
+                      case 'pre-built': return styles.preBuilt;
+                      case 'custom': return styles.custom;
+                      case 'overridden': return styles.overridden;
+                      case 'cleared': return styles.cleared;
+                      case 'none': return styles.none;
+                      default: return '';
+                    }
+                  };
+
                   return (
                     <button
                       key={`${number}-${colorVersion}`}
-                      className={`number-cell ${messageState} ${hasMessage ? 'has-message' : ''} ${isSelected ? 'selected' : ''}`}
+                      className={`${styles.numberCell} ${messageState ? getMessageStateClass(messageState) : ''} ${hasMessage ? styles.hasMessage : ''} ${isSelected ? styles.selected : ''}`}
                       style={!isSelected ? cellStyle : {}}
                       onClick={() => handleNumberClick(number)}
                     >
@@ -690,38 +702,38 @@ const SpecialNumbersGrid: React.FC<SpecialNumbersGridProps> = ({ property, onCha
         })}
       </div>
 
-      <div className="number-message-editor">
+      <div className={styles.numberMessageEditor}>
         <textarea
           value={textareaValue}
           onChange={(e) => handleTextareaChange(e.target.value)}
           placeholder={selectedNumber ? getPlaceholderText(selectedNumber) : 'Select a number above to edit its message'}
-          className="message-textarea"
+          className={styles.messageTextarea}
           disabled={selectedNumber === null}
         />
 
         {selectedNumber && (
-          <div className="message-actions">
-            <div className="selected-number-info">
-              <span className="selected-number">Number {selectedNumber}</span>
+          <div className={styles.messageActions}>
+            <div className={styles.selectedNumberInfo}>
+              <span className={styles.selectedNumber}>Number {selectedNumber}</span>
               {(() => {
                 const messageState = getNumberMessageState(selectedNumber);
                 switch (messageState) {
                   case 'pre-built':
-                    return <span className="message-badge pre-built">Pre-built</span>;
+                    return <span className={`${styles.messageBadge} ${styles.preBuilt}`}>Pre-built</span>;
                   case 'custom':
-                    return <span className="message-badge custom">Custom</span>;
+                    return <span className={`${styles.messageBadge} ${styles.custom}`}>Custom</span>;
                   case 'overridden':
-                    return <span className="message-badge overridden">Overridden</span>;
+                    return <span className={`${styles.messageBadge} ${styles.overridden}`}>Overridden</span>;
                   case 'cleared':
-                    return <span className="message-badge cleared">Cleared</span>;
+                    return <span className={`${styles.messageBadge} ${styles.cleared}`}>Cleared</span>;
                   default:
-                    return <span className="message-badge none">No message</span>;
+                    return <span className={`${styles.messageBadge} ${styles.none}`}>No message</span>;
                 }
               })()}
             </div>
-            <div className="message-action-buttons">
+            <div className={styles.messageActionButtons}>
               <button
-                className="clear-message-btn"
+                className={styles.clearMessageBtn}
                 onClick={handleClearMessage}
                 disabled={getNumberMessageState(selectedNumber) === 'none'}
               >
@@ -729,7 +741,7 @@ const SpecialNumbersGrid: React.FC<SpecialNumbersGridProps> = ({ property, onCha
               </button>
               {(getNumberMessageState(selectedNumber) === 'overridden' || getNumberMessageState(selectedNumber) === 'cleared') && (
                 <button
-                  className="revert-message-btn"
+                  className={styles.revertMessageBtn}
                   onClick={handleRevertMessage}
                 >
                   Revert to Pre-built
@@ -985,7 +997,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
         <select
           value={property.value}
           onChange={(e) => handleVersionChange(e.target.value)}
-          className="select-input"
+          className={styles.selectInput}
         >
           {selectOptions.map((option: string) => (
             <option key={option} value={option}>
@@ -999,13 +1011,13 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
     switch (property.type) {
       case 'boolean':
         return (
-          <label className="checkbox-label">
+          <label className={styles.checkboxLabel}>
             <input
               type="checkbox"
               checked={property.value}
               onChange={(e) => onChange(e.target.checked)}
             />
-            <span className="checkmark"></span>
+            <span className={styles.checkmark}></span>
           </label>
         );
       case 'number':
@@ -1014,7 +1026,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
             type="number"
             value={property.value}
             onChange={(e) => onChange(Number(e.target.value))}
-            className="number-input"
+            className={styles.numberInput}
           />
         );
       case 'colorpicker':
@@ -1030,7 +1042,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
           <select
             value={property.value}
             onChange={(e) => onChange(e.target.value)}
-            className="select-input"
+            className={styles.selectInput}
           >
             {selectOptions.map((option: string) => (
               <option key={option} value={option}>
@@ -1046,7 +1058,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
             type="text"
             value={property.value}
             onChange={(e) => onChange(e.target.value)}
-            className="text-input"
+            className={styles.textInput}
           />
         );
       case 'textarea':
@@ -1054,7 +1066,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
           <textarea
             value={property.value}
             onChange={(e) => onChange(e.target.value)}
-            className="textarea-input"
+            className={styles.textareaInput}
             readOnly={property.readonly}
             style={{
               backgroundColor: property.readonly ? '#f8f9fa' : 'white',
@@ -1068,14 +1080,14 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
             type="password"
             value={property.value}
             onChange={(e) => onChange(e.target.value)}
-            className="password-input"
+            className={styles.passwordInput}
             placeholder="Enter password..."
           />
         );
       case 'combo+textarea':
         const comboOptions = resolveOptions(property.options, property);
         return (
-          <div className="combo-textarea-container">
+          <div className={styles.comboTextareaContainer}>
             <select
               value={property.value?.selectedKey || ''}
               onChange={(e) => {
@@ -1090,7 +1102,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
                   customValue: selectedKey ? defaultValue : ''
                 });
               }}
-              className="combo-select"
+              className={styles.comboSelect}
             >
               <option value="">Select option...</option>
               {comboOptions.map((option: string) => (
@@ -1105,7 +1117,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
                 selectedKey: property.value?.selectedKey || '',
                 customValue: e.target.value
               })}
-              className="combo-textarea"
+              className={styles.comboTextarea}
               placeholder="Enter details..."
             />
           </div>
@@ -1177,28 +1189,28 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
     };
 
     return (
-      <div className="settings-section telemetry-section">
-        <div className="section-header" onClick={onToggle}>
+      <div className={`${styles.settingsSection} telemetry-section`}>
+        <div className={styles.sectionHeader} onClick={onToggle}>
           <h2>Game Telemetry</h2>
-          <span className={`collapse-arrow ${collapsed ? 'collapsed' : ''}`}>
+          <span className={`${styles.collapseArrow} ${collapsed ? styles.collapsed : ''}`}>
             ▼
           </span>
         </div>
 
         {!collapsed && (
-          <div className="section-content">
-            <div className="section-content-wrapper">
+          <div className={styles.sectionContent}>
+            <div className={styles.sectionContentWrapper}>
               {/* Current Session */}
               {currentStats && (
-                <div className="setting-item">
-                  <div className="setting-info">
-                    <label className="setting-label">Current Session</label>
-                    <p className="setting-description">
+                <div className={styles.settingItem}>
+                  <div className={styles.settingInfo}>
+                    <label className={styles.settingLabel}>Current Session</label>
+                    <p className={styles.settingDescription}>
                       Information about the currently active game session.
                     </p>
                   </div>
-                  <div className="setting-control">
-                    <div className="telemetry-info">
+                  <div className={styles.settingControl}>
+                    <div className={styles.telemetryInfo}>
                       <p><strong>Game:</strong> {currentStats.gameName}</p>
                       <p><strong>Variant:</strong> {currentStats.variant}</p>
                       <p><strong>Free Space:</strong> {currentStats.freeSpace ? 'ON' : 'OFF'}</p>
@@ -1211,28 +1223,28 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
               )}
 
               {/* Session History */}
-              <div className="setting-item">
-                <div className="setting-info">
-                  <label className="setting-label">Session History</label>
-                  <p className="setting-description">
+              <div className={styles.settingItem}>
+                <div className={styles.settingInfo}>
+                  <label className={styles.settingLabel}>Session History</label>
+                  <p className={styles.settingDescription}>
                     History of completed game sessions. Shows {sessionHistory.length} total sessions.
                   </p>
                 </div>
-                <div className="setting-control">
-                  <div className="telemetry-history">
+                <div className={styles.settingControl}>
+                  <div className={styles.telemetryHistory}>
                     {sessionHistory.length === 0 ? (
                       <p>No completed sessions yet.</p>
                     ) : (
-                      <div className="session-list">
+                      <div className={styles.sessionList}>
                         {sessionHistory.slice(-5).reverse().map((session, index) => (
-                          <div key={session.sessionId} className="session-item">
-                            <div className="session-header">
+                          <div key={session.sessionId} className={styles.sessionItem}>
+                            <div className={styles.sessionHeader}>
                               <strong>{session.gameName}</strong>
-                              <span className="session-date">
+                              <span className={styles.sessionDate}>
                                 {session.startTime.toLocaleDateString()} {session.startTime.toLocaleTimeString()}
                               </span>
                             </div>
-                            <div className="session-details">
+                            <div className={styles.sessionDetails}>
                               <span>Numbers: {session.numbersCalled.length}/{session.totalNumbers}</span>
                               {session.endTime && (
                                 <span>Duration: {formatDuration(session.endTime.getTime() - session.startTime.getTime())}</span>
@@ -1244,7 +1256,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
                           </div>
                         ))}
                         {sessionHistory.length > 5 && (
-                          <p className="session-note">Showing 5 most recent sessions of {sessionHistory.length} total.</p>
+                          <p className={styles.sessionNote}>Showing 5 most recent sessions of {sessionHistory.length} total.</p>
                         )}
                       </div>
                     )}
@@ -1254,15 +1266,15 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
 
               {/* Tonight's Session Stats */}
               {tonightStats && tonightStats.totalGames > 0 && (
-                <div className="setting-item">
-                  <div className="setting-info">
-                    <label className="setting-label">Tonight's Session</label>
-                    <p className="setting-description">
+                <div className={styles.settingItem}>
+                  <div className={styles.settingInfo}>
+                    <label className={styles.settingLabel}>Tonight's Session</label>
+                    <p className={styles.settingDescription}>
                       Statistics for all games played in today's session.
                     </p>
                   </div>
-                  <div className="setting-control">
-                    <div className="telemetry-info">
+                  <div className={styles.settingControl}>
+                    <div className={styles.telemetryInfo}>
                       <p><strong>Total Games:</strong> {tonightStats.totalGames}</p>
                       <p><strong>Total Numbers Called:</strong> {tonightStats.totalNumbersCalled}</p>
                       <p><strong>Total Duration:</strong> {formatDuration(tonightStats.totalDuration)}</p>
@@ -1276,15 +1288,15 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
 
               {/* Long-Term Statistics */}
               {longTermStats && longTermStats.totalGamesPlayed > 0 && (
-                <div className="setting-item">
-                  <div className="setting-info">
-                    <label className="setting-label">Long-Term Statistics</label>
-                    <p className="setting-description">
+                <div className={styles.settingItem}>
+                  <div className={styles.settingInfo}>
+                    <label className={styles.settingLabel}>Long-Term Statistics</label>
+                    <p className={styles.settingDescription}>
                       Overall statistics across all recorded game sessions.
                     </p>
                   </div>
-                  <div className="setting-control">
-                    <div className="telemetry-info">
+                  <div className={styles.settingControl}>
+                    <div className={styles.telemetryInfo}>
                       <p><strong>Total Games Played:</strong> {longTermStats.totalGamesPlayed}</p>
                       <p><strong>Average Call Rate:</strong> {Math.round(longTermStats.overallStats.averageCallRate * 100) / 100} numbers/second</p>
                       {longTermStats.overallStats.shortestWinnerNumbers !== Infinity && (
@@ -1306,24 +1318,24 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
               )}
 
               {/* Actions */}
-              <div className="setting-item">
-                <div className="setting-info">
-                  <label className="setting-label">Telemetry Actions</label>
-                  <p className="setting-description">
+              <div className={styles.settingItem}>
+                <div className={styles.settingInfo}>
+                  <label className={styles.settingLabel}>Telemetry Actions</label>
+                  <p className={styles.settingDescription}>
                     Export or clear telemetry data. Export includes all session history and statistics.
                   </p>
                 </div>
-                <div className="setting-control">
-                  <div className="telemetry-actions">
+                <div className={styles.settingControl}>
+                  <div className={styles.telemetryActions}>
                     <button
-                      className="telemetry-button export"
+                      className={`${styles.telemetryButton} ${styles.export}`}
                       onClick={handleExportTelemetry}
                       disabled={sessionHistory.length === 0 && !currentSession}
                     >
                       📊 Export Data
                     </button>
                     <button
-                      className="telemetry-button clear"
+                      className={`${styles.telemetryButton} ${styles.clear}`}
                       onClick={handleClearTelemetry}
                     >
                       🗑️ Clear All Data
@@ -1352,27 +1364,27 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
     const debugSettings = settingsSections.find(section => section.title === 'Debug Settings');
 
     return (
-      <div className="settings-section debug-section">
-        <div className="section-header" onClick={onToggle}>
+      <div className={`${styles.settingsSection} ${styles.debugSection}`}>
+        <div className={styles.sectionHeader} onClick={onToggle}>
           <h2>Debug</h2>
-          <span className={`collapse-arrow ${collapsed ? 'collapsed' : ''}`}>
+          <span className={`${styles.collapseArrow} ${collapsed ? styles.collapsed : ''}`}>
             ▼
           </span>
         </div>
 
         {!collapsed && (
-          <div className="section-content">
-            <div className="section-content-wrapper">
+          <div className={styles.sectionContent}>
+            <div className={styles.sectionContentWrapper}>
               {/* Debug Settings */}
               {debugSettings && debugSettings.properties.map((property) => {
                 const originalSectionIndex = settingsSections.findIndex(section => section.title === 'Debug Settings');
                 return (
-                  <div key={property.id} className="setting-item">
-                    <div className="setting-info">
-                      <label className="setting-label">{property.Label}</label>
-                      <p className="setting-description">{property.description}</p>
+                  <div key={property.id} className={styles.settingItem}>
+                    <div className={styles.settingInfo}>
+                      <label className={styles.settingLabel}>{property.Label}</label>
+                      <p className={styles.settingDescription}>{property.description}</p>
                     </div>
-                    <div className="setting-control">
+                    <div className={styles.settingControl}>
                       {renderSettingInput(property, originalSectionIndex)}
                     </div>
                   </div>
@@ -1380,18 +1392,18 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
               })}
 
               {/* Debug JSON Dump */}
-              <div className="setting-item">
-                <div className="setting-info">
-                  <label className="setting-label">Current Settings JSON</label>
-                  <p className="setting-description">
+              <div className={styles.settingItem}>
+                <div className={styles.settingInfo}>
+                  <label className={styles.settingLabel}>Current Settings JSON</label>
+                  <p className={styles.settingDescription}>
                     Developer information showing all current settings in JSON format. This area is read-only and automatically updates when settings change.
                   </p>
                 </div>
-                <div className="setting-control">
+                <div className={styles.settingControl}>
                   <textarea
                     value={debugInfo}
                     readOnly
-                    className="textarea-input"
+                    className={styles.textareaInput}
                     style={{
                       backgroundColor: '#f8f9fa',
                       cursor: 'default'
@@ -1407,7 +1419,7 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
   };
 
   return (
-    <div className="settings-page">
+    <div className={styles.settingsPage}>
       <SidebarWithMenu
         currentPage="settings"
         onReset={handleReset}
@@ -1429,60 +1441,60 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
         ]}
       />
 
-      <div className="settings-content">
-        <div className="settings-main-header">
-          <div className="settings-header">
+      <div className={styles.settingsContent}>
+        <div className={styles.settingsMainHeader}>
+          <div className={styles.settingsHeader}>
             <h1>Settings</h1>
-            <p>Configure your bingo game preferences • <span className="auto-save-indicator">Auto-save enabled ✓</span></p>
+            <p>Configure your bingo game preferences • <span className={styles.autoSaveIndicator}>Auto-save enabled ✓</span></p>
           </div>
 
-          <div className="special-numbers-header desktop-only">
+          <div className={`${styles.specialNumbersHeader} ${styles.desktopOnly}`}>
             <h1>Special Numbers</h1>
-            <p>Customize messages shown for certain numbers when activated • <span className="auto-save-indicator">Auto-save enabled ✓</span></p>
+            <p>Customize messages shown for certain numbers when activated • <span className={styles.autoSaveIndicator}>Auto-save enabled ✓</span></p>
           </div>
         </div>
 
-        <div className="settings-layout">
-          <div className="settings-sections">
+        <div className={styles.settingsLayout}>
+          <div className={styles.settingsSections}>
             {settingsSections.map((section, sectionIndex) => {
               // Skip debug settings as they're handled separately
               if (section.title === 'Debug Settings') return null;
 
               return (
-                <div key={section.title} className="settings-section" data-section={section.title.toLowerCase().replace(/\s+/g, '-')}>
+                <div key={section.title} className={styles.settingsSection} data-section={section.title.toLowerCase().replace(/\s+/g, '-')}>
                   <div
-                    className="section-header"
+                    className={styles.sectionHeader}
                     onClick={() => toggleSection(sectionIndex)}
                   >
                     <h2>{section.title}</h2>
-                    <span className={`collapse-arrow ${section.collapsed ? 'collapsed' : ''}`}>
+                    <span className={`${styles.collapseArrow} ${section.collapsed ? styles.collapsed : ''}`}>
                       ▼
                     </span>
                   </div>
 
                   {!section.collapsed && (
-                    <div className="section-content">
-                      <div className="section-content-wrapper">
+                    <div className={styles.sectionContent}>
+                      <div className={styles.sectionContentWrapper}>
                         {/* Add server connection status for Bingo Server Settings */}
                         {section.title === 'Bingo Server Settings' && (
-                          <div className="setting-item">
-                            <div className="setting-info">
-                              <label className="setting-label">Connection Status</label>
-                              <p className="setting-description">Real-time status of server connection. Auto-reconnect attempts at configurable intervals.</p>
+                          <div className={styles.settingItem}>
+                            <div className={styles.settingInfo}>
+                              <label className={styles.settingLabel}>Connection Status</label>
+                              <p className={styles.settingDescription}>Real-time status of server connection. Auto-reconnect attempts at configurable intervals.</p>
                             </div>
-                            <div className="setting-control">
+                            <div className={styles.settingControl}>
                               <ServerConnectionStatus />
                             </div>
                           </div>
                         )}
 
                         {section.properties.map((property) => (
-                          <div key={property.id} className="setting-item">
-                            <div className="setting-info">
-                              <label className="setting-label">{property.Label}</label>
-                              <p className="setting-description">{property.description}</p>
+                          <div key={property.id} className={styles.settingItem}>
+                            <div className={styles.settingInfo}>
+                              <label className={styles.settingLabel}>{property.Label}</label>
+                              <p className={styles.settingDescription}>{property.description}</p>
                             </div>
-                            <div className="setting-control">
+                            <div className={styles.settingControl}>
                               {renderSettingInput(property, sectionIndex)}
                             </div>
                           </div>
@@ -1508,10 +1520,10 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
             />
           </div>
 
-          <div className="special-numbers-section">
-            <div className="special-numbers-header mobile-only">
+          <div className={styles.specialNumbersSection}>
+            <div className={`${styles.specialNumbersHeader} ${styles.mobileOnly}`}>
               <h1>Special Numbers</h1>
-              <p>Customize messages shown for certain numbers when activated • <span className="auto-save-indicator">Auto-save enabled ✓</span></p>
+              <p>Customize messages shown for certain numbers when activated • <span className={styles.autoSaveIndicator}>Auto-save enabled ✓</span></p>
             </div>
 
             <SpecialNumbersGrid
@@ -1534,13 +1546,13 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
             />
 
             {/* Audience Interactions Section */}
-            <div className="audience-interactions-section">
-              <div className="section-header-static">
+            <div className={styles.audienceInteractionsSection}>
+              <div className={styles.sectionHeaderStatic}>
                 <h2>Audience Interactions</h2>
-                <p>Configure audience interaction messages and auto-triggers • <span className="auto-save-indicator">Auto-save enabled ✓</span></p>
+                <p>Configure audience interaction messages and auto-triggers • <span className={styles.autoSaveIndicator}>Auto-save enabled ✓</span></p>
               </div>
 
-              <div className="section-content-static">
+              <div className={styles.sectionContentStatic}>
                 <AudienceInteractions
                   onChange={(data) => {
                     // Handle audience interaction changes

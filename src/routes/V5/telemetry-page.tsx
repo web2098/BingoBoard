@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './telemetry-page.css';
+import styles from './telemetry-page.module.css';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
 import {
   getSessionHistory,
@@ -229,17 +229,17 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
     const highlightColor = getSetting('boardHighlightColor', '#42a5f5');
 
     return (
-      <div className="heatmap-container">
-        <div className="heatmap-grid-rows">
+      <div className={styles.heatmapContainer}>
+        <div className={styles.heatmapGridRows}>
           {letters.map((letter, letterIndex) => (
-            <div key={letter} className="heatmap-row">
+            <div key={letter} className={styles.heatmapRow}>
               <div
-                className="heatmap-letter-row"
+                className={styles.heatmapLetterRow}
                 style={{ backgroundColor: letterColors[letter as keyof typeof letterColors] }}
               >
                 {letter}
               </div>
-              <div className="heatmap-numbers-row">
+              <div className={styles.heatmapNumbersRow}>
                 {Array.from({ length: 15 }, (_, i) => {
                   const number = letterIndex * 15 + i + 1;
                   const count = numberCounts[number] || 0;
@@ -248,35 +248,35 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
                   return (
                     <div
                       key={number}
-                      className="heatmap-cell"
+                      className={styles.heatmapCell}
                       title={`${number}: Called ${count} times`}
                     >
                       <div
-                        className="heatmap-fill"
+                        className={styles.heatmapFill}
                         style={{
                           height: `${intensity * 100}%`,
                           background: highlightColor
                         }}
                       />
-                      <div className="heatmap-content">
-                        <div className="heatmap-number">
+                      <div className={styles.heatmapContent}>
+                        <div className={styles.heatmapNumber}>
                           {number}
                         </div>
-                        <div className="heatmap-count">
+                        <div className={styles.heatmapCount}>
                           {count}
                         </div>
                         {/* White text overlay that's masked by the fill */}
                         <div
-                          className="heatmap-text-overlay"
+                          className={styles.heatmapTextOverlay}
                           style={{
                             WebkitMask: `linear-gradient(to top, black ${intensity * 100}%, transparent ${intensity * 100}%)`,
                             mask: `linear-gradient(to top, black ${intensity * 100}%, transparent ${intensity * 100}%)`
                           }}
                         >
-                          <div className="heatmap-number-white">
+                          <div className={styles.heatmapNumberWhite}>
                             {number}
                           </div>
-                          <div className="heatmap-count-white">
+                          <div className={styles.heatmapCountWhite}>
                             {count}
                           </div>
                         </div>
@@ -294,9 +294,9 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
 
   // Number list component
   const NumberList = ({ numbers, title }: { numbers: Array<{ number: number, count: number }>, title: string }) => (
-    <div className="number-list">
+    <div className={styles.numberList}>
       <h4>{title}</h4>
-      <div className="number-text-list">
+      <div className={styles.numberTextList}>
         {numbers.map(({ number, count }: { number: number, count: number }, index: number) => (
           <span key={number}>
             {number}({count}){index < numbers.length - 1 ? ', ' : ''}
@@ -307,43 +307,43 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
   );
 
   return (
-    <div className="telemetry-page">
+    <div className={styles.telemetryPage}>
       <SidebarWithMenu
         currentPage="telemetry"
         pageButtons={pageButtons}
       />
 
-      <div className="telemetry-content">
+      <div className={styles.telemetryContent}>
         {/* Tonight's Stats and Games Side by Side */}
-        <div className="tonight-section">
+        <div className={styles.tonightSection}>
           {/* Left Side - Summary Cards and Tonight's Numbers */}
-          <div className="tonight-numbers">
+          <div className={styles.tonightNumbers}>
             {/* Summary Stats - 2x2 Grid */}
-            <div className="summary-section-embedded">
-              <div className="summary-card">
+            <div className={styles.summarySectionEmbedded}>
+              <div className={styles.summaryCard}>
                 <h3>Games This Session</h3>
-                <div className="stat-number">{activeTonightStats?.totalGames || 0}</div>
+                <div className={styles.statNumber}>{activeTonightStats?.totalGames || 0}</div>
               </div>
-              <div className="summary-card">
+              <div className={styles.summaryCard}>
                 <h3>Games All Time</h3>
-                <div className="stat-number">{activeLongTermStats.totalGamesPlayed}</div>
+                <div className={styles.statNumber}>{activeLongTermStats.totalGamesPlayed}</div>
               </div>
-              <div className="summary-card">
+              <div className={styles.summaryCard}>
                 <h3>Numbers Called All Time</h3>
-                <div className="stat-number">{
+                <div className={styles.statNumber}>{
                   activeLongTermStats.numberCallFrequency ?
                     Object.values(activeLongTermStats.numberCallFrequency).reduce((sum: number, count: unknown) => sum + (count as number), 0) : 0
                 }</div>
               </div>
-              <div className="summary-card">
+              <div className={styles.summaryCard}>
                 <h3>Numbers Called Tonight</h3>
-                <div className="stat-number">{activeTonightStats?.totalNumbersCalled || 0}</div>
+                <div className={styles.statNumber}>{activeTonightStats?.totalNumbersCalled || 0}</div>
               </div>
             </div>
 
-            <div className="stats-group">
+            <div className={styles.statsGroup}>
               <h3>Tonight's Numbers</h3>
-              <div className="stats-row">
+              <div className={styles.statsRow}>
                 <NumberList numbers={tonightStats_calc.top10} title="Top 10 Called" />
                 <NumberList numbers={tonightStats_calc.bottom10} title="Bottom 10 Called" />
                 {tonightStats_calc.notCalled.length > 0 && (
@@ -352,9 +352,9 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
               </div>
             </div>
 
-            <div className="stats-group">
+            <div className={styles.statsGroup}>
               <h3>Tonight's Numbers (Excluding Blackout Games)</h3>
-              <div className="stats-row">
+              <div className={styles.statsRow}>
                 <NumberList numbers={tonightWithoutBlackoutStats.top10} title="Top 10 Called" />
                 <NumberList numbers={tonightWithoutBlackoutStats.bottom10} title="Bottom 10 Called" />
                 {tonightWithoutBlackoutStats.notCalled.length > 0 && (
@@ -365,9 +365,9 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
           </div>
 
           {/* Right Side - Games Table and Tonight's Heatmap */}
-          <div className="tonight-games">
-            <div className="games-table-container">
-              <table className="games-table">
+          <div className={styles.tonightGames}>
+            <div className={styles.gamesTableContainer}>
+              <table className={styles.gamesTable}>
                 <thead>
                   <tr>
                     <th>Game Name</th>
@@ -400,11 +400,11 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
                         <td>{numbersPerSecond}</td>
                         <td>
                           {sortedWinners.length > 0 ? (
-                            <div className="winners-list">
+                            <div className={styles.winnersList}>
                               {sortedWinners.map((winner: any, i: number) => (
-                                <div key={i} className="winner-item">
+                                <div key={i} className={styles.winnerItem}>
                                   <span>#{winner.numberIndex + 1}</span>
-                                  <span className="detection-method">({winner.detectionMethod})</span>
+                                  <span className={styles.detectionMethod}>({winner.detectionMethod})</span>
                                 </div>
                               ))}
                             </div>
@@ -414,7 +414,7 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
                           {fastestWin ? (
                             <div>
                               <div>{fastestWin} numbers</div>
-                              <div className="win-date">{session.startTime.toLocaleDateString()}</div>
+                              <div className={styles.winDate}>{session.startTime.toLocaleDateString()}</div>
                             </div>
                           ) : '-'}
                         </td>
@@ -422,7 +422,7 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
                           {slowestWin ? (
                             <div>
                               <div>{slowestWin} numbers</div>
-                              <div className="win-date">{session.startTime.toLocaleDateString()}</div>
+                              <div className={styles.winDate}>{session.startTime.toLocaleDateString()}</div>
                             </div>
                           ) : '-'}
                         </td>
@@ -443,17 +443,17 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
         </div>
 
         {/* Heat Maps */}
-        <div className="heatmaps-section">
-          <div className="section-header">
+        <div className={styles.heatmapsSection}>
+          <div className={styles.sectionHeader}>
             <h2>All Time Statistics</h2>
           </div>
-          <div className="alltime-section">
+          <div className={styles.alltimeSection}>
             {/* Top Section - All Time Numbers and Heatmap Side by Side */}
-            <div className="alltime-numbers-section">
-              <div className="alltime-numbers">
-                <div className="stats-group">
+            <div className={styles.alltimeNumbersSection}>
+              <div className={styles.alltimeNumbers}>
+                <div className={styles.statsGroup}>
                   <h3>All Time Numbers</h3>
-                  <div className="stats-row">
+                  <div className={styles.statsRow}>
                     <NumberList numbers={allTimeStats_calc.top10} title="Top 10 Called" />
                     <NumberList numbers={allTimeStats_calc.bottom10} title="Bottom 10 Called" />
                     {allTimeStats_calc.notCalled.length > 0 && (
@@ -463,7 +463,7 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
                 </div>
               </div>
 
-              <div className="alltime-heatmap">
+              <div className={styles.alltimeHeatmap}>
                 <NumberHeatMap
                   numberCounts={allTimeStats_calc.numberCounts}
                 />
@@ -471,9 +471,9 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
             </div>
 
             {/* Bottom Section - All Games Table (Full Width) */}
-            <div className="alltime-games-full">
-              <div className="games-table-container">
-                <table className="games-table">
+            <div className={styles.alltimeGamesFull}>
+              <div className={styles.gamesTableContainer}>
+                <table className={styles.gamesTable}>
                   <thead>
                     <tr>
                       <th style={{ width: '30px' }}></th>
@@ -534,31 +534,31 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
                               )}
                             </td>
                             <td>
-                              <div className="game-name">
+                              <div className={styles.gameName}>
                                 {game.name}
                               </div>
                             </td>
                             <td>
-                              {totalTimesPlayed > 0 ? totalTimesPlayed : <span className="na-value">N/A</span>}
+                              {totalTimesPlayed > 0 ? totalTimesPlayed : <span className={styles.naValue}>N/A</span>}
                             </td>
                             <td>
-                              {totalTimesPlayed > 0 ? formatDuration(avgGameTime) : <span className="na-value">N/A</span>}
+                              {totalTimesPlayed > 0 ? formatDuration(avgGameTime) : <span className={styles.naValue}>N/A</span>}
                             </td>
                             <td>
-                              {totalTimesPlayed > 0 ? avgNumbersPerSecond.toFixed(2) : <span className="na-value">N/A</span>}
+                              {totalTimesPlayed > 0 ? avgNumbersPerSecond.toFixed(2) : <span className={styles.naValue}>N/A</span>}
                             </td>
                             <td>
-                              {totalTimesPlayed > 0 ? totalNumbersCalled : <span className="na-value">N/A</span>}
+                              {totalTimesPlayed > 0 ? totalNumbersCalled : <span className={styles.naValue}>N/A</span>}
                             </td>
                             <td>
                               {fastestWin ? (
                                 <div>{fastestWin} numbers</div>
-                              ) : <span className="na-value">N/A</span>}
+                              ) : <span className={styles.naValue}>N/A</span>}
                             </td>
                             <td>
                               {slowestWin ? (
                                 <div>{slowestWin} numbers</div>
-                              ) : <span className="na-value">N/A</span>}
+                              ) : <span className={styles.naValue}>N/A</span>}
                             </td>
                           </tr>
 
@@ -571,17 +571,17 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
 
                             if (variantSessions.length === 0) {
                               return (
-                                <tr key={`${gameIndex}-${variantIndex}`} className="variant-row">
+                                <tr key={`${gameIndex}-${variantIndex}`} className={styles.variantRow}>
                                   <td></td>
-                                  <td className="variant-name">
+                                  <td className={styles.variantName}>
                                     └ Variant {variantIndex + 1}
                                   </td>
-                                  <td><span className="na-value">N/A</span></td>
-                                  <td><span className="na-value">N/A</span></td>
-                                  <td><span className="na-value">N/A</span></td>
-                                  <td><span className="na-value">N/A</span></td>
-                                  <td><span className="na-value">N/A</span></td>
-                                  <td><span className="na-value">N/A</span></td>
+                                  <td><span className={styles.naValue}>N/A</span></td>
+                                  <td><span className={styles.naValue}>N/A</span></td>
+                                  <td><span className={styles.naValue}>N/A</span></td>
+                                  <td><span className={styles.naValue}>N/A</span></td>
+                                  <td><span className={styles.naValue}>N/A</span></td>
+                                  <td><span className={styles.naValue}>N/A</span></td>
                                 </tr>
                               );
                             }
@@ -610,9 +610,9 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
                               Math.max(...variantWinners.map((w: any) => w.numberIndex + 1)) : null;
 
                             return (
-                              <tr key={`${gameIndex}-${variantIndex}`} className="variant-row">
+                              <tr key={`${gameIndex}-${variantIndex}`} className={styles.variantRow}>
                                 <td></td>
-                                <td className="variant-name">
+                                <td className={styles.variantName}>
                                   └ Variant {variantIndex + 1}
                                 </td>
                                 <td>{timesPlayed}</td>
@@ -622,12 +622,12 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
                                 <td>
                                   {variantFastestWin ? (
                                     <div>{variantFastestWin} numbers</div>
-                                  ) : <span className="na-value">N/A</span>}
+                                  ) : <span className={styles.naValue}>N/A</span>}
                                 </td>
                                 <td>
                                   {variantSlowestWin ? (
                                     <div>{variantSlowestWin} numbers</div>
-                                  ) : <span className="na-value">N/A</span>}
+                                  ) : <span className={styles.naValue}>N/A</span>}
                                 </td>
                               </tr>
                             );

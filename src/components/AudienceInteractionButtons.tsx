@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import audienceInteractionsData from '../data/audienceInteractions.json';
 import { getMappedAsset } from '../utils/assetMapping';
 import { recordAudienceWinner } from '../utils/telemetry';
-import './AudienceInteractionButtons.css';
+import styles from './AudienceInteractionButtons.module.css';
 
 interface AudienceInteraction {
   id: string;
@@ -78,17 +78,17 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
 
   const renderInteractionIcon = (interaction: AudienceInteraction) => {
     if (interaction.icon.emoji) {
-      return <span className="interaction-emoji">{interaction.icon.emoji}</span>;
+      return <span className={styles.interactionEmoji}>{interaction.icon.emoji}</span>;
     } else if (interaction.icon.img) {
       return (
         <img
           src={getMappedAsset(interaction.icon.img)}
           alt={interaction.description}
-          className="interaction-icon-img"
+          className={styles.interactionIconImg}
         />
       );
     }
-    return <span className="interaction-emoji">🎭</span>;
+    return <span className={styles.interactionEmoji}>🎭</span>;
   };
 
   if (interactions.length === 0) {
@@ -97,11 +97,11 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
 
   return (
     <>
-      <div className={`audience-interaction-buttons ${className}`}>
+      <div className={`${styles.audienceInteractionButtons} ${className}`}>
         {interactions.map((interaction, index) => (
           <button
             key={interaction.id}
-            className="audience-interaction-btn"
+            className={styles.audienceInteractionBtn}
             onClick={() => handleInteractionClick(interaction)}
             title={`${interaction.description} (${interaction.shortcuts.join(', ')})`}
             style={{ '--btn-index': index } as React.CSSProperties}

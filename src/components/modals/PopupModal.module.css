@@ -1,5 +1,5 @@
 /* Popup Modal Styles */
-.popup-modal-overlay {
+.popupModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@
   cursor: pointer;
 }
 
-.popup-modal-content {
+.popupModalContent {
   position: relative;
   width: 100vw;
   height: 100vh;
@@ -25,7 +25,7 @@
 }
 
 /* Image popup styles - fills entire page */
-.popup-modal-img {
+.popupModalImg {
   width: 100vw;
   height: 100vh;
   object-fit: cover;
@@ -35,7 +35,7 @@
 }
 
 /* Text popup styles */
-.popup-modal-text {
+.popupModalText {
   color: #ffffff;
   text-align: center;
   font-weight: bold;
@@ -52,7 +52,7 @@
   height: 100%;
 }
 
-.popup-modal-close-hint {
+.popupModalCloseHint {
   position: absolute;
   bottom: 20px;
   left: 50%;
@@ -69,64 +69,64 @@
 }
 
 /* Font size variations for text popup */
-.popup-modal-text.small {
+.popupModalText.small {
   font-size: 2rem;
 }
 
-.popup-modal-text.medium {
+.popupModalText.medium {
   font-size: 3rem;
 }
 
-.popup-modal-text.large {
+.popupModalText.large {
   font-size: 4rem;
 }
 
-.popup-modal-text.xlarge {
+.popupModalText.xlarge {
   font-size: 6rem;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .popup-modal-text.small {
+  .popupModalText.small {
     font-size: 1.5rem;
   }
 
-  .popup-modal-text.medium {
+  .popupModalText.medium {
     font-size: 2rem;
   }
 
-  .popup-modal-text.large {
+  .popupModalText.large {
     font-size: 2.5rem;
   }
 
-  .popup-modal-text.xlarge {
+  .popupModalText.xlarge {
     font-size: 3.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .popup-modal-text {
+  .popupModalText {
     padding: 20px;
     max-width: 90vw;
   }
 
-  .popup-modal-text.small {
+  .popupModalText.small {
     font-size: 1.2rem;
   }
 
-  .popup-modal-text.medium {
+  .popupModalText.medium {
     font-size: 1.5rem;
   }
 
-  .popup-modal-text.large {
+  .popupModalText.large {
     font-size: 2rem;
   }
 
-  .popup-modal-text.xlarge {
+  .popupModalText.xlarge {
     font-size: 2.5rem;
   }
 
-  .popup-modal-close-hint {
+  .popupModalCloseHint {
     bottom: 15px;
     font-size: 0.8rem;
     padding: 6px 12px;

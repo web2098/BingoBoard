@@ -1,5 +1,5 @@
 /* Audience Interaction Buttons Styles */
-.audience-interaction-buttons {
+.audienceInteractionButtons {
   position: fixed;
   left: 12px;
   top: 160px; /* Position below the floating start button */
@@ -10,7 +10,7 @@
   pointer-events: none; /* Allow clicks to pass through the container */
 }
 
-.audience-interaction-btn {
+.audienceInteractionBtn {
   width: 56px;
   height: 56px;
   border: none;
@@ -35,7 +35,7 @@
   transform: translateX(-100px);
 }
 
-.audience-interaction-btn:hover {
+.audienceInteractionBtn:hover {
   transform: scale(1.1);
   box-shadow:
     0 6px 20px rgba(99, 102, 241, 0.4),
@@ -44,7 +44,7 @@
   background: linear-gradient(145deg, #7c3aed, #6366f1);
 }
 
-.audience-interaction-btn:active {
+.audienceInteractionBtn:active {
   transform: scale(0.95);
   box-shadow:
     0 2px 8px rgba(99, 102, 241, 0.3),
@@ -52,13 +52,13 @@
     inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.interaction-emoji {
+.interactionEmoji {
   font-size: 24px;
   line-height: 1;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
-.interaction-icon-img {
+.interactionIconImg {
   width: 32px;
   height: 32px;
   object-fit: contain;
@@ -75,51 +75,51 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .audience-interaction-buttons {
+  .audienceInteractionButtons {
     left: 15px;
     top: 140px; /* Account for smaller floating button */
     gap: 8px;
   }
 
-  .audience-interaction-btn {
+  .audienceInteractionBtn {
     width: 50px;
     height: 50px;
   }
 
-  .interaction-emoji {
+  .interactionEmoji {
     font-size: 20px;
   }
 
-  .interaction-icon-img {
+  .interactionIconImg {
     width: 26px;
     height: 26px;
   }
 }
 
 @media (max-width: 480px) {
-  .audience-interaction-buttons {
+  .audienceInteractionButtons {
     left: 5px;
     top: 130px;
     gap: 6px;
   }
 
-  .audience-interaction-btn {
+  .audienceInteractionBtn {
     width: 40px;
     height: 40px;
   }
 
-  .interaction-emoji {
+  .interactionEmoji {
     font-size: 18px;
   }
 
-  .interaction-icon-img {
+  .interactionIconImg {
     width: 22px;
     height: 22px;
   }
 }
 
 /* When inside sidebar, override the fixed positioning */
-.audience-interaction-section .audience-interaction-buttons {
+.audienceInteractionSection .audienceInteractionButtons {
   position: static !important;
   left: auto !important;
   top: auto !important;
@@ -132,7 +132,7 @@
   align-items: center;
 }
 
-.audience-interaction-section .audience-interaction-btn {
+.audienceInteractionSection .audienceInteractionBtn {
   width: 56px;
   height: 56px;
   margin: 0;
@@ -140,14 +140,14 @@
 
 /* Responsive styles for sidebar integration */
 @media (max-width: 768px) {
-  .audience-interaction-section .audience-interaction-btn {
+  .audienceInteractionSection .audienceInteractionBtn {
     width: 48px;
     height: 48px;
   }
 }
 
 @media (max-width: 480px) {
-  .audience-interaction-section .audience-interaction-btn {
+  .audienceInteractionSection .audienceInteractionBtn {
     width: 40px;
     height: 40px;
   }

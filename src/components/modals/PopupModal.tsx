@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import './PopupModal.css';
+import styles from './PopupModal.module.css';
 
 export interface PopupModalProps {
   isVisible: boolean;
@@ -56,29 +56,29 @@ const PopupModal: React.FC<PopupModalProps> = ({
   const hasText = content.text;
 
   return (
-    <div className="popup-modal-overlay" onClick={onClose}>
-      <div className="popup-modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className={styles.popupModalOverlay} onClick={onClose}>
+      <div className={styles.popupModalContent} onClick={(e) => e.stopPropagation()}>
         {hasImage ? (
           // Image popup - should fill entire page
           <>
             <img
               src={content.img}
               alt={alt}
-              className="popup-modal-img"
+              className={styles.popupModalImg}
               onClick={onClose}
             />
-            <div className="popup-modal-close-hint">
+            <div className={styles.popupModalCloseHint}>
               Click image{closeOnShortcut ? ` or press "${closeOnShortcut.toUpperCase()}"` : ''} to close
             </div>
           </>
         ) : (
           // Text popup
           <div
-            className={`popup-modal-text ${fontSize}`}
+            className={`${styles.popupModalText} ${styles[fontSize]}`}
             onClick={onClose}
           >
             {hasText && content.text}
-            <div className="popup-modal-close-hint">
+            <div className={styles.popupModalCloseHint}>
               Click text{closeOnShortcut ? ` or press "${closeOnShortcut.toUpperCase()}"` : ''} to close
             </div>
           </div>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import AudienceInteractionButtons from './AudienceInteractionButtons';
 import { getSetting, setSetting } from '../utils/settings';
 import { getVersionLabels, getVersionRoute } from '../config/versions';
-import './SidebarWithMenu.css';
+import styles from './SidebarWithMenu.module.css';
 
 interface SidebarButton {
   id: string;
@@ -123,7 +123,6 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
           { label: 'Reset to Defaults', href: '#reset' },
           { label: 'divider', href: '#' },
           { label: 'About', href: '/BingoBoard/about' },
-          { label: 'Settings', href: '/BingoBoard/settings' },
           { label: 'Report an Issue', href: 'https://github.com/web2098/BingoBoard/issues/new', external: true }
         ];
       case 'about':
@@ -154,24 +153,24 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
   return (
     <>
       {/* Sidebar */}
-      <div className="sidebar">
+      <div className={styles.sidebar}>
         {/* Hamburger Menu Button */}
         <button
-          className="hamburger-button"
+          className={styles.hamburgerButton}
           onClick={toggleMenu}
           aria-label="Menu"
         >
-          <div className="hamburger-line"></div>
-          <div className="hamburger-line"></div>
-          <div className="hamburger-line"></div>
+          <div className={styles.hamburgerLine}></div>
+          <div className={styles.hamburgerLine}></div>
+          <div className={styles.hamburgerLine}></div>
         </button>
 
         {/* Page-specific buttons */}
-        <div className="page-buttons">
+        <div className={styles.pageButtons}>
           {pageButtons.map((button) => (
             <button
               key={button.id}
-              className={`sidebar-button ${button.className || ''}`}
+              className={`${styles.sidebarButton} ${button.className || ''}`}
               onClick={() => handlePageButtonClick(button)}
               title={button.label}
             >
@@ -181,34 +180,34 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
         </div>
 
         {/* Custom content area */}
-        {children && <div className="sidebar-custom-content">{children}</div>}
+        {children && <div className={styles.sidebarCustomContent}>{children}</div>}
 
         {/* Audience Interaction Buttons */}
-        <div className="audience-interaction-section">
+        <div className={styles.audienceInteractionSection}>
           <AudienceInteractionButtons currentPage={currentPage} />
         </div>
       </div>
 
       {/* Menu Overlay */}
       {isMenuOpen && (
-        <div className="sidebar-menu-overlay" onClick={toggleMenu}>
-          <div className="sidebar-menu-panel" onClick={(e) => e.stopPropagation()}>
-            <div className="sidebar-menu-header">
-              <div className="sidebar-menu-header-top">
+        <div className={styles.sidebarMenuOverlay} onClick={toggleMenu}>
+          <div className={styles.sidebarMenuPanel} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.sidebarMenuHeader}>
+              <div className={styles.sidebarMenuHeaderTop}>
                 <h2>Bingo Menu</h2>
-                <button className="sidebar-menu-back-arrow" onClick={toggleMenu}>
+                <button className={styles.sidebarMenuBackArrow} onClick={toggleMenu}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M19 12H5M12 19l-7-7 7-7"/>
                   </svg>
                 </button>
               </div>
-              <div className="sidebar-menu-version-selector">
+              <div className={styles.sidebarMenuVersionSelector}>
                 <label htmlFor="version-select">Version:</label>
                 <select
                   id="version-select"
                   value={getCurrentVersion()}
                   onChange={handleVersionChange}
-                  className="version-select"
+                  className={styles.versionSelect}
                 >
                   {availableVersions.map((versionOption) => (
                     <option key={versionOption.value} value={versionOption.value}>
@@ -219,16 +218,16 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
               </div>
             </div>
 
-            <nav className="sidebar-menu-nav">
+            <nav className={styles.sidebarMenuNav}>
               {getPageLinks().map((link, index) => (
                 link.label === "divider" ?
-                <hr key={index} className="sidebar-menu-divider" />
+                <hr key={index} className={styles.sidebarMenuDivider} />
                 :
                 link.href.startsWith('#') ? (
                   <a
                     key={index}
                     href={link.href}
-                    className="sidebar-menu-link"
+                    className={styles.sidebarMenuLink}
                     onClick={(e) => {
                       e.preventDefault();
                       handleMenuClick(link.href, link.label);
@@ -240,14 +239,14 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
                   <a
                     key={index}
                     href={link.href}
-                    className="sidebar-menu-link"
+                    className={styles.sidebarMenuLink}
                     target={(link.href.startsWith('http') || link.href.startsWith('https')) ? "_blank" : undefined}
                     rel={(link.href.startsWith('http') || link.href.startsWith('https')) ? "noopener noreferrer" : undefined}
                   >
                     {link.label}
                   </a>
                 ) : (
-                  <Link key={index} to={link.href} className="sidebar-menu-link">
+                  <Link key={index} to={link.href} className={styles.sidebarMenuLink}>
                     {link.label}
                   </Link>
                 )

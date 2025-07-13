@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import './FlashModal.css';
+import cssStyles from './FlashModal.module.css';
 
 export interface FlashModalProps {
   isVisible: boolean;
@@ -78,7 +78,7 @@ const FlashModal: React.FC<FlashModalProps> = ({
     const container = contentRef.current;
 
     // Remove any existing circles
-    const existingCircles = container.querySelectorAll('.flash-circle');
+    const existingCircles = container.querySelectorAll(`.${cssStyles.flashCircle}`);
     existingCircles.forEach(circle => circle.remove());
 
     const rect = container.getBoundingClientRect();
@@ -94,7 +94,7 @@ const FlashModal: React.FC<FlashModalProps> = ({
 
     function createCircle(x: number, y: number, colorIndex: number) {
       const circle = document.createElement('div');
-      circle.className = 'flash-circle';
+      circle.className = cssStyles.flashCircle;
       circle.style.position = 'absolute';
       // Position relative to the border area
       circle.style.left = `${x - borderWidth/2 - circleRadius}px`;
@@ -145,7 +145,7 @@ const FlashModal: React.FC<FlashModalProps> = ({
     } else {
       // Clean up circles when modal closes
       if (contentRef.current) {
-        const existingCircles = contentRef.current.querySelectorAll('.flash-circle');
+        const existingCircles = contentRef.current.querySelectorAll(`.${cssStyles.flashCircle}`);
         existingCircles.forEach(circle => circle.remove());
       }
       if (circleAnimationRef.current) {
@@ -242,31 +242,31 @@ const FlashModal: React.FC<FlashModalProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="flash-modal-overlay">
+    <div className={cssStyles.flashModalOverlay}>
       {timeout > 0 && countdown > 0 && (
         <div
-          className="flash-countdown"
+          className={cssStyles.flashCountdown}
           style={{
             '--countdown-duration': `${timeout}ms`
           } as React.CSSProperties}
           key={`countdown-${modalStartTimeRef.current}`}
         >
-          <svg className="countdown-circle" viewBox="0 0 70 70">
+          <svg className={cssStyles.countdownCircle} viewBox="0 0 70 70">
             <circle
-              className="countdown-circle-bg"
+              className={cssStyles.countdownCircleBg}
               cx="35"
               cy="35"
               r="32"
             />
             <circle
-              className="countdown-circle-progress"
+              className={cssStyles.countdownCircleProgress}
               cx="35"
               cy="35"
               r="32"
               key={`progress-${modalStartTimeRef.current}`}
             />
           </svg>
-          <div className="countdown-number">
+          <div className={cssStyles.countdownNumber}>
             {countdown}
           </div>
         </div>
@@ -274,7 +274,7 @@ const FlashModal: React.FC<FlashModalProps> = ({
 
       <div
         ref={contentRef}
-        className={`flash-message-content ${fontSize}`}
+        className={`${cssStyles.flashMessageContent} ${cssStyles[fontSize]}`}
         style={{
           backgroundColor: backgroundColor,
           borderColor: borderColor,

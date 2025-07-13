@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './AnimatedModal.css';
+import styles from './AnimatedModal.module.css';
 
 export interface AnimatedModalProps {
   isVisible: boolean;
@@ -158,32 +158,32 @@ const AnimatedModal: React.FC<AnimatedModalProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="animated-modal-overlay">
-      <div className="animated-modal-content">
+    <div className={styles.animatedModalOverlay}>
+      <div className={styles.animatedModalContent}>
         {!hasAudio && countdown > 0 && (
           <div
-            className="modal-countdown"
+            className={styles.modalCountdown}
             style={{
               '--countdown-duration': `${effectiveTimeout}ms`
             } as React.CSSProperties}
             key={`countdown-${modalStartTimeRef.current}`}
           >
-            <svg className="countdown-circle" viewBox="0 0 70 70">
+            <svg className={styles.countdownCircle} viewBox="0 0 70 70">
               <circle
-                className="countdown-circle-bg"
+                className={styles.countdownCircleBg}
                 cx="35"
                 cy="35"
                 r="32"
               />
               <circle
-                className="countdown-circle-progress"
+                className={styles.countdownCircleProgress}
                 cx="35"
                 cy="35"
                 r="32"
                 key={`progress-${modalStartTimeRef.current}`}
               />
             </svg>
-            <div className="countdown-number">
+            <div className={styles.countdownNumber}>
               {countdown}
             </div>
           </div>
@@ -191,7 +191,7 @@ const AnimatedModal: React.FC<AnimatedModalProps> = ({
         <img
           src={imageSrc}
           alt={alt}
-          className="animated-modal-img"
+          className={styles.animatedModalImg}
         />
 
         {audioSrc && (
@@ -207,9 +207,9 @@ const AnimatedModal: React.FC<AnimatedModalProps> = ({
           </audio>
         )}
 
-        <div className="animated-modal-progress">
+        <div className={styles.animatedModalProgress}>
           <div
-            className="animated-modal-progress-bar"
+            className={styles.animatedModalProgressBar}
             style={{
               animationDuration: `${effectiveTimeout}ms`
             }}

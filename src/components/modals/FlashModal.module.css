@@ -1,5 +1,5 @@
-/* Text Modal Styles */
-.text-modal-overlay {
+/* Flash Modal Styles */
+.flashModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -10,61 +10,55 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  cursor: pointer;
+  pointer-events: none; /* Allow clicking to pass through to prevent accidental closure */
 }
 
-.text-modal-content {
+.flashMessageContent {
   position: relative;
   text-align: center;
   font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  padding: 40px;
+  color: #000000; /* Dark text on light background */
+  padding: 40px; /* Standard padding */
   max-width: 80vw;
   word-wrap: break-word;
-  cursor: default;
-}
-
-/* Flash Message Specific Styling */
-.text-modal-content.flash-message {
-  background-color: var(--flash-bg-color, #F5F0B9);
-  border: 3px solid var(--flash-border-color, #307743);
+  border: 50px solid;
   border-radius: 8px;
-  color: #000000; /* Dark text on light background */
-  text-shadow: none;
+  pointer-events: auto; /* Re-enable pointer events for the content */
+  cursor: default;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  background-clip: padding-box;
 }
 
-.text-modal-content.flash-message::before {
-  content: '';
+/* Flash circles will be created dynamically by JavaScript */
+.flashCircle {
   position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  border: 4px solid var(--flash-color-1, #F5CE17);
-  border-radius: 12px;
-  animation: flash-border 1s infinite alternate;
-  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  animation: flash-blink 1s infinite;
 }
 
-@keyframes flash-border {
+@keyframes flash-blink {
   0% {
-    border-color: var(--flash-color-1, #F5CE17);
-    box-shadow: 0 0 10px var(--flash-color-1, #F5CE17);
+    background-color: var(--flash-color-1, #F5CE17);
+    box-shadow: none;
   }
-  100% {
-    border-color: var(--flash-color-2, #FFFF00);
+  50% {
+    background-color: var(--flash-color-2, #FFFF00);
     box-shadow: 0 0 10px var(--flash-color-2, #FFFF00);
   }
+  100% {
+    background-color: var(--flash-color-1, #F5CE17);
+    box-shadow: none;
+  }
 }
 
-/* Modal countdown timer */
-.modal-countdown {
+/* Countdown timer positioned at top right */
+.flashCountdown {
   position: fixed;
-  top: 50%;
+  top: 30px;
   right: 30px;
-  transform: translateY(-50%);
   width: 70px;
   height: 70px;
   display: flex;
@@ -77,7 +71,7 @@
   z-index: 10001;
 }
 
-.countdown-circle {
+.countdownCircle {
   position: absolute;
   top: 0;
   left: 0;
@@ -86,13 +80,13 @@
   transform: rotate(-90deg);
 }
 
-.countdown-circle-bg {
+.countdownCircleBg {
   fill: none;
   stroke: rgba(255, 255, 255, 0.2);
   stroke-width: 4;
 }
 
-.countdown-circle-progress {
+.countdownCircleProgress {
   fill: none;
   stroke: #ffcc00;
   stroke-width: 4;
@@ -102,7 +96,7 @@
   animation: countdown-progress linear var(--countdown-duration, 3000ms) forwards;
 }
 
-.countdown-number {
+.countdownNumber {
   position: relative;
   z-index: 1;
   background-color: rgba(0, 0, 0, 0.8);
@@ -124,60 +118,86 @@
 }
 
 /* Font size variations */
-.text-modal-content.small {
+.flashMessageContent.small {
   font-size: 2rem;
 }
 
-.text-modal-content.medium {
+.flashMessageContent.medium {
   font-size: 3rem;
 }
 
-.text-modal-content.large {
+.flashMessageContent.large {
   font-size: 4rem;
 }
 
-.text-modal-content.xlarge {
+.flashMessageContent.xlarge {
   font-size: 6rem;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .text-modal-content.small {
+  .flashCountdown {
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    font-size: 1.4rem;
+  }
+
+  .countdownNumber {
+    width: 40px;
+    height: 40px;
+  }
+
+  .flashMessageContent.small {
     font-size: 1.5rem;
   }
 
-  .text-modal-content.medium {
+  .flashMessageContent.medium {
     font-size: 2rem;
   }
 
-  .text-modal-content.large {
+  .flashMessageContent.large {
     font-size: 2.5rem;
   }
 
-  .text-modal-content.xlarge {
+  .flashMessageContent.xlarge {
     font-size: 3.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .text-modal-content {
+  .flashMessageContent {
     padding: 20px;
     max-width: 90vw;
   }
 
-  .text-modal-content.small {
+  .flashCountdown {
+    top: 15px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
     font-size: 1.2rem;
   }
 
-  .text-modal-content.medium {
+  .countdownNumber {
+    width: 35px;
+    height: 35px;
+  }
+
+  .flashMessageContent.small {
+    font-size: 1.2rem;
+  }
+
+  .flashMessageContent.medium {
     font-size: 1.5rem;
   }
 
-  .text-modal-content.large {
+  .flashMessageContent.large {
     font-size: 2rem;
   }
 
-  .text-modal-content.xlarge {
+  .flashMessageContent.xlarge {
     font-size: 2.5rem;
   }
 }

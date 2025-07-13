@@ -1,6 +1,6 @@
 /* Select Game Page Styles - Requirements Implementation */
 
-.select-game-page {
+.selectGamePage {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -11,7 +11,7 @@
 }
 
 /* Main Layout Container */
-.main-layout {
+.mainLayout {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -20,7 +20,7 @@
 }
 
 /* Top Section - 3/4 height */
-.top-section {
+.topSection {
   display: flex;
   min-height: 30vh;
   max-height: 90vh;
@@ -30,7 +30,7 @@
 }
 
 /* Section 1: Game Preview Area - 2/3 width */
-.game-preview-area {
+.gamePreviewArea {
   flex: 2;
   display: flex;
   flex-direction: column;
@@ -39,13 +39,13 @@
 }
 
 /* Section 2: Welcome Area - 1/3 width */
-.welcome-area {
+.welcomeArea {
   flex: 1;
   overflow: hidden;
 }
 
 /* Section 3: Bottom Section - 1/4 height */
-.bottom-section {
+.bottomSection {
   height: 10.25vh;
   position: fixed;
   bottom: 0;
@@ -59,7 +59,7 @@
 }
 
 /* On hover, expand upward to show full content */
-.bottom-section:hover {
+.bottomSection:hover {
   height: 36vh;
   bottom: 0;
   z-index: 999;
@@ -67,21 +67,21 @@
   box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
 }
 
-.bottom-section:hover .swiper-container {
+.bottomSection:hover .swiperContainer {
   padding-bottom: 25px;
 }
 
-.bottom-section:hover .game-swiper {
+.bottomSection:hover .gameSwiper {
   padding: 5px 0;
 }
 
-.bottom-section:hover .swiper-navigation {
+.bottomSection:hover .swiperNavigation {
   bottom: 20px;
   opacity: 1;
   visibility: visible;
 }
 
-.bottom-section::before {
+.bottomSection::before {
   content: '';
   position: absolute;
   top: -1px;
@@ -91,7 +91,7 @@
   background: linear-gradient(90deg, transparent, #dee2e6, transparent);
 }
 
-.bottom-section:hover::after {
+.bottomSection:hover::after {
   display: none;
 }
 
@@ -99,7 +99,7 @@
    GAME PREVIEW SECTION STYLES
    ============================================== */
 
-.game-preview-section {
+.gamePreviewSection {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -107,7 +107,7 @@
 }
 
 /* Game Info Card */
-.game-info-card {
+.gameInfoCard {
   background: #f8f9fa;
   padding: 10px;
   border-radius: 8px;
@@ -115,7 +115,7 @@
   flex-shrink: 0;
 }
 
-.game-title {
+.gameTitle {
   margin: 0 0 15px 0;
   font-size: 4rem;
   color: #333;
@@ -124,7 +124,7 @@
   font-weight: bold;
 }
 
-.game-rules h4 {
+.gameRules h4 {
   margin: 0 0 10px 0;
   color: #333;
   font-size: 1.9rem;
@@ -133,7 +133,7 @@
 }
 
 /* Free Space Toggle */
-.free-space-toggle {
+.freeSpaceToggle {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -141,14 +141,14 @@
   flex-shrink: 0;
 }
 
-.toggle-label {
+.toggleLabel {
   font-size: 1.2em;
   font-weight: bold;
   color: #333;
   user-select: none;
 }
 
-.toggle-state {
+.toggleState {
   font-size: 1.1em;
   color: #666;
   font-weight: bold;
@@ -156,7 +156,7 @@
 }
 
 /* Variant controlled indicator */
-.variant-controlled-indicator {
+.variantControlledIndicator {
   font-size: 0.8em;
   color: #666;
   font-style: italic;
@@ -165,16 +165,16 @@
 }
 
 /* Disabled toggle switch */
-.toggle-switch.disabled {
+.toggleSwitch.disabled {
   opacity: 0.6;
 }
 
-.toggle-switch.disabled .slider {
+.toggleSwitch.disabled .slider {
   cursor: not-allowed;
 }
 
 /* Game Display Area */
-.game-display-area {
+.gameDisplayArea {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -185,7 +185,7 @@
 }
 
 /* Game Boards Wrapper */
-.game-boards-wrapper {
+.gameBoardsWrapper {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -195,20 +195,20 @@
 }
 
 /* Progress Circle */
-.progress-circle-container {
+.progressCircleContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
 }
 
-.progress-circle {
+.progressCircle {
   transform: scale(0.8);
   filter: drop-shadow(0 2px 4px rgba(0, 123, 255, 0.2));
 }
 
 /* Game Boards Container */
-.game-boards-container {
+.gameBoardsContainer {
   width: 100%;
   flex: 1;
   display: flex;
@@ -217,7 +217,7 @@
   gap: 20px;
 }
 
-.game-boards-container.dual-board {
+.gameBoardsContainer.dualBoard {
   display: grid;
   grid-template-columns: 1fr 10px 1fr;
   gap: 10px;
@@ -226,7 +226,7 @@
 }
 
 /* Operator Icon */
-.operator-icon {
+.operatorIcon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -239,7 +239,7 @@
 }
 
 /* Variant Controls Wrapper */
-.variant-controls-wrapper {
+.variantControlsWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -249,7 +249,7 @@
 }
 
 /* Progress Circle Inline */
-.progress-circle-inline {
+.progressCircleInline {
   display: flex;
   align-items: center;
   position: absolute;
@@ -259,7 +259,7 @@
 }
 
 /* Variant Controls */
-.variant-controls {
+.variantControls {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -267,7 +267,7 @@
   flex-shrink: 0;
 }
 
-.variant-arrow {
+.variantArrow {
   background: #007bff;
   color: white;
   border: none;
@@ -282,16 +282,16 @@
   justify-content: center;
 }
 
-.variant-arrow:hover:not(:disabled) {
+.variantArrow:hover:not(:disabled) {
   background: #0056b3;
 }
 
-.variant-arrow:disabled {
+.variantArrow:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
 
-.variant-indicator {
+.variantIndicator {
   font-size: 1.1em;
   font-weight: bold;
   color: #333;
@@ -304,7 +304,7 @@
    GAME BOARD STYLES
    ============================================== */
 
-.game-board {
+.gameBoard {
   display: grid;
   grid-template-rows: repeat(5, 1fr);
   border: 2px solid #333;
@@ -313,17 +313,17 @@
   user-select: none;
 }
 
-.game-board.selected {
+.gameBoard.selected {
   border-color: #007bff;
   box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
 }
 
-.board-row {
+.boardRow {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
 }
 
-.board-cell {
+.boardCell {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -336,26 +336,26 @@
   user-select: none;
 }
 
-.board-cell.free-space {
+.boardCell.freeSpace {
   background-color: #fff;
   color: #333;
   font-weight: bold;
 }
 
 /* Single Board Layout */
-.game-boards-container:not(.dual-board) .board-cell {
+.gameBoardsContainer:not(.dualBoard) .boardCell {
   font-size: clamp(2.2rem, 5vw, 4.75rem);
   aspect-ratio: 2/1;
 }
 
 /* Dual Board Layout */
-.game-boards-container.dual-board .board-cell {
+.gameBoardsContainer.dualBoard .boardCell {
   font-size: clamp(4.12rem, 5vw, 4.75rem);
   aspect-ratio: 1;
 }
 
 /* Double Bingo Dual Board Layout - Smaller font for better readability */
-.game-boards-container.dual-board.double-bingo-dual .board-cell {
+.gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
   font-size: clamp(1.2rem, 3vw, 2.75rem);
 }
 
@@ -363,15 +363,15 @@
    WELCOME PANEL STYLES
    ============================================== */
 
-.welcome-panel {
+.welcomePanel {
   display: flex;
   flex-direction: column;
   height: 100%;
   gap: 20px;
 }
 
-.welcome-message-card,
-.qr-code-card {
+.welcomeMessageCard,
+.qrCodeCard {
   background: #f8f9fa;
   padding: 10px;
   border-radius: 8px;
@@ -379,18 +379,18 @@
   text-align: center;
 }
 
-.welcome-message-card {
+.welcomeMessageCard {
   flex: 1;
 }
 
-.welcome-message-card h3 {
+.welcomeMessageCard h3 {
   margin: 0 0 15px 0;
   color: #333;
   font-size: 3.5rem;
   user-select: none;
 }
 
-.welcome-template {
+.welcomeTemplate {
   font-family: 'Courier New', monospace;
   font-size: 2.2rem;
   font-weight: bold;
@@ -401,33 +401,33 @@
   user-select: none;
 }
 
-.qr-code-card {
+.qrCodeCard {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.qr-code-card h4 {
+.qrCodeCard h4 {
   margin: 0 0 15px 0;
   color: #333;
   font-size: 2.2rem;
   user-select: none;
 }
 
-.qr-code-container {
+.qrCodeContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1;
 }
 
-.game-qr-code {
+.gameQrCode {
   max-width: 100%;
   height: auto;
 }
 
-.room-id-display {
+.roomIdDisplay {
   margin-top: 10px;
   font-family: 'Courier New', monospace;
   font-size: 1.4rem;
@@ -440,7 +440,7 @@
 }
 
 /* QR Code Card Message States */
-.qr-code-message {
+.qrCodeMessage {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -450,49 +450,49 @@
   text-align: center;
 }
 
-.qr-code-message .status-icon {
+.qrCodeMessage .statusIcon {
   font-size: 3rem;
   margin-bottom: 15px;
 }
 
-.qr-code-message p {
+.qrCodeMessage p {
   margin: 5px 0;
   color: #333;
 }
 
-.qr-code-message p:first-of-type {
+.qrCodeMessage p:firstOfType {
   font-size: 1.6rem;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-.qr-code-message .status-detail {
+.qrCodeMessage .statusDetail {
   font-size: 1.2rem;
   color: #666;
   margin-bottom: 15px;
 }
 
-.qr-code-message .status-hint {
+.qrCodeMessage .statusHint {
   font-size: 1.1rem;
   color: #888;
   font-style: italic;
 }
 
 /* Error state styling */
-.qr-code-message.error {
+.qrCodeMessage.error {
   border-left-color: #dc3545;
 }
 
-.qr-code-message.error .status-icon {
+.qrCodeMessage.error .statusIcon {
   color: #dc3545;
 }
 
-.qr-code-message.error p:first-of-type {
+.qrCodeMessage.error p:firstOfType {
   color: #dc3545;
 }
 
 /* Connecting state styling */
-.qr-code-message.connecting .status-icon {
+.qrCodeMessage.connecting .statusIcon {
   color: #ffc107;
   animation: pulse 2s infinite;
 }
@@ -504,7 +504,7 @@
 }
 
 /* Settings link styling */
-.settings-link {
+.settingsLink {
   display: inline-block;
   padding: 10px 20px;
   background: #007bff;
@@ -516,21 +516,21 @@
   transition: background-color 0.3s ease;
 }
 
-.settings-link:hover {
+.settingsLink:hover {
   background: #0056b3;
   color: white;
   text-decoration: none;
 }
 
 /* QR Code Success State */
-.qr-code-success {
+.qrCodeSuccess {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.qr-code-instruction {
+.qrCodeInstruction {
   margin-top: 5px;
   font-size: 1.1rem;
   color: #666;
@@ -538,14 +538,14 @@
 }
 
 /* Toggle Switch Styles */
-.toggle-switch {
+.toggleSwitch {
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
 }
 
-.toggle-switch input {
+.toggleSwitch input {
   opacity: 0;
   width: 0;
   height: 0;
@@ -596,7 +596,7 @@ input:disabled + .slider {
    GAME SELECTION SECTION STYLES
    ============================================== */
 
-.game-selection-section {
+.gameSelectionSection {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -604,19 +604,19 @@ input:disabled + .slider {
   background: #f8f9fa;
 }
 
-.swiper-container {
+.swiperContainer {
   flex: 1;
   position: relative;
   overflow: hidden;
   background: #f8f9fa;
 }
 
-.game-swiper {
+.gameSwiper {
   height: 100%;
   padding: 10px 0;
 }
 
-.game-slide {
+.gameSlide {
   width: calc(25% - 12px) !important;
   display: flex;
   justify-content: center;
@@ -625,19 +625,19 @@ input:disabled + .slider {
 
 /* Responsive slide widths */
 @media (max-width: 767px) {
-  .game-slide {
+  .gameSlide {
     width: calc(33.333% - 10px) !important;
   }
 }
 
 @media (max-width: 639px) {
-  .game-slide {
+  .gameSlide {
     width: calc(50% - 8px) !important;
   }
 }
 
 /* Small Game Preview */
-.small-game-preview {
+.smallGamePreview {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -652,11 +652,11 @@ input:disabled + .slider {
   user-select: none;
 }
 
-.small-game-preview:hover {
+.smallGamePreview:hover {
   transform: scale(1.02);
 }
 
-.small-game-board {
+.smallGameBoard {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -666,7 +666,7 @@ input:disabled + .slider {
   flex-shrink: 0;
 }
 
-.small-game-board .game-board {
+.smallGameBoard .gameBoard {
   width: 100%;
   height: auto;
   border: 1px solid #ccc;
@@ -674,26 +674,26 @@ input:disabled + .slider {
   aspect-ratio: 2 / 1;
 }
 
-.small-game-board .board-cell{
+.smallGameBoard .boardCell{
   aspect-ratio: 2/1;
 }
 
 /* Responsive board sizing */
 @media (max-width: 767px) {
-  .small-game-board .game-board {
+  .smallGameBoard .gameBoard {
     max-width: 110px;
     max-height: 55px;
   }
 }
 
 @media (max-width: 639px) {
-  .small-game-board .game-board {
+  .smallGameBoard .gameBoard {
     max-width: 100px;
     max-height: 50px;
   }
 }
 
-.small-game-board .board-cell {
+.smallGameBoard .boardCell {
   font-size: 1.65rem;
   line-height: 1.1;
   padding: 2px;
@@ -701,40 +701,40 @@ input:disabled + .slider {
   user-select: none;
 }
 
-.small-game-board .board-cell.free-space {
+.smallGameBoard .boardCell.freeSpace {
   background-color: #fff;
   color: #333;
 }
 
 /* Double Bingo small boards need smaller font */
-.small-game-board.double-bingo-dual .board-cell {
+.smallGameBoard.doubleBingoDual .boardCell {
   font-size: 1.2rem;
 }
 
 /* Responsive board cell sizing */
 @media (max-width: 767px) {
-  .small-game-board .board-cell {
+  .smallGameBoard .boardCell {
     font-size: 0.6rem;
   }
 
   /* Double Bingo small boards need even smaller font at tablet size */
-  .small-game-board.double-bingo-dual .board-cell {
+  .smallGameBoard.doubleBingoDual .boardCell {
     font-size: 0.5rem;
   }
 }
 
 @media (max-width: 639px) {
-  .small-game-board .board-cell {
+  .smallGameBoard .boardCell {
     font-size: 0.55rem;
   }
 
   /* Double Bingo small boards need even smaller font at mobile size */
-  .small-game-board.double-bingo-dual .board-cell {
+  .smallGameBoard.doubleBingoDual .boardCell {
     font-size: 0.45rem;
   }
 }
 
-.game-preview-label {
+.gamePreviewLabel {
   font-size: 1.2rem;
   text-align: center;
   color: #333;
@@ -755,21 +755,21 @@ input:disabled + .slider {
 
 /* Responsive label sizing */
 @media (max-width: 767px) {
-  .game-preview-label {
+  .gamePreviewLabel {
     font-size: 0.75rem;
     height: 26px;
   }
 }
 
 @media (max-width: 639px) {
-  .game-preview-label {
+  .gamePreviewLabel {
     font-size: 0.7rem;
     height: 24px;
   }
 }
 
 /* Swiper Navigation */
-.swiper-navigation {
+.swiperNavigation {
   position: absolute;
   bottom: 5px;
   left: 0;
@@ -785,8 +785,8 @@ input:disabled + .slider {
   visibility: hidden;
 }
 
-.swiper-button-prev,
-.swiper-button-next {
+.swiperButtonPrev,
+.swiperButtonNext {
   position: static !important;
   margin: 0 !important;
   width: 40px !important;
@@ -803,27 +803,27 @@ input:disabled + .slider {
   font-weight: bold;
 }
 
-.swiper-button-prev:hover,
-.swiper-button-next:hover {
+.swiperButtonPrev:hover,
+.swiperButtonNext:hover {
   background: #007bff;
   color: white !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
-.swiper-button-prev::after {
+.swiperButtonPrev::after {
   content: '‹' !important;
   font-size: 20px !important;
   font-weight: bold !important;
 }
 
-.swiper-button-next::after {
+.swiperButtonNext::after {
   content: '›' !important;
   font-size: 20px !important;
   font-weight: bold !important;
 }
 
-.swiper-pagination {
+.swiperPagination {
   position: static !important;
   width: auto !important;
   display: flex;
@@ -832,7 +832,7 @@ input:disabled + .slider {
   margin: 0 10px;
 }
 
-.swiper-pagination-bullet {
+.swiperPaginationBullet {
   background: #666 !important;
   width: 10px !important;
   height: 10px !important;
@@ -843,7 +843,7 @@ input:disabled + .slider {
   opacity: 0.8 !important;
 }
 
-.swiper-pagination-bullet-active {
+.swiperPaginationBulletActive {
   background: #007bff !important;
   border-color: #0056b3 !important;
   transform: scale(1.2);
@@ -853,7 +853,7 @@ input:disabled + .slider {
 /* ==============================================
    START GAME BUTTON
 /* Play Icon for Start Game Button */
-.play-icon {
+.playIcon {
   width: 0;
   height: 0;
   border-left: 14px solid white;
@@ -867,49 +867,49 @@ input:disabled + .slider {
    ============================================== */
 
 @media (max-width: 768px) {
-  .main-layout {
+  .mainLayout {
     padding-left: 60px;
     padding-bottom: 26.5vh; /* Space for mobile bottom section */
   }
 
-  .top-section {
+  .topSection {
     flex-direction: column;
     min-height: auto;
     height: calc(100vh - 26.5vh); /* Fixed height to prevent growing into bottom section */
     flex: none;
   }
 
-  .game-preview-area {
+  .gamePreviewArea {
     order: 2;
     flex: none;
     min-height: 40vh;
   }
 
-  .welcome-area {
+  .welcomeArea {
     order: 1;
     flex: none;
     min-height: 25vh;
   }
 
-  .bottom-section {
+  .bottomSection {
     height: 26.5vh;
     overflow: hidden;
   }
 
-  .game-title {
+  .gameTitle {
     font-size: 1.5rem;
   }
 
-  .welcome-template {
+  .welcomeTemplate {
     font-size: 1rem;
   }
 
-  .progress-circle {
+  .progressCircle {
     transform: scale(0.7);
   }
 
   /* Dual board layout adjustments */
-  .game-boards-container.dual-board {
+  .gameBoardsContainer.dualBoard {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 10px 1fr;
     gap: 10px;
@@ -917,17 +917,17 @@ input:disabled + .slider {
   }
 
   /* Tablet Dual Board Layout */
-  .game-boards-container.dual-board .board-cell {
+  .gameBoardsContainer.dualBoard .boardCell {
     font-size: clamp(1.5rem, 3.5vw, 2.5rem);
     aspect-ratio: 1;
   }
 
   /* Tablet Double Bingo Dual Board Layout - Smaller font for better readability */
-  .game-boards-container.dual-board.double-bingo-dual .board-cell {
+  .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
     font-size: clamp(1.0rem, 2.5vw, 1.8rem);
   }
 
-  .operator-icon {
+  .operatorIcon {
     width: 25px;
     height: 25px;
     font-size: 1.2rem;
@@ -935,12 +935,12 @@ input:disabled + .slider {
 }
 
 @media (max-width: 480px) {
-  .main-layout {
+  .mainLayout {
     padding-left: 50px;
     padding-bottom: 22.25vh; /* Space for mobile bottom section */
   }
 
-  .top-section {
+  .topSection {
     padding: 10px;
     gap: 15px;
     min-height: auto;
@@ -948,57 +948,57 @@ input:disabled + .slider {
     flex: none;
   }
 
-  .bottom-section {
+  .bottomSection {
     padding: 0 10px 10px;
     height: 22.25vh;
     overflow: hidden;
   }
 
-  .game-title {
+  .gameTitle {
     font-size: 1.3rem;
   }
 
-  .welcome-template {
+  .welcomeTemplate {
     font-size: 0.9rem;
   }
 
-  .progress-circle {
+  .progressCircle {
     transform: scale(0.6);
   }
 
   /* Mobile Single Board Layout */
-  .game-boards-container:not(.dual-board) .board-cell {
+  .gameBoardsContainer:not(.dualBoard) .boardCell {
     font-size: clamp(1.5rem, 3.5vw, 2.5rem);
     aspect-ratio: 2/1;
   }
 
   /* Mobile Dual Board Layout */
-  .game-boards-container.dual-board .board-cell {
+  .gameBoardsContainer.dualBoard .boardCell {
     font-size: clamp(0.9rem, 2.25vw, 1.5rem);
     aspect-ratio: 1;
   }
 
   /* Mobile Double Bingo Dual Board Layout - Even smaller font for mobile */
-  .game-boards-container.dual-board.double-bingo-dual .board-cell {
+  .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
     font-size: clamp(0.7rem, 1.8vw, 1.2rem);
   }
 
-  .small-game-preview {
+  .smallGamePreview {
     width: 100px;
   }
 
-  .small-game-board {
+  .smallGameBoard {
     width: 80px;
     height: 40px;
   }
 
-  .small-game-board .game-board {
+  .smallGameBoard .gameBoard {
     max-width: 80px;
     max-height: 40px;
   }
 
   /* Mobile Play Icon */
-  .play-icon {
+  .playIcon {
     border-left: 12px solid white;
     border-top: 7px solid transparent;
     border-bottom: 7px solid transparent;

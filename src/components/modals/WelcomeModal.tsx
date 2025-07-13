@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { generateWelcomeMessage } from '../../utils/settings';
-import './WelcomeModal.css';
+import styles from './WelcomeModal.module.css';
 
 export interface WelcomeModalProps {
   isVisible: boolean;
@@ -57,14 +57,14 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="welcome-modal-overlay" onClick={onClose}>
+    <div className={styles.welcomeModalOverlay} onClick={onClose}>
       <div
-        className="welcome-modal-content"
+        className={styles.welcomeModalContent}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="welcome-modal-card">
-          <h3 className="welcome-modal-title">Welcome</h3>
-          <pre className="welcome-modal-template">{welcomeText}</pre>
+        <div className={styles.welcomeModalCard}>
+          <h3 className={styles.welcomeModalTitle}>Welcome</h3>
+          <pre className={styles.welcomeModalTemplate}>{welcomeText}</pre>
         </div>
       </div>
     </div>

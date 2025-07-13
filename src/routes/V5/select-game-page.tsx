@@ -1,7 +1,7 @@
 // Select Game Page
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './select-game-page.css';
+import styles from './select-game-page.module.css';
 import games from '../../data/games';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
 import QRCode from '../../components/QRCode';
@@ -35,8 +35,8 @@ const ProgressCircle = ({ progress, isResetting }: { progress: number, isResetti
   const strokeDashoffset = circumference - (progress * circumference);
 
   return (
-    <div className="progress-circle-container">
-      <svg width="50" height="50" viewBox="0 0 50 50" className="progress-circle">
+    <div className={styles.progressCircleContainer}>
+      <svg width="50" height="50" viewBox="0 0 50 50" className={styles.progressCircle}>
         {/* Background circle */}
         <circle
           cx="25"
@@ -96,9 +96,9 @@ const GameBoard = ({
   const highlightTextColor = getContrastTextColor(boardHighlightColor);
 
   return (
-    <div className={`game-board ${isSelected ? 'selected' : ''}`} onClick={handleClick}>
+    <div className={`${styles.gameBoard} ${isSelected ? styles.selected : ''}`} onClick={handleClick}>
       {[0, 1, 2, 3, 4].map((rowIndex) => (
-        <div key={rowIndex} className="board-row">
+        <div key={rowIndex} className={styles.boardRow}>
           {[0, 1, 2, 3, 4].map((colIndex) => {
             const isHighlightedCell = isHighlighted(rowIndex, colIndex);
             const isFreeSpace = rowIndex === 2 && colIndex === 2;
@@ -112,7 +112,7 @@ const GameBoard = ({
             return (
               <div
                 key={`${rowIndex}-${colIndex}-${colorVersion}`}
-                className={`board-cell ${isHighlightedCell ? 'highlighted' : ''} ${isFreeSpace ? 'free-space' : ''}`}
+                className={`${styles.boardCell} ${isHighlightedCell ? styles.highlighted : ''} ${isFreeSpace ? styles.freeSpace : ''}`}
                 style={cellStyle}
               >
                 {isFreeSpace ? (freeSpace ? 'FREE' : letters[colIndex]) : letters[colIndex]}
@@ -137,7 +137,7 @@ const OperatorIcon = ({ operator }: { operator: string }) => {
   };
 
   return (
-    <div className="operator-icon">
+    <div className={styles.operatorIcon}>
       {getOperatorSymbol()}
     </div>
   );
@@ -146,9 +146,9 @@ const OperatorIcon = ({ operator }: { operator: string }) => {
 // Game Info Card Component
 const GameInfoCard = ({ game, variant }: { game: any, variant: any }) => {
   return (
-    <div className="game-info-card">
-      <h2 className="game-title">{game.name}</h2>
-      <div className="game-rules">
+    <div className={styles.gameInfoCard}>
+      <h2 className={styles.gameTitle}>{game.name}</h2>
+      <div className={styles.gameRules}>
         <h4>{variant.rules}</h4>
       </div>
     </div>
@@ -172,18 +172,18 @@ const FreeSpaceToggle = ({
   const isDisabled = disabled || (!hasDynamicFreeSpace);
 
   return (
-    <div className="free-space-toggle">
-      <span className="toggle-label">Free Space:</span>
-      <label className={`toggle-switch ${isDisabled ? 'disabled' : ''}`}>
+    <div className={styles.freeSpaceToggle}>
+      <span className={styles.toggleLabel}>Free Space:</span>
+      <label className={`${styles.toggleSwitch} ${isDisabled ? styles.disabled : ''}`}>
         <input
           type="checkbox"
           checked={freeSpace}
           onChange={(e) => !isDisabled && onChange(e.target.checked)}
           disabled={isDisabled}
         />
-        <span className="slider"></span>
+        <span className={styles.slider}></span>
       </label>
-      <span className="toggle-state">{freeSpace ? 'ON' : 'OFF'}</span>
+      <span className={styles.toggleState}>{freeSpace ? 'ON' : 'OFF'}</span>
     </div>
   );
 };
@@ -201,19 +201,19 @@ const VariantControls = ({
   onNext: () => void
 }) => {
   return (
-    <div className="variant-controls">
+    <div className={styles.variantControls}>
       <button
-        className="variant-arrow"
+        className={styles.variantArrow}
         onClick={onPrevious}
         disabled={totalVariants <= 1}
       >
         ←
       </button>
-      <span className="variant-indicator">
+      <span className={styles.variantIndicator}>
         {currentVariant + 1} / {totalVariants}
       </span>
       <button
-        className="variant-arrow"
+        className={styles.variantArrow}
         onClick={onNext}
         disabled={totalVariants <= 1}
       >
@@ -236,44 +236,44 @@ const WelcomePanel = () => {
   const renderQRCodeContent = () => {
     if (!hasServerSettings) {
       return (
-        <div className="qr-code-message">
-          <div className="status-icon">⚠️</div>
+        <div className={styles.qrCodeMessage}>
+          <div className={styles.statusIcon}>⚠️</div>
           <p>Server settings missing</p>
-          <p className="status-detail">Configure server URL and auth token to enable multiplayer</p>
-          <a href="/BingoBoard/settings?expand=bingo-server-settings" className="settings-link">Configure Server Settings</a>
+          <p className={styles.statusDetail}>Configure server URL and auth token to enable multiplayer</p>
+          <a href="/BingoBoard/settings?expand=bingo-server-settings" className={styles.settingsLink}>Configure Server Settings</a>
         </div>
       );
     }
 
     if (connectionError) {
       return (
-        <div className="qr-code-message error">
-          <div className="status-icon">❌</div>
+        <div className={`${styles.qrCodeMessage} ${styles.error}`}>
+          <div className={styles.statusIcon}>❌</div>
           <p>Server connection failed</p>
-          <p className="status-detail">{connectionError}</p>
-          <p className="status-hint">Check if server is running and settings are correct</p>
+          <p className={styles.statusDetail}>{connectionError}</p>
+          <p className={styles.statusHint}>Check if server is running and settings are correct</p>
         </div>
       );
     }
 
     if (!isConnected) {
       return (
-        <div className="qr-code-message connecting">
-          <div className="status-icon">🔄</div>
+        <div className={`${styles.qrCodeMessage} ${styles.connecting}`}>
+          <div className={styles.statusIcon}>🔄</div>
           <p>Connecting to server...</p>
-          <p className="status-detail">Attempting to establish connection</p>
+          <p className={styles.statusDetail}>Attempting to establish connection</p>
         </div>
       );
     }
 
     if (isConnected && roomId) {
       return (
-        <div className="qr-code-success">
-          <div className="qr-code-container">
+        <div className={styles.qrCodeSuccess}>
+          <div className={styles.qrCodeContainer}>
             <QRCode
               value={`${window.location.origin}/BingoBoard/board?roomId=${roomId}`}
               size={200}
-              className="game-qr-code"
+              className={styles.gameQrCode}
             />
           </div>
         </div>
@@ -282,21 +282,21 @@ const WelcomePanel = () => {
 
     // Connected but no room ID yet
     return (
-      <div className="qr-code-message connecting">
-        <div className="status-icon">🔄</div>
+      <div className={`${styles.qrCodeMessage} ${styles.connecting}`}>
+        <div className={styles.statusIcon}>🔄</div>
         <p>Setting up room...</p>
-        <p className="status-detail">Connected to server, creating room</p>
+        <p className={styles.statusDetail}>Connected to server, creating room</p>
       </div>
     );
   };
 
   return (
-    <div className="welcome-panel">
-      <div className="welcome-message-card">
+    <div className={styles.welcomePanel}>
+      <div className={styles.welcomeMessageCard}>
         <h3>Welcome</h3>
-        <pre className="welcome-template">{welcomeText}</pre>
+        <pre className={styles.welcomeTemplate}>{welcomeText}</pre>
       </div>
-      <div className="qr-code-card">
+      <div className={styles.qrCodeCard}>
         <h4>User Board View</h4>
         {renderQRCodeContent()}
       </div>
@@ -447,7 +447,7 @@ const GamePreviewSection = ({
     }
 
     return (
-      <div className={`game-boards-container ${isDualBoard ? 'dual-board' : 'single-board'} ${isDoubleBingo && isDualBoard ? 'double-bingo-dual' : ''}`}>
+      <div className={`${styles.gameBoardsContainer} ${isDualBoard ? styles.dualBoard : styles.singleBoard} ${isDoubleBingo && isDualBoard ? styles.doubleBingoDual : ''}`}>
         {cachedPatterns.map((possiblePatterns: number[][][], index: number) => {
           // Use rotation index to pick which pattern to display (with wrap-around)
           const selectedPattern = possiblePatterns[rotationIndex % possiblePatterns.length];
@@ -471,7 +471,7 @@ const GamePreviewSection = ({
   };
 
   return (
-    <div className="game-preview-section">
+    <div className={styles.gamePreviewSection}>
       <GameInfoCard game={currentGame} variant={currentVariant} />
 
       <FreeSpaceToggle
@@ -480,13 +480,13 @@ const GamePreviewSection = ({
         variant={currentVariant}
       />
 
-      <div className="game-display-area">
-        <div className="game-boards-wrapper">
+      <div className={styles.gameDisplayArea}>
+        <div className={styles.gameBoardsWrapper}>
           {renderGameBoards()}
         </div>
       </div>
 
-      <div className="variant-controls-wrapper">
+      <div className={styles.variantControlsWrapper}>
         <VariantControls
           currentVariant={settings.variant}
           totalVariants={currentGame.variants.length}
@@ -494,7 +494,7 @@ const GamePreviewSection = ({
           onNext={() => handleVariantChange('next')}
         />
         {hasMultiplePatterns && (
-          <div className="progress-circle-inline">
+          <div className={styles.progressCircleInline}>
             <ProgressCircle progress={progress} isResetting={isResetting} />
           </div>
         )}
@@ -526,11 +526,11 @@ const SmallGamePreview = ({
     : firstBoardFunction; // Fallback for any remaining non-function boards
 
   return (
-    <div className="small-game-preview" onClick={onClick}>
-      <div className="game-preview-label">
+    <div className={styles.smallGamePreview} onClick={onClick}>
+      <div className={styles.gamePreviewLabel}>
         {game.name} [{firstVariant.length || 'Standard'}]
       </div>
-      <div className={`small-game-board ${isDualBoard && isDoubleBingo ? 'double-bingo-dual' : ''}`}>
+      <div className={`${styles.smallGameBoard} ${isDualBoard && isDoubleBingo ? styles.doubleBingoDual : ''}`}>
         <GameBoard board={firstPattern} freeSpace={true} colorVersion={colorVersion} />
       </div>
     </div>
@@ -550,8 +550,8 @@ const GameSelectionSection = ({
   colorVersion?: number
 }) => {
   return (
-    <div className="game-selection-section">
-      <div className="swiper-container">
+    <div className={styles.gameSelectionSection}>
+      <div className={styles.swiperContainer}>
         <Swiper
           modules={[Navigation, Pagination, Mousewheel, Keyboard]}
           spaceBetween={20}
@@ -583,10 +583,10 @@ const GameSelectionSection = ({
           }}
           mousewheel={true}
           keyboard={true}
-          className="game-swiper"
+          className={styles.gameSwiper}
         >
           {games.map((game, index) => (
-            <SwiperSlide key={index} className="game-slide">
+            <SwiperSlide key={index} className={styles.gameSlide}>
               <SmallGamePreview
                 game={game}
                 gameIndex={index}
@@ -597,7 +597,7 @@ const GameSelectionSection = ({
           ))}
         </Swiper>
 
-        <div className="swiper-navigation">
+        <div className={styles.swiperNavigation}>
           <div className="swiper-button-prev"></div>
           <div className="swiper-pagination"></div>
           <div className="swiper-button-next"></div>
@@ -699,23 +699,23 @@ const SelectGamePage = () => {
   };
 
   return (
-    <div className="select-game-page">
+    <div className={styles.selectGamePage}>
       <SidebarWithMenu
         currentPage="select-game"
         pageButtons={[
           {
             id: 'start-game',
             label: 'Start Game',
-            icon: <div className="play-icon"></div>,
+            icon: <div className={styles.playIcon}></div>,
             onClick: handlePlayGame,
-            className: 'start-game-button'
+            className: styles.startGameButton
           }
         ]}
       />
 
-      <div className="main-layout">
-        <div className="top-section">
-          <div className="game-preview-area">
+      <div className={styles.mainLayout}>
+        <div className={styles.topSection}>
+          <div className={styles.gamePreviewArea}>
             <GamePreviewSection
               games={gameList}
               settings={gameSettings}
@@ -724,12 +724,12 @@ const SelectGamePage = () => {
             />
           </div>
 
-          <div className="welcome-area">
+          <div className={styles.welcomeArea}>
             <WelcomePanel />
           </div>
         </div>
 
-        <div className="bottom-section">
+        <div className={styles.bottomSection}>
           <GameSelectionSection
             games={gameList}
             currentGameId={gameSettings.id}

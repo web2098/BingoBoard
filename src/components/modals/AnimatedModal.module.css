@@ -1,5 +1,5 @@
 /* Animated Modal Styles */
-.animated-modal-overlay {
+.animatedModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@
   z-index: 9999;
 }
 
-.animated-modal-content {
+.animatedModalContent {
   position: relative;
   width: 75vw; /* 75% of viewport width as specified */
   height: 75vh; /* 75% of viewport height as specified */
@@ -22,7 +22,7 @@
 }
 
 /* Modal countdown timer */
-.modal-countdown {
+.modalCountdown {
   position: fixed;
   top: 50%;
   right: 30px;
@@ -39,7 +39,7 @@
   z-index: 10001;
 }
 
-.countdown-circle {
+.countdownCircle {
   position: absolute;
   top: 0;
   left: 0;
@@ -48,13 +48,13 @@
   transform: rotate(-90deg);
 }
 
-.countdown-circle-bg {
+.countdownCircleBg {
   fill: none;
   stroke: rgba(255, 255, 255, 0.2);
   stroke-width: 4;
 }
 
-.countdown-circle-progress {
+.countdownCircleProgress {
   fill: none;
   stroke: #ffcc00;
   stroke-width: 4;
@@ -64,7 +64,7 @@
   animation: countdown-progress linear var(--countdown-duration, 3000ms) forwards;
 }
 
-.countdown-number {
+.countdownNumber {
   position: relative;
   z-index: 1;
   background-color: rgba(0, 0, 0, 0.8);
@@ -85,7 +85,7 @@
   }
 }
 
-.animated-modal-img {
+.animatedModalImg {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
@@ -93,7 +93,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.animated-modal-progress {
+.animatedModalProgress {
   position: absolute;
   bottom: 20px;
   left: 50%;
@@ -105,7 +105,7 @@
   overflow: hidden;
 }
 
-.animated-modal-progress-bar {
+.animatedModalProgressBar {
   height: 100%;
   background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff);
   background-size: 400% 400%;
@@ -137,12 +137,12 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .animated-modal-content {
+  .animatedModalContent {
     width: 95vw;
     height: 95vh;
   }
 
-  .animated-modal-progress {
+  .animatedModalProgress {
     bottom: 15px;
     width: 150px;
     height: 3px;
@@ -150,16 +150,16 @@
 }
 
 @media (max-width: 480px) {
-  .animated-modal-content {
+  .animatedModalContent {
     width: 98vw;
     height: 98vh;
   }
 
-  .animated-modal-img {
+  .animatedModalImg {
     border-radius: 8px;
   }
 
-  .animated-modal-progress {
+  .animatedModalProgress {
     bottom: 10px;
     width: 120px;
     height: 2px;
@@ -168,15 +168,15 @@
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-  .animated-modal-overlay {
+  .animatedModalOverlay {
     background-color: rgba(0, 0, 0, 0.95);
   }
 
-  .animated-modal-progress {
+  .animatedModalProgress {
     background-color: rgba(255, 255, 255, 0.4);
   }
 
-  .animated-modal-progress-bar {
+  .animatedModalProgressBar {
     background: #ffffff;
   }
 }

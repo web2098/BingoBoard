@@ -1,5 +1,5 @@
 /* Welcome Modal Styles */
-.welcome-modal-overlay {
+.welcomeModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@
   cursor: pointer;
 }
 
-.welcome-modal-content {
+.welcomeModalContent {
   cursor: default;
   max-width: 90vw;
   max-height: 90vh;
@@ -22,7 +22,7 @@
   align-items: center;
 }
 
-.welcome-modal-card {
+.welcomeModalCard {
   background: #f8f9fa;
   padding: 40px;
   border-radius: 12px;
@@ -33,14 +33,14 @@
   max-width: 600px;
 }
 
-.welcome-modal-title {
+.welcomeModalTitle {
   margin: 0 0 20px 0;
   color: #333;
   font-size: 3.5rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.welcome-modal-template {
+.welcomeModalTemplate {
   font-family: 'Courier New', monospace;
   font-size: 2.2rem;
   font-weight: bold;
@@ -53,44 +53,44 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .welcome-modal-card {
+  .welcomeModalCard {
     padding: 30px 20px;
     min-width: 300px;
     max-width: 85vw;
   }
 
-  .welcome-modal-title {
+  .welcomeModalTitle {
     font-size: 2.5rem;
   }
 
-  .welcome-modal-template {
+  .welcomeModalTemplate {
     font-size: 1.8rem;
   }
 }
 
 @media (max-width: 480px) {
-  .welcome-modal-card {
+  .welcomeModalCard {
     padding: 20px 15px;
     min-width: 280px;
     max-width: 90vw;
   }
 
-  .welcome-modal-title {
+  .welcomeModalTitle {
     font-size: 2rem;
   }
 
-  .welcome-modal-template {
+  .welcomeModalTemplate {
     font-size: 1.4rem;
     line-height: 1.4;
   }
 }
 
 /* Animation */
-.welcome-modal-overlay {
+.welcomeModalOverlay {
   animation: fadeIn 0.3s ease-out;
 }
 
-.welcome-modal-card {
+.welcomeModalCard {
   animation: slideUp 0.3s ease-out;
 }
 
