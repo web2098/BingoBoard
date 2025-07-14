@@ -12,6 +12,15 @@ export class ClientConnection extends ServerConnection {
     super(config);
     this.clientConfig = config;
     this.roomId = config.roomId;
+
+    // Try to restore client ID from session storage
+    const storedClientId = sessionStorage.getItem('bingo_client_id');
+    if (storedClientId && storedClientId !== 'null' && storedClientId !== 'undefined') {
+      this.clientId = storedClientId;
+      console.log('Restored client ID from session storage:', this.clientId);
+    } else {
+      console.log('No valid client ID found in session storage');
+    }
   }
 
   public async connectToRoom(): Promise<boolean> {
@@ -45,8 +54,22 @@ export class ClientConnection extends ServerConnection {
   }
 
   protected onOpen(): void {
-    // Request current game state after connection
-    this.requestUpdate();
+    // If we already have a client ID from session storage, request update directly
+    // Otherwise, request a new client ID first
+    if (this.clientId && this.clientId !== 'undefined' && this.clientId !== 'null' && this.clientId.trim() !== '') {
+      console.log('Using stored client ID:', this.clientId);
+      this.requestUpdate();
+    } else {
+      console.log('No valid stored client ID, requesting new one. Current clientId:', this.clientId);
+      this.requestClientId();
+    }
+  }
+
+  public requestClientId(): void {
+    const message = {
+      type: "request_id"
+    };
+    this.sendMessage(message);
   }
 
   public requestUpdate(): void {
@@ -72,11 +95,31 @@ export class ClientConnection extends ServerConnection {
     return this.roomId;
   }
 
+  public clearStoredClientId(): void {
+    console.log('Clearing stored client ID');
+    sessionStorage.removeItem('bingo_client_id');
+    this.clientId = null;
+  }
+
+  public getStoredClientId(): string | null {
+    return sessionStorage.getItem('bingo_client_id');
+  }
+
   protected handleMessage(message: any): void {
+    console.log('Received message:', message);
     super.handleMessage(message);
 
     // Handle client-specific messages
     switch (message.type) {
+      case 'id':
+        console.log('Received client ID:', message.id);
+        // Store the client ID in session storage
+        sessionStorage.setItem('bingo_client_id', message.conn_id);
+        this.clientId = message.conn_id;
+        console.log('Stored client ID in session storage:', message.conn_id);
+        // Now request the current game state
+        this.requestUpdate();
+        break;
       case 'setup':
         console.log('Received game setup:', message.data);
         break;

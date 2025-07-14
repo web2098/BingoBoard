@@ -1,12 +1,10 @@
 /* Audience Interaction Buttons Styles */
 .audienceInteractionButtons {
-  position: fixed;
-  left: 12px;
-  top: 160px; /* Position below the floating start button */
   display: flex;
   flex-direction: column;
   gap: 12px;
-  z-index: 10;
+  width: 100%;
+  align-items: center;
   pointer-events: none; /* Allow clicks to pass through the container */
 }
 
@@ -76,8 +74,6 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .audienceInteractionButtons {
-    left: 15px;
-    top: 140px; /* Account for smaller floating button */
     gap: 8px;
   }
 
@@ -98,8 +94,6 @@
 
 @media (max-width: 480px) {
   .audienceInteractionButtons {
-    left: 5px;
-    top: 130px;
     gap: 6px;
   }
 
@@ -118,37 +112,4 @@
   }
 }
 
-/* When inside sidebar, override the fixed positioning */
-.audienceInteractionSection .audienceInteractionButtons {
-  position: static !important;
-  left: auto !important;
-  top: auto !important;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  z-index: auto;
-  pointer-events: auto;
-  width: 100%;
-  align-items: center;
-}
 
-.audienceInteractionSection .audienceInteractionBtn {
-  width: 56px;
-  height: 56px;
-  margin: 0;
-}
-
-/* Responsive styles for sidebar integration */
-@media (max-width: 768px) {
-  .audienceInteractionSection .audienceInteractionBtn {
-    width: 48px;
-    height: 48px;
-  }
-}
-
-@media (max-width: 480px) {
-  .audienceInteractionSection .audienceInteractionBtn {
-    width: 40px;
-    height: 40px;
-  }
-}

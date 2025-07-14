@@ -271,7 +271,7 @@ const WelcomePanel = () => {
         <div className={styles.qrCodeSuccess}>
           <div className={styles.qrCodeContainer}>
             <QRCode
-              value={`${window.location.origin}/BingoBoard/board?roomId=${roomId}`}
+              value={`${window.location.origin}/BingoBoard/client?roomId=${roomId}&serverUrl=${encodeURIComponent(getSetting('serverUrl', ''))}`}
               size={200}
               className={styles.gameQrCode}
             />

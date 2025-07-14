@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import SelectGamePage from './routes/V5/select-game-page';
 import BoardPage from './routes/V5/board-page';
+import ClientPage from './routes/V5/client-page';
 import SettingsPage from './routes/V5/settings-page';
 import About from './routes/V5/about-page';
 import TelemetryPage from './routes/V5/telemetry-page';
@@ -68,10 +69,17 @@ function VersionSpecificRoute({
 }
 
 export default function MyApp() {
+  // Handle game state updates from the server interaction context
+  const handleGameStateUpdate = useCallback((gameState: any, styleConfig: any, sessionConfig: any) => {
+    console.log('App received game state update:', gameState);
+    // This ensures the app is aware of game state changes for proper client updates
+  }, []);
+
   // Define page components mapping
   const pageComponents = {
     selectGame: SelectGamePage,
     board: BoardPage,
+    client: ClientPage,
     settings: SettingsPage,
     about: About,
     telemetry: TelemetryPage,
@@ -118,7 +126,9 @@ export default function MyApp() {
   const router = createBrowserRouter(routes);
 
   return (
-    <ServerInteractionProvider>
+    <ServerInteractionProvider
+      onGameStateUpdate={handleGameStateUpdate}
+    >
       <AudienceInteractionModalManager>
         <RouterProvider router={router} />
       </AudienceInteractionModalManager>

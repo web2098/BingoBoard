@@ -97,12 +97,19 @@ export const ServerInteractionProvider: React.FC<ServerInteractionProviderProps>
         break;
 
       case 'setup':
+        console.log('Received setup message:', message);
+        console.log('Setup data:', message.data);
+        console.log('Active numbers:', message.data.active);
+
         const gameState: GameState = {
           name: message.data.game,
           freeSpaceOn: message.data.free,
-          calledNumbers: message.data.active,
+          calledNumbers: message.data.active || [],
           lastNumber: message.data.lastNumber
         };
+
+        console.log('Created gameState:', gameState);
+
         setState(prev => ({
           ...prev,
           gameState,
@@ -115,18 +122,59 @@ export const ServerInteractionProvider: React.FC<ServerInteractionProviderProps>
         break;
 
       case 'activate':
+        // Update internal game state
+        setState(prev => {
+          if (prev.gameState) {
+            const updatedGameState = {
+              ...prev.gameState,
+              calledNumbers: prev.gameState.calledNumbers.includes(message.id)
+                ? prev.gameState.calledNumbers
+                : [...prev.gameState.calledNumbers, message.id],
+              lastNumber: message.id
+            };
+            return { ...prev, gameState: updatedGameState };
+          }
+          return prev;
+        });
+
         if (onNumberActivated) {
           onNumberActivated(message.id, message.spots);
         }
         break;
 
       case 'deactivate':
+        // Update internal game state
+        setState(prev => {
+          if (prev.gameState) {
+            const updatedCalledNumbers = prev.gameState.calledNumbers.filter(n => n !== message.id);
+            const updatedGameState = {
+              ...prev.gameState,
+              calledNumbers: updatedCalledNumbers,
+              lastNumber: updatedCalledNumbers.length > 0 ? updatedCalledNumbers[updatedCalledNumbers.length - 1] : undefined
+            };
+            return { ...prev, gameState: updatedGameState };
+          }
+          return prev;
+        });
+
         if (onNumberDeactivated) {
           onNumberDeactivated(message.id, message.spots);
         }
         break;
 
       case 'update_free':
+        // Update internal game state
+        setState(prev => {
+          if (prev.gameState) {
+            const updatedGameState = {
+              ...prev.gameState,
+              freeSpaceOn: message.free
+            };
+            return { ...prev, gameState: updatedGameState };
+          }
+          return prev;
+        });
+
         if (onFreeSpaceUpdate) {
           onFreeSpaceUpdate(message.free);
         }
@@ -140,8 +188,18 @@ export const ServerInteractionProvider: React.FC<ServerInteractionProviderProps>
 
       case 'update':
         // Host received update request from client
+        console.log('Received update request from client:', message.client_id);
         const currentState = connectionStateRef.current;
-        if (currentState.isHost && onGameStateUpdate && currentState.gameState && currentState.styleConfig && currentState.sessionConfig) {
+        console.log('Current state for update:', {
+          isHost: currentState.isHost,
+          gameState: currentState.gameState,
+          hasStyleConfig: !!currentState.styleConfig,
+          hasSessionConfig: !!currentState.sessionConfig
+        });
+
+        if (currentState.isHost && currentState.gameState && currentState.styleConfig && currentState.sessionConfig) {
+          console.log('Sending game setup to client:', message.client_id);
+          console.log('Game state being sent:', currentState.gameState);
           // Re-send current state to requesting client
           currentState.hostConnection?.sendGameSetupToClient(
             message.client_id,
@@ -149,6 +207,18 @@ export const ServerInteractionProvider: React.FC<ServerInteractionProviderProps>
             currentState.styleConfig,
             currentState.sessionConfig
           );
+
+          // Notify the app that a client requested an update
+          if (onGameStateUpdate) {
+            onGameStateUpdate(currentState.gameState, currentState.styleConfig, currentState.sessionConfig);
+          }
+        } else {
+          console.log('Cannot send update - missing state:', {
+            isHost: currentState.isHost,
+            hasGameState: !!currentState.gameState,
+            hasStyleConfig: !!currentState.styleConfig,
+            hasSessionConfig: !!currentState.sessionConfig
+          });
         }
         break;
     }
@@ -250,7 +320,7 @@ export const ServerInteractionProvider: React.FC<ServerInteractionProviderProps>
     }
   }, [handleMessage, handleError, handleOpen, handleClose]);
 
-  // Auto-connect effect with configurable retry interval
+  //Auto-connect effect with configurable retry interval
   useEffect(() => {
     const serverUrl = getSetting('serverUrl', '');
     const authToken = getSetting('serverAuthToken', '');
@@ -268,11 +338,14 @@ export const ServerInteractionProvider: React.FC<ServerInteractionProviderProps>
       const urlParams = new URLSearchParams(window.location.search);
       const roomId = urlParams.get('roomId');
 
-      if (roomId) {
-        // This is a client joining via QR code
+      // Check if we're on the client page - if so, don't auto-connect
+      const isClientPage = window.location.pathname.includes('/client');
+
+      if (roomId && !isClientPage) {
+        // This is a client joining via QR code (but not on the dedicated client page)
         console.log('Auto-connecting as client to room:', roomId);
         joinRoom(serverUrl, roomId);
-      } else {
+      } else if (!roomId && !isClientPage) {
         // This is a host connection
         if (authToken.trim()) {
           console.log('Auto-connecting as host to server:', serverUrl);

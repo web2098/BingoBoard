@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './board-page.module.css';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
@@ -318,13 +318,13 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   } = useServerInteraction();
   const [calledNumbers, setCalledNumbers] = useState<number[]>([]);
   const [lastNumber, setLastNumber] = useState<number | null>(null);
-  const [gameData, setGameData] = useState({
-    id: 0,
-    name: "Traditional Bingo",
-    variant: 0,
-    freeSpace: true,
-    totalNumbers: 75
-  });
+  const [gameData, setGameData] = useState<{
+    id: number;
+    name: string;
+    variant: number;
+    freeSpace: boolean;
+    totalNumbers: number;
+  } | null>(null);
 
   // State for pattern rotation functionality
   const [rotationIndex, setRotationIndex] = useState(0);
@@ -346,6 +346,10 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   // State for triggering board re-renders when highlight color changes
   const [settingsVersion, setSettingsVersion] = useState(0);
 
+  // Ref to track if initial game setup has been sent to avoid multiple sends during component initialization
+  const initialSetupSent = useRef(false);
+  const lastSentGameConfig = useRef<string | null>(null);
+
   // Modal handlers
   const handlePreviewClick = () => {
     setIsModalVisible(true);
@@ -354,12 +358,39 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   const handleModalClose = () => {
     setIsModalVisible(false);
   };
-
   // Game options handlers with telemetry integration
   const handleResetBoard = () => {
     resetGameSession();
     setCalledNumbers([]);
     setLastNumber(null);
+
+    // Reset tracking to ensure game setup is sent after reset
+    initialSetupSent.current = false;
+    lastSentGameConfig.current = null;
+
+    // Send updated game state to clients if connected as host
+    if (isConnected && isHost && gameData) {
+      const gameState: GameState = {
+        name: gameData.name,
+        freeSpaceOn: gameData.freeSpace,
+        calledNumbers: [],
+        lastNumber: undefined
+      };
+
+      const styleConfig: StyleConfig = {
+        selectedColor: getSetting('boardHighlightColor', '#1e4d2b'),
+        selectedTextColor: getSetting('highlightTextColor', '#ffffff'),
+        unselectedColor: getSetting('backgroundColor', '#ffffff'),
+        unselectedTextColor: getSetting('textColor', '#000000')
+      };
+
+      const sessionConfig: SessionConfig = {
+        specialNumbers: JSON.parse(localStorage.getItem('specialNumbers') || '{}')
+      };
+
+      console.log("Sending game setup after reset");
+      sendGameSetup(gameState, styleConfig, sessionConfig);
+    }
   };
 
   const handleSelectNewGame = () => {
@@ -407,71 +438,104 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   // Load game settings from localStorage and initialize telemetry
   useEffect(() => {
     const savedSettings = localStorage.getItem('gameSettings');
+    let gameConfig;
+
     if (savedSettings) {
       const settings = JSON.parse(savedSettings);
-      const gameConfig = {
+      gameConfig = {
         id: settings.id || 0,
         name: settings.name || "Traditional Bingo",
         variant: settings.variant || 0,
         freeSpace: settings.freeSpace,
         totalNumbers: 75
       };
-
-      setGameData(gameConfig);
-
-      // Initialize telemetry session
-      const currentSession = getCurrentSession();
-      if (!currentSession ||
-          currentSession.gameId !== gameConfig.id ||
-          currentSession.variant !== gameConfig.variant ||
-          currentSession.freeSpace !== gameConfig.freeSpace) {
-        // Start new session if no current session or game changed
-        startGameSession(
-          gameConfig.id,
-          gameConfig.name,
-          gameConfig.variant,
-          gameConfig.freeSpace,
-          gameConfig.totalNumbers
-        );
-      }
-
-      // Load called numbers from telemetry
-      const telemetryNumbers = getLastCalledNumbers();
-      const lastTelemetryNumber = getLastCalledNumber();
-
-      setCalledNumbers(telemetryNumbers);
-      setLastNumber(lastTelemetryNumber);
     } else {
-      // Initialize telemetry session for default game
-      startGameSession(0, "Traditional Bingo", 0, true, 75);
+      // Use default game configuration
+      gameConfig = {
+        id: 0,
+        name: "Traditional Bingo",
+        variant: 0,
+        freeSpace: true,
+        totalNumbers: 75
+      };
     }
+
+    setGameData(gameConfig);
+
+    // Initialize telemetry session
+    const currentSession = getCurrentSession();
+    if (!currentSession ||
+        currentSession.gameId !== gameConfig.id ||
+        currentSession.variant !== gameConfig.variant ||
+        currentSession.freeSpace !== gameConfig.freeSpace) {
+      // Start new session if no current session or game changed
+      startGameSession(
+        gameConfig.id,
+        gameConfig.name,
+        gameConfig.variant,
+        gameConfig.freeSpace,
+        gameConfig.totalNumbers
+      );
+    }
+
+    // Load called numbers from telemetry
+    const telemetryNumbers = getLastCalledNumbers();
+    const lastTelemetryNumber = getLastCalledNumber();
+
+    setCalledNumbers(telemetryNumbers);
+    setLastNumber(lastTelemetryNumber);
   }, []);
 
   // Sync game state with server when connected as host
   useEffect(() => {
-    if (isConnected && isHost && gameData && calledNumbers) {
-      // Send current game state to all clients
-      const gameState: GameState = {
+    if (isConnected && isHost && gameData) {
+      // Create a unique identifier for the current game configuration
+      const currentGameConfig = JSON.stringify({
+        id: gameData.id,
         name: gameData.name,
-        freeSpaceOn: gameData.freeSpace,
-        calledNumbers: calledNumbers,
-        lastNumber: lastNumber || undefined
-      };
+        variant: gameData.variant,
+        freeSpace: gameData.freeSpace
+      });
 
-      const styleConfig: StyleConfig = {
-        selectedColor: getSetting('boardHighlightColor', '#1e4d2b'),
-        selectedTextColor: getSetting('highlightTextColor', '#ffffff'),
-        unselectedColor: getSetting('backgroundColor', '#ffffff'),
-        unselectedTextColor: getSetting('textColor', '#000000')
-      };
+      // Check if this is a new connection or a meaningful game change that requires setup
+      const shouldSendSetup = !initialSetupSent.current || lastSentGameConfig.current !== currentGameConfig;
+      console.log(`Sending game setup: ${shouldSendSetup} - Last ${initialSetupSent.current} Last Config ${lastSentGameConfig.current} Config: ${currentGameConfig}`);
 
-      const sessionConfig: SessionConfig = {
-        specialNumbers: JSON.parse(localStorage.getItem('specialNumbers') || '{}')
-      };
+      if (shouldSendSetup) {
+        // Get current state for setup
+        const currentCalledNumbers = getLastCalledNumbers();
+        const currentLastNumber = getLastCalledNumber();
 
-      sendGameSetup(gameState, styleConfig, sessionConfig);
+        // Send current game state to all clients
+        const gameState: GameState = {
+          name: gameData.name,
+          freeSpaceOn: gameData.freeSpace,
+          calledNumbers: currentCalledNumbers,
+          lastNumber: currentLastNumber || undefined
+        };
+
+        const styleConfig: StyleConfig = {
+          selectedColor: getSetting('boardHighlightColor', '#1e4d2b'),
+          selectedTextColor: getSetting('highlightTextColor', '#ffffff'),
+          unselectedColor: getSetting('backgroundColor', '#ffffff'),
+          unselectedTextColor: getSetting('textColor', '#000000')
+        };
+
+        const sessionConfig: SessionConfig = {
+          specialNumbers: JSON.parse(localStorage.getItem('specialNumbers') || '{}')
+        };
+
+        console.log("Sending game setup - Config:", currentGameConfig);
+        sendGameSetup(gameState, styleConfig, sessionConfig);
+        initialSetupSent.current = true;
+        lastSentGameConfig.current = currentGameConfig;
+      }
+    } else if (!isConnected) {
+      // Reset the flags when disconnected so we send setup again on reconnection
+      initialSetupSent.current = false;
+      lastSentGameConfig.current = null;
     }
-  }, [isConnected, isHost, gameData, calledNumbers, lastNumber, sendGameSetup]);
+  }, [gameData, isConnected, isHost, sendGameSetup]);
 
   // Cleanup effect to end session when component unmounts
   useEffect(() => {
@@ -537,6 +601,12 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
   // Effect to handle pattern rotation for preview
   useEffect(() => {
+    if (!gameData) {
+      setCachedPatterns(null);
+      setHasMultiplePatterns(false);
+      return;
+    }
+
     try {
       const gamesList = games();
       const currentGame = gamesList[gameData.id];
@@ -590,7 +660,16 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       setCachedPatterns(null);
       setHasMultiplePatterns(false);
     }
-  }, [gameData.id, gameData.variant, gameData.freeSpace]);
+  }, [gameData]);
+
+  // Print QR code URL when roomId is established
+  useEffect(() => {
+    if (isConnected && roomId) {
+      const serverUrl = getSetting('serverUrl', '');
+      const qrCodeValue = `${window.location.origin}/BingoBoard/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl)}`;
+      console.log("QR Code URL:", qrCodeValue);
+    }
+  }, [roomId, isConnected]);
 
   // Generate the bingo grid (5x15 with letters B,I,N,G,O)
   const generateBingoGrid = () => {
@@ -614,6 +693,11 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
   // Use settingsVersion as a dependency to force re-renders when highlight color changes
   const bingoGrid = generateBingoGrid();
+
+  // Early return if gameData is not yet loaded
+  if (!gameData) {
+    return <div className={styles.boardPage}>Loading...</div>;
+  }
 
   const handleNumberClick = (number: number) => {
     // Only hosts can click numbers when connected to server
@@ -652,11 +736,38 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     if( number === null ){ return "";}
     return getNumberMessage(number);
   };
-
   const resetGame = () => {
     resetGameSession();
     setCalledNumbers([]);
     setLastNumber(null);
+
+    // Reset tracking to ensure game setup is sent after reset
+    initialSetupSent.current = false;
+    lastSentGameConfig.current = null;
+
+    // Send updated game state to clients if connected as host
+    if (isConnected && isHost && gameData) {
+      const gameState: GameState = {
+        name: gameData.name,
+        freeSpaceOn: gameData.freeSpace,
+        calledNumbers: [],
+        lastNumber: undefined
+      };
+
+      const styleConfig: StyleConfig = {
+        selectedColor: getSetting('boardHighlightColor', '#1e4d2b'),
+        selectedTextColor: getSetting('highlightTextColor', '#ffffff'),
+        unselectedColor: getSetting('backgroundColor', '#ffffff'),
+        unselectedTextColor: getSetting('textColor', '#000000')
+      };
+
+      const sessionConfig: SessionConfig = {
+        specialNumbers: JSON.parse(localStorage.getItem('specialNumbers') || '{}')
+      };
+
+      console.log("Sending game setup after game reset");
+      sendGameSetup(gameState, styleConfig, sessionConfig);
+    }
   };
 
   // Get the Bingo letter for a number
@@ -690,11 +801,18 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       return; // Clients cannot change settings
     }
 
+    if (!gameData) {
+      return; // Cannot change if no game data
+    }
+
     const newGameData = { ...gameData, freeSpace };
     setGameData(newGameData);
 
     // Update localStorage to persist the change
     localStorage.setItem('gameSettings', JSON.stringify(newGameData));
+
+    // Reset tracking so the configuration change is properly detected
+    lastSentGameConfig.current = null;
 
     // Send server update if connected and host
     if (isConnected && isHost) {
@@ -926,13 +1044,16 @@ const BoardPage: React.FC<BoardPageProps> = () => {
             }
 
             if (isConnected && roomId) {
+              const serverUrl = getSetting('serverUrl', '');
+              const qrCodeValue = `${window.location.origin}/BingoBoard/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl)}`;
+
               return (
                 <div className={styles.qrCodeHeader}>
                   <h4>View On Your Device</h4>
                   <div className={styles.qrCodeSuccess}>
                     <div className={styles.qrCodeContainer}>
                       <QRCode
-                        value={`${window.location.origin}/BingoBoard/board?roomId=${roomId}`}
+                        value={qrCodeValue}
                         size={170}
                         className={styles.boardQrCode}
                       />
