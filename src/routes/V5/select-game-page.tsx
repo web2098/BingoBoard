@@ -73,13 +73,15 @@ const GameBoard = ({
   freeSpace,
   isSelected = false,
   onClick,
-  colorVersion = 0
+  colorVersion = 0,
+  hasDynamicFreeSpace = false
 }: {
   board: number[][],
   freeSpace: boolean,
   isSelected?: boolean,
   onClick?: () => void,
-  colorVersion?: number
+  colorVersion?: number,
+  hasDynamicFreeSpace?: boolean
 }) => {
   const letters = ['B', 'I', 'N', 'G', 'O'];
 
@@ -102,6 +104,7 @@ const GameBoard = ({
           {[0, 1, 2, 3, 4].map((colIndex) => {
             const isHighlightedCell = isHighlighted(rowIndex, colIndex);
             const isFreeSpace = rowIndex === 2 && colIndex === 2;
+            const isFreeSpaceDisabled = isFreeSpace && hasDynamicFreeSpace && !freeSpace;
 
             // Dynamic styling for highlighted cells
             const cellStyle = isHighlightedCell ? {
@@ -112,7 +115,7 @@ const GameBoard = ({
             return (
               <div
                 key={`${rowIndex}-${colIndex}-${colorVersion}`}
-                className={`${styles.boardCell} ${isHighlightedCell ? styles.highlighted : ''} ${isFreeSpace ? styles.freeSpace : ''}`}
+                className={`${styles.boardCell} ${isHighlightedCell ? styles.highlighted : ''} ${isFreeSpace ? styles.freeSpace : ''} ${isFreeSpaceDisabled ? styles.disabled : ''}`}
                 style={cellStyle}
               >
                 {isFreeSpace ? (freeSpace ? 'FREE' : letters[colIndex]) : letters[colIndex]}
@@ -144,10 +147,27 @@ const OperatorIcon = ({ operator }: { operator: string }) => {
 };
 
 // Game Info Card Component
-const GameInfoCard = ({ game, variant }: { game: any, variant: any }) => {
+const GameInfoCard = ({
+  game,
+  variant,
+  freeSpace,
+  onFreeSpaceChange
+}: {
+  game: any,
+  variant: any,
+  freeSpace: boolean,
+  onFreeSpaceChange: (value: boolean) => void
+}) => {
   return (
     <div className={styles.gameInfoCard}>
-      <h2 className={styles.gameTitle}>{game.name}</h2>
+      <div className={styles.gameInfoHeader}>
+        <h2 className={styles.gameTitle}>{game.name}</h2>
+        <FreeSpaceToggle
+          freeSpace={freeSpace}
+          onChange={onFreeSpaceChange}
+          variant={variant}
+        />
+      </div>
       <div className={styles.gameRules}>
         <h4>{variant.rules}</h4>
       </div>
@@ -462,6 +482,7 @@ const GamePreviewSection = ({
                 freeSpace={settings.freeSpace}
                 onClick={handleGameBoardClick}
                 colorVersion={colorVersion}
+                hasDynamicFreeSpace={currentVariant.hasOwnProperty('dynamicFreeSpace') && currentVariant.dynamicFreeSpace}
               />
               {index < cachedPatterns.length - 1 && currentVariant.op && (
                 <OperatorIcon operator={currentVariant.op} />
@@ -475,19 +496,12 @@ const GamePreviewSection = ({
 
   return (
     <div className={styles.gamePreviewSection}>
-      <GameInfoCard game={currentGame} variant={currentVariant} />
-
-      <FreeSpaceToggle
-        freeSpace={settings.freeSpace}
-        onChange={handleFreeSpaceToggle}
+      <GameInfoCard
+        game={currentGame}
         variant={currentVariant}
+        freeSpace={settings.freeSpace}
+        onFreeSpaceChange={handleFreeSpaceToggle}
       />
-
-      <div className={styles.gameDisplayArea}>
-        <div className={styles.gameBoardsWrapper}>
-          {renderGameBoards()}
-        </div>
-      </div>
 
       <div className={styles.variantControlsWrapper}>
         <VariantControls
@@ -501,6 +515,12 @@ const GamePreviewSection = ({
             <ProgressCircle progress={progress} isResetting={isResetting} />
           </div>
         )}
+      </div>
+
+      <div className={styles.gameDisplayArea}>
+        <div className={styles.gameBoardsWrapper}>
+          {renderGameBoards()}
+        </div>
       </div>
     </div>
   );
@@ -534,7 +554,12 @@ const SmallGamePreview = ({
         {game.name} [{firstVariant.length || 'Standard'}]
       </div>
       <div className={`${styles.smallGameBoard} ${isDualBoard && isDoubleBingo ? styles.doubleBingoDual : ''}`}>
-        <GameBoard board={firstPattern} freeSpace={true} colorVersion={colorVersion} />
+        <GameBoard 
+          board={firstPattern} 
+          freeSpace={true} 
+          colorVersion={colorVersion}
+          hasDynamicFreeSpace={false}
+        />
       </div>
     </div>
   );

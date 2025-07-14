@@ -115,13 +115,32 @@
   flex-shrink: 0;
 }
 
+.gameInfoHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  position: relative;
+}
+
 .gameTitle {
-  margin: 0 0 15px 0;
+  margin: 0;
   font-size: 4rem;
   color: #333;
   text-align: center;
   user-select: none;
   font-weight: bold;
+  flex: 1;
+}
+
+.freeSpaceToggle {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .gameRules h4 {
@@ -132,24 +151,17 @@
   text-align: center;
 }
 
-/* Free Space Toggle */
-.freeSpaceToggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  flex-shrink: 0;
-}
+/* Free Space Toggle styles are now defined above in .gameInfoHeader section */
 
 .toggleLabel {
-  font-size: 1.2em;
+  font-size: 1.0em;
   font-weight: bold;
   color: #333;
   user-select: none;
 }
 
 .toggleState {
-  font-size: 1.1em;
+  font-size: 0.9em;
   color: #666;
   font-weight: bold;
   user-select: none;
@@ -339,6 +351,13 @@
 .boardCell.freeSpace {
   background-color: #fff;
   color: #333;
+  font-weight: bold;
+}
+
+/* Free space cell when disabled (dynamic free space games only) */
+.boardCell.freeSpace.disabled {
+  background-color: #000;
+  color: transparent;
   font-weight: bold;
 }
 
@@ -932,6 +951,26 @@ input:disabled + .slider {
     height: 25px;
     font-size: 1.2rem;
   }
+
+  .gameInfoHeader {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    position: static;
+  }
+
+  .freeSpaceToggle {
+    position: static;
+    gap: 8px;
+  }
+
+  .gameTitle {
+    font-size: 1.5rem;
+  }
+
+  .toggleLabel {
+    font-size: 0.9em;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1003,5 +1042,27 @@ input:disabled + .slider {
     border-top: 7px solid transparent;
     border-bottom: 7px solid transparent;
     margin-left: 2px;
+  }
+
+  .gameInfoHeader {
+    gap: 8px;
+    position: static;
+  }
+
+  .freeSpaceToggle {
+    position: static;
+    gap: 6px;
+  }
+
+  .gameTitle {
+    font-size: 1.3rem;
+  }
+
+  .toggleLabel {
+    font-size: 0.8em;
+  }
+
+  .toggleState {
+    font-size: 0.8em;
   }
 }
