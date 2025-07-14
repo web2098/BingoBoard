@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './board-page.module.css';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
 import QRCode from '../../components/QRCode';
-import { useServerInteraction } from '../../serverInteractions/ServerInteractionContext';
-import { GameState, StyleConfig, SessionConfig } from '../../serverInteractions/types';
+import { useServerInteraction } from '../../serverInteractions/useServerInteraction';
+import { GameState, StyleConfig, SessionConfig, AudienceInteractionType, AudienceInteractionOptions } from '../../serverInteractions/types';
 import { getNumberMessage, getSetting, getLetterColor, getContrastTextColor, getBoardHighlightColor } from '../../utils/settings';
 import games from '../../data/games';
 import {
@@ -14,8 +14,10 @@ import {
   endCurrentSession,
   getCurrentSession,
   getLastCalledNumbers,
+  getLastCalledNumbersReversed,
   getLastCalledNumber,
-  isNumberCalled
+  isNumberCalled,
+  updateFreeSpaceSetting
 } from '../../utils/telemetry';
 
 interface BoardPageProps {}
@@ -314,10 +316,29 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     sendNumberActivated,
     sendNumberDeactivated,
     sendGameSetup,
-    sendFreeSpaceUpdate
-  } = useServerInteraction();
-  const [calledNumbers, setCalledNumbers] = useState<number[]>([]);
-  const [lastNumber, setLastNumber] = useState<number | null>(null);
+    sendFreeSpaceUpdate,
+    sendAudienceInteraction,
+    sendModalDeactivate
+  } = useServerInteraction({
+    autoConnect: true, // Enable auto-connection for host pages
+    autoConnectRetryInterval: getSetting('connectionTimeout', 10)
+  });
+
+  // Create a stable callback wrapper
+  const handleAudienceInteraction = useCallback((eventType: AudienceInteractionType, options: AudienceInteractionOptions = {}) => {
+    if (sendAudienceInteraction) {
+      sendAudienceInteraction(eventType, options);
+    } else {
+      console.error('Board page - sendAudienceInteraction is not available');
+    }
+  }, [sendAudienceInteraction]);
+  // Helper functions to get current state from telemetry
+  const getCalledNumbers = () => getLastCalledNumbers();
+  const getLastNumber = () => getLastCalledNumber();
+
+  // Force component re-render when telemetry data changes
+  const [refreshKey, setRefreshKey] = useState(0);
+  const forceRefresh = () => setRefreshKey(prev => prev + 1);
   const [gameData, setGameData] = useState<{
     id: number;
     name: string;
@@ -361,8 +382,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   // Game options handlers with telemetry integration
   const handleResetBoard = () => {
     resetGameSession();
-    setCalledNumbers([]);
-    setLastNumber(null);
+    forceRefresh(); // Trigger re-render after reset
+    // State is now managed by telemetry - no local state to clear
 
     // Reset tracking to ensure game setup is sent after reset
     initialSetupSent.current = false;
@@ -373,8 +394,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       const gameState: GameState = {
         name: gameData.name,
         freeSpaceOn: gameData.freeSpace,
-        calledNumbers: [],
-        lastNumber: undefined
+        calledNumbers: getCalledNumbers(), // Get current state from telemetry
+        lastNumber: getLastNumber() || undefined // Get current state from telemetry
       };
 
       const styleConfig: StyleConfig = {
@@ -478,12 +499,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       );
     }
 
-    // Load called numbers from telemetry
-    const telemetryNumbers = getLastCalledNumbers();
-    const lastTelemetryNumber = getLastCalledNumber();
-
-    setCalledNumbers(telemetryNumbers);
-    setLastNumber(lastTelemetryNumber);
+    // Called numbers are now loaded directly from telemetry when needed
+    // No need to sync local state since telemetry is the source of truth
   }, []);
 
   // Sync game state with server when connected as host
@@ -499,11 +516,10 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
       // Check if this is a new connection or a meaningful game change that requires setup
       const shouldSendSetup = !initialSetupSent.current || lastSentGameConfig.current !== currentGameConfig;
-      console.log(`Sending game setup: ${shouldSendSetup} - Last ${initialSetupSent.current} Last Config ${lastSentGameConfig.current} Config: ${currentGameConfig}`);
 
       if (shouldSendSetup) {
-        // Get current state for setup
-        const currentCalledNumbers = getLastCalledNumbers();
+        // Get current state for setup - use reversed order to match v4 expectations
+        const currentCalledNumbers = getLastCalledNumbersReversed();
         const currentLastNumber = getLastCalledNumber();
 
         // Send current game state to all clients
@@ -525,7 +541,6 @@ const BoardPage: React.FC<BoardPageProps> = () => {
           specialNumbers: JSON.parse(localStorage.getItem('specialNumbers') || '{}')
         };
 
-        console.log("Sending game setup - Config:", currentGameConfig);
         sendGameSetup(gameState, styleConfig, sessionConfig);
         initialSetupSent.current = true;
         lastSentGameConfig.current = currentGameConfig;
@@ -671,8 +686,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     }
   }, [roomId, isConnected]);
 
-  // Generate the bingo grid (5x15 with letters B,I,N,G,O)
-  const generateBingoGrid = () => {
+  // Use settingsVersion and refreshKey as dependencies to force re-renders when highlight color or telemetry data changes
+  const bingoGrid = useMemo(() => {
     const letters = ['B', 'I', 'N', 'G', 'O'];
     const grid = [];
 
@@ -683,16 +698,14 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         rowData.push({
           number,
           letter: letters[row],
-          called: isNumberCalled(number)
+          called: isNumberCalled(number) // This depends on telemetry data
         });
       }
       grid.push(rowData);
     }
     return grid;
-  };
-
-  // Use settingsVersion as a dependency to force re-renders when highlight color changes
-  const bingoGrid = generateBingoGrid();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshKey, settingsVersion]); // refreshKey ensures re-calculation when telemetry changes
 
   // Early return if gameData is not yet loaded
   if (!gameData) {
@@ -710,17 +723,15 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
     // Record in telemetry (handles both adding and removing)
     recordNumberCall(number);
+    forceRefresh(); // Trigger re-render after number change
 
-    // Update local state
-    const updatedNumbers = getLastCalledNumbers();
-    const lastTelemetryNumber = getLastCalledNumber();
-
-    setCalledNumbers(updatedNumbers);
-    setLastNumber(lastTelemetryNumber);
+    // No need to update local state - telemetry is the source of truth
+    // The component will re-render when bingoGrid is regenerated
 
     // Send server updates if connected and host
     if (isConnected && isHost) {
-      const totalSpots = updatedNumbers.length;
+      const currentNumbers = getLastCalledNumbers();
+      const totalSpots = currentNumbers.length;
 
       if (wasAlreadyCalled) {
         // Number was uncalled
@@ -738,8 +749,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   };
   const resetGame = () => {
     resetGameSession();
-    setCalledNumbers([]);
-    setLastNumber(null);
+    forceRefresh(); // Trigger re-render after reset
+    // State is now managed by telemetry - no local state to clear
 
     // Reset tracking to ensure game setup is sent after reset
     initialSetupSent.current = false;
@@ -750,8 +761,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       const gameState: GameState = {
         name: gameData.name,
         freeSpaceOn: gameData.freeSpace,
-        calledNumbers: [],
-        lastNumber: undefined
+        calledNumbers: getCalledNumbers(), // Get current state from telemetry
+        lastNumber: getLastNumber() || undefined // Get current state from telemetry
       };
 
       const styleConfig: StyleConfig = {
@@ -807,6 +818,9 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
     const newGameData = { ...gameData, freeSpace };
     setGameData(newGameData);
+
+    // Update telemetry session with new free space setting
+    updateFreeSpaceSetting(freeSpace);
 
     // Update localStorage to persist the change
     localStorage.setItem('gameSettings', JSON.stringify(newGameData));
@@ -931,6 +945,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         currentPage="game-board"
         onReset={resetGame}
         pageButtons={pageButtons}
+        onAudienceInteraction={handleAudienceInteraction}
       />
 
       {/* Section 1: Header */}
@@ -964,7 +979,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
               {renderBoardPreview()}
             </div>
             <p className={styles.numberCount}>
-              {calledNumbers.length}/{gameData.totalNumbers} ({gameData.totalNumbers - calledNumbers.length} Left)
+              {getCalledNumbers().length}/{gameData.totalNumbers} ({gameData.totalNumbers - getCalledNumbers().length} Left)
             </p>
           </div>
         </div>
@@ -973,14 +988,14 @@ const BoardPage: React.FC<BoardPageProps> = () => {
           <div className={styles.lastNumberSection}>
             <div className={styles.lastNumberDisplay}>
               <div className={styles.bingoCardsGroup}>
-                {lastNumber ? (
+                {getLastNumber() ? (
                   <>
                     <span className={styles.lastNumberText}>The Last Number Was</span>
-                    <div className={styles.bingoLetterCard} style={getLetterStyle(lastNumber)}>
-                      {getBingoLetter(lastNumber)}
+                    <div className={styles.bingoLetterCard} style={getLetterStyle(getLastNumber()!)}>
+                      {getBingoLetter(getLastNumber()!)}
                     </div>
                     <div className={styles.bingoNumberCard}>
-                      {lastNumber}
+                      {getLastNumber()}
                     </div>
                   </>
                 ) : (
@@ -989,7 +1004,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
               </div>
             </div>
             <div className={styles.specialCalloutSection}>
-                <p className={styles.specialCallout}>{getSpecialCallout(lastNumber)}</p>
+                <p className={styles.specialCallout}>{getSpecialCallout(getLastNumber())}</p>
             </div>
           </div>
         </div>
@@ -1134,7 +1149,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
           <div className={styles.numberHistory}>
             <h4>Last Numbers Called</h4>
             <div className={styles.historyList}>
-              {calledNumbers.slice().reverse().map((number, index) => (
+              {getCalledNumbers().slice().reverse().map((number: number, index: number) => (
                 <div
                   key={number}
                   className={`${styles.historyItem} ${index === 0 ? styles.mostRecent : ''}`}
@@ -1142,7 +1157,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
                   {number}
                 </div>
               ))}
-              {calledNumbers.length === 0 && (
+              {getCalledNumbers().length === 0 && (
                 <div className={styles.noNumbers}>No numbers called yet</div>
               )}
             </div>

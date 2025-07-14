@@ -5,7 +5,7 @@
   min-height: 100vh;
   background-color: var(--background-color, #ffffff);
   color: var(--text-color, #000000);
-  padding: 1rem;
+
   box-sizing: border-box;
   align-items: center;;
 }
@@ -16,7 +16,7 @@
   grid-template-columns:  1fr 2fr 1fr;
   gap: 2rem;
   margin-bottom: 2rem;
-  width: 90%;
+  width: 98%;
   align-items: start;
 }
 
@@ -31,21 +31,28 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem; /* Reduced from 1rem */
 }
 
 .gamePreviewHeader h3 {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.25rem 0; /* Reduced from 0.5rem */
   font-size: 1.1rem;
   font-weight: 600;
   text-align: center;
   color: #333;
 }
 
+.freeSpaceStatus {
+  margin: 0 0 0.25rem 0; /* Small margin below free space status */
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+}
+
 .miniBoard {
   display: flex;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem; /* Reduced from 1rem */
 }
 
 .numberCount {
@@ -76,10 +83,7 @@
   grid-template-rows: repeat(5, 1fr);
   gap: 1px;
   background-color: #ccc;
-  border: 2px solid #999;
-  border-radius: 4px;
-  width: 80px;
-  height: 80px;
+  border: 1px solid #999;
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -95,10 +99,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 8px;
   font-weight: bold;
   color: #333;
-  border-radius: 2px;
+  font-size: 1.0rem;
 }
 
 .boardCell.highlighted {
@@ -107,8 +110,7 @@
 }
 
 .boardCell.freeSpace {
-  background-color: #fff3cd;
-  border: 1px solid #ffeaa7;
+    font-size: .6rem;
 }
 
 .operatorIcon {
@@ -214,6 +216,10 @@
   align-items: center;
 }
 
+.headerLeft{
+  flex-grow: 1;
+}
+
 .qrCodeHeader {
   text-align: center;
 }
@@ -252,6 +258,7 @@
 .bingoGridSection {
   margin-bottom: 1rem;
   width: 90%;
+  min-width: 388px;
 }
 
 .bingoGrid {
@@ -271,7 +278,7 @@
 }
 
 .rowLetter {
-  width: 60px;
+  flex: 0 0 60px;
   height: 60px;
   display: flex;
   align-items: center;
@@ -279,7 +286,7 @@
   font-size: 1.5rem;
   font-weight: bold;
   border-radius: 4px;
-  flex-shrink: 0;
+  min-width: 40px;
 }
 
 .bingoCell {
@@ -397,23 +404,22 @@
   font-weight: bold;
   font-style: italic;
 }
-/* Responsive Design */
-@media (max-width: 1200px) {
+
+@media (orientation: portrait) {
   .boardHeader {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-around;
     gap: 1rem;
-    text-align: center;
   }
-
-  .bingoCell {
-    height: 50px;
-    font-size: 1rem;
+  .headerCenter {
+    order: 3;
   }
-
-  .rowLetter {
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
+  .headerRight {
+    order: 1;
+  }
+  .headerLeft{
+    order: 2;
   }
 }
 
@@ -423,110 +429,28 @@
   }
 
   .bingoCell {
+    height: 50px;
+    font-size: 1rem;
+  }
+
+  .rowLetter {
+    flex: 0 0 50px;
+    height: 50px;
+    font-size: 1.2rem;
+    min-width: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bingoCell {
     height: 40px;
     font-size: 0.9rem;
   }
 
   .rowLetter {
-    width: 40px;
+    flex: 0 0 40px;
     height: 40px;
     font-size: 1rem;
-  }
-
-  .horizontalHistoryItem {
-    width: 40px;
-    height: 40px;
-    font-size: 0.9rem;
-  }
-
-  .bingoNumberCard {
-    width: 80px;
-    height: 80px;
-    font-size: 2rem;
-  }
-
-  .bingoLetterCard {
-    width: 60px;
-    height: 60px;
-    font-size: 1.5rem;
-  }
-}
-
-/* Landscape mobile phones - compact header for horizontal orientation */
-@media (max-height: 500px) and (orientation: landscape) {
-  .boardHeader {
-    grid-template-columns: 200px 1fr 180px;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    align-items: center;
-  }
-
-  .gamePreviewMini {
-    padding: 0.5rem;
-    border-radius: 8px;
-  }
-
-  .gamePreviewHeader h3 {
-    font-size: 0.9rem;
-    margin: 0 0 0.25rem 0;
-  }
-
-  .miniBoard {
-    margin-bottom: 0.5rem;
-  }
-
-  .numberCount {
-    font-size: 0.8rem;
-    margin: 0;
-  }
-
-  .lastNumberSection {
-    margin: 0;
-  }
-
-  .bingoCardsGroup {
-    gap: 0.5rem;
-  }
-
-  .lastNumberText {
-    font-size: 1rem;
-    margin-bottom: 0.25rem;
-  }
-
-  .bingoLetterCard {
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
-  }
-
-  .bingoNumberCard {
-    width: 60px;
-    height: 60px;
-    font-size: 1.8rem;
-  }
-
-  .specialCalloutSection {
-    margin-top: 0.5rem;
-  }
-
-  .specialCallout {
-    font-size: 1.5rem;
-    margin: 0;
-  }
-
-  .qrCodeHeader h4 {
-    font-size: 0.9rem;
-    margin: 0 0 0.25rem 0;
-  }
-
-  .qrCodeContainer {
-    width: 100px;
-    height: 100px;
-    padding: 0.5rem;
-  }
-
-  .boardQrCode {
-    width: 100px !important;
-    height: 100px !important;
+    min-width: 30px;
   }
 }

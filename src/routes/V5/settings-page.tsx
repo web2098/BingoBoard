@@ -39,7 +39,7 @@ import {
 } from '../../utils/telemetry';
 
 // Import server interaction context
-import { useServerInteraction } from '../../serverInteractions/ServerInteractionContext';
+import { useServerInteraction } from '../../serverInteractions/useServerInteraction';
 
 interface SettingsPageProps {}
 

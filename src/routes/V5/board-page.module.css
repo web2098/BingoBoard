@@ -33,6 +33,7 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   height: 17.5vh; /* Reduced by 30% from 25vh */
   flex-shrink: 0;
+  overflow: auto;
 }
 
 .headerLeft {
@@ -326,8 +327,9 @@
   padding: 20px;
   padding-left: 100px; /* Space for sidebar */
   padding-bottom: 0; /* Remove bottom padding to use for gap */
-  overflow: hidden;
   flex-shrink: 0;
+  overflow: auto;
+  min-width: 388px;
 }
 
 .bingoRow {
@@ -338,7 +340,7 @@
 }
 
 .rowLetter {
-  width: 7.2%;
+  flex: 0 0 7.2%;
   height: 100%;
   min-height: 60px;
   display: flex;
@@ -347,7 +349,6 @@
   font-size: 4em;
   font-weight: bold;
   margin-right: 10px;
-  border-radius: 8px;
 }
 
 .bingoCell {

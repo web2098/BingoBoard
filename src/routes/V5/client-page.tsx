@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styles from './client-page.module.css';
 import QRCode from '../../components/QRCode';
-import { useServerInteraction } from '../../serverInteractions/ServerInteractionContext';
+import { useServerInteraction } from '../../serverInteractions/useServerInteraction';
 import { getNumberMessage, getLetterColor, getContrastTextColor, getBoardHighlightColor } from '../../utils/settings';
 import games from '../../data/games';
+import { AudienceInteractionModalManager } from '../../components/modals';
+import audienceInteractionsData from '../../data/audienceInteractions.json';
 
 interface ClientPageProps {}
 
@@ -82,9 +84,31 @@ const ClientPage: React.FC<ClientPageProps> = () => {
   const {
     isConnected,
     connectionError,
-    gameState,
-    joinRoom
-  } = useServerInteraction();
+    lastSetupMessage,
+    lastActivateMessage,
+    lastDeactivateMessage,
+    lastFreeSpaceMessage,
+    joinRoom  } = useServerInteraction({
+    onAudienceInteraction: (eventType: string, options: any) => {
+      // Look up the interaction data from audienceInteractions.json
+      const interaction = audienceInteractionsData.find(item => item.id === eventType);
+      if (interaction) {
+        // Check if the global function exists
+        if ((window as any).showAudienceInteraction) {
+          (window as any).showAudienceInteraction(interaction);
+        }
+      } else {
+        console.warn('Unknown audience interaction type:', eventType);
+      }
+    },
+    onModalDeactivate: () => {
+      console.log('Client received modal deactivate');
+      // Hide any currently shown modal
+      if ((window as any).hideAudienceInteraction) {
+        (window as any).hideAudienceInteraction();
+      }
+    }
+  });
 
   const [calledNumbers, setCalledNumbers] = useState<number[]>([]);
   const [lastNumber, setLastNumber] = useState<number | null>(null);
@@ -120,22 +144,67 @@ const ClientPage: React.FC<ClientPageProps> = () => {
     }
   }, [roomId, serverUrl, joinRoom]);
 
-  // Handle game state updates from server
+  // Handle setup message from server
   useEffect(() => {
-    if (gameState) {
+    if (lastSetupMessage && lastSetupMessage.type === 'setup') {
+      console.log('Client processing setup message:', lastSetupMessage);
       const newGameData = {
         id: 0, // We don't have game ID from server, use default
-        name: gameState.name,
+        name: lastSetupMessage.data.game,
         variant: 0, // We don't have variant from server, use default
-        freeSpace: gameState.freeSpaceOn,
+        freeSpace: lastSetupMessage.data.free,
         totalNumbers: 75
       };
       setGameData(newGameData);
-      // Use the gameState's called numbers and last number directly
-      setCalledNumbers(gameState.calledNumbers);
-      setLastNumber(gameState.lastNumber || null);
+      // Use the setup message's called numbers and last number directly
+      setCalledNumbers(lastSetupMessage.data.active || []);
+      setLastNumber(lastSetupMessage.data.lastNumber || null);
     }
-  }, [gameState]);
+  }, [lastSetupMessage]);
+
+  // Handle number activation messages
+  useEffect(() => {
+    if (lastActivateMessage && lastActivateMessage.type === 'activate') {
+      console.log('Client processing activate message:', lastActivateMessage);
+      setCalledNumbers(prev => {
+        if (!prev.includes(lastActivateMessage.id)) {
+          setLastNumber(lastActivateMessage.id);
+          return [...prev, lastActivateMessage.id];
+        }
+        return prev;
+      });
+    }
+  }, [lastActivateMessage]);
+
+  // Handle number deactivation messages
+  useEffect(() => {
+    if (lastDeactivateMessage && lastDeactivateMessage.type === 'deactivate') {
+      console.log('Client processing deactivate message:', lastDeactivateMessage);
+      const deactivatedNumber = lastDeactivateMessage.id;
+
+      setCalledNumbers(prev => {
+        const newNumbers = prev.filter(n => n !== deactivatedNumber);
+
+        // Update last number if the deactivated number was the last number
+        setLastNumber(currentLastNumber => {
+          if (deactivatedNumber === currentLastNumber) {
+            return newNumbers.length > 0 ? newNumbers[newNumbers.length - 1] : null;
+          }
+          return currentLastNumber;
+        });
+
+        return newNumbers;
+      });
+    }
+  }, [lastDeactivateMessage]);
+
+  // Handle free space updates
+  useEffect(() => {
+    if (lastFreeSpaceMessage && lastFreeSpaceMessage.type === 'update_free') {
+      console.log('Client processing free space message:', lastFreeSpaceMessage);
+      setGameData(prev => prev ? { ...prev, freeSpace: lastFreeSpaceMessage.free } : null);
+    }
+  }, [lastFreeSpaceMessage]);
 
   // Generate patterns for display when game data changes
   useEffect(() => {
@@ -331,218 +400,231 @@ const ClientPage: React.FC<ClientPageProps> = () => {
   // Show loading or error states
   if (!roomId || !serverUrl) {
     return (
-      <div className={styles.clientPage}>
-        <div className={styles.errorMessage}>
-          <h2>Missing Connection Information</h2>
-          <p>Room ID and Server URL are required to connect.</p>
+      <AudienceInteractionModalManager>
+        <div className={styles.clientPage}>
+          <div className={styles.errorMessage}>
+            <h2>Missing Connection Information</h2>
+            <p>Room ID and Server URL are required to connect.</p>
+          </div>
         </div>
-      </div>
+      </AudienceInteractionModalManager>
     );
   }
 
   if (connectionError) {
     return (
-      <div className={styles.clientPage}>
-        <div className={styles.errorMessage}>
-          <h2>Connection Error</h2>
-          <p>{connectionError}</p>
-          <p>Please check your connection and try again.</p>
+      <AudienceInteractionModalManager>
+        <div className={styles.clientPage}>
+          <div className={styles.errorMessage}>
+            <h2>Connection Error</h2>
+            <p>{connectionError}</p>
+            <p>Please check your connection and try again.</p>
+          </div>
         </div>
-      </div>
+      </AudienceInteractionModalManager>
     );
   }
 
   if (!isConnected) {
     return (
-      <div className={styles.clientPage}>
-        <div className={styles.loadingMessage}>
-          <h2>Connecting...</h2>
-          <p>Connecting to room {roomId}</p>
+      <AudienceInteractionModalManager>
+        <div className={styles.clientPage}>
+          <div className={styles.loadingMessage}>
+            <h2>Connecting...</h2>
+            <p>Connecting to room {roomId}</p>
+          </div>
         </div>
-      </div>
+      </AudienceInteractionModalManager>
     );
   }
 
   if (!gameData) {
     return (
-      <div className={styles.clientPage}>
-        <div className={styles.loadingMessage}>
-          <h2>Waiting for Game Data...</h2>
-          <p>Connected to room. Waiting for game setup.</p>
+      <AudienceInteractionModalManager>
+        <div className={styles.clientPage}>
+          <div className={styles.loadingMessage}>
+            <h2>Waiting for Game Data...</h2>
+            <p>Connected to room. Waiting for game setup.</p>
+          </div>
         </div>
-      </div>
+      </AudienceInteractionModalManager>
     );
   }
 
   return (
-    <div className={styles.clientPage}>
-      {/* Header */}
-      <div className={styles.boardHeader}>
-        <div className={styles.headerLeft}>
-          {/* Game Preview */}
-          <div className={styles.gamePreviewMini}>
-            <div className={styles.gamePreviewHeader}>
-              <h3>{gameData.name}</h3>
-            </div>
-            <div className={styles.miniBoard}>
-              {renderBoardPreview()}
-            </div>
-            <p className={styles.numberCount}>
-              {calledNumbers.length}/{gameData.totalNumbers} ({gameData.totalNumbers - calledNumbers.length} Left)
-            </p>
-          </div>
-        </div>
-
-        <div className={styles.headerCenter}>
-          <div className={styles.lastNumberSection}>
-            <div className={styles.lastNumberDisplay}>
-                {lastNumber ? (
-                    <span className={styles.lastNumberText}>The Last Number Was</span>
-                ) : (
-                  <span className={styles.lastNumberText}>Waiting For First Number</span>
-                )}
-              <div className={styles.bingoCardsGroup}>
-                {lastNumber ? (
-                  <>
-                    <div className={styles.bingoLetterCard} style={getLetterStyle(lastNumber)}>
-                      {getBingoLetter(lastNumber)}
-                    </div>
-                    <div
-                      className={styles.bingoNumberCard}
-                      style={{
-                        background: getBoardHighlightColor(),
-                        color: getContrastTextColor(getBoardHighlightColor())
-                      }}
-                    >
-                      {lastNumber}
-                    </div>
-                  </>
-                ) : (
-                  <div></div>
-                )}
+    <AudienceInteractionModalManager>
+      <div className={styles.clientPage}>
+        {/* Header */}
+        <div className={styles.boardHeader}>
+          <div className={styles.headerLeft}>
+            {/* Game Preview */}
+            <div className={styles.gamePreviewMini}>
+              <div className={styles.gamePreviewHeader}>
+                <h3>{gameData.name}</h3>
+                <p className={styles.freeSpaceStatus}>
+                  Free Space: {gameData.freeSpace ? 'ON' : 'OFF'}
+                </p>
               </div>
-            </div>
-            <div className={styles.specialCalloutSection}>
-              <p className={styles.specialCallout}>{getSpecialCallout(lastNumber)}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.headerRight}>
-          <div className={styles.qrCodeHeader}>
-            <h4>Share This View</h4>
-            <div className={styles.qrCodeSuccess}>
-              <div className={styles.qrCodeContainer}>
-                <QRCode
-                  value={`${window.location.origin}/BingoBoard/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl || '')}`}
-                  size={window.innerHeight <= 500 ? 100 : 140}
-                  className={styles.boardQrCode}
-                />
+              <div className={styles.miniBoard}>
+                {renderBoardPreview()}
               </div>
+              <p className={styles.numberCount}>
+                {calledNumbers.length}/{gameData.totalNumbers} ({gameData.totalNumbers - calledNumbers.length} Left)
+              </p>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Bingo Numbers Grid */}
-      <div className={styles.bingoGridSection}>
-        <div className={styles.bingoGrid}>
-          {bingoGrid.map((row, rowIndex) => {
-            const letter = row[0].letter;
-            const backgroundColor = getLetterColor(letter);
-            const textColor = getContrastTextColor(backgroundColor);
-
-            return (
-              <div key={rowIndex} className={styles.bingoRow}>
-                <div
-                  className={styles.rowLetter}
-                  style={{
-                    backgroundColor: backgroundColor,
-                    color: textColor
-                  }}
-                >
-                  {letter}
+          <div className={styles.headerCenter}>
+            <div className={styles.lastNumberSection}>
+              <div className={styles.lastNumberDisplay}>
+                  {lastNumber ? (
+                      <span className={styles.lastNumberText}>The Last Number Was</span>
+                  ) : (
+                    <span className={styles.lastNumberText}>Waiting For First Number</span>
+                  )}
+                <div className={styles.bingoCardsGroup}>
+                  {lastNumber ? (
+                    <>
+                      <div className={styles.bingoLetterCard} style={getLetterStyle(lastNumber)}>
+                        {getBingoLetter(lastNumber)}
+                      </div>
+                      <div
+                        className={styles.bingoNumberCard}
+                        style={{
+                          background: getBoardHighlightColor(),
+                          color: getContrastTextColor(getBoardHighlightColor())
+                        }}
+                      >
+                        {lastNumber}
+                      </div>
+                    </>
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
-                {row.map((cell) => {
-                  // Dynamic styling for called cells
-                  const boardHighlightColor = getBoardHighlightColor();
-
-                  // Create a slightly darker border color by reducing brightness
-                  const darkerBorderColor = boardHighlightColor.replace('#', '').match(/.{2}/g)?.map(hex => {
-                    const num = parseInt(hex, 16);
-                    const darker = Math.max(0, num - 30); // Reduce by 30 for darker shade
-                    return darker.toString(16).padStart(2, '0');
-                  }).join('');
-
-                  const cellStyle = cell.called ? {
-                    backgroundColor: boardHighlightColor,
-                    color: getContrastTextColor(boardHighlightColor),
-                    borderColor: `#${darkerBorderColor}`
-                  } : {};
-
-                  return (
-                    <div
-                      key={cell.number}
-                      className={`${styles.bingoCell} ${cell.called ? styles.called : ''}`}
-                      style={cellStyle}
-                    >
-                      {cell.number}
-                    </div>
-                  );
-                })}
               </div>
-            );
-          })}
+              <div className={styles.specialCalloutSection}>
+                <p className={styles.specialCallout}>{getSpecialCallout(lastNumber)}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.headerRight}>
+            <div className={styles.qrCodeHeader}>
+              <h4>Share This View</h4>
+              <div className={styles.qrCodeSuccess}>
+                <div className={styles.qrCodeContainer}>
+                  <QRCode
+                    value={`${window.location.origin}/BingoBoard/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl || '')}`}
+                    size={window.innerHeight <= 500 ? 100 : 140}
+                    className={styles.boardQrCode}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Horizontal Number History */}
-      <div className={styles.numberHistorySection}>
-        <h4>Recently Called Numbers</h4>
-        <div className={styles.horizontalHistoryList}>
-          {calledNumbers.length === 0 ? (
-            <div className={styles.noNumbers}>No numbers called yet</div>
-          ) : (
-            calledNumbers.slice().reverse().map((number, index) => {
-              // Get board colors for gradient effect
-              const boardHighlightColor = getBoardHighlightColor();
-              const unHighlightedColor = '#f0f0f0'; // Default cell background
-
-              // Create gradient colors for first 3 numbers
-              let backgroundColor = unHighlightedColor;
-              let textColor = '#333';
-
-              if (index === 0) {
-                // Most recent: use highlighted color
-                backgroundColor = boardHighlightColor;
-                textColor = getContrastTextColor(boardHighlightColor);
-              } else if (index === 1) {
-                // Second most recent: 66% highlighted, 34% unhighlighted
-                backgroundColor = blendColors(boardHighlightColor, unHighlightedColor, 0.66);
-                textColor = getContrastTextColor(backgroundColor);
-              } else if (index === 2) {
-                // Third most recent: 33% highlighted, 67% unhighlighted
-                backgroundColor = blendColors(boardHighlightColor, unHighlightedColor, 0.33);
-                textColor = getContrastTextColor(backgroundColor);
-              }
+        {/* Bingo Numbers Grid */}
+        <div className={styles.bingoGridSection}>
+          <div className={styles.bingoGrid}>
+            {bingoGrid.map((row, rowIndex) => {
+              const letter = row[0].letter;
+              const backgroundColor = getLetterColor(letter);
+              const textColor = getContrastTextColor(backgroundColor);
 
               return (
-                <div
-                  key={number}
-                  className={styles.historyNumber}
-                  style={{
-                    backgroundColor,
-                    color: textColor
-                  }}
-                >
-                  {number}
+                <div key={rowIndex} className={styles.bingoRow}>
+                  <div
+                    className={styles.rowLetter}
+                    style={{
+                      backgroundColor: backgroundColor,
+                      color: textColor
+                    }}
+                  >
+                    {letter}
+                  </div>
+                  {row.map((cell) => {
+                    // Dynamic styling for called cells
+                    const boardHighlightColor = getBoardHighlightColor();
+
+                    // Create a slightly darker border color by reducing brightness
+                    const darkerBorderColor = boardHighlightColor.replace('#', '').match(/.{2}/g)?.map(hex => {
+                      const num = parseInt(hex, 16);
+                      const darker = Math.max(0, num - 30); // Reduce by 30 for darker shade
+                      return darker.toString(16).padStart(2, '0');
+                    }).join('');
+
+                    const cellStyle = cell.called ? {
+                      backgroundColor: boardHighlightColor,
+                      color: getContrastTextColor(boardHighlightColor),
+                      borderColor: `#${darkerBorderColor}`
+                    } : {};
+
+                    return (
+                      <div
+                        key={cell.number}
+                        className={`${styles.bingoCell} ${cell.called ? styles.called : ''}`}
+                        style={cellStyle}
+                      >
+                        {cell.number}
+                      </div>
+                    );
+                  })}
                 </div>
               );
-            })
-          )}
+            })}
+          </div>
+        </div>
+
+        {/* Horizontal Number History */}
+        <div className={styles.numberHistorySection}>
+          <h4>Recently Called Numbers</h4>
+          <div className={styles.horizontalHistoryList}>
+            {calledNumbers.length === 0 ? (
+              <div className={styles.noNumbers}>No numbers called yet</div>
+            ) : (
+              calledNumbers.slice().reverse().map((number, index) => {
+                // Get board colors for gradient effect
+                const boardHighlightColor = getBoardHighlightColor();
+                const unHighlightedColor = '#f0f0f0'; // Default cell background
+
+                // Create gradient colors for first 3 numbers
+                let backgroundColor = unHighlightedColor;
+                let textColor = '#333';
+
+                if (index === 0) {
+                  // Most recent: use highlighted color
+                  backgroundColor = boardHighlightColor;
+                  textColor = getContrastTextColor(boardHighlightColor);
+                } else if (index === 1) {
+                  // Second most recent: 66% highlighted, 34% unhighlighted
+                  backgroundColor = blendColors(boardHighlightColor, unHighlightedColor, 0.66);
+                  textColor = getContrastTextColor(backgroundColor);
+                } else if (index === 2) {
+                  // Third most recent: 33% highlighted, 67% unhighlighted
+                  backgroundColor = blendColors(boardHighlightColor, unHighlightedColor, 0.33);
+                  textColor = getContrastTextColor(backgroundColor);
+                }
+
+                return (
+                  <div
+                    key={number}
+                    className={styles.historyNumber}
+                    style={{
+                      backgroundColor,
+                      color: textColor
+                    }}
+                  >
+                    {number}
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </AudienceInteractionModalManager>
   );
 };
 

@@ -5,7 +5,7 @@ import styles from './select-game-page.module.css';
 import games from '../../data/games';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
 import QRCode from '../../components/QRCode';
-import { useServerInteraction } from '../../serverInteractions/ServerInteractionContext';
+import { useServerInteraction } from '../../serverInteractions/useServerInteraction';
 import { generateWelcomeMessage, getSetting, getBoardHighlightColor, getContrastTextColor } from '../../utils/settings';
 import { switchToNewGame } from '../../utils/telemetry';
 
@@ -224,9 +224,12 @@ const VariantControls = ({
 };
 
 // Welcome Panel Component
-const WelcomePanel = () => {
+const WelcomePanel = ({ isConnected, roomId, connectionError }: {
+  isConnected: boolean;
+  roomId: string | null;
+  connectionError: string | null;
+}) => {
   const welcomeText = generateWelcomeMessage();
-  const { isConnected, roomId, connectionError } = useServerInteraction();
   // Check server settings
   const serverUrl = getSetting('serverUrl', '');
   const authToken = getSetting('serverAuthToken', '');
@@ -614,6 +617,12 @@ const SelectGamePage = () => {
   const [settingsUpdateTrigger, setSettingsUpdateTrigger] = useState(0);
   const [highlightColorVersion, setHighlightColorVersion] = useState(0);
 
+  // Server interaction for audience interactions and connection
+  const { isConnected, roomId, connectionError, sendAudienceInteraction } = useServerInteraction({
+    autoConnect: true, // Enable auto-connection for host pages
+    autoConnectRetryInterval: getSetting('connectionTimeout', 10)
+  });
+
 
   // Update game list when settings change
   useEffect(() => {
@@ -711,6 +720,7 @@ const SelectGamePage = () => {
             className: styles.startGameButton
           }
         ]}
+        onAudienceInteraction={sendAudienceInteraction}
       />
 
       <div className={styles.mainLayout}>
@@ -725,7 +735,11 @@ const SelectGamePage = () => {
           </div>
 
           <div className={styles.welcomeArea}>
-            <WelcomePanel />
+            <WelcomePanel
+              isConnected={isConnected}
+              roomId={roomId}
+              connectionError={connectionError}
+            />
           </div>
         </div>
 

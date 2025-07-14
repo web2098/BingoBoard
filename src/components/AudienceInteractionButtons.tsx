@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import audienceInteractionsData from '../data/audienceInteractions.json';
 import { getMappedAsset } from '../utils/assetMapping';
 import { recordAudienceWinner } from '../utils/telemetry';
+import { AudienceInteractionType, AudienceInteractionOptions } from '../serverInteractions/types';
 import styles from './AudienceInteractionButtons.module.css';
 
 interface AudienceInteraction {
@@ -26,11 +27,13 @@ interface AudienceInteraction {
 interface AudienceInteractionButtonsProps {
   currentPage: string;
   className?: string;
+  onAudienceInteraction?: (eventType: AudienceInteractionType, options: AudienceInteractionOptions) => void;
 }
 
 const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
   currentPage,
-  className = ""
+  className = "",
+  onAudienceInteraction
 }) => {
   const [interactions, setInteractions] = useState<AudienceInteraction[]>([]);
 
@@ -48,13 +51,18 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
       recordAudienceWinner();
     }
 
-    // Use the global showAudienceInteraction function
+    // Send audience interaction to server (for clients)
+    if (onAudienceInteraction) {
+      onAudienceInteraction(interaction.id as AudienceInteractionType, interaction as AudienceInteractionOptions);
+    }
+
+    // Use the global showAudienceInteraction function (for local display)
     if ((window as any).showAudienceInteraction) {
       (window as any).showAudienceInteraction(interaction);
     } else {
       console.warn('AudienceInteractionModalManager not available');
     }
-  }, []);
+  }, [onAudienceInteraction]);
 
   useEffect(() => {
     // Set up keyboard shortcuts

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import AudienceInteractionButtons from './AudienceInteractionButtons';
 import { getSetting, setSetting } from '../utils/settings';
 import { getVersionLabels, getVersionRoute } from '../config/versions';
+import { AudienceInteractionType, AudienceInteractionOptions } from '../serverInteractions/types';
 import styles from './SidebarWithMenu.module.css';
 
 interface SidebarButton {
@@ -22,6 +23,7 @@ interface SidebarWithMenuProps {
   onReset?: () => void;
   pageButtons?: SidebarButton[];
   children?: React.ReactNode;
+  onAudienceInteraction?: (eventType: AudienceInteractionType, options: AudienceInteractionOptions) => void;
 }
 
 const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
@@ -30,7 +32,8 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
   onSave,
   onReset,
   pageButtons = [],
-  children
+  children,
+  onAudienceInteraction
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -184,7 +187,10 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
 
         {/* Audience Interaction Buttons */}
         <div className={styles.audienceInteractionSection}>
-          <AudienceInteractionButtons currentPage={currentPage} />
+          <AudienceInteractionButtons
+            currentPage={currentPage}
+            onAudienceInteraction={onAudienceInteraction}
+          />
         </div>
       </div>
 

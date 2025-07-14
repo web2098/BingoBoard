@@ -3,11 +3,11 @@ import {
   HostConnectionConfig,
   HostAuthResponse,
   RequestIdMessage,
-  SetupMessage,
   ActivateMessage,
   DeactivateMessage,
   UpdateFreeMessage,
   ModalActivateMessage,
+  ModalDeactivateMessage,
   GameState,
   StyleConfig,
   SessionConfig,
@@ -117,7 +117,7 @@ export class HostConnection extends ServerConnection {
   }
 
   public sendGameSetup(gameState: GameState, styleConfig: StyleConfig, sessionConfig: SessionConfig): void {
-    const message: SetupMessage = {
+    const message = {
       type: "setup",
       data: {
         game: gameState.name,
@@ -125,16 +125,22 @@ export class HostConnection extends ServerConnection {
         active: gameState.calledNumbers,
         lastNumber: gameState.lastNumber
       },
-      style: styleConfig,
+      style: {
+        selectedColor: styleConfig.selectedColor,
+        selectedTextColor: styleConfig.selectedTextColor,
+        unselectedColor: styleConfig.unselectedColor,
+        unselectedTextColor: styleConfig.unselectedTextColor,
+      },
       session: {
         numbers: sessionConfig.specialNumbers
       }
     };
+    console.log(`Sending game setup to all clients:`, message);
     this.sendMessage(message);
   }
 
   public sendGameSetupToClient(clientId: string, gameState: GameState, styleConfig: StyleConfig, sessionConfig: SessionConfig): void {
-    const message: SetupMessage = {
+    const message = {
       type: "setup",
       client_id: clientId,
       data: {
@@ -143,11 +149,17 @@ export class HostConnection extends ServerConnection {
         active: gameState.calledNumbers,
         lastNumber: gameState.lastNumber
       },
-      style: styleConfig,
+      style: {
+        selectedColor: styleConfig.selectedColor,
+        selectedTextColor: styleConfig.selectedTextColor,
+        unselectedColor: styleConfig.unselectedColor,
+        unselectedTextColor: styleConfig.unselectedTextColor,
+      },
       session: {
         numbers: sessionConfig.specialNumbers
       }
     };
+    console.log(`Sending game setup to client ${clientId}:`, message);
     this.sendMessage(message);
   }
 
@@ -186,6 +198,14 @@ export class HostConnection extends ServerConnection {
     this.sendMessage(message);
   }
 
+  public sendModalDeactivate(): void {
+    console.log('HostConnection: Sending modal_deactivate message');
+    const message: ModalDeactivateMessage = {
+      type: "modal_deactivate"
+    };
+    this.sendMessage(message);
+  }
+
   public getRoomId(): string | null {
     return this.auth?.room_id || null;
   }
@@ -196,12 +216,5 @@ export class HostConnection extends ServerConnection {
 
   protected handleMessage(message: any): void {
     super.handleMessage(message);
-
-    // Handle host-specific messages
-    if (message.type === 'update') {
-      // Client is requesting an update - call the message handler
-      // The parent component should handle this by sending a setup message
-      console.log(`Client ${message.client_id} requesting update`);
-    }
   }
 }

@@ -56,6 +56,10 @@ export interface ModalActivateMessage extends BaseMessage {
   };
 }
 
+export interface ModalDeactivateMessage extends BaseMessage {
+  type: "modal_deactivate";
+}
+
 // Host incoming messages
 export interface IdMessage extends BaseMessage {
   type: "id";

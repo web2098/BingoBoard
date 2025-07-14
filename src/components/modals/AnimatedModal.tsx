@@ -38,6 +38,14 @@ const AnimatedModal: React.FC<AnimatedModalProps> = ({
       // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
 
+      // Add escape key listener
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          onClose();
+        }
+      };
+      document.addEventListener('keydown', handleKeyDown);
+
       // Check if we have audio
       if (audioSrc && audioRef.current) {
         setHasAudio(true);
@@ -80,6 +88,10 @@ const AnimatedModal: React.FC<AnimatedModalProps> = ({
         }, effectiveTimeout);
       }
       // For audio modals, timeout will be set in handleAudioLoadedMetadata
+
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
 
     } else if (!isVisible && modalStartTimeRef.current !== 0) {
       // Only clear timers when modal actually closes (not on re-renders)

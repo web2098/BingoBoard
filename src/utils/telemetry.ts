@@ -449,6 +449,21 @@ export const getLastCalledNumbers = (): number[] => {
 };
 
 /**
+ * Get the last called numbers from current session in reverse chronological order (most recent first)
+ * This matches the format expected by the v4 system where clickedNumbers[0] is the most recent
+ */
+export const getLastCalledNumbersReversed = (): number[] => {
+  const currentSession = loadCurrentSession();
+  if (!currentSession) {
+    return [];
+  }
+
+  return currentSession.numbersCalled
+    .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()) // Most recent first
+    .map(call => call.number);
+};
+
+/**
  * Get the most recent number called
  */
 export const getLastCalledNumber = (): number | null => {
@@ -746,6 +761,23 @@ const addWinnerWithPriority = (session: GameSession, newWinner: Winner): boolean
     default:
       return false;
   }
+};
+
+/**
+ * Update the free space setting for the current session
+ */
+export const updateFreeSpaceSetting = (freeSpace: boolean): void => {
+  const currentSession = loadCurrentSession();
+  if (!currentSession) {
+    console.warn('No active session to update free space setting');
+    return;
+  }
+
+  currentSession.freeSpace = freeSpace;
+  saveCurrentSession(currentSession);
+
+  // Dispatch telemetry update event for listeners
+  dispatchTelemetryUpdate();
 };
 
 /**

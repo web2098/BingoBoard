@@ -2,13 +2,50 @@
 
 This module handles all server communication for the Bingo Board application, including hosting rooms and client connections.
 
+# Server Interactions - V5
+
+This module handles all server communication for the Bingo Board application, including hosting rooms and client connections.
+
 ## Architecture
 
-- **ServerConnection**: Main connection management class
+- **ServerInteractionService**: Singleton service for managing all server connections and state
+- **useServerInteraction**: React hook providing access to the server interaction service
 - **HostConnection**: Host-specific functionality for managing rooms
 - **ClientConnection**: Client-specific functionality for joining rooms
 - **MessageTypes**: TypeScript interfaces for all message types
-- **ServerInteractionContext**: React context for managing server state
+
+## Usage
+
+### In React Components
+
+```typescript
+import { useServerInteraction } from './serverInteractions/useServerInteraction';
+
+const MyComponent = () => {
+  const {
+    isConnected,
+    hostRoom,
+    sendGameSetup,
+    // ... other methods
+  } = useServerInteraction({
+    onNumberActivated: (number, spots) => {
+      // Handle number activation
+    }
+  });
+
+  // Use the service methods...
+};
+```
+
+### Direct Service Access
+
+```typescript
+import { getServerInteractionService } from './serverInteractions/ServerInteractionService';
+
+const service = getServerInteractionService();
+const state = service.getState();
+await service.hostRoom(serverUrl, authToken);
+```
 
 ## Message Types
 

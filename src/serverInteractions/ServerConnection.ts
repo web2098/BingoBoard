@@ -64,7 +64,6 @@ export class ServerConnection {
       this.ws.onmessage = (event) => {
         try {
           const message = JSON.parse(event.data);
-          console.log('Received message:', message);
           this.handleMessage(message);
         } catch (error) {
           console.error('Error parsing message:', error);
@@ -137,7 +136,7 @@ export class ServerConnection {
 
   protected handleMessage(message: any): void {
     if (message.type === 'id') {
-      this.clientId = message.client_id;
+      this.clientId = message.conn_id;
       console.log('Received client ID:', this.clientId);
     }
 

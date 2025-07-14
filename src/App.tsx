@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -14,7 +14,12 @@ import ErrorPage from "./routes/error-page";
 import { getSetting } from './utils/settings';
 import { getVersionRoute, getVersionConfig, getAvailableVersions } from './config/versions';
 import { AudienceInteractionModalManager } from './components/modals';
-import { ServerInteractionProvider } from './serverInteractions/ServerInteractionContext';
+import { initializeServerInteraction } from './serverInteractions/ServerInteractionService';
+import { useServerInteraction } from './serverInteractions/useServerInteraction';
+// Note: ServerInteractionProvider is no longer needed as a React component
+
+// Initialize the server interaction service early
+initializeServerInteraction();
 
 // Component to handle version-based redirection
 function VersionRedirect() {
@@ -69,11 +74,19 @@ function VersionSpecificRoute({
 }
 
 export default function MyApp() {
-  // Handle game state updates from the server interaction context
-  const handleGameStateUpdate = useCallback((gameState: any, styleConfig: any, sessionConfig: any) => {
-    console.log('App received game state update:', gameState);
-    // This ensures the app is aware of game state changes for proper client updates
-  }, []);
+  return (
+    <AppWithServerInteraction />
+  );
+}
+
+function AppWithServerInteraction() {
+  const { sendModalDeactivate } = useServerInteraction();
+
+  // Create a wrapped callback with logging
+  const handleModalClose = React.useCallback(() => {
+    console.log('App: Modal close callback triggered, calling sendModalDeactivate');
+    sendModalDeactivate();
+  }, [sendModalDeactivate]);
 
   // Define page components mapping
   const pageComponents = {
@@ -126,13 +139,9 @@ export default function MyApp() {
   const router = createBrowserRouter(routes);
 
   return (
-    <ServerInteractionProvider
-      onGameStateUpdate={handleGameStateUpdate}
-    >
-      <AudienceInteractionModalManager>
-        <RouterProvider router={router} />
-      </AudienceInteractionModalManager>
-    </ServerInteractionProvider>
+    <AudienceInteractionModalManager onModalClose={handleModalClose}>
+      <RouterProvider router={router} />
+    </AudienceInteractionModalManager>
   );
 }
 
