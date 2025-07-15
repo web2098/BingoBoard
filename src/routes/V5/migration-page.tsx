@@ -4,7 +4,6 @@ import styles from './migration-page.module.css';
 import { migrateV4ToV5, isMigrationNeeded } from '../../utils/settingsMigration';
 import { setSetting } from '../../utils/settings';
 import MigrationModal, { MigrationResult } from '../../components/settings/MigrationModal';
-import SidebarWithMenu from '../../components/SidebarWithMenu';
 
 interface MigrationPageProps {}
 

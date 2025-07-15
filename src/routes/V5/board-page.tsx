@@ -34,8 +34,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     sendNumberDeactivated,
     sendGameSetup,
     sendFreeSpaceUpdate,
-    sendAudienceInteraction,
-    sendModalDeactivate
+    sendAudienceInteraction
+    // sendModalDeactivate - not used in this component
   } = useServerInteraction({
     autoConnect: true, // Enable auto-connection for host pages
     autoConnectRetryInterval: getSetting('connectionTimeout', 10)

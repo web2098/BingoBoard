@@ -3,16 +3,6 @@ import specialNumbersData from '../data/specialNumbers.json';
 import { setSetting } from './settings';
 
 /**
- * Interface for version mapping entries
- */
-interface VersionMapping {
-  v4_id: string;
-  v5_id: string | string[] | null;
-  v4_to_v5?: string;
-  migration_type?: 'simple' | 'complex';
-}
-
-/**
  * Custom migration functions for specific settings that need special handling
  */
 const migrationFunctions: { [key: string]: (value: any) => any } = {
