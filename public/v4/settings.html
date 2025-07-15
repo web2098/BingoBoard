@@ -41,6 +41,46 @@
             text-align: center;
             font-size: 100%;
         }
+        .version-upgrade-header {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .version-upgrade-header:hover {
+            background: linear-gradient(135deg, #0056b3, #004085);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .version-upgrade-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .version-upgrade-header:hover::before {
+            left: 100%;
+        }
     </style>
     <script src="utilities.js"></script>
     <script>
@@ -310,10 +350,26 @@
             });
         }
 
+        function tryLatestVersion() {
+            // Update the version setting to 'latest'
+            const currentSettings = JSON.parse(localStorage.getItem('bingoSettings') || '{}');
+            currentSettings.defaultVersion = 'latest';
+            localStorage.setItem('bingoSettings', JSON.stringify(currentSettings));
+
+            // Redirect to the latest version
+            window.location.href = '/BingoBoard/select-game';
+        }
     </script>
 </head>
 
 <body>
+    <div class="version-upgrade-header" onclick="tryLatestVersion()">
+        <p class="upgrade-text">
+            <span class="upgrade-icon">✨</span>
+            Try Latest Version - Enhanced Features & Modern Interface
+            <span class="upgrade-icon">→</span>
+        </p>
+    </div>
     <div id="body_div">
         <div class="container" id="quick_settings">
             <h1>Settings</h1>
