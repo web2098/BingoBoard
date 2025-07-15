@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FlashModal, PopupModal, AnimatedModal } from '../modals';
+import WelcomeModal from './WelcomeModal';
 import { getSetting } from '../../utils/settings';
 import { getMappedAsset } from '../../utils/assetMapping';
 
@@ -54,6 +55,12 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
     autoPlay: true
   });
 
+  const [welcomeModal, setWelcomeModal] = useState<{
+    isVisible: boolean;
+  }>({
+    isVisible: false
+  });
+
   // Track the current popup shortcut for toggle functionality
   const [currentPopupShortcut, setCurrentPopupShortcut] = useState<string | null>(null);
 
@@ -82,6 +89,14 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
 
   // Function to show audience interaction modal
   const showAudienceInteraction = React.useCallback((interaction: any, options?: { enable_audio?: boolean; enable_image?: boolean }) => {
+    // Check for welcome modal first
+    if (interaction.id === 'welcomeCard' || interaction.action?.function === 'showWelcomeModal') {
+      setWelcomeModal({
+        isVisible: true
+      });
+      return;
+    }
+
     const hasText = interaction.content?.text;
     const hasImage = interaction.content?.img;
     const hasAudio = interaction.content?.audio;
@@ -104,7 +119,7 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
     }
 
     // Check if any modal is currently active - prevent new activations (AFTER toggle check)
-    const isAnyModalActive = flashModal.isVisible || popupModal.isVisible || animatedModal.isVisible;
+    const isAnyModalActive = flashModal.isVisible || popupModal.isVisible || animatedModal.isVisible || welcomeModal.isVisible;
 
     if (isAnyModalActive) {
       console.log('Modal activation blocked: Another modal is already active', {
@@ -191,7 +206,7 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
         autoPlay: shouldPlayAudio
       });
     }
-  }, [flashModal.isVisible, popupModal.isVisible, animatedModal.isVisible, currentPopupShortcut, onModalClose]);
+  }, [flashModal.isVisible, popupModal.isVisible, animatedModal.isVisible, welcomeModal.isVisible, currentPopupShortcut, onModalClose]);
 
   // Function to hide any currently visible audience interaction modal
   const hideAudienceInteraction = React.useCallback(() => {
@@ -199,13 +214,14 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
     setFlashModal(prev => ({ ...prev, isVisible: false }));
     setPopupModal(prev => ({ ...prev, isVisible: false }));
     setAnimatedModal(prev => ({ ...prev, isVisible: false }));
+    setWelcomeModal(prev => ({ ...prev, isVisible: false }));
     setCurrentPopupShortcut(null);
   }, []);
 
   // Function to check if any modal is currently active
   const isAnyModalActive = React.useCallback(() => {
-    return flashModal.isVisible || popupModal.isVisible || animatedModal.isVisible;
-  }, [flashModal.isVisible, popupModal.isVisible, animatedModal.isVisible]);
+    return flashModal.isVisible || popupModal.isVisible || animatedModal.isVisible || welcomeModal.isVisible;
+  }, [flashModal.isVisible, popupModal.isVisible, animatedModal.isVisible, welcomeModal.isVisible]);
 
   // Make the functions available globally for other components to use
   React.useEffect(() => {
@@ -263,6 +279,15 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
         autoPlay={animatedModal.autoPlay}
         onClose={() => {
           setAnimatedModal(prev => ({ ...prev, isVisible: false }));
+          if (onModalClose) onModalClose();
+        }}
+      />
+
+      {/* Welcome Modal */}
+      <WelcomeModal
+        isVisible={welcomeModal.isVisible}
+        onClose={() => {
+          setWelcomeModal(prev => ({ ...prev, isVisible: false }));
           if (onModalClose) onModalClose();
         }}
       />

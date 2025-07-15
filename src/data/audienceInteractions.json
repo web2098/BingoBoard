@@ -27,6 +27,10 @@
         "id": "welcomeCard",
         "content":{"text": "Welcome Card"},
         "icon": {"emoji": "👋"},
+        "action": {
+            "function": "showWelcomeModal",
+            "args": []
+        },
         "description": "Show Welcome Card Modal",
         "pages": ["select-game"],
         "shortcuts":["h", "0"]

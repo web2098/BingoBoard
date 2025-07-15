@@ -5,25 +5,13 @@ import styles from './WelcomeModal.module.css';
 export interface WelcomeModalProps {
   isVisible: boolean;
   onClose: () => void;
-  timeout?: number; // in milliseconds, default 5000ms
 }
 
 const WelcomeModal: React.FC<WelcomeModalProps> = ({
   isVisible,
-  onClose,
-  timeout = 5000
+  onClose
 }) => {
   const welcomeText = generateWelcomeMessage();
-
-  useEffect(() => {
-    if (isVisible && timeout > 0) {
-      const timer = setTimeout(() => {
-        onClose();
-      }, timeout);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible, timeout, onClose]);
 
   useEffect(() => {
     if (isVisible) {

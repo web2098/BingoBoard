@@ -359,10 +359,11 @@ This page is used to show all telemetry in the current session and long term tel
     - There should be one for the current session, and one for the all time
 
 # Audience Interactions
-- There are 3 audience interactions
+- There are 4 audience interactions
     - Flash Message
     - Popup Message
     - Video Message
+    - Welcome Modal
 - Audience interactions should be defined in a json data file
 - The audience interactions should use the format
 ```json
@@ -415,4 +416,13 @@ This page is used to show all telemetry in the current session and long term tel
     - A animated message shows a gif and audio
     - The message should hide when the audio finishes, or a timeout set to 3.5 seconds
     - The gif should take up the entire 75% of the page
+- Welcome Modal
+    - Defined by having special ID "welcome" or action function "showWelcomeModal"
+    - Shows a customizable welcome message in a modal dialog
+    - Modal appears centered on screen with semi-transparent black background overlay
+    - Contains welcome title and formatted message text using generateWelcomeMessage() utility
+    - Does not auto-close and remains visible until manually dismissed
+    - Can be manually closed by clicking overlay, pressing Escape key, or clicking close
+    - Prevents body scrolling while modal is open
+    - Uses WelcomeModal component with consistent styling
 
