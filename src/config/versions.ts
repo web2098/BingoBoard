@@ -21,6 +21,7 @@ export interface VersionConfig {
     settings: VersionRoute;
     about: VersionRoute;
     telemetry: VersionRoute;
+    migration: VersionRoute;
   };
 }
 
@@ -47,7 +48,8 @@ export const VERSIONS: Record<string, VersionConfig> = {
       client: { path: '/BingoBoard/client' },
       settings: { path: '/BingoBoard/settings' },
       about: { path: '/BingoBoard/about' },
-      telemetry: { path: '/BingoBoard/telemetry' }
+      telemetry: { path: '/BingoBoard/telemetry' },
+      migration: { path: '/BingoBoard/migration' }
     }
   },
   v4: {
@@ -63,7 +65,8 @@ export const VERSIONS: Record<string, VersionConfig> = {
       client: { path: '/BingoBoard/v4/client_view.html', external: true },
       settings: { path: '/BingoBoard/v4/settings.html', external: true },
       about: { path: '/BingoBoard/v4/about.html', external: true },
-      telemetry: { path: '/BingoBoard/v4/stats.html' } // V4 uses V5 telemetry page
+      telemetry: { path: '/BingoBoard/v4/stats.html' }, // V4 uses V5 telemetry page
+      migration: { path: '/BingoBoard/migration' } // Redirect to V5 migration page
     }
   }
 };

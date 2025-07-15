@@ -10,6 +10,7 @@ import ClientPage from './routes/V5/client-page';
 import SettingsPage from './routes/V5/settings-page';
 import About from './routes/V5/about-page';
 import TelemetryPage from './routes/V5/telemetry-page';
+import MigrationPage from './routes/V5/migration-page';
 import ErrorPage from "./routes/error-page";
 import { getSetting } from './utils/settings';
 import { getVersionRoute, getVersionConfig, getAvailableVersions } from './config/versions';
@@ -96,6 +97,7 @@ function AppWithServerInteraction() {
     settings: SettingsPage,
     about: About,
     telemetry: TelemetryPage,
+    migration: MigrationPage,
   };
 
   // Generate routes dynamically

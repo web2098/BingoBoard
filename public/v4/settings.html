@@ -351,13 +351,8 @@
         }
 
         function tryLatestVersion() {
-            // Update the version setting to 'latest'
-            const currentSettings = JSON.parse(localStorage.getItem('bingoSettings') || '{}');
-            currentSettings.defaultVersion = 'latest';
-            localStorage.setItem('bingoSettings', JSON.stringify(currentSettings));
-
-            // Redirect to the latest version
-            window.location.href = '/BingoBoard/select-game';
+            // Redirect to the migration page which will handle the migration process
+            window.location.href = '/BingoBoard/migration';
         }
     </script>
 </head>
