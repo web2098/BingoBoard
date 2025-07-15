@@ -7,8 +7,8 @@ import battleImg from '../assets/images/audience-interactions/battle.jpg';
 import lightsaberImg from '../assets/images/audience-interactions/lightsaber.png';
 import order66Gif from '../assets/images/audience-interactions/order66.gif';
 
-// Import audio
-import order66Audio from '../assets/audio/audience-interactions/order66.mp3';
+// Import audio using require to avoid TypeScript module resolution issues
+const order66Audio = require('../assets/audio/audience-interactions/order66.mp3');
 
 // Asset mapping for audience interactions
 export const assetMap: { [key: string]: string } = {

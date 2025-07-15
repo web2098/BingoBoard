@@ -1,18 +1,7 @@
 import React, { useState } from 'react';
 import { FlashModal, PopupModal, AnimatedModal } from '../modals';
 import { getSetting } from '../../utils/settings';
-
-// Import the assets
-import battleImg from '../../assets/images/audience-interactions/battle.jpg';
-import order66Gif from '../../assets/images/audience-interactions/order66.gif';
-import order66Audio from '../../assets/audio/audience-interactions/order66.mp3';
-
-// Asset mapping for audience interactions
-const assetMap: { [key: string]: string } = {
-  '/images/audience-interactions/battle.jpg': battleImg,
-  '/images/audience-interactions/order66.gif': order66Gif,
-  '/audio/audience-interactions/order66.mp3': order66Audio,
-};
+import { getMappedAsset } from '../../utils/assetMapping';
 
 interface AudienceInteractionModalManagerProps {
   children: React.ReactNode;
@@ -134,7 +123,7 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
 
       // Show popup modal with image (if enabled by both global setting and options)
       const shouldShowImage = enableImage && enableImageSetting;
-      const mappedImage = assetMap[interaction.content.img] || interaction.content.img;
+      const mappedImage = getMappedAsset(interaction.content.img);
 
       setPopupModal({
         isVisible: true,
@@ -170,7 +159,7 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
       });
     } else if (hasImage && !hasAudio && !hasText && enableImage) {
       // Image-only modal - use PopupModal (only if images are enabled)
-      const mappedImage = assetMap[interaction.content.img] || interaction.content.img;
+      const mappedImage = getMappedAsset(interaction.content.img);
       setPopupModal({
         isVisible: true,
         content: {
@@ -183,8 +172,8 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
       setCurrentPopupShortcut(primaryShortcut);
     } else if (hasImage && hasAudio) {
       // Animated modal with audio
-      const mappedImage = assetMap[interaction.content.img] || interaction.content.img;
-      const mappedAudio = assetMap[interaction.content.audio] || interaction.content.audio;
+      const mappedImage = getMappedAsset(interaction.content.img);
+      const mappedAudio = getMappedAsset(interaction.content.audio);
 
       // Calculate if audio should play (individual setting AND global sound effects AND options)
       const audioKey = `${interaction.id}_enableAudio`;

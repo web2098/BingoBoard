@@ -3,12 +3,14 @@ import { useSearchParams } from 'react-router-dom';
 import styles from './client-page.module.css';
 import QRCode from '../../components/QRCode';
 import ClientSettings from '../../components/ClientSettings';
+import ClientLog from '../../components/ClientLog';
 import { BoardPreviewModal, GameBoard, OperatorIcon } from '../../components/boards';
 import { useServerInteraction } from '../../serverInteractions/useServerInteraction';
 import { getNumberMessage, getLetterColor, getContrastTextColor, getBoardHighlightColor, getSetting } from '../../utils/settings';
 import games from '../../data/games';
 import { AudienceInteractionModalManager } from '../../components/modals';
 import audienceInteractionsData from '../../data/audienceInteractions.json';
+import { useConsoleLog } from '../../hooks/useConsoleLog';
 
 interface ClientPageProps {}
 
@@ -36,6 +38,23 @@ const ClientPage: React.FC<ClientPageProps> = () => {
   const [searchParams] = useSearchParams();
   const roomId = searchParams.get('roomId');
   const serverUrl = searchParams.get('serverUrl');
+
+  // Initialize console logging - this will capture all console outputs and display in the log section
+  const { logs, clearLogs } = useConsoleLog({ maxEntries: 200 });
+
+  // Log component initialization
+  useEffect(() => {
+    console.log('Client page initialized with logging system');
+    console.info('Console logging is now active and will display in the log section below');
+    console.warn('This is a sample warning message');
+
+    // Log connection parameters
+    if (roomId && serverUrl) {
+      console.log('Connection parameters:', { roomId, serverUrl });
+    } else {
+      console.error('Missing connection parameters:', { roomId, serverUrl });
+    }
+  }, [roomId, serverUrl]);
 
   // Helper function to get client setting value
   const getClientSetting = (settingId: string, defaultValue: any = null) => {
@@ -136,7 +155,7 @@ const ClientPage: React.FC<ClientPageProps> = () => {
   // Wake lock functionality to prevent screen from turning off
   const requestWakeLock = async () => {
     try {
-      if ('wakeLock' in navigator) {
+      if ('wakeLock' in navigator && navigator.wakeLock) {
         wakeLockRef.current = await navigator.wakeLock.request('screen');
         console.log('Screen Wake Lock is active');
 
@@ -183,8 +202,26 @@ const ClientPage: React.FC<ClientPageProps> = () => {
       console.log('Connecting to room:', roomId, 'on server:', serverUrl);
       connectionInitiated.current = true;
       joinRoom(serverUrl, roomId);
+    } else if (!roomId || !serverUrl) {
+      console.error('Cannot connect: missing roomId or serverUrl');
     }
   }, [roomId, serverUrl, joinRoom]);
+
+  // Log connection status changes
+  useEffect(() => {
+    if (isConnected) {
+      console.info('Successfully connected to server');
+    } else {
+      console.warn('Not connected to server');
+    }
+  }, [isConnected]);
+
+  // Log connection errors
+  useEffect(() => {
+    if (connectionError) {
+      console.error('Connection error:', connectionError);
+    }
+  }, [connectionError]);
 
   // Handle setup message from server
   useEffect(() => {
@@ -514,6 +551,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             <h2>Missing Connection Information</h2>
             <p>Room ID and Server URL are required to connect.</p>
           </div>
+
+          {/* Client Log Section */}
+          <ClientLog logs={logs} onClearLogs={clearLogs} />
         </div>
       </AudienceInteractionModalManager>
     );
@@ -528,6 +568,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             <p>{connectionError}</p>
             <p>Please check your connection and try again.</p>
           </div>
+
+          {/* Client Log Section */}
+          <ClientLog logs={logs} onClearLogs={clearLogs} />
         </div>
       </AudienceInteractionModalManager>
     );
@@ -541,6 +584,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             <h2>Connecting...</h2>
             <p>Connecting to room {roomId}</p>
           </div>
+
+          {/* Client Log Section */}
+          <ClientLog logs={logs} onClearLogs={clearLogs} />
         </div>
       </AudienceInteractionModalManager>
     );
@@ -554,6 +600,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             <h2>Waiting for Game Data...</h2>
             <p>Connected to room. Waiting for game setup.</p>
           </div>
+
+          {/* Client Log Section */}
+          <ClientLog logs={logs} onClearLogs={clearLogs} />
         </div>
       </AudienceInteractionModalManager>
     );
@@ -734,6 +783,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
 
         {/* Client Settings Section */}
         <ClientSettings />
+
+        {/* Client Log Section */}
+        <ClientLog logs={logs} onClearLogs={clearLogs} />
 
         {/* Board Preview Modal */}
         {gameData && (

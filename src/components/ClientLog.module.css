@@ -1,0 +1,299 @@
+/* Client Log Styles */
+.clientLog {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 0;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.logHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0;
+  user-select: none;
+  background: rgba(248, 249, 250, 0.8);
+  border-radius: 12px 12px 0 0;
+}
+
+.logHeader:hover {
+  background: rgba(248, 249, 250, 1);
+}
+
+.logHeaderContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logHeaderContent h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.logCount {
+  font-size: 0.85rem;
+  color: #666;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: #666;
+  transition: transform 0.2s ease, color 0.2s ease;
+  border-radius: 4px;
+}
+
+.toggleButton:hover {
+  color: #333;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.toggleButton.collapsed {
+  transform: rotate(-90deg);
+}
+
+.logContent {
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+}
+
+.logControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(248, 249, 250, 0.5);
+  border-bottom: 1px solid #e0e0e0;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filterControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterControls label {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.filterSelect {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  background: white;
+  color: #333;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #007acc;
+  box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+}
+
+.actionControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.autoScrollLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  color: #666;
+  cursor: pointer;
+  user-select: none;
+}
+
+.autoScrollLabel input[type="checkbox"] {
+  margin: 0;
+}
+
+.clearButton {
+  padding: 0.25rem 0.75rem;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clearButton:hover:not(:disabled) {
+  background: #d32f2f;
+}
+
+.clearButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.logContainer {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  background: #fafafa;
+}
+
+.logContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.logContainer::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.logContainer::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.logContainer::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.emptyLog {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.logEntry {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 2px;
+  word-break: break-word;
+  align-items: flex-start;
+}
+
+.logEntry:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.logTimestamp {
+  color: #888;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  min-width: 70px;
+}
+
+.logLevel {
+  flex-shrink: 0;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  min-width: 45px;
+  text-align: center;
+}
+
+.logMessage {
+  flex: 1;
+  white-space: pre-wrap;
+}
+
+.logArgs {
+  color: #666;
+  font-style: italic;
+}
+
+/* Log Level Styles */
+.logDefault .logLevel {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.logInfo .logLevel {
+  background: #e8f5e8;
+  color: #388e3c;
+}
+
+.logWarn .logLevel {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.logError .logLevel {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+.logError {
+  background: rgba(255, 235, 238, 0.3);
+}
+
+.logWarn {
+  background: rgba(255, 243, 224, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .logControls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .filterControls,
+  .actionControls {
+    justify-content: space-between;
+  }
+
+  .logContainer {
+    max-height: 200px;
+    font-size: 0.75rem;
+  }
+
+  .logEntry {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .logTimestamp,
+  .logLevel {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .logHeaderContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .logContainer {
+    max-height: 150px;
+  }
+}

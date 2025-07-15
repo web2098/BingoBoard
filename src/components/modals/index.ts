@@ -11,5 +11,4 @@ export type { AnimatedModalProps } from './AnimatedModal';
 export type { WelcomeModalProps } from './WelcomeModal';
 
 // Helper Components
-export { default as ModalExample } from './ModalExample';
 export { default as AudienceInteractionModalManager } from './AudienceInteractionModalManager';
