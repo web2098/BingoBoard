@@ -84,6 +84,7 @@ export const useServerInteraction = (options: UseServerInteractionOptions = {}) 
   // Expose auto-connection methods for direct use
   const autoConnect = useCallback(() => service.autoConnect(), [service]);
   const startAutoConnect = useCallback((retryInterval?: number) => service.startAutoConnect(retryInterval), [service]);
+  const stopAutoConnect = useCallback(() => service.stopAutoConnect(), [service]);
 
   return {
     // State
@@ -104,6 +105,7 @@ export const useServerInteraction = (options: UseServerInteractionOptions = {}) 
 
     // Auto-connection methods
     autoConnect,
-    startAutoConnect
+    startAutoConnect,
+    stopAutoConnect
   };
 };

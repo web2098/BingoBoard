@@ -39,6 +39,7 @@ export class ServerConnection {
           this.config.onError(timeoutError);
 
           if (this.shouldReconnect) {
+            console.log('Retrying connection due to timeout');
             this.retryConnection();
           }
         }
@@ -82,10 +83,6 @@ export class ServerConnection {
 
         const wsError = new Error('WebSocket connection error');
         this.config.onError(wsError);
-
-        if (this.shouldReconnect) {
-          this.retryConnection();
-        }
       };
 
       this.ws.onclose = (event) => {
@@ -104,6 +101,7 @@ export class ServerConnection {
         }
 
         if (this.shouldReconnect && event.code !== 1000) { // 1000 = normal closure
+          console.log('Retrying connection after close');
           this.retryConnection();
         }
       };
@@ -120,6 +118,7 @@ export class ServerConnection {
       this.config.onError(error as Error);
 
       if (this.shouldReconnect) {
+        console.log('Retrying connection due to error');
         this.retryConnection();
       }
     }
@@ -147,6 +146,7 @@ export class ServerConnection {
     console.log(`Retrying connection in ${this.retryTime / 1000} seconds...`);
 
     setTimeout(() => {
+      console.log(`Adjust retry time from ${this.retryTime}ms to ${Math.min(this.retryTime * 2, this.maxRetryTime)}ms`);
       if (this.retryTime < this.maxRetryTime) {
         this.retryTime *= 2; // Exponential backoff
       }

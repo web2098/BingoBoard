@@ -36,6 +36,10 @@ class ServerInteractionService {
   private state: ServerInteractionState;
   private callbacks: Set<StateChangeCallback> = new Set();
 
+  // Auto-connect tracking
+  private autoConnectInterval: NodeJS.Timeout | null = null;
+  private isAutoConnectRunning: boolean = false;
+
   // Callback props
   private onNumberActivated?: (number: number, totalSpots: number) => void;
   private onNumberDeactivated?: (number: number, totalSpots: number) => void;
@@ -69,6 +73,7 @@ class ServerInteractionService {
 
   public static reset(): void {
     if (ServerInteractionService.instance) {
+      ServerInteractionService.instance.stopAutoConnect();
       ServerInteractionService.instance.disconnect();
     }
     ServerInteractionService.instance = null;
@@ -446,18 +451,31 @@ class ServerInteractionService {
 
   // Start auto-connection with retry logic
   public startAutoConnect(retryIntervalSeconds: number = 10): () => void {
+    // Stop any existing auto-connect process first
+    this.stopAutoConnect();
+
+    if( this.isAutoConnectRunning) {
+      return () => {};
+    }
+    this.isAutoConnectRunning = true;
+
     // Initial connection attempt
     this.autoConnect();
 
-    // Set up retry interval
-    const retryInterval = setInterval(() => {
-      this.autoConnect();
-    }, retryIntervalSeconds * 1000);
 
     // Return cleanup function
     return () => {
-      clearInterval(retryInterval);
+      this.stopAutoConnect();
     };
+  }
+
+  // Stop auto-connection
+  public stopAutoConnect(): void {
+    this.isAutoConnectRunning = false;
+    if (this.autoConnectInterval) {
+      clearInterval(this.autoConnectInterval);
+      this.autoConnectInterval = null;
+    }
   }
 }
 
