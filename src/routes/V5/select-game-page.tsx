@@ -554,9 +554,9 @@ const SmallGamePreview = ({
         {game.name} [{firstVariant.length || 'Standard'}]
       </div>
       <div className={`${styles.smallGameBoard} ${isDualBoard && isDoubleBingo ? styles.doubleBingoDual : ''}`}>
-        <GameBoard 
-          board={firstPattern} 
-          freeSpace={true} 
+        <GameBoard
+          board={firstPattern}
+          freeSpace={true}
           colorVersion={colorVersion}
           hasDynamicFreeSpace={false}
         />

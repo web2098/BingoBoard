@@ -1757,12 +1757,6 @@
   cursor: not-allowed;
 }
 
-.telemetryButton:disabled:hover {
-  background-color: #ffffff;
-  border-color: #dee2e6;
-  transform: none;
-}
-
 .telemetryButton.export {
   border-color: #007bff;
   color: #007bff;
@@ -1805,3 +1799,4 @@
     gap: 4px;
   }
 }
+

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './settings-page.module.css';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
+import MigrationModal from '../../components/settings/MigrationModal';
 import {
   getSettingsSections,
   getSettings,
@@ -20,6 +21,7 @@ import {
   getContrastTextColor,
   getBoardHighlightColor
 } from '../../utils/settings';
+import { migrateV4ToV5, isMigrationNeeded, MigrationDetail } from '../../utils/settingsMigration';
 
 // Import centralized asset mapping
 import { getMappedAsset } from '../../utils/assetMapping';
@@ -763,6 +765,19 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
   const [telemetryCollapsed, setTelemetryCollapsed] = useState<boolean>(true); // Telemetry section collapsed by default
   const [currentSettings, setCurrentSettings] = useState<{ [key: string]: any }>({});
   const [colorVersion, setColorVersion] = useState<number>(0);
+  const [migrationModalVisible, setMigrationModalVisible] = useState<boolean>(false);
+
+  const [migrationResult, setMigrationResult] = useState<{
+    success: boolean;
+    migratedCount: number;
+    errors: string[];
+    migrations: MigrationDetail[];
+    complexMigrations: any[]; // ComplexMigrationResult[]
+    v4Settings: { [key: string]: any };
+    v5Settings: { [key: string]: any };
+    requiresUserApproval: boolean;
+  } | null>(null);
+
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const urlParameterProcessedRef = useRef<boolean>(false);
 
@@ -951,6 +966,22 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
       }
       // No error notification - reset operation fails silently
     }
+  };
+
+  const handleMigration = () => {
+    const result = migrateV4ToV5();
+
+    // The result now already contains all the detailed information we need
+    setMigrationResult(result);
+    // Show migration modal
+    setMigrationModalVisible(true);
+
+    // Reload settings after migration
+    const sections = getSettingsSections();
+    setSettingsSections(sections);
+
+    const settings = getSettings();
+    setCurrentSettings(settings);
   };
 
   const renderSettingInput = (property: SettingProperty, sectionIndex: number) => {
@@ -1411,6 +1442,27 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
                   />
                 </div>
               </div>
+
+              {/* V4 to V5 Migration */}
+              {isMigrationNeeded() && (
+                <div className={styles.settingItem}>
+                  <div className={styles.settingInfo}>
+                    <label className={styles.settingLabel}>V4 Settings Migration</label>
+                    <p className={styles.settingDescription}>
+                      Migrate your V4 settings to the new V5 format. This will preserve your existing preferences.
+                    </p>
+                  </div>
+                  <div className={styles.settingControl}>
+                    <button
+                      onClick={handleMigration}
+                      className={styles.resetButton}
+                      style={{ backgroundColor: '#007acc' }}
+                    >
+                      Migrate V4 Settings
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -1564,6 +1616,20 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
           </div>
         </div>
       </div>
+
+      {/* Migration Results Modal */}
+      <MigrationModal
+        isVisible={migrationModalVisible && !!migrationResult}
+        migrationResult={migrationResult}
+        onClose={() => setMigrationModalVisible(false)}
+        onSettingsRefresh={() => {
+          // Refresh settings after migration - reload both sections and current settings
+          const sections = getSettingsSections();
+          setSettingsSections(sections);
+          setCurrentSettings(getSettings());
+        }}
+      />
+
     </div>
   );
 };
