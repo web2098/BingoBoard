@@ -47,6 +47,11 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(swiper|ssr-window|dom7)/)"
+    ]
+  },
   "devDependencies": {
     "gh-pages": "^6.1.1"
   }
