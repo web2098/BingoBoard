@@ -352,6 +352,7 @@
 
         function tryLatestVersion() {
             // Redirect to the migration page which will handle the migration process
+            localStorage.setItem('defaultVersion', 'latest');
             window.location.href = '/BingoBoard/migration';
         }
     </script>
