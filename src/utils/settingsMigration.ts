@@ -480,7 +480,7 @@ export function migrateV4ToV5(): {
               v5Value = v4Value;
               conversionDescription = 'Direct copy (no conversion needed)';
             }
-            
+
             // Log migration, but mask private values
             if (mapping.private) {
               console.log(`Migrated ${v4_id} -> ${v5_id} (automatic): [PRIVATE] -> [PRIVATE]`);

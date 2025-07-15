@@ -274,7 +274,7 @@ const MigrationModal: React.FC<MigrationModalProps> = ({
                   <div className={styles.complexMigrationOriginal}>
                     <h5>Original V4 Value:</h5>
                     <div className={styles.originalValue}>
-                      {complexMigration.private 
+                      {complexMigration.private
                         ? '[PRIVATE]'
                         : (typeof complexMigration.v4_value === 'string'
                             ? complexMigration.v4_value
@@ -362,10 +362,10 @@ const MigrationModal: React.FC<MigrationModalProps> = ({
                         <div className={styles.migrationValue}>
                           <span className={styles.migrationValueLabel}>V4:</span>
                           <code>
-                            {migration.private 
-                              ? '[PRIVATE]' 
-                              : (typeof migration.v4_value === 'object' 
-                                  ? JSON.stringify(migration.v4_value) 
+                            {migration.private
+                              ? '[PRIVATE]'
+                              : (typeof migration.v4_value === 'object'
+                                  ? JSON.stringify(migration.v4_value)
                                   : String(migration.v4_value))
                             }
                           </code>
@@ -414,10 +414,10 @@ const MigrationModal: React.FC<MigrationModalProps> = ({
                                   );
                                 }
                                 return <code>
-                                  {migration.private 
-                                    ? '[PRIVATE]' 
-                                    : (typeof migration.v5_value === 'object' 
-                                        ? JSON.stringify(migration.v5_value) 
+                                  {migration.private
+                                    ? '[PRIVATE]'
+                                    : (typeof migration.v5_value === 'object'
+                                        ? JSON.stringify(migration.v5_value)
                                         : String(migration.v5_value))
                                   }
                                 </code>;
@@ -425,10 +425,10 @@ const MigrationModal: React.FC<MigrationModalProps> = ({
                             </div>
                           ) : (
                             <code>
-                              {migration.private 
-                                ? '[PRIVATE]' 
-                                : (typeof migration.v5_value === 'object' 
-                                    ? JSON.stringify(migration.v5_value) 
+                              {migration.private
+                                ? '[PRIVATE]'
+                                : (typeof migration.v5_value === 'object'
+                                    ? JSON.stringify(migration.v5_value)
                                     : String(migration.v5_value))
                               }
                             </code>

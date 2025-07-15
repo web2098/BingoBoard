@@ -118,6 +118,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
   // Ref to store the rotation interval so we can clear it
   const rotationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Ref to store the wake lock
+  const wakeLockRef = useRef<WakeLockSentinel | null>(null);
+
   // State for letter colors
   const letterColors = {
     B: getLetterColor('B'),
@@ -129,6 +132,50 @@ const ClientPage: React.FC<ClientPageProps> = () => {
 
   // Track if we've already initiated connection to prevent multiple calls
   const connectionInitiated = useRef(false);
+
+  // Wake lock functionality to prevent screen from turning off
+  const requestWakeLock = async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLockRef.current = await navigator.wakeLock.request('screen');
+        console.log('Screen Wake Lock is active');
+
+        wakeLockRef.current.addEventListener('release', () => {
+          console.log('Screen Wake Lock released');
+        });
+      } else {
+        console.warn('Wake Lock API not supported');
+      }
+    } catch (err: any) {
+      console.error('Wake Lock not supported', err.name, err.message);
+    }
+  };
+
+  const releaseWakeLock = () => {
+    if (wakeLockRef.current) {
+      wakeLockRef.current.release();
+      wakeLockRef.current = null;
+      console.log('Wake Lock manually released');
+    }
+  };
+
+  // Request wake lock when component mounts and page becomes visible
+  useEffect(() => {
+    requestWakeLock();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        requestWakeLock();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      releaseWakeLock();
+    };
+  }, []);
 
   // Connect to server when component mounts
   useEffect(() => {
