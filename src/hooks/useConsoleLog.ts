@@ -21,7 +21,12 @@ export const useConsoleLog = (options: UseConsoleLogOptions = {}) => {
     info: typeof console.info;
     warn: typeof console.warn;
     error: typeof console.error;
-  }>();
+  }>({
+    log: console.log,
+    info: console.info,
+    warn: console.warn,
+    error: console.error,
+  });
 
   // Function to add a log entry
   const addLogEntry = useCallback((level: LogEntry['level'], message: string, ...args: any[]) => {
