@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import styles from './client-page.module.css';
 import QRCode from '../../components/QRCode';
 import ClientSettings from '../../components/ClientSettings';
+import { BoardPreviewModal, GameBoard, OperatorIcon } from '../../components/boards';
 import { useServerInteraction } from '../../serverInteractions/useServerInteraction';
 import { getNumberMessage, getLetterColor, getContrastTextColor, getBoardHighlightColor, getSetting } from '../../utils/settings';
 import games from '../../data/games';
@@ -30,72 +31,6 @@ interface AudienceInteractionOptions {
   enable_audio?: boolean;
   enable_image?: boolean;
 }
-
-// Game Board Component for displaying 5x5 grids with bingo patterns (read-only for clients)
-const GameBoard = ({
-  board,
-  freeSpace
-}: {
-  board: number[][],
-  freeSpace: boolean
-}) => {
-  const letters = ['B', 'I', 'N', 'G', 'O'];
-
-  // Create a 5x5 grid and mark highlighted cells
-  const isHighlighted = (row: number, col: number): boolean => {
-    return board.some(coord => coord[0] === row && coord[1] === col);
-  };
-
-  const boardHighlightColor = getBoardHighlightColor();
-  const highlightTextColor = getContrastTextColor(boardHighlightColor);
-
-  return (
-    <div className={styles.gameBoard}>
-      {[0, 1, 2, 3, 4].map((rowIndex) => (
-        <div key={rowIndex} className={styles.boardRow}>
-          {[0, 1, 2, 3, 4].map((colIndex) => {
-            const isHighlightedCell = isHighlighted(rowIndex, colIndex);
-            const isFreeSpace = rowIndex === 2 && colIndex === 2;
-
-            // Dynamic styling for highlighted cells
-            const cellStyle = isHighlightedCell ? {
-              backgroundColor: boardHighlightColor,
-              color: highlightTextColor
-            } : {};
-
-            return (
-              <div
-                key={`${rowIndex}-${colIndex}`}
-                className={`${styles.boardCell} ${isHighlightedCell ? styles.highlighted : ''} ${isFreeSpace ? styles.freeSpace : ''}`}
-                style={cellStyle}
-              >
-                {isFreeSpace ? ('FREE') : letters[colIndex]}
-              </div>
-            );
-          })}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-// Operator Icon Component for dual board games
-const OperatorIcon = ({ operator }: { operator: string }) => {
-  const getOperatorSymbol = () => {
-    switch (operator.toUpperCase()) {
-      case 'AND': return 'AND';
-      case 'OR': return 'OR';
-      case 'TRANSITION': return 'INTO';
-      default: return operator;
-    }
-  };
-
-  return (
-    <div className={styles.operatorIcon}>
-      {getOperatorSymbol()}
-    </div>
-  );
-};
 
 const ClientPage: React.FC<ClientPageProps> = () => {
   const [searchParams] = useSearchParams();
@@ -176,6 +111,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
   const [cachedPatterns, setCachedPatterns] = useState<number[][][][] | null>(null);
   const [rotationIndex, setRotationIndex] = useState(0);
   const [rotationEnabled, setRotationEnabled] = useState(true);
+
+  // Modal state for board preview
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Ref to store the rotation interval so we can clear it
   const rotationIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -432,6 +370,15 @@ const ClientPage: React.FC<ClientPageProps> = () => {
     };
   };
 
+  // Modal handlers
+  const handlePreviewClick = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
+
   // Render the board preview
   const renderBoardPreview = () => {
     if (!gameData) return null;
@@ -442,7 +389,7 @@ const ClientPage: React.FC<ClientPageProps> = () => {
 
       if (!currentGame || !currentGame.variants || !currentGame.variants[gameData.variant]) {
         return (
-          <div className={styles.miniGrid}>
+          <div className={`${styles.miniGrid} ${styles.clickablePreview}`} onClick={handlePreviewClick}>
             {['B', 'I', 'N', 'G', 'O'].map((letter, index) => (
               <div key={letter} className={styles.miniCell}>
                 {letter}
@@ -480,7 +427,10 @@ const ClientPage: React.FC<ClientPageProps> = () => {
       const isDualBoard = filteredPatterns.length > 1;
 
       return (
-        <div className={`${styles.gameBoardsContainer} ${isDualBoard ? styles.dualBoard : styles.singleBoard}`}>
+        <div
+          className={`${styles.gameBoardsContainer} ${isDualBoard ? styles.dualBoard : styles.singleBoard} ${styles.clickablePreview}`}
+          onClick={handlePreviewClick}
+        >
           {filteredPatterns.map((pattern: number[][], index: number) => (
             <React.Fragment key={`client-${index}`}>
               <GameBoard
@@ -497,7 +447,7 @@ const ClientPage: React.FC<ClientPageProps> = () => {
     } catch (error) {
       console.error('Error rendering board preview:', error);
       return (
-        <div className={styles.miniGrid}>
+        <div className={`${styles.miniGrid} ${styles.clickablePreview}`} onClick={handlePreviewClick}>
           {['B', 'I', 'N', 'G', 'O'].map((letter, index) => (
             <div key={letter} className={styles.miniCell}>
               {letter}
@@ -737,6 +687,19 @@ const ClientPage: React.FC<ClientPageProps> = () => {
 
         {/* Client Settings Section */}
         <ClientSettings />
+
+        {/* Board Preview Modal */}
+        {gameData && (
+          <BoardPreviewModal
+            isVisible={isModalVisible}
+            onClose={handleModalClose}
+            gameData={gameData}
+            rotationIndex={rotationIndex}
+            cachedPatterns={cachedPatterns}
+            showFreeSpaceToggle={false}
+            showRules={true}
+          />
+        )}
       </div>
     </AudienceInteractionModalManager>
   );

@@ -454,3 +454,41 @@
     min-width: 30px;
   }
 }
+
+/* Clickable Preview Styles */
+.clickablePreview {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.clickablePreview:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.miniGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  width: 80px;
+  height: 80px;
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 4px;
+  background: white;
+}
+
+.miniCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #666;
+  border-radius: 2px;
+  font-weight: bold;
+  font-size: 0.7em;
+  background: #f8f9fa;
+  color: #333;
+}

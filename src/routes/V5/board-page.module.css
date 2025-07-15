@@ -38,7 +38,6 @@
 
 .headerLeft {
   flex: .6;
-  overflow: auto;
 }
 
 .headerRight {
@@ -159,11 +158,14 @@
 
 .miniBoard {
   background: #fff;
-  padding-top: 10px;
+  padding: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
 }
+
 
 .miniGrid {
   display: grid;
@@ -624,24 +626,6 @@
     padding: 8px;
   }
 
-  .boardCell {
-    font-size: 0.5em;
-  }
-
-  .gameBoardsContainer:not(.dualBoard) .boardCell {
-    font-size: 0.6em;
-  }
-
-  .gameBoardsContainer.dualBoard .boardCell {
-    font-size: 0.4em;
-  }
-
-  .operatorIcon {
-    font-size: 0.6em;
-    padding: 3px 6px;
-    min-width: 24px;
-  }
-
   .bingoCell {
     font-size: 1.2em;
     height: 50px;
@@ -753,24 +737,6 @@
 
   .miniBoard {
     padding: 6px;
-  }
-
-  .boardCell {
-    font-size: 0.4em;
-  }
-
-  .gameBoardsContainer:not(.dualBoard) .boardCell {
-    font-size: 0.5em;
-  }
-
-  .gameBoardsContainer.dualBoard .boardCell {
-    font-size: 0.35em;
-  }
-
-  .operatorIcon {
-    font-size: 0.5em;
-    padding: 2px 4px;
-    min-width: 20px;
   }
 
   .bingoGrid {
@@ -921,24 +887,6 @@
     padding: 4px;
   }
 
-  .boardCell {
-    font-size: 0.3em;
-  }
-
-  .gameBoardsContainer:not(.dualBoard) .boardCell {
-    font-size: 0.4em;
-  }
-
-  .gameBoardsContainer.dualBoard .boardCell {
-    font-size: 0.25em;
-  }
-
-  .operatorIcon {
-    font-size: 0.4em;
-    padding: 1px 3px;
-    min-width: 16px;
-  }
-
   .gridAndHistoryContainer {
     flex-direction: column;
     gap: 10px;
@@ -1007,8 +955,7 @@
   }
 }
 
-/* Board Preview Modal Styles */
-
+/* Clickable Preview Styles */
 .clickablePreview {
   cursor: pointer;
   transition: box-shadow 0.2s ease, opacity 0.2s ease;
@@ -1019,254 +966,7 @@
   transform: scale(1.05);
 }
 
-.boardPreviewModalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(3px);
-}
-
-.boardPreviewModalContent {
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  width: 95%;
-  height: 90%;
-  max-width: 1200px;
-  max-height: 900px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-}
-
-.modalHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #e9ecef;
-}
-
-.modalHeaderLeft {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex: 1;
-}
-
-.modalHeader h2 {
-  margin: 0;
-  color: #333;
-  font-size: 1.8em;
-}
-
-.modalCloseButton {
-  background: none;
-  border: none;
-  font-size: 2em;
-  cursor: pointer;
-  color: #666;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.modalCloseButton:hover {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.modalPreviewArea {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  overflow: hidden;
-}
-
-.modalGameBoardsContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.modalGameBoardsContainer.singleBoard {
-  justify-content: center;
-}
-
-.modalGameBoardsContainer.dualBoard {
-  justify-content: space-around;
-}
-
-.modalGameBoardsContainer .gameBoard {
-  font-size: 1.2em;
-  border: 3px solid #333;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* Single board modal styles */
-
-.modalGameBoardsContainer.singleBoard .boardCell {
-  font-size: 400%;
-  font-weight: bold;
-  border: 2px solid #666;
-  aspect-ratio: 2/1;
-}
-
-/* Dual board modal styles */
-
-.modalGameBoardsContainer.dualBoard .boardCell {
-  font-size: 200%;
-  font-weight: bold;
-  border: 2px solid #666;
-  aspect-ratio: 1;
-}
-
-.modalGameBoardsContainer .operatorIcon {
-  font-size: 1.5em;
-  padding: 20px;
-  background: #007bff;
-  color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.modalFreeSpaceToggle {
-  display: flex;
-  align-items: center;
-}
-
-.modalFreeSpaceToggle .freeSpaceToggleMini {
-  font-size: 1.1em;
-}
-
-.modalRulesCard {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  margin: 0 20px 20px 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  overflow: hidden;
-}
-
-.modalRulesHeader {
-  background: #007bff;
-  color: white;
-  padding: 12px 20px;
-  margin: 0;
-}
-
-.modalRulesHeader h3 {
-  margin: 0;
-  font-size: 1.1em;
-  font-weight: 600;
-  text-align: center;
-}
-
-.modalRulesContent {
-  padding: 15px 20px;
-  font-size: 2.0em;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.modalRulesContent p {
-  margin: 0;
-  font-size: 1em;
-  line-height: 1.5;
-  color: #333;
-}
-
-.modalMiniGrid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-  width: 300px;
-  height: 300px;
-  border: 3px solid #333;
-  border-radius: 8px;
-  padding: 10px;
-  background: white;
-}
-
-.modalMiniCell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #666;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 1.1em;
-  background: #f8f9fa;
-  color: #333;
-}
-
-/* Standalone Game Board Classes for CSS Modules */
-.gameBoard {
-  display: grid;
-  grid-template-rows: repeat(5, 1fr);
-  border: 1px solid #333;
-  user-select: none;
-}
-
-.boardRow {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-}
-
-.boardCell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #333;
-  background-color: #fff;
-  font-weight: bold;
-  color: #333;
-  aspect-ratio: 1;
-  user-select: none;
-  font-size: 0.6em;
-}
-
-.boardCell.freeSpace {
-  background-color: #fff;
-  color: #333;
-  font-weight: bold;
-}
-
-.operatorIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #007bff;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.7em;
-  font-weight: bold;
-  min-width: 30px;
-  text-align: center;
-}
-
+/* Game Boards Container for inline preview displays */
 .gameBoardsContainer {
   display: flex;
   align-items: center;
@@ -1282,103 +982,18 @@
   justify-content: center;
 }
 
-.toggleLabel {
-  color: #666;
-  font-size: 0.8em;
-}
-
-.toggleSwitch {
-  position: relative;
-  display: inline-block;
-  width: 40px;
-  height: 20px;
-}
-
-.toggleState {
-  color: #666;
-  font-size: 0.8em;
-  font-weight: bold;
-  min-width: 24px;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: 0.4s;
-  border-radius: 20px;
-}
-
-/* Modal Classes */
-.modalHeaderLeft {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex: 1;
-}
-
-.modalCloseButton {
-  background: none;
-  border: none;
-  font-size: 2em;
-  cursor: pointer;
-  color: #666;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.modalPreviewArea {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  overflow: hidden;
-}
-
-.modalGameBoardsContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.modalMiniGrid {
+/* Mini Grid for preview displays */
+.miniGrid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-  width: 300px;
-  height: 300px;
-  border: 3px solid #333;
-  border-radius: 8px;
-  padding: 10px;
-  background: white;
+  gap: 2px;
 }
 
-.modalMiniCell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #666;
-  border-radius: 4px;
+.miniCell {
+  background: #f0f0f0;
+  border: 1px solid #999;
+  padding: 5px;
+  text-align: center;
   font-weight: bold;
-  font-size: 1.1em;
-  background: #f8f9fa;
-  color: #333;
-}
-
-.modalFreeSpaceToggle {
-  display: flex;
-  align-items: center;
+  font-size: 0.8em;
 }

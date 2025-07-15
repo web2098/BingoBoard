@@ -1,0 +1,163 @@
+/* ==============================================
+   GAME BOARD STYLES
+   ============================================== */
+
+.gameBoard {
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  width: 100%;
+  height: 100%;
+}
+
+.gameBoard.selected {
+  border: 3px solid #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
+
+.boardRow {
+  display: flex;
+  flex: 1;
+  align-items: stretch;
+}
+
+.boardCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #333;
+  background-color: #fff;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+  user-select: none;
+
+  font-size: 1.5vw;
+  aspect-ratio: 2/1;
+  width: 2.0vw;
+  height: auto;
+}
+
+.boardCell.freeSpace {
+  background-color: #fff;
+  color: #333;
+  font-weight: bold;
+  font-size: .8vw;
+}
+
+/* Mini board variant - smaller sizing for header previews */
+.gameBoard.mini {
+}
+
+.gameBoard.mini .boardCell {
+  font-size: 0.8vw;
+  aspect-ratio: 2/1;
+  width: 2vw;
+  height: auto;
+}
+
+/* Mini board free space - smaller font for "FREE" text */
+.gameBoard.mini .boardCell.freeSpace {
+  font-size: 0.7vw;
+}
+
+/* Mini board dual board variant - even smaller for two boards side by side */
+.gameBoard.mini.dualBoard .boardCell {
+  font-size: 0.8vw;
+  width: 1.6vw;
+}
+
+.gameBoard.mini.dualBoard .boardCell.freeSpace {
+  font-size: 0.5vw;
+}
+
+/* Large preview variant - for modal displays */
+.gameBoard.large {
+  border: 2px solid #333;
+}
+
+.gameBoard.large .boardCell {
+  font-size: 4vw;
+}
+
+/* Large board free space - smaller font for "FREE" text */
+.gameBoard.large .boardCell.freeSpace {
+  font-size: 2.3vw;
+}
+
+/* Mobile responsive styles */
+@media screen and (max-width: 768px) {
+  /* Portrait phone orientation */
+  @media (orientation: portrait) {
+    .boardCell {
+      font-size: 4vw;
+      width: 5vw;
+    }
+
+    .boardCell.freeSpace {
+      font-size: 2vw;
+    }
+
+    .gameBoard.mini .boardCell {
+      font-size: 0.6vw;
+      width: 1.5vw;
+    }
+
+    .gameBoard.mini .boardCell.freeSpace {
+      font-size: 0.5vw;
+    }
+
+    .gameBoard.mini.dualBoard .boardCell {
+      width: 1.2vw;
+    }
+
+    .gameBoard.mini.dualBoard .boardCell.freeSpace {
+      font-size: 0.4vw;
+    }
+
+    .gameBoard.large .boardCell {
+      font-size: 4.5vw;
+    }
+
+    .gameBoard.large .boardCell.freeSpace {
+      font-size: 2.5vw;
+    }
+  }
+
+  /* Landscape phone orientation */
+  @media (orientation: landscape) {
+    .boardCell {
+      font-size: 1.8vw;
+      width: 2.2vw;
+    }
+
+    .boardCell.freeSpace {
+      font-size: 1.2vw;
+    }
+
+    .gameBoard.mini .boardCell {
+      font-size: 1.0vw;
+      width: 2.2vw;
+    }
+
+    .gameBoard.mini .boardCell.freeSpace {
+      font-size: 0.8vw;
+    }
+
+    .gameBoard.mini.dualBoard .boardCell {
+      width: 1.8vw;
+    }
+
+    .gameBoard.mini.dualBoard .boardCell.freeSpace {
+      font-size: 0.6vw;
+    }
+
+    .gameBoard.large .boardCell {
+      font-size: 4.5vw;
+    }
+
+    .gameBoard.large .boardCell.freeSpace {
+      font-size: 2.8vw;
+    }
+  }
+}
