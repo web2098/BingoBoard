@@ -1,0 +1,87 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.github/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run tests
+      run: npm test -- --coverage --watchAll=false
+
+    - name: Build application
+      run: npm run build
+      env:
+        CI: false # Treat warnings as warnings, not errors
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build
+        cname: # Add your custom domain here if you have one
+        force_orphan: true
+
+    - name: Create deployment summary
+      run: |
+        echo "## Deployment Summary 🚀" >> $GITHUB_STEP_SUMMARY
+        echo "- **Branch:** main" >> $GITHUB_STEP_SUMMARY
+        echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Deployed to:** GitHub Pages" >> $GITHUB_STEP_SUMMARY
+        echo "- **Build size:** $(du -sh build | cut -f1)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Deployment time:** $(date)" >> $GITHUB_STEP_SUMMARY
+
+  post-deploy-checks:
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    if: success()
+
+    steps:
+    - name: Wait for deployment
+      run: sleep 30
+
+    - name: Check deployment health
+      run: |
+        # Use the homepage URL from package.json
+        URL="https://web2098.github.io/BingoBoard"
+        echo "Checking deployment at: $URL"
+
+        # Basic health check
+        HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL" || echo "000")
+
+        if [ "$HTTP_STATUS" -eq 200 ]; then
+          echo "✅ Deployment successful - Site is responding with HTTP 200"
+          echo "🌐 Site URL: $URL"
+        else
+          echo "❌ Deployment check failed - HTTP Status: $HTTP_STATUS"
+          exit 1
+        fi
+
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "🎉 Deployment completed successfully!"
+        else
+          echo "💥 Deployment health check failed!"
+        fi
