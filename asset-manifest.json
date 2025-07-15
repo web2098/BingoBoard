@@ -1,18 +1,16 @@
 {
   "files": {
-    "main.css": "/BingoBoard/static/css/main.1686cb32.css",
-    "main.js": "/BingoBoard/static/js/main.baa76393.js",
-    "static/js/453.172e9ae7.chunk.js": "/BingoBoard/static/js/453.172e9ae7.chunk.js",
+    "main.css": "/BingoBoard/static/css/main.af25b7d5.css",
+    "main.js": "/BingoBoard/static/js/main.a4a04aa0.js",
     "static/media/order66.gif": "/BingoBoard/static/media/order66.7e373a39a1a3dbb53b66.gif",
     "static/media/battle.jpg": "/BingoBoard/static/media/battle.f6f81fd0b81121a883ba.jpg",
     "static/media/order66.mp3": "/BingoBoard/static/media/order66.62a0508d6e04d2dd64df.mp3",
     "index.html": "/BingoBoard/index.html",
-    "main.1686cb32.css.map": "/BingoBoard/static/css/main.1686cb32.css.map",
-    "main.baa76393.js.map": "/BingoBoard/static/js/main.baa76393.js.map",
-    "453.172e9ae7.chunk.js.map": "/BingoBoard/static/js/453.172e9ae7.chunk.js.map"
+    "main.af25b7d5.css.map": "/BingoBoard/static/css/main.af25b7d5.css.map",
+    "main.a4a04aa0.js.map": "/BingoBoard/static/js/main.a4a04aa0.js.map"
   },
   "entrypoints": [
-    "static/css/main.1686cb32.css",
-    "static/js/main.baa76393.js"
+    "static/css/main.af25b7d5.css",
+    "static/js/main.a4a04aa0.js"
   ]
 }
