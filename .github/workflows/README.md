@@ -4,11 +4,11 @@ This repository contains two GitHub Actions workflows to automate CI/CD processe
 
 ## 🔍 PR Validation Workflow (`pr-validation.yml`)
 
-**Trigger:** When a Pull Request is created or updated targeting `main` or `react` branches
+**Trigger:** When a Pull Request is created or updated targeting any branch
 
 **What it does:**
 - **Multi-Node Testing:** Tests the application on Node.js 18.x and 20.x
-- **Dependency Installation:** Uses `npm ci` for fast, reliable builds
+- **Dependency Installation:** Uses `npm ci --legacy-peer-deps` for compatibility with TypeScript 5.x
 - **Code Quality Checks:**
   - Linting (if `npm run lint` script exists)
   - Type checking (if `npm run type-check` script exists)
@@ -96,6 +96,20 @@ Currently configured for GitHub Pages. To deploy elsewhere:
 1. Replace the "Deploy to GitHub Pages" step
 2. Update the health check URL
 3. Modify environment variables as needed
+
+## ⚠️ TypeScript Compatibility
+
+This project uses TypeScript 5.1.6, but react-scripts@5.0.1 expects TypeScript ^3.2.1 || ^4. To resolve this dependency conflict, both workflows use `--legacy-peer-deps` flag when installing dependencies.
+
+**Why this happens:**
+- React Scripts 5.0.1 has not been updated to support TypeScript 5.x
+- The project uses modern TypeScript features available in 5.1.6
+- Using `--legacy-peer-deps` allows npm to bypass the peer dependency conflict
+
+**Alternative solutions:**
+1. Downgrade TypeScript to 4.9.5 (not recommended - loses modern features)
+2. Upgrade to React Scripts 5.0.2+ when available
+3. Eject from Create React App and manage dependencies manually
 
 ## 🐛 Troubleshooting
 
