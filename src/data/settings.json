@@ -10,7 +10,7 @@
       "v5",
       "v4"
     ],
-    "default": "latest"
+    "default": "v4"
   },
   {
     "section": "Welcome Customizations",
