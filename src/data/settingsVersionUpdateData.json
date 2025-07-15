@@ -30,7 +30,8 @@
   },
   {
     "v4_id": "bingo_server_auth",
-    "v5_id": "serverAuthToken"
+    "v5_id": "serverAuthToken",
+    "private": true
   },
   {
     "v4_id": "audience-message-timeout",

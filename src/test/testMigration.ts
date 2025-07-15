@@ -2,6 +2,44 @@
 import { migrateV4ToV5 } from '../utils/settingsMigration';
 import { getSetting, setSetting } from '../utils/settings';
 
+export function testServerSettingsMigration() {
+  console.log('=== Testing Server Settings Migration ===');
+
+  // Set up V4 test data for server settings
+  localStorage.setItem('bingo_server_url', 'http://localhost:8080');
+  localStorage.setItem('bingo_server_auth', 'test-token-123');
+
+  console.log('Set V4 server settings:');
+  console.log('  bingo_server_url:', localStorage.getItem('bingo_server_url'));
+  console.log('  bingo_server_auth: [PRIVATE] (actual value hidden for security)');
+
+  // Clear any existing V5 server settings
+  setSetting('serverUrl', '');
+  setSetting('serverAuthToken', '');
+
+  console.log('Cleared V5 settings:');
+  console.log('  serverUrl:', getSetting('serverUrl', ''));
+  console.log('  serverAuthToken: [PRIVATE] (actual value hidden for security)');
+
+  // Run migration
+  console.log('Running migration...');
+  const result = migrateV4ToV5();
+
+  console.log('Migration result:', result);
+
+  // Check results
+  console.log('Post-migration V5 settings:');
+  console.log('  serverUrl:', getSetting('serverUrl', ''));
+  console.log('  serverAuthToken: [PRIVATE] (actual value hidden for security)');
+
+  // Find the specific migrations for server settings
+  const urlMigration = result.migrations.find(m => m.v4_id === 'bingo_server_url');
+  const authMigration = result.migrations.find(m => m.v4_id === 'bingo_server_auth');
+
+  console.log('URL Migration:', urlMigration);
+  console.log('Auth Migration:', authMigration);
+}
+
 export function testSpecialNumbersMigration() {
   console.log('=== Testing Special Numbers Migration ===');
 
@@ -47,5 +85,6 @@ export function testSpecialNumbersMigration() {
   return result;
 }
 
-// Make it available globally for browser console testing
+// Make both functions available globally for browser console testing
 (window as any).testSpecialNumbersMigration = testSpecialNumbersMigration;
+(window as any).testServerSettingsMigration = testServerSettingsMigration;

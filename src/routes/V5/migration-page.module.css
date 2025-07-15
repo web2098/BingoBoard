@@ -1,46 +1,129 @@
 /* Migration Page Styles */
 .migrationPage {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background-color: #f5f5f5;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Vertical off-white sidebar space */
+.migrationPage::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 100vh;
+  background-color: #f8f9fa;
+  z-index: 1;
+  border-right: 1px solid #e9ecef;
 }
 
 .migrationContainer {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  padding: 40px;
-  max-width: 600px;
-  width: 100%;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-left: 100px; /* Space for sidebar + margin */
+  padding-right: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  overflow-y: auto;
 }
 
 .migrationHeader {
-  margin-bottom: 30px;
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #667eea;
 }
 
 .migrationHeader h1 {
-  font-size: 32px;
+  font-size: 28px;
   color: #333;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .migrationHeader p {
   font-size: 16px;
   color: #666;
-  line-height: 1.5;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Migration Content Sections */
+.migrationStart,
+.migrationProgress,
+.migrationSuccess,
+.migrationError {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.migrationStart {
+  text-align: center;
+}
+
+.migrationActions {
+  margin: 30px 0;
+}
+
+.startMigrationBtn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.startMigrationBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.backLink {
+  background: none;
+  color: #667eea;
+  border: 2px solid #667eea;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 15px;
+}
+
+.backLink:hover {
+  background: #667eea;
+  color: white;
+}
+
+.migrationProgress {
+  text-align: center;
 }
 
 .migrationStatus {
   background: #f8f9fa;
   border-radius: 8px;
   padding: 20px;
-  margin: 30px 0;
-  text-align: left;
+  margin: 20px 0;
 }
 
 .statusHeader {
@@ -235,34 +318,6 @@
   margin-top: 30px;
 }
 
-.startMigrationBtn,
-.continueBtn {
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
-}
-
-.startMigrationBtn:hover,
-.continueBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.35);
-}
-
-.startMigrationBtn:disabled,
-.continueBtn:disabled {
-  background: #6c757d;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
 .backLink {
   background: none;
   border: none;
@@ -286,8 +341,8 @@
   display: inline-block;
   width: 20px;
   height: 20px;
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #007bff;
+  border: 2px solid #e9ecef;
+  border-top: 2px solid #667eea;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -297,31 +352,7 @@
   100% { transform: rotate(360deg); }
 }
 
-.successMessage {
-  background: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 20px 0;
-}
 
-.successMessage h3 {
-  margin-bottom: 10px;
-}
-
-.errorMessage {
-  background: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 20px 0;
-}
-
-.errorMessage h3 {
-  margin-bottom: 10px;
-}
 
 /* Migration Start */
 .migrationStart {
@@ -379,20 +410,6 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: #2d3748;
-}
-
-.spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid #e2e8f0;
-  border-top: 3px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 /* Migration Success */
@@ -467,30 +484,49 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .migrationPage {
-    padding: 16px;
-  }
-
   .migrationContainer {
-    padding: 24px;
-    max-width: 100%;
+    padding-left: 90px; /* Smaller sidebar space on mobile */
+    padding-right: 15px;
+    padding-top: 15px;
   }
 
   .migrationHeader h1 {
-    font-size: 2rem;
+    font-size: 24px;
   }
 
   .migrationHeader p {
-    font-size: 1rem;
+    font-size: 14px;
   }
 
   .startMigrationBtn {
-    padding: 14px 28px;
-    font-size: 1rem;
+    padding: 12px 24px;
+    font-size: 14px;
   }
 
   .migrationActions {
     flex-direction: column;
     align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .migrationPage::before {
+    width: 60px; /* Smaller sidebar on very small screens */
+  }
+
+  .migrationContainer {
+    padding-left: 70px;
+    padding-right: 10px;
+  }
+
+  .migrationHeader {
+    padding: 20px;
+  }
+
+  .migrationStart,
+  .migrationProgress,
+  .migrationSuccess,
+  .migrationError {
+    padding: 20px;
   }
 }

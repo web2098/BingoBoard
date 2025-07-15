@@ -319,6 +319,7 @@ export interface MigrationDetail {
   proposedValues?: { [key: string]: any };
   multipleTargets?: boolean;
   targetSettings?: string[];
+  private?: boolean;
 }
 
 /**
@@ -342,6 +343,7 @@ interface ComplexMigrationResult {
   }[];
   requiresApproval: boolean;
   autoConversionAttempted: boolean;
+  private?: boolean;
 }
 
 /**
@@ -389,6 +391,8 @@ export function migrateV4ToV5(): {
       if (migration_type === 'complex' && Array.isArray(v5_id)) {
         if (v4_to_v5 && migrationFunctions[v4_to_v5]) {
           const complexResult = migrationFunctions[v4_to_v5](v4Value) as ComplexMigrationResult;
+          // Add privacy information to complex migration result
+          complexResult.private = mapping.private || false;
           complexMigrations.push(complexResult);
           requiresUserApproval = true;
         }
@@ -403,7 +407,8 @@ export function migrateV4ToV5(): {
           description: 'Complex migration requiring user approval',
           requiresUserApproval: true,
           multipleTargets: true,
-          targetSettings: v5_id
+          targetSettings: v5_id,
+          private: mapping.private || false
         };
         migrations.push(migrationDetail);
         return;
@@ -418,7 +423,8 @@ export function migrateV4ToV5(): {
           v5_value: null,
           success: false,
           conversionType: 'direct',
-          description: ''
+          description: '',
+          private: mapping.private || false
         };
 
         try {
@@ -450,7 +456,12 @@ export function migrateV4ToV5(): {
                 conversionDescription = `Applied custom function: ${v4_to_v5}`;
             }
 
-            console.log(`Migrated ${v4_id} -> ${v5_id} using ${v4_to_v5}:`, v4Value, '->', v5Value);
+            // Log migration, but mask private values
+            if (mapping.private) {
+              console.log(`Migrated ${v4_id} -> ${v5_id} using ${v4_to_v5}: [PRIVATE] -> [PRIVATE]`);
+            } else {
+              console.log(`Migrated ${v4_id} -> ${v5_id} using ${v4_to_v5}:`, v4Value, '->', v5Value);
+            }
           } else {
             // Apply automatic conversions based on known patterns
             migrationDetail.conversionType = 'automatic';
@@ -469,7 +480,13 @@ export function migrateV4ToV5(): {
               v5Value = v4Value;
               conversionDescription = 'Direct copy (no conversion needed)';
             }
-            console.log(`Migrated ${v4_id} -> ${v5_id} (automatic):`, v4Value, '->', v5Value);
+            
+            // Log migration, but mask private values
+            if (mapping.private) {
+              console.log(`Migrated ${v4_id} -> ${v5_id} (automatic): [PRIVATE] -> [PRIVATE]`);
+            } else {
+              console.log(`Migrated ${v4_id} -> ${v5_id} (automatic):`, v4Value, '->', v5Value);
+            }
           }
 
           migrationDetail.v5_value = v5Value;

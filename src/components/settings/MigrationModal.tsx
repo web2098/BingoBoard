@@ -274,9 +274,12 @@ const MigrationModal: React.FC<MigrationModalProps> = ({
                   <div className={styles.complexMigrationOriginal}>
                     <h5>Original V4 Value:</h5>
                     <div className={styles.originalValue}>
-                      {typeof complexMigration.v4_value === 'string'
-                        ? complexMigration.v4_value
-                        : JSON.stringify(complexMigration.v4_value)}
+                      {complexMigration.private 
+                        ? '[PRIVATE]'
+                        : (typeof complexMigration.v4_value === 'string'
+                            ? complexMigration.v4_value
+                            : JSON.stringify(complexMigration.v4_value))
+                      }
                     </div>
                   </div>
 
@@ -358,7 +361,14 @@ const MigrationModal: React.FC<MigrationModalProps> = ({
                       <div className={styles.migrationValues}>
                         <div className={styles.migrationValue}>
                           <span className={styles.migrationValueLabel}>V4:</span>
-                          <code>{typeof migration.v4_value === 'object' ? JSON.stringify(migration.v4_value) : String(migration.v4_value)}</code>
+                          <code>
+                            {migration.private 
+                              ? '[PRIVATE]' 
+                              : (typeof migration.v4_value === 'object' 
+                                  ? JSON.stringify(migration.v4_value) 
+                                  : String(migration.v4_value))
+                            }
+                          </code>
                         </div>
                         <div className={styles.migrationValue}>
                           <span className={styles.migrationValueLabel}>V5:</span>
@@ -403,11 +413,25 @@ const MigrationModal: React.FC<MigrationModalProps> = ({
                                     </div>
                                   );
                                 }
-                                return <code>{typeof migration.v5_value === 'object' ? JSON.stringify(migration.v5_value) : String(migration.v5_value)}</code>;
+                                return <code>
+                                  {migration.private 
+                                    ? '[PRIVATE]' 
+                                    : (typeof migration.v5_value === 'object' 
+                                        ? JSON.stringify(migration.v5_value) 
+                                        : String(migration.v5_value))
+                                  }
+                                </code>;
                               })()}
                             </div>
                           ) : (
-                            <code>{typeof migration.v5_value === 'object' ? JSON.stringify(migration.v5_value) : String(migration.v5_value)}</code>
+                            <code>
+                              {migration.private 
+                                ? '[PRIVATE]' 
+                                : (typeof migration.v5_value === 'object' 
+                                    ? JSON.stringify(migration.v5_value) 
+                                    : String(migration.v5_value))
+                              }
+                            </code>
                           )}
                         </div>
                       </div>
