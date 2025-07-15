@@ -352,7 +352,11 @@
 
         function tryLatestVersion() {
             // Redirect to the migration page which will handle the migration process
-            window.location.href = '/BingoBoard/migration';
+            localStorage.setItem('defaultVersion', 'latest');
+            // Use relative path that works on GitHub Pages
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.includes('/BingoBoard/') ? '/BingoBoard' : '';
+            window.location.href = basePath + '/migration';
         }
     </script>
 </head>

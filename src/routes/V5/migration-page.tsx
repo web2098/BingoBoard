@@ -26,7 +26,7 @@ const MigrationPage: React.FC<MigrationPageProps> = () => {
     if (!isMigrationNeeded()) {
       // No V4 settings found, redirect directly to select-game
       setSetting('defaultVersion', 'latest');
-      navigate('/BingoBoard/select-game');
+      navigate('/select-game');
     }
   }, [navigate]);
 
@@ -59,7 +59,7 @@ const MigrationPage: React.FC<MigrationPageProps> = () => {
     setMigrationState(prev => ({ ...prev, status: 'success' }));
 
     setTimeout(() => {
-      navigate('/BingoBoard/select-game');
+      navigate('/select-game');
     }, 2000);
   };
 

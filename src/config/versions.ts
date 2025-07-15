@@ -41,15 +41,15 @@ export const VERSIONS: Record<string, VersionConfig> = {
     label: 'V5 (Current)',
     description: 'Enhanced React version with modern UI, color customization, and modal previews',
     routes: {
-      root: { path: '/BingoBoard/select-game' },
-      bingo: { path: '/BingoBoard/select-game' },
-      selectGame: { path: '/BingoBoard/select-game' },
-      board: { path: '/BingoBoard/board' },
-      client: { path: '/BingoBoard/client' },
-      settings: { path: '/BingoBoard/settings' },
-      about: { path: '/BingoBoard/about' },
-      telemetry: { path: '/BingoBoard/telemetry' },
-      migration: { path: '/BingoBoard/migration' }
+      root: { path: '/select-game' },
+      bingo: { path: '/select-game' },
+      selectGame: { path: '/select-game' },
+      board: { path: '/board' },
+      client: { path: '/client' },
+      settings: { path: '/settings' },
+      about: { path: '/about' },
+      telemetry: { path: '/telemetry' },
+      migration: { path: '/migration' }
     }
   },
   v4: {
@@ -65,8 +65,8 @@ export const VERSIONS: Record<string, VersionConfig> = {
       client: { path: '/BingoBoard/v4/client_view.html', external: true },
       settings: { path: '/BingoBoard/v4/settings.html', external: true },
       about: { path: '/BingoBoard/v4/about.html', external: true },
-      telemetry: { path: '/BingoBoard/v4/stats.html' }, // V4 uses V5 telemetry page
-      migration: { path: '/BingoBoard/migration' } // Redirect to V5 migration page
+      telemetry: { path: '/BingoBoard/v4/stats.html' },
+      migration: { path: '/migration' } // Redirect to V5 migration page
     }
   }
 };

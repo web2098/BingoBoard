@@ -72,7 +72,7 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
 
   // Navigation handlers
   const handleBackToGames = () => {
-    navigate('/BingoBoard/select-game');
+    navigate('/select-game');
   };
 
   // Toggle expanded game function

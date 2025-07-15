@@ -133,12 +133,12 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
   const handleSelectNewGame = () => {
     endCurrentSession();
-    navigate('/BingoBoard/select-game');
+    navigate('/select-game');
   };
 
   const handleEndNight = () => {
     endCurrentSession();
-    navigate('/BingoBoard/telemetry');
+    navigate('/telemetry');
   };
 
   // Define page buttons for the sidebar

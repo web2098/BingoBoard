@@ -737,7 +737,7 @@ const SelectGamePage = () => {
       75 // total numbers
     );
 
-    navigate('/BingoBoard/board');
+    navigate('/board');
   };
 
   return (

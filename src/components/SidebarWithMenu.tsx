@@ -103,43 +103,43 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
     switch (currentPage) {
       case 'select-game':
         return [
-          { label: 'Start Game', href: '/BingoBoard/board' },
-          { label: 'Telemetry', href: '/BingoBoard/telemetry' },
+          { label: 'Start Game', href: '/board' },
+          { label: 'Telemetry', href: '/telemetry' },
           { label: 'divider', href: '#' },
-          { label: 'About', href: '/BingoBoard/about' },
-          { label: 'Settings', href: '/BingoBoard/settings' },
+          { label: 'About', href: '/about' },
+          { label: 'Settings', href: '/settings' },
           { label: 'Report an Issue', href: 'https://github.com/web2098/BingoBoard/issues/new', external: true }
         ];
       case 'game-board':
         return [
-          { label: 'Back to Game Selection', href: '/BingoBoard/select-game' },
+          { label: 'Back to Game Selection', href: '/select-game' },
           { label: 'Reset Game', href: '#reset' },
-          { label: 'New Game', href: '/BingoBoard/select-game' },
+          { label: 'New Game', href: '/select-game' },
           { label: 'divider', href: '#' },
-          { label: 'About', href: '/BingoBoard/about' },
-          { label: 'Settings', href: '/BingoBoard/settings' },
+          { label: 'About', href: '/about' },
+          { label: 'Settings', href: '/settings' },
           { label: 'Report an Issue', href: 'https://github.com/web2098/BingoBoard/issues/new', external: true }
         ];
       case 'settings':
         return [
-          { label: 'Back to Game Selection', href: '/BingoBoard/select-game' },
+          { label: 'Back to Game Selection', href: '/select-game' },
           { label: 'Reset to Defaults', href: '#reset' },
           { label: 'divider', href: '#' },
-          { label: 'About', href: '/BingoBoard/about' },
+          { label: 'About', href: '/about' },
           { label: 'Report an Issue', href: 'https://github.com/web2098/BingoBoard/issues/new', external: true }
         ];
       case 'about':
         return [
-          { label: 'Back to Game Selection', href: '/BingoBoard/select-game' },
+          { label: 'Back to Game Selection', href: '/select-game' },
           { label: 'divider', href: '#' },
-          { label: 'Settings', href: '/BingoBoard/settings' },
+          { label: 'Settings', href: '/settings' },
           { label: 'Report an Issue', href: 'https://github.com/web2098/BingoBoard/issues/new', external: true }
         ];
       case 'telemetry':
         return [
-          { label: 'Back to Game Selection', href: '/BingoBoard/select-game' },
+          { label: 'Back to Game Selection', href: '/select-game' },
           { label: 'divider', href: '#' },
-          { label: 'Settings', href: '/BingoBoard/settings' },
+          { label: 'Settings', href: '/settings' },
           { label: 'Report an Issue', href: 'https://github.com/web2098/BingoBoard/issues/new', external: true }
         ];
       default:

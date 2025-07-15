@@ -108,16 +108,11 @@ function AppWithServerInteraction() {
       element: <VersionRedirect />,
       errorElement: <ErrorPage />,
     },
-    {
-      path: "/BingoBoard",
-      element: <VersionRedirect />,
-      errorElement: <ErrorPage />,
-    },
   ];
 
   // Add default version-aware routes
   Object.entries(pageComponents).forEach(([routeKey, Component]) => {
-    const routePath = `/BingoBoard/${routeKey === 'selectGame' ? 'select-game' : routeKey}`;
+    const routePath = `/${routeKey === 'selectGame' ? 'select-game' : routeKey}`;
     routes.push({
       path: routePath,
       element: <VersionAwareRoute routeKey={routeKey as keyof typeof pageComponents}><Component /></VersionAwareRoute>,
@@ -129,7 +124,7 @@ function AppWithServerInteraction() {
   const availableVersions = getAvailableVersions();
   availableVersions.forEach(version => {
     Object.entries(pageComponents).forEach(([routeKey, Component]) => {
-      const routePath = `/BingoBoard/${version.id}/${routeKey === 'selectGame' ? 'select-game' : routeKey}`;
+      const routePath = `/${version.id}/${routeKey === 'selectGame' ? 'select-game' : routeKey}`;
       routes.push({
         path: routePath,
         element: <VersionSpecificRoute versionId={version.id} routeKey={routeKey as keyof typeof pageComponents}><Component /></VersionSpecificRoute>,
@@ -138,7 +133,9 @@ function AppWithServerInteraction() {
     });
   });
 
-  const router = createBrowserRouter(routes);
+  const router = createBrowserRouter(routes, {
+    basename: "/BingoBoard"
+  });
 
   return (
     <AudienceInteractionModalManager onModalClose={handleModalClose}>
