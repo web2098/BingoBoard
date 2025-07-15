@@ -407,7 +407,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   useEffect(() => {
     if (isConnected && roomId) {
       const serverUrl = getSetting('serverUrl', '');
-      const qrCodeValue = `${window.location.origin}/BingoBoard/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl)}`;
+      const qrCodeValue = `${window.location.origin}/BingoBoard/v5/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl)}`;
       console.log("QR Code URL:", qrCodeValue);
     }
   }, [roomId, isConnected]);

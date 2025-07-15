@@ -294,7 +294,7 @@ const WelcomePanel = ({ isConnected, roomId, connectionError }: {
         <div className={styles.qrCodeSuccess}>
           <div className={styles.qrCodeContainer}>
             <QRCode
-              value={`${window.location.origin}/BingoBoard/client?roomId=${roomId}&serverUrl=${encodeURIComponent(getSetting('serverUrl', ''))}`}
+              value={`${window.location.origin}/BingoBoard/v5/client?roomId=${roomId}&serverUrl=${encodeURIComponent(getSetting('serverUrl', ''))}`}
               size={200}
               className={styles.gameQrCode}
             />
