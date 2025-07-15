@@ -470,25 +470,25 @@
   .migrationPage {
     padding: 16px;
   }
-  
+
   .migrationContainer {
     padding: 24px;
     max-width: 100%;
   }
-  
+
   .migrationHeader h1 {
     font-size: 2rem;
   }
-  
+
   .migrationHeader p {
     font-size: 1rem;
   }
-  
+
   .startMigrationBtn {
     padding: 14px 28px;
     font-size: 1rem;
   }
-  
+
   .migrationActions {
     flex-direction: column;
     align-items: center;

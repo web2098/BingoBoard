@@ -1,0 +1,228 @@
+/* Client Settings Component Styles */
+.clientSettings {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.settingsSection {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #6c757d;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.sectionHeader:hover {
+  background: #e9ecef;
+}
+
+.sectionHeader h3 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.collapseArrow {
+  font-size: 14px;
+  color: #666;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.collapseArrow.collapsed {
+  transform: rotate(-90deg);
+}
+
+.sectionContent {
+  padding: 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  min-width: 0;
+}
+
+.sectionContentWrapper {
+  min-width: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.settingSubsection {
+  margin-bottom: 1.5rem;
+}
+
+.settingSubsection:last-child {
+  margin-bottom: 0;
+}
+
+.subsectionTitle {
+  margin: 0 0 1rem 0;
+  color: #495057;
+  font-size: 16px;
+  font-weight: 600;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.5rem;
+}
+
+.settingItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.settingItem:last-child {
+  border-bottom: none;
+}
+
+.settingInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.settingLabel {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.settingDescription {
+  margin: 0;
+  color: #666;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.settingControl {
+  flex-shrink: 0;
+  min-width: 140px;
+}
+
+/* Input Styles */
+.textInput,
+.numberInput,
+.selectInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.textInput:focus,
+.numberInput:focus,
+.selectInput:focus {
+  outline: none;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Checkbox Styles */
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  padding-left: 25px;
+  user-select: none;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-color: #eee;
+  border: 1px solid #ced4da;
+  border-radius: 3px;
+  transition: all 0.15s ease-in-out;
+}
+
+.checkboxLabel:hover input ~ .checkmark {
+  background-color: #e9ecef;
+}
+
+.checkboxLabel input:checked ~ .checkmark {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkboxLabel input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkboxLabel .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sectionContentWrapper {
+    min-width: 300px;
+    padding: 16px;
+  }
+
+  .settingItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .settingControl {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .textInput,
+  .numberInput,
+  .selectInput {
+    width: 100%;
+  }
+
+  .sectionHeader {
+    padding: 12px 16px;
+  }
+
+  .sectionHeader h3 {
+    font-size: 16px;
+  }
+}

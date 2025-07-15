@@ -54,6 +54,14 @@
   },
   {
     "section": "Welcome Customizations",
+    "Label": "Enable Pattern Rotation",
+    "id": "enablePatternRotation",
+    "description": "Enable automatic rotation of game patterns in select-game and board-page previews",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Welcome Customizations",
     "Label": "Game Display Order",
     "id": "gameDisplayOrder",
     "description": "Order in which games are displayed in the game selection",

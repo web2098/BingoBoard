@@ -4,6 +4,7 @@ import { getMappedAsset } from '../utils/assetMapping';
 import { recordAudienceWinner } from '../utils/telemetry';
 import { AudienceInteractionType, AudienceInteractionOptions } from '../serverInteractions/types';
 import styles from './AudienceInteractionButtons.module.css';
+import { getSetting } from '../utils/settings';
 
 interface AudienceInteraction {
   id: string;
@@ -51,14 +52,24 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
       recordAudienceWinner();
     }
 
+    const imageKey = `${interaction.id}_enableImage`;
+    const audioKey = `${interaction.id}_enableAudio`;
+    // Create default options for the interaction using the correct interface structure
+    const defaultOptions: AudienceInteractionOptions = {
+        enable_image: getSetting(imageKey, true),
+        enable_audio: getSetting(audioKey, true)
+    };
+
+    console.log('Audience interaction clicked:', interaction, defaultOptions);
+
     // Send audience interaction to server (for clients)
     if (onAudienceInteraction) {
-      onAudienceInteraction(interaction.id as AudienceInteractionType, interaction as AudienceInteractionOptions);
+      onAudienceInteraction(interaction.id as AudienceInteractionType, defaultOptions);
     }
 
     // Use the global showAudienceInteraction function (for local display)
     if ((window as any).showAudienceInteraction) {
-      (window as any).showAudienceInteraction(interaction);
+      (window as any).showAudienceInteraction(interaction, defaultOptions);
     } else {
       console.warn('AudienceInteractionModalManager not available');
     }

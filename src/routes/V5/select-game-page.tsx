@@ -351,13 +351,17 @@ const GamePreviewSection = ({
 
   // Effect to handle automatic rotation of patterns
   useEffect(() => {
+    // Check if rotation is enabled
+    const rotationEnabled = getSetting('enablePatternRotation', true);
+
     // Check if current variant has multiple possible patterns and cache them
     let allPatterns: number[][][][] = [];
     let hasMultiple = false;
 
-    currentVariant.boards.forEach((boardFunction: (freeSpace: boolean) => number[][][]) => {
+    currentVariant.boards.forEach((boardFunction: (freeSpace: boolean, previewMode?: boolean) => number[][][]) => {
       if (typeof boardFunction === 'function') {
-        const possiblePatterns = boardFunction(settings.freeSpace);
+        // Use preview mode if rotation is disabled
+        const possiblePatterns = boardFunction(settings.freeSpace, !rotationEnabled);
         allPatterns.push(possiblePatterns);
         if (possiblePatterns.length > 1) {
           hasMultiple = true;
@@ -371,14 +375,13 @@ const GamePreviewSection = ({
       allPatterns = currentVariant.filter(settings.freeSpace, allPatterns);
     }
 
-
     setCachedPatterns(allPatterns);
-    setHasMultiplePatterns(hasMultiple);
+    setHasMultiplePatterns(hasMultiple && rotationEnabled);
     setProgress(0);
     setIsResetting(false);
     setRotationIndex(0);
 
-    if (hasMultiple) {
+    if (hasMultiple && rotationEnabled) {
       // Get rotation interval from settings (in seconds)
       const intervalSeconds = getSetting('patternRotationInterval', 3);
       const intervalMs = intervalSeconds * 1000;
@@ -671,6 +674,11 @@ const SelectGamePage = () => {
       // Update highlight color version if board highlight color changed
       if (customEvent.detail && customEvent.detail.id === 'boardHighlightColor') {
         setHighlightColorVersion(prev => prev + 1);
+      }
+
+      // Trigger pattern regeneration for rotation setting changes
+      if (customEvent.detail && (customEvent.detail.id === 'enablePatternRotation' || customEvent.detail.id === 'patternRotationInterval')) {
+        setSettingsUpdateTrigger(prev => prev + 1);
       }
     };
 

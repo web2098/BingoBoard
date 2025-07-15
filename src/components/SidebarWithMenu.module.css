@@ -2,6 +2,35 @@
    SIDEBAR WITH MENU STYLES
    ============================================== */
 
+/* Custom scrollbar styling */
+.sidebar::-webkit-scrollbar,
+.audienceInteractionSection::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track,
+.audienceInteractionSection::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.audienceInteractionSection::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover,
+.audienceInteractionSection::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Firefox scrollbar styling */
+.sidebar,
+.audienceInteractionSection {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -16,6 +45,8 @@
   align-items: center;
   padding: 20px 0;
   box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Hamburger Menu Button */
@@ -108,23 +139,23 @@
 }
 
 .sidebarButton.newGameButton {
-  background: #007bff;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  background: #28a745 !important;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3) !important;
 }
 
 .sidebarButton.newGameButton:hover {
-  background: #0056b3;
-  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+  background: #218838 !important;
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4) !important;
 }
 
 .sidebarButton.endNightButton {
-  background: #6c757d;
-  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+  background: #2c3e50 !important;
+  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.3) !important;
 }
 
 .sidebarButton.endNightButton:hover {
-  background: #545b62;
-  box-shadow: 0 6px 16px rgba(108, 117, 125, 0.4);
+  background: #1a252f !important;
+  box-shadow: 0 6px 16px rgba(44, 62, 80, 0.4) !important;
 }
 
 /* Custom content area */
@@ -146,6 +177,8 @@
   align-items: center;
   width: 100%;
   min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Menu Overlay */
@@ -168,8 +201,29 @@
   height: 100vh;
   padding: 20px;
   overflow-y: auto;
+  overflow-x: hidden;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   animation: slideInFromLeft 0.3s ease-out;
+  box-sizing: border-box;
+}
+
+/* Custom scrollbar for menu panel */
+.sidebarMenuPanel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebarMenuPanel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.sidebarMenuPanel::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.sidebarMenuPanel::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
 @keyframes slideInFromLeft {
@@ -302,6 +356,12 @@
     padding: 15px 0;
   }
 
+  /* Smaller scrollbar for mobile */
+  .sidebar::-webkit-scrollbar,
+  .audienceInteractionSection::-webkit-scrollbar {
+    width: 4px;
+  }
+
   .hamburgerButton {
     width: 40px;
     height: 40px;
@@ -346,6 +406,12 @@
   .sidebar {
     width: 50px;
     padding: 10px 0;
+  }
+
+  /* Even smaller scrollbar for small mobile */
+  .sidebar::-webkit-scrollbar,
+  .audienceInteractionSection::-webkit-scrollbar {
+    width: 3px;
   }
 
   .hamburgerButton {

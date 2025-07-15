@@ -2,13 +2,34 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styles from './client-page.module.css';
 import QRCode from '../../components/QRCode';
+import ClientSettings from '../../components/ClientSettings';
 import { useServerInteraction } from '../../serverInteractions/useServerInteraction';
-import { getNumberMessage, getLetterColor, getContrastTextColor, getBoardHighlightColor } from '../../utils/settings';
+import { getNumberMessage, getLetterColor, getContrastTextColor, getBoardHighlightColor, getSetting } from '../../utils/settings';
 import games from '../../data/games';
 import { AudienceInteractionModalManager } from '../../components/modals';
 import audienceInteractionsData from '../../data/audienceInteractions.json';
 
 interface ClientPageProps {}
+
+/**
+ * Audience Interaction System:
+ *
+ * The board page sends audience interactions with options that include:
+ * - enable_audio: whether audio should be played
+ * - enable_images: whether images/graphics should be shown
+ * - section: the name/type of the interaction being shown
+ *
+ * Client settings can override these options:
+ * - clientEnablePopups: master toggle for all popups
+ * - clientPopupEnableAudio: override for audio (AND with server setting)
+ * - clientPopupGraphicToTheDeath: override for images (AND with server setting)
+ */
+
+// Interface for audience interaction options
+interface AudienceInteractionOptions {
+  enable_audio?: boolean;
+  enable_image?: boolean;
+}
 
 // Game Board Component for displaying 5x5 grids with bingo patterns (read-only for clients)
 const GameBoard = ({
@@ -48,7 +69,7 @@ const GameBoard = ({
                 className={`${styles.boardCell} ${isHighlightedCell ? styles.highlighted : ''} ${isFreeSpace ? styles.freeSpace : ''}`}
                 style={cellStyle}
               >
-                {isFreeSpace ? (freeSpace ? 'FREE' : letters[colIndex]) : letters[colIndex]}
+                {isFreeSpace ? ('FREE') : letters[colIndex]}
               </div>
             );
           })}
@@ -81,6 +102,19 @@ const ClientPage: React.FC<ClientPageProps> = () => {
   const roomId = searchParams.get('roomId');
   const serverUrl = searchParams.get('serverUrl');
 
+  // Helper function to get client setting value
+  const getClientSetting = (settingId: string, defaultValue: any = null) => {
+    const savedValue = localStorage.getItem(settingId);
+    if (savedValue !== null) {
+      try {
+        return JSON.parse(savedValue);
+      } catch {
+        return savedValue;
+      }
+    }
+    return defaultValue;
+  };
+
   const {
     isConnected,
     connectionError,
@@ -88,14 +122,32 @@ const ClientPage: React.FC<ClientPageProps> = () => {
     lastActivateMessage,
     lastDeactivateMessage,
     lastFreeSpaceMessage,
-    joinRoom  } = useServerInteraction({
-    onAudienceInteraction: (eventType: string, options: any) => {
+    joinRoom  } = useServerInteraction({    onAudienceInteraction: (eventType: string, options: AudienceInteractionOptions) => {
+      // Check if popups are enabled in client settings
+      const popupsEnabled = getClientSetting('clientEnablePopups', true);
+
+      if (!popupsEnabled) {
+        console.log('Audience interaction blocked by client settings:', eventType);
+        return;
+      }
+
       // Look up the interaction data from audienceInteractions.json
       const interaction = audienceInteractionsData.find(item => item.id === eventType);
       if (interaction) {
+        // Create enhanced options with client setting overrides
+        const enhancedOptions = {
+          // Start with server options
+          ...options,
+          // Apply client setting overrides (AND with server settings)
+          enable_audio: getClientSetting('clientPopupEnableAudio', true) && (options?.enable_audio ?? true),
+          enable_image: getClientSetting('clientPopupGraphicToTheDeath', true) && (options?.enable_image ?? true)
+        };
+
+        console.log('Audience interaction with options:', eventType, enhancedOptions);
+
         // Check if the global function exists
         if ((window as any).showAudienceInteraction) {
-          (window as any).showAudienceInteraction(interaction);
+          (window as any).showAudienceInteraction(interaction, enhancedOptions);
         }
       } else {
         console.warn('Unknown audience interaction type:', eventType);
@@ -120,8 +172,13 @@ const ClientPage: React.FC<ClientPageProps> = () => {
     totalNumbers: number;
   } | null>(null);
 
-  // State for pattern display
+  // State for pattern display and rotation
   const [cachedPatterns, setCachedPatterns] = useState<number[][][][] | null>(null);
+  const [rotationIndex, setRotationIndex] = useState(0);
+  const [rotationEnabled, setRotationEnabled] = useState(true);
+
+  // Ref to store the rotation interval so we can clear it
+  const rotationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // State for letter colors
   const letterColors = {
@@ -206,7 +263,26 @@ const ClientPage: React.FC<ClientPageProps> = () => {
     }
   }, [lastFreeSpaceMessage]);
 
-  // Generate patterns for display when game data changes
+  // Check rotation setting and update state when it changes
+  useEffect(() => {
+    const currentRotationEnabled = getClientSetting('clientEnablePatternRotation', true);
+    setRotationEnabled(currentRotationEnabled);
+
+    // Listen for client setting changes
+    const handleSettingChange = (event: CustomEvent) => {
+      if (event.detail.settingId === 'clientEnablePatternRotation') {
+        setRotationEnabled(event.detail.value);
+      }
+    };
+
+    window.addEventListener('clientSettingChanged', handleSettingChange as EventListener);
+
+    return () => {
+      window.removeEventListener('clientSettingChanged', handleSettingChange as EventListener);
+    };
+  }, []);
+
+  // Generate patterns for display when game data or rotation setting changes
   useEffect(() => {
     if (!gameData) {
       setCachedPatterns(null);
@@ -225,12 +301,16 @@ const ClientPage: React.FC<ClientPageProps> = () => {
 
       const currentVariant = currentGame.variants[gameData.variant];
       let allPatterns: number[][][][] = [];
+      let hasMultiple = false;
 
-      // Generate patterns for each board
+      // Generate patterns for each board - use preview mode if rotation is disabled
       currentVariant.boards.forEach((boardFunction: any) => {
         if (typeof boardFunction === 'function') {
-          const possiblePatterns = boardFunction(gameData.freeSpace, false);
+          const possiblePatterns = boardFunction(gameData.freeSpace, !rotationEnabled);
           allPatterns.push(possiblePatterns);
+          if (possiblePatterns.length > 1) {
+            hasMultiple = true;
+          }
         }
       });
 
@@ -240,11 +320,37 @@ const ClientPage: React.FC<ClientPageProps> = () => {
       }
 
       setCachedPatterns(allPatterns);
+      setRotationIndex(0);
+
+      // Clear any existing rotation interval
+      if (rotationIntervalRef.current) {
+        clearInterval(rotationIntervalRef.current);
+        rotationIntervalRef.current = null;
+      }
+
+      // Set up rotation interval if there are multiple patterns and rotation is enabled
+      if (hasMultiple && rotationEnabled) {
+        const intervalSeconds = getSetting('patternRotationInterval', 3);
+        const intervalMs = intervalSeconds * 1000;
+
+        rotationIntervalRef.current = setInterval(() => {
+          const maxPatterns = Math.max(...allPatterns.map(patterns => patterns.length));
+          setRotationIndex(prevIndex => (prevIndex + 1) % maxPatterns);
+        }, intervalMs);
+      }
     } catch (error) {
       console.error('Error setting up patterns for client:', error);
       setCachedPatterns(null);
     }
-  }, [gameData]);
+
+    // Cleanup function to clear interval when effect reruns or component unmounts
+    return () => {
+      if (rotationIntervalRef.current) {
+        clearInterval(rotationIntervalRef.current);
+        rotationIntervalRef.current = null;
+      }
+    };
+  }, [gameData, rotationEnabled]);
 
   // Get special callout message for a number (matches board page)
   const getSpecialCallout = (number: number | null) => {
@@ -350,9 +456,14 @@ const ClientPage: React.FC<ClientPageProps> = () => {
       let filteredPatterns: number[][][];
 
       if (cachedPatterns) {
-        // Use first pattern from cache
+        // Use cached patterns - rotation logic is handled in the pattern generation
         filteredPatterns = cachedPatterns.map((possiblePatterns: number[][][]) => {
-          return possiblePatterns[0] || [];
+          if (rotationEnabled && possiblePatterns.length > 1) {
+            const selectedPattern = possiblePatterns[rotationIndex % possiblePatterns.length];
+            return selectedPattern;
+          } else {
+            return possiblePatterns[0] || [];
+          }
         });
       } else {
         // Fallback: generate patterns for preview mode
@@ -515,7 +626,7 @@ const ClientPage: React.FC<ClientPageProps> = () => {
               <div className={styles.qrCodeSuccess}>
                 <div className={styles.qrCodeContainer}>
                   <QRCode
-                    value={`${window.location.origin}/BingoBoard/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl || '')}`}
+                    value={`${window.location.origin}/BingoBoard/v5/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl || '')}`}
                     size={window.innerHeight <= 500 ? 100 : 140}
                     className={styles.boardQrCode}
                   />
@@ -623,6 +734,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             )}
           </div>
         </div>
+
+        {/* Client Settings Section */}
+        <ClientSettings />
       </div>
     </AudienceInteractionModalManager>
   );

@@ -10,7 +10,7 @@ test('MigrationPage renders without crashing', () => {
       <MigrationPage />
     </BrowserRouter>
   );
-  
+
   // Check that the migration page title is present
   expect(screen.getByText(/migrate settings/i)).toBeInTheDocument();
 });
@@ -21,7 +21,7 @@ test('MigrationPage shows migration status', () => {
       <MigrationPage />
     </BrowserRouter>
   );
-  
+
   // Check that migration status elements are present
   expect(screen.getByText(/checking for settings/i)).toBeInTheDocument();
 });

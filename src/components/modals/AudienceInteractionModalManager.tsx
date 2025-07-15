@@ -92,12 +92,17 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
   }, [popupModal.isVisible, currentPopupShortcut, onModalClose]);
 
   // Function to show audience interaction modal
-  const showAudienceInteraction = React.useCallback((interaction: any, customText?: string) => {
-    const hasText = interaction.content?.text || customText;
+  const showAudienceInteraction = React.useCallback((interaction: any, options?: { enable_audio?: boolean; enable_image?: boolean }) => {
+    const hasText = interaction.content?.text;
     const hasImage = interaction.content?.img;
     const hasAudio = interaction.content?.audio;
     const shortcuts = interaction.shortcuts || [];
     const primaryShortcut = shortcuts[0];
+
+    // Apply options overrides (default to true if not specified)
+    const enableAudio = options?.enable_audio !== false;
+    const enableImage = options?.enable_image !== false;
+
     // Check if this interaction would show a popup modal and if the same shortcut is already active
     const wouldShowPopup = (hasText && hasImage && !hasAudio) || (hasImage && !hasAudio && !hasText);
 
@@ -125,15 +130,17 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
     if (hasText && hasImage && !hasAudio) {
       // Check the {id}_enableImage setting to determine which modal to show
       const imageKey = `${interaction.id}_enableImage`;
-      const enableImage = getSetting(imageKey, false);
+      const enableImageSetting = getSetting(imageKey, false);
 
-      // Show popup modal with image
+      // Show popup modal with image (if enabled by both global setting and options)
+      const shouldShowImage = enableImage && enableImageSetting;
       const mappedImage = assetMap[interaction.content.img] || interaction.content.img;
+
       setPopupModal({
         isVisible: true,
         content: {
-          img: enableImage ? mappedImage : undefined,
-          text: customText || interaction.content?.text
+          img: shouldShowImage ? mappedImage : undefined,
+          text: interaction.content?.text
         },
         alt: interaction.description,
         closeOnShortcut: primaryShortcut,
@@ -154,15 +161,15 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
 
       setFlashModal({
         isVisible: true,
-        text: customText || interaction.content.text,
+        text: interaction.content.text,
         timeout: timeout,
         fontSize: 'xlarge',
         backgroundColor: backgroundColor,
         borderColor: borderColor,
         animationColors: [animationColor1, animationColor2]
       });
-    } else if (hasImage && !hasAudio && !hasText) {
-      // Image-only modal - use PopupModal
+    } else if (hasImage && !hasAudio && !hasText && enableImage) {
+      // Image-only modal - use PopupModal (only if images are enabled)
       const mappedImage = assetMap[interaction.content.img] || interaction.content.img;
       setPopupModal({
         isVisible: true,
@@ -179,16 +186,16 @@ const AudienceInteractionModalManager: React.FC<AudienceInteractionModalManagerP
       const mappedImage = assetMap[interaction.content.img] || interaction.content.img;
       const mappedAudio = assetMap[interaction.content.audio] || interaction.content.audio;
 
-      // Calculate if audio should play (individual setting AND global sound effects)
+      // Calculate if audio should play (individual setting AND global sound effects AND options)
       const audioKey = `${interaction.id}_enableAudio`;
       const individualAudioEnabled = getSetting(audioKey, true);
       const globalSoundEffects = getSetting('soundEffects', true);
-      const shouldPlayAudio = individualAudioEnabled && globalSoundEffects;
+      const shouldPlayAudio = enableAudio && individualAudioEnabled && globalSoundEffects;
       const timeout = getSetting('flashMessageTimeout', 3) * 1000;
 
       setAnimatedModal({
         isVisible: true,
-        imageSrc: mappedImage,
+        imageSrc: enableImage ? mappedImage : '',
         audioSrc: mappedAudio,
         alt: interaction.description,
         timeout: timeout,

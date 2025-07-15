@@ -163,7 +163,6 @@ export type AudienceInteractionType =
   | 'order66';
 
 export interface AudienceInteractionOptions {
-  font_size?: string;
-  isGraphic?: boolean;
-  [key: string]: any;
+  enable_audio?: boolean;
+  enable_image?: boolean;
 }

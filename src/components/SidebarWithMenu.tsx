@@ -170,16 +170,26 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
 
         {/* Page-specific buttons */}
         <div className={styles.pageButtons}>
-          {pageButtons.map((button) => (
-            <button
-              key={button.id}
-              className={`${styles.sidebarButton} ${button.className || ''}`}
-              onClick={() => handlePageButtonClick(button)}
-              title={button.label}
-            >
-              {button.icon}
-            </button>
-          ))}
+          {pageButtons.map((button) => {
+            // Map className to CSS Modules class
+            let additionalClass = '';
+            if (button.className) {
+              // Convert kebab-case to camelCase and check if it exists in styles
+              const camelCaseClass = button.className.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+              additionalClass = styles[camelCaseClass] || '';
+            }
+
+            return (
+              <button
+                key={button.id}
+                className={`${styles.sidebarButton} ${additionalClass}`}
+                onClick={() => handlePageButtonClick(button)}
+                title={button.label}
+              >
+                {button.icon}
+              </button>
+            );
+          })}
         </div>
 
         {/* Custom content area */}

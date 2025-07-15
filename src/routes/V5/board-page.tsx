@@ -443,16 +443,21 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     {
       id: 'new-game',
       label: 'New Game',
-      icon: '🎮',
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M19 12H5"/>
+          <path d="M12 19l-7-7 7-7"/>
+        </svg>
+      ),
       onClick: handleSelectNewGame,
-      className: 'new-game-button'
+      className: 'newGameButton'
     },
     {
       id: 'end-night',
       label: 'End Night',
       icon: '🌙',
       onClick: handleEndNight,
-      className: 'end-night-button'
+      className: 'endNightButton'
     }
   ];
 
@@ -623,6 +628,9 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     }
 
     try {
+      // Check if rotation is enabled
+      const rotationEnabled = getSetting('enablePatternRotation', true);
+
       const gamesList = games();
       const currentGame = gamesList[gameData.id];
 
@@ -639,7 +647,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       // Generate patterns for each board
       currentVariant.boards.forEach((boardFunction: any) => {
         if (typeof boardFunction === 'function') {
-          const possiblePatterns = boardFunction(gameData.freeSpace, false); // Don't use preview mode for rotation
+          // Use preview mode if rotation is disabled
+          const possiblePatterns = boardFunction(gameData.freeSpace, !rotationEnabled);
           allPatterns.push(possiblePatterns);
           if (possiblePatterns.length > 1) {
             hasMultiple = true;
@@ -653,11 +662,11 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       }
 
       setCachedPatterns(allPatterns);
-      setHasMultiplePatterns(hasMultiple);
+      setHasMultiplePatterns(hasMultiple && rotationEnabled);
       setRotationIndex(0);
 
-      // Set up rotation interval if there are multiple patterns
-      if (hasMultiple) {
+      // Set up rotation interval if there are multiple patterns and rotation is enabled
+      if (hasMultiple && rotationEnabled) {
         const intervalSeconds = getSetting('patternRotationInterval', 3);
         const intervalMs = intervalSeconds * 1000;
 
@@ -675,7 +684,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       setCachedPatterns(null);
       setHasMultiplePatterns(false);
     }
-  }, [gameData]);
+  }, [gameData, settingsVersion]);
 
   // Print QR code URL when roomId is established
   useEffect(() => {
@@ -1060,7 +1069,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
             if (isConnected && roomId) {
               const serverUrl = getSetting('serverUrl', '');
-              const qrCodeValue = `${window.location.origin}/BingoBoard/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl)}`;
+              const qrCodeValue = `${window.location.origin}/BingoBoard/v5/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl)}`;
 
               return (
                 <div className={styles.qrCodeHeader}>
