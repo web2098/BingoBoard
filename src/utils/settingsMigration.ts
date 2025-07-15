@@ -1,4 +1,5 @@
 import settingsVersionUpdateData from '../data/settingsVersionUpdateData.json';
+import specialNumbersData from '../data/specialNumbers.json';
 import { setSetting } from './settings';
 
 /**
@@ -19,17 +20,36 @@ const migrationFunctions: { [key: string]: (value: any) => any } = {
    * Migrate special numbers from V4 to V5 format
    * V4: JSON stringified object in localStorage 'special-numbers'
    * V5: Object stored in settings system under 'specialNumbers'
+   *
+   * This migration preserves V4 special numbers and explicitly marks
+   * V5 defaults that weren't in V4 as "cleared by the user" by setting
+   * them to empty strings in the specialNumbers setting.
    */
   specialNumbersV4ToV5: (v4Value: any): { [key: string]: string } => {
     try {
       // Parse the V4 JSON string
       const v4SpecialNumbers = JSON.parse(v4Value);
 
-      // V4 format is already an object with number keys and message values
-      // V5 expects the same format, so we can return it directly
-      return v4SpecialNumbers;
+      // Load V5 default special numbers to check what needs to be cleared
+      const v5DefaultSpecialNumbers = specialNumbersData;
+      const result: { [key: string]: string } = {};
+
+      // Add all V4 special numbers
+      for (const [number, message] of Object.entries(v4SpecialNumbers)) {
+        result[number] = message as string;
+      }
+
+      // For V5 defaults that weren't in V4, mark as cleared by setting empty string
+      for (const number of Object.keys(v5DefaultSpecialNumbers)) {
+        if (!(number in v4SpecialNumbers)) {
+          result[number] = ''; // Empty string marks as "cleared by user"
+        }
+      }
+
+      return result;
     } catch (error) {
       console.warn('Failed to parse V4 special numbers:', error);
+      // Return empty object to clear all V5 defaults if V4 parsing fails
       return {};
     }
   },
@@ -456,11 +476,9 @@ export function migrateV4ToV5(): {
           migrationDetail.success = true;
           migrationDetail.description = conversionDescription;
 
-          // Only apply settings that don't require user approval
-          if (!requiresUserApproval || complexMigrations.length === 0) {
-            v5Settings[v5_id] = v5Value;
-            migratedCount++;
-          }
+          // Apply all simple settings immediately - complex migrations are handled separately
+          v5Settings[v5_id] = v5Value;
+          migratedCount++;
         } catch (error) {
           const errorMsg = `Failed to migrate ${v4_id} to ${v5_id}: ${error}`;
           console.error(errorMsg);
