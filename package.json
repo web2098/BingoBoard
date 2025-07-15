@@ -50,9 +50,24 @@
   "jest": {
     "transformIgnorePatterns": [
       "node_modules/(?!(swiper|ssr-window|dom7)/)"
-    ]
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/index.tsx",
+      "!src/reportWebVitals.ts"
+    ],
+    "moduleNameMapper": {
+      "^swiper/react$": "<rootDir>/src/__mocks__/swiper/react.js",
+      "^swiper/modules$": "<rootDir>/src/__mocks__/swiper/modules.js",
+      "^swiper/css$": "identity-obj-proxy",
+      "^swiper/css/navigation$": "identity-obj-proxy",
+      "^swiper/css/pagination$": "identity-obj-proxy",
+      "^swiper/css/mousewheel$": "identity-obj-proxy"
+    }
   },
   "devDependencies": {
-    "gh-pages": "^6.1.1"
+    "gh-pages": "^6.1.1",
+    "identity-obj-proxy": "^3.0.0"
   }
 }
