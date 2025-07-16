@@ -1,6 +1,37 @@
 <head>
 
     <style>
+        /* Ensure body takes full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Main content wrapper */
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Content grows to fill available space */
+        .content-wrapper {
+            flex: 1;
+        }
+
+        /* Copyright footer sticks to bottom */
+        .copyright-footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            background-color: #f8f9fa;
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+        }
+
         #body_div {
             display: flex;
             justify-content: space-between;
@@ -362,104 +393,113 @@
 </head>
 
 <body>
-    <div class="version-upgrade-header" onclick="tryLatestVersion()">
-        <p class="upgrade-text">
-            <span class="upgrade-icon">✨</span>
-            Try Latest Version - Enhanced Features & Modern Interface
-            <span class="upgrade-icon">→</span>
-        </p>
-    </div>
-    <div id="body_div">
-        <div class="container" id="quick_settings">
-            <h1>Settings</h1>
-            <p>Change your settings here.</p>
-            <div class="row" id="lnpdir">
-                <label for="default-page">Default Page:</label>
-                <select id="default-page">
-                    <option value="select_game">Select Game</option>
-                    <option value="board">Board</option>
-                </select>
+    <div class="main-content">
+        <div class="content-wrapper">
+            <div class="version-upgrade-header" onclick="tryLatestVersion()">
+                <p class="upgrade-text">
+                    <span class="upgrade-icon">✨</span>
+                    Try Latest Version - Enhanced Features & Modern Interface
+                    <span class="upgrade-icon">→</span>
+                </p>
             </div>
-            <div class="row" id="lnpdir">
-                <label for="game-order">Game Order:</label>
-                <select id="game-order">
-                    <option value="default">Default</option>
-                    <option value="length">Length</option>
-                    <option value="alphabetical">Alphabetical</option>
-                    <option value="random">Random</option>
-                </select>
-            </div>
-            <div class="row" id="lnpdir">
-                <label for="hot-fix-22">Enable 22 HotFix:</label>
-                <input type="checkbox" id="hot-fix-22" checked="true">
-            </div>
-            <div class="row" id="lnpdir">
-                <label for="enable-auto-saber">Enable Order 66 Auto Activation:</label>
-                <input type="checkbox" id="enable-auto-saber" checked="true">
-            </div>
-            <div class="row" id="lnpdir">
-                <input type="checkbox" id="last-number-enabled" checked="true">
-                <label for="last-direction">Last Number Played Location:</label>
-                <select id="last-direction">
-                    <option value="top">Top</option>
-                    <option value="bottom">Bottom</option>
-                </select>
-            </div>
-            <div class="row" id="nhdir">
-                <input type="checkbox" id="history-enabled" checked="true">
-                <label for="history-direction">Number History Location:</label>
-                <select id="history-direction">
-                    <option value="right">Right</option>
-                    <option value="left">Left</option>
-                </select>
-            </div>
-            <div class="row" id="ttddir">
-                <input type="checkbox" id="ttd-enabled" checked="true">
-                <label for="ttd-enabled">Enable Graph Battle Image</label>
-            </div>
-        </div>
-        <div id="customizations">
-            <div style="display: flex; flex-direction: column;">
-                <label for="welcome_message_edit">Welcome Message (HTML)</label>
-                <textarea id="welcome_message_edit" rows="4" cols="50"></textarea>
-            </div>
+            <div id="body_div">
+                <div class="container" id="quick_settings">
+                    <h1>Settings</h1>
+                    <p>Change your settings here.</p>
+                    <div class="row" id="lnpdir">
+                        <label for="default-page">Default Page:</label>
+                        <select id="default-page">
+                            <option value="select_game">Select Game</option>
+                            <option value="board">Board</option>
+                        </select>
+                    </div>
+                    <div class="row" id="lnpdir">
+                        <label for="game-order">Game Order:</label>
+                        <select id="game-order">
+                            <option value="default">Default</option>
+                            <option value="length">Length</option>
+                            <option value="alphabetical">Alphabetical</option>
+                            <option value="random">Random</option>
+                        </select>
+                    </div>
+                    <div class="row" id="lnpdir">
+                        <label for="hot-fix-22">Enable 22 HotFix:</label>
+                        <input type="checkbox" id="hot-fix-22" checked="true">
+                    </div>
+                    <div class="row" id="lnpdir">
+                        <label for="enable-auto-saber">Enable Order 66 Auto Activation:</label>
+                        <input type="checkbox" id="enable-auto-saber" checked="true">
+                    </div>
+                    <div class="row" id="lnpdir">
+                        <input type="checkbox" id="last-number-enabled" checked="true">
+                        <label for="last-direction">Last Number Played Location:</label>
+                        <select id="last-direction">
+                            <option value="top">Top</option>
+                            <option value="bottom">Bottom</option>
+                        </select>
+                    </div>
+                    <div class="row" id="nhdir">
+                        <input type="checkbox" id="history-enabled" checked="true">
+                        <label for="history-direction">Number History Location:</label>
+                        <select id="history-direction">
+                            <option value="right">Right</option>
+                            <option value="left">Left</option>
+                        </select>
+                    </div>
+                    <div class="row" id="ttddir">
+                        <input type="checkbox" id="ttd-enabled" checked="true">
+                        <label for="ttd-enabled">Enable Graph Battle Image</label>
+                    </div>
+                </div>
+                <div id="customizations">
+                    <div style="display: flex; flex-direction: column;">
+                        <label for="welcome_message_edit">Welcome Message (HTML)</label>
+                        <textarea id="welcome_message_edit" rows="4" cols="50"></textarea>
+                    </div>
 
-            <div style="display: flex; flex-direction: column;">
-                <h2>Special Numbers</h2>
-                <select id="special_numbers">
-                </select>
-                <textarea id="special_number_text" rows="4" cols="50"></textarea>
-            </div>
-            <div style="display: flex; flex-direction: column;">
-                <h2>Audience Interaction</h2>
-                <select id="audience_interaction">
-                    <option value="clap" id="clap_option" className="emoji-option">&#x1F44F;</option>
-                    <option value="ghost" id="ghost_option" className="emoji-option">&#x1F47B;</option>
-                    <option value="beer" id="beer_option" className="emoji-option">&#x1F37B;</option>
-                    <option value="party" id="party_option" className="emoji-option">&#x1F973;</option>
-                </select>
-                <textarea id="audience_interaction_text" rows="1" cols="50"></textarea>
-            </div>
-            <div>
-                <h2>Audience Interaction Timeout</h2>
-                <div class="spinner">
-                    <button onclick="decrease()">−</button>
-                    <input id="audience_interaction_timeout" type="number" min="1000" max="15000" step="1" value="10">
-                    <button onclick="increase()">+</button>
+                    <div style="display: flex; flex-direction: column;">
+                        <h2>Special Numbers</h2>
+                        <select id="special_numbers">
+                        </select>
+                        <textarea id="special_number_text" rows="4" cols="50"></textarea>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <h2>Audience Interaction</h2>
+                        <select id="audience_interaction">
+                            <option value="clap" id="clap_option" className="emoji-option">&#x1F44F;</option>
+                            <option value="ghost" id="ghost_option" className="emoji-option">&#x1F47B;</option>
+                            <option value="beer" id="beer_option" className="emoji-option">&#x1F37B;</option>
+                            <option value="party" id="party_option" className="emoji-option">&#x1F973;</option>
+                        </select>
+                        <textarea id="audience_interaction_text" rows="1" cols="50"></textarea>
+                    </div>
+                    <div>
+                        <h2>Audience Interaction Timeout</h2>
+                        <div class="spinner">
+                            <button onclick="decrease()">−</button>
+                            <input id="audience_interaction_timeout" type="number" min="1000" max="15000" step="1" value="10">
+                            <button onclick="increase()">+</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <h4>Bingo Server URL</h4>
+                        <input id="bingo_server_url" rows="1" cols="50"></input>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <h4>Bingo Server Auth Token</h4>
+                        <input id="bingo_server_auth" rows="1" cols="50" type="password"></input>
+                    </div>
                 </div>
             </div>
-            <div style="display: flex; flex-direction: column;">
-                <h4>Bingo Server URL</h4>
-                <input id="bingo_server_url" rows="1" cols="50"></input>
-            </div>
-            <div style="display: flex; flex-direction: column;">
-                <h4>Bingo Server Auth Token</h4>
-                <input id="bingo_server_auth" rows="1" cols="50" type="password"></input>
-            </div>
+
+            <button id="applyButton">Apply</button>
+            <button id="resetButton">Reset To Default</button>
+            <button id="resetFameButton">Reset Hall of Fame</button>
+        </div>
+
+        <!-- Copyright Footer -->
+        <div class="copyright-footer">
+            © 2025 Eric Gressman. All rights reserved.
         </div>
     </div>
-
-    <button id="applyButton">Apply</button>
-    <button id="resetButton">Reset To Default</button>
-    <button id="resetFameButton">Reset Hall of Fame</button>
 </body>

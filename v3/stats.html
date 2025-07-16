@@ -1,5 +1,36 @@
 <head>
     <style>
+        /* Ensure body takes full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Main content wrapper */
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Content grows to fill available space */
+        .content-wrapper {
+            flex: 1;
+        }
+
+        /* Copyright footer sticks to bottom */
+        .copyright-footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid #e9ecef;
+            background-color: #f8f9fa;
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+        }
+
         /* Floating button to latest version */
         .version-upgrade-btn {
             position: fixed;
@@ -46,20 +77,37 @@
     </script>
 </head>
 <body>
-    <!-- Floating button to upgrade to latest version -->
-    <button class="version-upgrade-btn" onclick="tryLatestVersion()" title="Upgrade to the latest version">
-        ⬆️ Latest Version
-    </button>
+    <div class="main-content">
+        <div class="content-wrapper">
+            <!-- Floating button to upgrade to latest version -->
+            <button class="version-upgrade-btn" onclick="tryLatestVersion()" title="Upgrade to the latest version">
+                ⬆️ Latest Version
+            </button>
 
-    <h1 id="gamesPlayed">Games Played:</h1>
-    <h2 id="topTenNumbers">Top Ten Numbers:</h2>
+            <h1 id="gamesPlayed">Games Played:</h1>
+            <h2 id="topTenNumbers">Top Ten Numbers:</h2>
 
-    <canvas id="barGraph" height="100"></canvas>
-    <h2 id="notCalledNumbers">The following numbers were never called:</h2>
+            <canvas id="barGraph" height="100"></canvas>
+            <h2 id="notCalledNumbers">The following numbers were never called:</h2>
 
-    <div style="width: 100%; overflow-x: auto; overflow-y: hidden">
-        <div style="width: 4000px; height: 300px">
-          <canvas id="allGraph" height="300" width="0"></canvas>
+            <div style="width: 100%; overflow-x: auto; overflow-y: hidden">
+                <div style="width: 4000px; height: 300px">
+                  <canvas id="allGraph" height="300" width="0"></canvas>
+                </div>
+              </div>
         </div>
-      </div>
+    </div>
+
+    <script>
+        // Add copyright footer after all content is loaded
+        window.addEventListener('load', function() {
+            // Wait a bit to ensure all dynamic content is added
+            setTimeout(function() {
+                const copyrightDiv = document.createElement('div');
+                copyrightDiv.className = 'copyright-footer';
+                copyrightDiv.innerHTML = '© 2025 Eric Gressman. All rights reserved.';
+                document.body.appendChild(copyrightDiv);
+            }, 100);
+        });
+    </script>
 </body>

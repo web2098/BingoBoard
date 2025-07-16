@@ -307,6 +307,19 @@
                 document.body.appendChild(lastNumber);
             }
             document.body.appendChild(buttonDiv);
+
+            // Add copyright footer at the bottom
+            const copyrightDiv = document.createElement('div');
+            copyrightDiv.style.textAlign = 'center';
+            copyrightDiv.style.padding = '20px';
+            copyrightDiv.style.marginTop = '40px';
+            copyrightDiv.style.borderTop = '1px solid #e9ecef';
+            copyrightDiv.style.backgroundColor = '#f8f9fa';
+            copyrightDiv.style.color = '#666';
+            copyrightDiv.style.fontSize = '14px';
+            copyrightDiv.style.fontStyle = 'italic';
+            copyrightDiv.innerHTML = '© 2025 Eric Gressman. All rights reserved.';
+            document.body.appendChild(copyrightDiv);
         }
 
         function tryLatestVersion() {

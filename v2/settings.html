@@ -1,6 +1,37 @@
 <head>
 
     <style>
+        /* Ensure body takes full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Main content wrapper */
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Content grows to fill available space */
+        .content-wrapper {
+            flex: 1;
+        }
+
+        /* Copyright footer sticks to bottom */
+        .copyright-footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            background-color: #f8f9fa;
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+        }
+
         /* Floating button to latest version */
         .version-upgrade-btn {
             position: fixed;
@@ -138,29 +169,38 @@
 </head>
 
 <body>
-    <!-- Floating button to upgrade to latest version -->
-    <button class="version-upgrade-btn" onclick="tryLatestVersion()" title="Upgrade to the latest version">
-        ⬆️ Latest Version
-    </button>
+    <div class="main-content">
+        <div class="content-wrapper">
+            <!-- Floating button to upgrade to latest version -->
+            <button class="version-upgrade-btn" onclick="tryLatestVersion()" title="Upgrade to the latest version">
+                ⬆️ Latest Version
+            </button>
 
-    <div class="container">
-        <h1>Settings</h1>
-        <p>Change your settings here.</p>
-        <div class="row" id="lnpdir">
-            <label for="last-direction">Last Number Played Location:</label>
-            <select id="last-direction">
-                <option value="top">Top</option>
-                <option value="bottom">Bottom</option>
-            </select>
+            <div class="container">
+                <h1>Settings</h1>
+                <p>Change your settings here.</p>
+                <div class="row" id="lnpdir">
+                    <label for="last-direction">Last Number Played Location:</label>
+                    <select id="last-direction">
+                        <option value="top">Top</option>
+                        <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="row" id="nhdir">
+                    <label for="history-direction">Number History Location:</label>
+                    <select id="history-direction">
+                        <option value="right">Right</option>
+                        <option value="left">Left</option>
+                    </select>
+                </div>
+            </div>
+            <button id="applyButton">Apply</button>
+            <button id="resetButton">Reset To Default</button>
         </div>
-        <div class="row" id="nhdir">
-            <label for="history-direction">Number History Location:</label>
-            <select id="history-direction">
-                <option value="right">Right</option>
-                <option value="left">Left</option>
-            </select>
+
+        <!-- Copyright Footer -->
+        <div class="copyright-footer">
+            © 2025 Eric Gressman. All rights reserved.
         </div>
     </div>
-    <button id="applyButton">Apply</button>
-    <button id="resetButton">Reset To Default</button>
 </body>
