@@ -1,0 +1,324 @@
+<head>
+    <style>
+        :root {
+            --main-bg-color: #FFFFFF;
+            --main-font-color: #000000
+        }
+
+        /* Floating button to latest version */
+        .version-upgrade-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .version-upgrade-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .version-upgrade-btn:active {
+            transform: translateY(0);
+        }
+
+        body {
+            background-color: var(--main-bg-color); /* replace with your desired color */
+        }
+        #lastNumber {
+            font-size: 45px; /* adjust as needed */
+            font-weight: bold; /* makes the text bold */
+            text-align: center; /* centers the text */
+            height:50px;
+            color: var(--main-font-color);
+        }
+        #lastNumberCalled {
+            font-size: 20px; /* adjust as needed */
+            text-align: center; /* centers the text */
+            text-decoration: underline;
+            min-width:150px;
+            color: var(--main-font-color);
+        }
+        #extraInfo {
+            font-size: 25px; /* adjust as needed */
+            text-align: center; /* centers the text */
+            min-height: 10px;
+            height:10px;
+            font-weight: bold; /* makes the text bold */
+            color: var(--main-font-color);
+        }
+
+        td {
+            border: 2px solid black;
+            min-width: 5vw; /* minimum width */
+            height: 7vw; /* adjust as needed */
+            text-align: center; /* to center the content */
+
+            font-size: 45px; /* adjust as needed */
+            font-weight: bold; /* makes the text bold */
+        }
+        #lettersTable td{
+            border: none;
+            color: var(--main-font-color);
+        }
+        #tablesContainer {
+            display: flex;
+            justify-content: center;
+            max-height: 70vh; /* Adjust this value as needed */
+            min-height: 70vh;
+        }
+        #clickedNumbersTable td{
+            justify-content: right;
+            font-size: 25px; /* adjust as needed */
+            width: 1vw;
+            height: 1vw;
+            border: none;
+            min-width:150px;
+            color: var(--main-font-color);
+        }
+        #clickedNumbersDiv {
+            overflow-y: auto;
+            min-width:180px;
+            overflow-y: scroll;
+        }
+        button {
+            margin: 1vw 8vw; /* This adds of space to the left and right of each button */
+            font-size: 25px; /* adjust as needed */
+        }
+        #buttonDiv {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+    </style>
+    <script>
+        window.onload = function() {
+            // README: Change this values to change the look and layout of the page
+            let styleVariables = {
+                selectedColor: 'rgb(30, 77, 43)', //CSU Green
+                //selectedColor: 'rgb(202, 26, 58)', //Valentine Red
+                selectedTextColor: 'white',
+                unselectedColor: 'white',
+                unselectedTextColor: 'black',
+                lastNumberDir: "top", // 'top' or 'bottom'
+                numberHistoryDir: 'right', // 'right' or 'left'
+            };
+
+            //Don't Change any code below this line
+            var clickedNumbersHistory = []; // Array to store the history of clicked numbers
+
+            function onReset() {
+                var cells = document.getElementsByTagName('td');
+                for (var i = 0; i < cells.length; i++) {
+                    cells[i].style.backgroundColor = '';
+                    cells[i].style.color = 'black';
+                }
+                clickedNumbersHistory.push([...clickedNumbers]);
+                // Clear the array
+                clickedNumbers = [];
+                // Reset the last number text
+                document.getElementById('lastNumber').innerHTML = "Waiting for first number";
+                clickedNumbersTable.innerHTML = "";
+
+            }
+
+            //Create button div
+            var buttonDiv = document.createElement('div');
+            buttonDiv.id = 'buttonDiv';
+            // Create reset button
+            var resetButton = document.createElement('button');
+            resetButton.innerHTML = 'Reset Board';
+            resetButton.onclick = onReset;
+            buttonDiv.appendChild(resetButton);
+            // Create save button
+            var saveButton = document.createElement('button');
+            saveButton.innerHTML = 'Save Games';
+            saveButton.onclick = function() {
+                onReset();
+                // Convert clickedNumbersHistory to a string
+                var data = clickedNumbersHistory.map(entry => entry.join(',')).join('\n');
+
+                // Create a Blob with the data
+                var blob = new Blob([data], {type: 'text/plain'});
+
+                // Create a link for the Blob
+                var url = URL.createObjectURL(blob);
+
+                // Create a download link
+                var downloadLink = document.createElement('a');
+                downloadLink.download = 'clickedNumbersHistory.txt';
+                downloadLink.href = url;
+
+                // Trigger the download
+                downloadLink.click();
+            }
+            buttonDiv.appendChild(saveButton);
+
+            // Create reset games button
+            var saveButton = document.createElement('button');
+            saveButton.innerHTML = 'Reset Game History';
+            saveButton.onclick = function() {
+                clickedNumbersHistory = [];
+            }
+            buttonDiv.appendChild(saveButton);
+
+
+            // Create paragraph to display the last clicked number
+            var lastNumber = document.createElement('p');
+            lastNumber.id = 'lastNumber';
+            lastNumber.innerHTML = "Waiting for first number";
+            // Create paragraph to display the last clicked number
+            var extraInfo = document.createElement('p');
+            extraInfo.id = 'extraInfo';
+            extraInfo.innerHTML = " ";
+
+            var clickedNumbers = []; // Array to store the clicked numbers
+
+            var letters = ['B', 'I', 'N', 'G', 'O'];
+
+            // Create a container for the tables
+            var tablesContainer = document.createElement('div');
+            tablesContainer.id = 'tablesContainer';
+
+
+            var clickedNumbersDiv = document.createElement('div');
+            clickedNumbersDiv.id = 'clickedNumbersDiv';
+            // Create paragraph to display the last clicked number
+            var lastNumberCalled = document.createElement('p');
+            lastNumberCalled.id = 'lastNumberCalled';
+            lastNumberCalled.innerHTML = "Called Numbers";
+            clickedNumbersDiv.appendChild(lastNumberCalled);
+            // Create a table for the clicked numbers
+            var clickedNumbersTable = document.createElement('table');
+            clickedNumbersTable.id = 'clickedNumbersTable';
+            clickedNumbersDiv.appendChild(clickedNumbersTable);
+            // Create a table for the letters
+            var lettersTable = document.createElement('table');
+            lettersTable.id = 'lettersTable';
+            for (var i = 0; i < 5; i++) {
+                var tr = document.createElement('tr');
+                var td = document.createElement('td');
+                td.innerHTML = letters[i];
+                tr.appendChild(td);
+                lettersTable.appendChild(tr);
+            }
+            var table = document.createElement('table');
+            table.id = 'numbersTable';
+            var counter = 1;
+            for (var i = 0; i < 5; i++) {
+                var tr = document.createElement('tr');
+                for (var j = 0; j < 15; j++) {
+                    var td = document.createElement('td');
+                    td.innerHTML = counter++;
+                    td.style.backgroundColor = styleVariables.unselectedColor;
+                    td.style.color = styleVariables.unselectedTextColor;
+                    td.onclick = function() {
+                        var rowIndex = Array.prototype.indexOf.call(this.parentNode.parentNode.children, this.parentNode);
+                        var letter = lettersTable.children[rowIndex].firstChild.innerHTML;
+                        var number = letter + this.innerHTML;
+                        var index = clickedNumbers.indexOf(number);
+                        console.log(this.style.backgroundColor)
+                        if (index > -1) {
+                            this.style.backgroundColor = styleVariables.unselectedColor;
+                            this.style.color = styleVariables.unselectedTextColor;
+                            // Remove the number from the array
+                            var index = clickedNumbers.indexOf(number);
+                            if (index > -1) {
+                                clickedNumbers.splice(index, 1);
+                                clickedNumbersTable.removeChild(clickedNumbersTable.children[index]);
+                            }
+
+                            document.getElementById('extraInfo').innerHTML = " ";
+                        } else {
+                            this.style.backgroundColor = styleVariables.selectedColor;
+                            this.style.color = styleVariables.selectedTextColor;
+                            // Add the number to the array
+                            clickedNumbers.unshift(number);
+
+                            var tr = document.createElement('tr');
+                            var td = document.createElement('td');
+                            td.innerHTML = number;
+                            tr.appendChild(td);
+
+                            clickedNumbersTable.insertBefore(tr, clickedNumbersTable.firstChild);
+
+                            if (this.innerHTML == "25"){
+                                document.getElementById('extraInfo').innerHTML = "Beep Beep";
+                            }
+                            else if (this.innerHTML == "69"){
+                                document.getElementById('extraInfo').innerHTML = "Oooooooo";
+                            }
+                            else if (this.innerHTML == "11"){
+                                document.getElementById('extraInfo').innerHTML = "B11! B! B! 11!";
+                            }
+                            else if (this.innerHTML == "44"){
+                                document.getElementById('extraInfo').innerHTML = "Lucky!";
+                            }
+                            else{
+                                document.getElementById('extraInfo').innerHTML = " ";
+                            }
+                        }
+
+
+                        // Update the last number text
+                        if (clickedNumbers.length > 0) {
+                            document.getElementById('lastNumber').innerHTML = "The last number was " + clickedNumbers[0];
+                        } else {
+                            document.getElementById('lastNumber').innerHTML = "Waiting for first number";
+                        }
+                    }
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+            if (styleVariables.numberHistoryDir === 'left') {
+                tablesContainer.appendChild(clickedNumbersDiv);
+            }
+            tablesContainer.appendChild(lettersTable);
+            tablesContainer.appendChild(table);
+            if (styleVariables.numberHistoryDir === 'right') {
+                tablesContainer.appendChild(clickedNumbersDiv);
+            }
+            if( styleVariables.lastNumberDir === "top" ) {
+                document.body.appendChild(lastNumber);
+                document.body.appendChild(extraInfo);
+            }
+            document.body.appendChild(tablesContainer);
+            if( styleVariables.lastNumberDir === "bottom") {
+                document.body.appendChild(extraInfo);
+                document.body.appendChild(lastNumber);
+            }
+            document.body.appendChild(buttonDiv);
+        }
+
+        function tryLatestVersion() {
+            // Redirect to the migration page which will handle the migration process
+            localStorage.setItem('defaultVersion', 'latest');
+            // Use relative path that works on GitHub Pages
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.includes('/BingoBoard/') ? '/BingoBoard' : '';
+            window.location.href = basePath + '/migration?from=v1';
+        }
+    </script>
+</head>
+<body>
+    <!-- Floating button to upgrade to latest version -->
+    <button class="version-upgrade-btn" onclick="tryLatestVersion()" title="Upgrade to the latest version">
+        ⬆️ Latest Version
+    </button>
+</body>
