@@ -8,7 +8,6 @@ import { BoardPreviewModal, GameBoard, OperatorIcon } from '../../components/boa
 import { useServerInteraction } from '../../serverInteractions/useServerInteraction';
 import ServerInteractionService from '../../serverInteractions/ServerInteractionService';
 import { getNumberMessage, getLetterColor, getContrastTextColor, getBoardHighlightColor, getSetting } from '../../utils/settings';
-import { getVersionRoute, resolveVersionAlias } from '../../config/versions';
 import games from '../../data/games';
 import { AudienceInteractionModalManager } from '../../components/modals';
 import audienceInteractionsData from '../../data/audienceInteractions.json';

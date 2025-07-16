@@ -29,7 +29,6 @@ import { getMappedAsset } from '../../utils/assetMapping';
 // Import version configuration
 import {
   getVersionRoute,
-  getCurrentVersion,
   shouldNavigateForVersionChange
 } from '../../config/versions';
 
