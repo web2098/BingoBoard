@@ -117,6 +117,9 @@
 .leftColumn {
   flex: 1;
   min-width: 0; /* Allows flex item to shrink below its content size */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Add gap between cards in left column */
 }
 
 .rightColumn {
@@ -130,7 +133,15 @@
   padding: 16px;
   margin-bottom: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #28a745;
+  border-left: 4px solid #007bff; /* Default blue */
+}
+
+.changeLogItem.currentVersionItem {
+  border-left: 4px solid #28a745; /* Green for current version */
+}
+
+.changeLogItem.otherVersionItem {
+  border-left: 4px solid #007bff; /* Blue for other versions */
 }
 
 .changeLogItem h2 {
@@ -166,6 +177,29 @@
   color: #555;
 }
 
+.aiOpinion {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-left: 3px solid #6c757d;
+  border-radius: 4px;
+}
+
+.aiOpinion h4 {
+  margin: 0 0 8px 0;
+  color: #495057;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.aiOpinion p {
+  margin: 0;
+  color: #6c757d;
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .columnTitle {
   margin: 0 0 20px 0;
   color: #333;
@@ -173,6 +207,81 @@
   font-weight: 600;
   padding-bottom: 8px;
   border-bottom: 2px solid #007bff;
+}
+
+/* Profile Card Styles */
+.profileCard {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e9ecef;
+  overflow: auto;
+}
+
+.profileCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.profileLink {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+}
+
+.profileAvatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid #007bff;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.profileInfo {
+  flex: 1;
+}
+
+.profileName {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.profileDescription {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.profileLink:hover .profileName {
+  color: #007bff;
+}
+
+/* Copyright Section */
+.copyright {
+  text-align: center;
+  padding: 24px 0;
+  margin-top: 40px;
+  border-top: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.copyright p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
 }
 
 /* Responsive Design */

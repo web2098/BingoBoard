@@ -405,6 +405,24 @@
   font-style: italic;
 }
 
+/* Copyright Section */
+.copyright {
+  text-align: center;
+  padding: 24px 0;
+  margin-top: 40px;
+  border-top: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+  width: 100%;
+  position: relative;
+}
+
+.copyright p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+}
+
 @media (orientation: portrait) {
   .boardHeader {
     display: flex;

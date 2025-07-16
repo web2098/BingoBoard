@@ -1,41 +1,72 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './migration-page.module.css';
-import { migrateV4ToV5, isMigrationNeeded } from '../../utils/settingsMigration';
+import { migrateVersionToV5, isMigrationNeededFromVersion } from '../../utils/settingsMigration';
 import { setSetting } from '../../utils/settings';
+import { getVersionRoute, getPostMigrationRoute } from '../../config/versions';
 import MigrationModal, { MigrationResult } from '../../components/settings/MigrationModal';
 
 interface MigrationPageProps {}
 
 interface MigrationState {
-  status: 'start' | 'progress' | 'migrating' | 'success' | 'error';
+  status: 'start' | 'progress' | 'migrating' | 'success' | 'error' | 'skip';
   migrationResult: MigrationResult | null;
   errorMessage: string;
+  sourceVersion: string;
 }
 
 const MigrationPage: React.FC<MigrationPageProps> = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Get source version from URL parameters (default to 'v4' for backward compatibility)
+  const sourceVersion = searchParams.get('from') || 'v4';
+
   const [migrationState, setMigrationState] = useState<MigrationState>({
     status: 'start',
     migrationResult: null,
-    errorMessage: ''
+    errorMessage: '',
+    sourceVersion: sourceVersion
   });
 
   useEffect(() => {
-    // Check if migration is actually needed
-    if (!isMigrationNeeded()) {
-      // No V4 settings found, redirect directly to select-game
-      setSetting('defaultVersion', 'latest');
-      navigate('/select-game');
-    }
-  }, [navigate]);
-
+    // Don't automatically redirect - let user click "Start Migration" for consistent UX
+    // Analysis will happen when user clicks the button
+  }, [navigate, sourceVersion]);
   const startMigration = () => {
     setMigrationState(prev => ({ ...prev, status: 'progress' }));
 
+    // Always show analysis phase for consistent UX
     setTimeout(() => {
       try {
-        const result = migrateV4ToV5();
+        // First, check if migration is needed
+        if (!isMigrationNeededFromVersion(migrationState.sourceVersion)) {
+          console.log(`No migration needed from ${migrationState.sourceVersion}, showing no migration required`);
+          setMigrationState(prev => ({ ...prev, status: 'skip' }));
+
+          // Navigate to select-game after showing skip message
+          setTimeout(() => {
+            setSetting('defaultVersion', 'latest');
+            navigate(getPostMigrationRoute());
+          }, 3000); // Show skip message for 3 seconds
+          return;
+        }
+
+        // If migration is needed, proceed with migration
+        const result = migrateVersionToV5(migrationState.sourceVersion);
+
+        if (result.skipped) {
+          console.log(`Migration skipped for ${migrationState.sourceVersion}, no settings to migrate`);
+          setMigrationState(prev => ({ ...prev, status: 'skip' }));
+
+          // Navigate to select-game after showing skip message
+          setTimeout(() => {
+            setSetting('defaultVersion', 'latest');
+            navigate(getPostMigrationRoute());
+          }, 3000); // Show skip message for 3 seconds
+          return;
+        }
+
         setMigrationState(prev => ({
           ...prev,
           status: 'migrating',
@@ -48,7 +79,16 @@ const MigrationPage: React.FC<MigrationPageProps> = () => {
           errorMessage: `Failed to run migration: ${error instanceof Error ? error.message : 'Unknown error'}`
         }));
       }
-    }, 1500);
+    }, 1500); // Show analysis for 1.5 seconds
+  };
+
+  const skipMigration = () => {
+    console.log(`User chose to skip migration from ${migrationState.sourceVersion}`);
+    const postMigrationRoute = getPostMigrationRoute();
+    console.log(`Navigating to post-migration route: ${postMigrationRoute}`);
+    // Set version to latest and navigate directly
+    setSetting('defaultVersion', 'latest');
+    navigate(postMigrationRoute);
   };
 
   const handleMigrationComplete = () => {
@@ -59,28 +99,44 @@ const MigrationPage: React.FC<MigrationPageProps> = () => {
     setMigrationState(prev => ({ ...prev, status: 'success' }));
 
     setTimeout(() => {
-      navigate('/select-game');
+      navigate(getPostMigrationRoute());
     }, 2000);
   };
 
-  const renderMigrationStart = () => (
-    <div className={styles.migrationStart}>
-      <div className={styles.migrationActions}>
+  const renderMigrationStart = () => {
+    // Check if migration is supported for this version
+    const migrationSupported = isMigrationNeededFromVersion(migrationState.sourceVersion);
+
+    return (
+      <div className={styles.migrationStart}>
+        <div className={styles.migrationActions}>
+          <button
+            className={styles.startMigrationBtn}
+            onClick={startMigration}
+          >
+            Start Migration
+          </button>
+          {migrationSupported && (
+            <button
+              className={styles.skipMigrationBtn}
+              onClick={skipMigration}
+            >
+              Skip Migration
+            </button>
+          )}
+        </div>
         <button
-          className={styles.startMigrationBtn}
-          onClick={startMigration}
+          className={styles.backLink}
+          onClick={() => {
+            const settingsRoute = getVersionRoute(migrationState.sourceVersion, 'settings');
+            window.location.href = settingsRoute.path;
+          }}
         >
-          Start Migration
+          ← Back to {migrationState.sourceVersion.toUpperCase()} Settings
         </button>
       </div>
-      <button
-        className={styles.backLink}
-        onClick={() => window.location.href = '/BingoBoard/v4/settings.html'}
-      >
-        ← Back to V4 Settings
-      </button>
-    </div>
-  );
+    );
+  };
 
   const renderMigrationProgress = () => (
     <div className={styles.migrationProgress}>
@@ -118,10 +174,27 @@ const MigrationPage: React.FC<MigrationPageProps> = () => {
       </div>
       <button
         className={styles.backLink}
-        onClick={() => window.location.href = '/BingoBoard/v4/settings.html'}
+        onClick={() => {
+          const settingsRoute = getVersionRoute(migrationState.sourceVersion, 'settings');
+          window.location.href = settingsRoute.path;
+        }}
       >
-        ← Back to V4 Settings
+        ← Back to {migrationState.sourceVersion.toUpperCase()} Settings
       </button>
+    </div>
+  );
+
+  const renderMigrationSkip = () => (
+    <div className={styles.migrationSuccess}>
+      <div className={styles.successMessage}>
+        <div className={styles.checkmarkContainer}>
+          <div className={styles.greenCircle}>
+            <span className={styles.checkmark}>✓</span>
+          </div>
+        </div>
+        <h3>No Migration Required</h3>
+        <p>Your {migrationState.sourceVersion.toUpperCase()} installation is already up to date - taking you to game selection...</p>
+      </div>
     </div>
   );
 
@@ -137,6 +210,8 @@ const MigrationPage: React.FC<MigrationPageProps> = () => {
         return renderMigrationSuccess();
       case 'error':
         return renderMigrationError();
+      case 'skip':
+        return renderMigrationSkip();
       default:
         return renderMigrationStart();
     }
@@ -147,7 +222,10 @@ const MigrationPage: React.FC<MigrationPageProps> = () => {
       <div className={styles.migrationContainer}>
         <div className={styles.migrationHeader}>
           <h1>🚀 Welcome to the Latest Version!</h1>
-          <p>We're migrating your settings from V4 to the new enhanced V5 format. This will preserve all your preferences while unlocking new features.</p>
+          <p>We're migrating your settings from {migrationState.sourceVersion.toUpperCase()} to the new enhanced V5 format. This will preserve all your preferences while unlocking new features.</p>
+          {isMigrationNeededFromVersion(migrationState.sourceVersion) && (
+            <p><strong>Note:</strong> You can choose to skip the migration and start fresh with default settings if you prefer.</p>
+          )}
         </div>
         {renderContent()}
 
@@ -159,6 +237,10 @@ const MigrationPage: React.FC<MigrationPageProps> = () => {
           onSettingsRefresh={() => {
           }}
         />
+      </div>
+
+      <div className={styles.copyright}>
+        <p>© 2025 Eric Gressman. All rights reserved.</p>
       </div>
     </div>
   );

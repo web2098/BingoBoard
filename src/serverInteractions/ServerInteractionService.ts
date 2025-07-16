@@ -147,6 +147,61 @@ class ServerInteractionService {
     };
   }
 
+  /**
+   * Generate base64-encoded parameters for client URL
+   */
+  public static generateClientParams(roomId: string, serverUrl: string): string {
+    const params = {
+      roomId,
+      serverUrl
+    };
+
+    try {
+      const jsonString = JSON.stringify(params);
+      const base64 = btoa(jsonString);
+      return base64;
+    } catch (error) {
+      console.error('Error generating client params:', error);
+      return '';
+    }
+  }
+
+  /**
+   * Parse base64-encoded parameters from client URL
+   */
+  public static parseClientParams(base64Params: string): { roomId: string; serverUrl: string } | null {
+    try {
+      const jsonString = atob(base64Params);
+      const params = JSON.parse(jsonString);
+
+      if (params.roomId && params.serverUrl) {
+        return {
+          roomId: params.roomId,
+          serverUrl: params.serverUrl
+        };
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Error parsing client params:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get current connection parameters for sharing
+   */
+  public getConnectionParams(): { roomId: string; serverUrl: string } | null {
+    if (this.state.roomId && this.state.isConnected) {
+      const serverUrl = getSetting('serverUrl', '');
+      return {
+        roomId: this.state.roomId,
+        serverUrl: serverUrl
+      };
+    }
+    return null;
+  }
+
   // Message handler
   private handleMessage = (message: any): void => {
     console.log("Handle message server interaction service");

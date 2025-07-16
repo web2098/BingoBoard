@@ -5,11 +5,7 @@
     "id": "defaultVersion",
     "description": "The default version to use when accessing the application",
     "type": "select",
-    "options": [
-      "latest",
-      "v5",
-      "v4"
-    ],
+    "options": "getAvailableVersionIds",
     "default": "v4"
   },
   {

@@ -2,6 +2,7 @@
 
 import settingsData from '../data/settings.json';
 import specialNumbersData from '../data/specialNumbers.json';
+import { getVersionLabel, getAvailableVersions } from '../config/versions';
 
 export interface SettingProperty {
   section: string;
@@ -291,6 +292,7 @@ const OPTION_FUNCTIONS: { [key: string]: () => string[] } = {
   'getEventTypes': () => ['celebration', 'warning', 'announcement', 'special', 'order66', 'battle'],
   'getThemes': () => ['light', 'dark'],
   'getFontSizes': () => ['small', 'medium', 'large', 'extra-large'],
+  'getAvailableVersionIds': () => getAvailableVersions().map(version => version.id),
 };
 
 /**
@@ -326,17 +328,13 @@ export function resolveOptions(options?: string[] | string, property?: SettingPr
  * Get display name for an option (includes emoji if available)
  */
 export function getOptionDisplayName(optionKey: string, property?: SettingProperty): string {
-  // Special handling for version options
+  // Special handling for version options using data-driven approach
   if (property?.id === 'defaultVersion') {
-    switch (optionKey) {
-      case 'latest':
-        return 'Latest';
-      case 'v5':
-        return 'V5 (Current)';
-      case 'v4':
-        return 'V4 (Legacy)';
-      default:
-        return optionKey.toUpperCase();
+    try {
+      return getVersionLabel(optionKey);
+    } catch (error) {
+      // Fallback if version not found
+      return optionKey.toUpperCase();
     }
   }
 

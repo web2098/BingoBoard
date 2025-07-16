@@ -6,7 +6,9 @@ import ClientSettings from '../../components/ClientSettings';
 import ClientLog from '../../components/ClientLog';
 import { BoardPreviewModal, GameBoard, OperatorIcon } from '../../components/boards';
 import { useServerInteraction } from '../../serverInteractions/useServerInteraction';
+import ServerInteractionService from '../../serverInteractions/ServerInteractionService';
 import { getNumberMessage, getLetterColor, getContrastTextColor, getBoardHighlightColor, getSetting } from '../../utils/settings';
+import { getVersionRoute, resolveVersionAlias } from '../../config/versions';
 import games from '../../data/games';
 import { AudienceInteractionModalManager } from '../../components/modals';
 import audienceInteractionsData from '../../data/audienceInteractions.json';
@@ -36,8 +38,24 @@ interface AudienceInteractionOptions {
 
 const ClientPage: React.FC<ClientPageProps> = () => {
   const [searchParams] = useSearchParams();
-  const roomId = searchParams.get('roomId');
-  const serverUrl = searchParams.get('serverUrl');
+
+  // Parse parameters from URL - support both old format and new base64 format
+  let roomId: string | null = null;
+  let serverUrl: string | null = null;
+
+  const base64Params = searchParams.get('params');
+  if (base64Params) {
+    // New format: base64-encoded JSON
+    const parsed = ServerInteractionService.parseClientParams(base64Params);
+    if (parsed) {
+      roomId = parsed.roomId;
+      serverUrl = parsed.serverUrl;
+    }
+  } else {
+    // Fallback to old format for backward compatibility
+    roomId = searchParams.get('roomId');
+    serverUrl = searchParams.get('serverUrl');
+  }
 
   // Initialize console logging - this will capture all console outputs and display in the log section
   const { logs, clearLogs } = useConsoleLog({ maxEntries: 200 });
@@ -672,7 +690,7 @@ const ClientPage: React.FC<ClientPageProps> = () => {
               <div className={styles.qrCodeSuccess}>
                 <div className={styles.qrCodeContainer}>
                   <QRCode
-                    value={`${window.location.origin}/BingoBoard/v5/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl || '')}`}
+                    value={window.location.href}
                     size={window.innerHeight <= 500 ? 100 : 140}
                     className={styles.boardQrCode}
                   />
@@ -799,6 +817,10 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             showRules={true}
           />
         )}
+      </div>
+
+      <div className={styles.copyright}>
+        <p>© 2025 Eric Gressman. All rights reserved.</p>
       </div>
     </AudienceInteractionModalManager>
   );

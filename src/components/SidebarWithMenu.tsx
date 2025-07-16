@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AudienceInteractionButtons from './AudienceInteractionButtons';
 import { getSetting, setSetting } from '../utils/settings';
-import { getVersionLabels, getVersionRoute } from '../config/versions';
+import {
+  getVersionLabels,
+  getVersionRoute,
+  getCurrentVersion,
+  shouldNavigateForVersionChange
+} from '../config/versions';
 import { AudienceInteractionType, AudienceInteractionOptions } from '../serverInteractions/types';
 import styles from './SidebarWithMenu.module.css';
 
@@ -45,32 +50,13 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
   };
   const handleVersionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedVersion = event.target.value;
+    const currentDefaultVersion = getSetting('defaultVersion', 'latest');
 
     // Update the setting
     setSetting('defaultVersion', selectedVersion);
 
-    // Check if we need to navigate
-    const shouldNavigate = () => {
-      // If we're on V4 and selecting something other than V4, navigate
-      if (window.location.pathname.includes('/v4/') && selectedVersion !== 'v4') {
-        return true;
-      }
-
-      // If we're on V5 and selecting V4, navigate
-      if (!window.location.pathname.includes('/v4/') && selectedVersion === 'v4') {
-        return true;
-      }
-
-      // If we're on V5 and selecting latest or v5, no need to navigate (they're the same)
-      if (!window.location.pathname.includes('/v4/') && (selectedVersion === 'latest' || selectedVersion === 'v5')) {
-        return false;
-      }
-
-      return false;
-    };
-
-    // Only navigate if necessary
-    if (shouldNavigate()) {
+    // Check if navigation is needed using data-driven logic
+    if (shouldNavigateForVersionChange(window.location.pathname, currentDefaultVersion, selectedVersion)) {
       const route = getVersionRoute(selectedVersion, 'root');
       if (route.external) {
         window.location.href = route.path;
@@ -80,15 +66,9 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
     }
   };
 
-  const getCurrentVersion = () => {
-    // First check if we're on V4 based on URL
-    if (window.location.pathname.includes('/v4/')) {
-      return 'v4';
-    }
-
-    // Otherwise, get the saved version setting
-    const savedVersion = getSetting('defaultVersion', 'latest');
-    return savedVersion;
+  const getCurrentVersionForSelector = () => {
+    const currentDefaultVersion = getSetting('defaultVersion', 'latest');
+    return getCurrentVersion(window.location.pathname, currentDefaultVersion);
   };
 
   const handleMenuClick = (href: string, label: string) => {
@@ -221,7 +201,7 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
                 <label htmlFor="version-select">Version:</label>
                 <select
                   id="version-select"
-                  value={getCurrentVersion()}
+                  value={getCurrentVersionForSelector()}
                   onChange={handleVersionChange}
                   className={styles.versionSelect}
                 >

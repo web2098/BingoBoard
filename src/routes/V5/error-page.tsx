@@ -89,6 +89,10 @@ export default function ErrorPage() {
             </div>
           </div>
         </div>
+
+        <div className={styles.copyright}>
+          <p>© 2025 Eric Gressman. All rights reserved.</p>
+        </div>
       </div>
     </>
   );

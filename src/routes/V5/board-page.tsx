@@ -5,8 +5,10 @@ import SidebarWithMenu from '../../components/SidebarWithMenu';
 import QRCode from '../../components/QRCode';
 import { BoardPreviewModal, GameBoard, OperatorIcon, FreeSpaceToggle } from '../../components/boards';
 import { useServerInteraction } from '../../serverInteractions/useServerInteraction';
+import ServerInteractionService from '../../serverInteractions/ServerInteractionService';
 import { GameState, StyleConfig, SessionConfig, AudienceInteractionType, AudienceInteractionOptions } from '../../serverInteractions/types';
 import { getNumberMessage, getSetting, getLetterColor, getContrastTextColor, getBoardHighlightColor } from '../../utils/settings';
+import { getVersionRoute, resolveVersionAlias } from '../../config/versions';
 import games from '../../data/games';
 import {
   startGameSession,
@@ -402,12 +404,19 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       setHasMultiplePatterns(false);
     }
   }, [gameData, settingsVersion]);
-
   // Print QR code URL when roomId is established
   useEffect(() => {
     if (isConnected && roomId) {
       const serverUrl = getSetting('serverUrl', '');
-      const qrCodeValue = `${window.location.origin}/BingoBoard/v5/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl)}`;
+      const currentVersion = getSetting('defaultVersion', 'latest');
+      const resolvedVersion = resolveVersionAlias(currentVersion);
+      const clientRoute = getVersionRoute(resolvedVersion, 'client');
+
+      // Generate base64 parameters
+      const base64Params = ServerInteractionService.generateClientParams(roomId, serverUrl);
+
+      // Build the QR code URL using the version-specific client route with base64 params
+      const qrCodeValue = `${window.location.origin}/BingoBoard/${resolvedVersion}${clientRoute.path}?params=${base64Params}`;
       console.log("QR Code URL:", qrCodeValue);
     }
   }, [roomId, isConnected]);
@@ -788,7 +797,12 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
             if (isConnected && roomId) {
               const serverUrl = getSetting('serverUrl', '');
-              const qrCodeValue = `${window.location.origin}/BingoBoard/v5/client?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl)}`;
+              const currentVersion = getSetting('defaultVersion', 'latest');
+              const resolvedVersion = resolveVersionAlias(currentVersion);
+              const clientRoute = getVersionRoute(resolvedVersion, 'client');
+
+              // Build the QR code URL using the version-specific client route
+              const qrCodeValue = `${window.location.origin}/BingoBoard/${resolvedVersion}${clientRoute.path}?roomId=${roomId}&serverUrl=${encodeURIComponent(serverUrl)}`;
 
               return (
                 <div className={styles.qrCodeHeader}>
@@ -891,6 +905,10 @@ const BoardPage: React.FC<BoardPageProps> = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className={styles.copyright}>
+        <p>© 2025 Eric Gressman. All rights reserved.</p>
       </div>
 
       {/* Board Preview Modal - Controlled by BoardPage state */}

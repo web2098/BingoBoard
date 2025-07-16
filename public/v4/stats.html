@@ -6,6 +6,37 @@
     <script src="stats.js"></script>
 
     <style>
+        /* Ensure body takes full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Main content wrapper */
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Content grows to fill available space */
+        .content-wrapper {
+            flex: 1;
+        }
+
+        /* Copyright footer sticks to bottom */
+        .copyright-footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid #e9ecef;
+            background-color: #f8f9fa;
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+        }
+
         /* Create a style to put info_div on the left half and game_info on the right half */
         #full_body {
             display: flex;
@@ -45,24 +76,41 @@
     </style>
 </head>
 <body>
-    <div id="full_body">
-        <div id="info_div">
-            <div id="info_all_div">
-                <h1 id="gamesPlayed">All Game Stats:</h1>
-                <h2 id="topTenNumbers">Top Ten Numbers:</h2>
-                <h2 id="bottomTenNumbers">Bottom Ten Numbers:</h2>
-                <h2 id="notCalledNumbers">The following numbers were never called:</h2>
-            </div>
-            <div id="info_filtered_div">
-                <h1 id="gamesPlayed_filtered">All Game Stats</h1>
-                <h2 id="topTenNumbers_withoutBlackout">Top Ten Numbers (W/O Blackout):</h2>
-                <h2 id="bottomTenNumbers_withoutBlackout">Bottom Ten Numbers (W/O Blackout):</h2>
-                <h2 id="notCalledNumbers_withoutBlackout">The following numbers were never called(Without Blackout):</h2>
-            </div>
-            <div id="heat_map"> </div>
-        </div>
-        <div id="game_info">
+    <div class="main-content">
+        <div class="content-wrapper">
+            <div id="full_body">
+                <div id="info_div">
+                    <div id="info_all_div">
+                        <h1 id="gamesPlayed">All Game Stats:</h1>
+                        <h2 id="topTenNumbers">Top Ten Numbers:</h2>
+                        <h2 id="bottomTenNumbers">Bottom Ten Numbers:</h2>
+                        <h2 id="notCalledNumbers">The following numbers were never called:</h2>
+                    </div>
+                    <div id="info_filtered_div">
+                        <h1 id="gamesPlayed_filtered">All Game Stats</h1>
+                        <h2 id="topTenNumbers_withoutBlackout">Top Ten Numbers (W/O Blackout):</h2>
+                        <h2 id="bottomTenNumbers_withoutBlackout">Bottom Ten Numbers (W/O Blackout):</h2>
+                        <h2 id="notCalledNumbers_withoutBlackout">The following numbers were never called(Without Blackout):</h2>
+                    </div>
+                    <div id="heat_map"> </div>
+                </div>
+                <div id="game_info">
 
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        // Add copyright footer after all content is loaded
+        window.addEventListener('load', function() {
+            // Wait a bit to ensure all dynamic content is added
+            setTimeout(function() {
+                const copyrightDiv = document.createElement('div');
+                copyrightDiv.className = 'copyright-footer';
+                copyrightDiv.innerHTML = '© 2025 Eric Gressman. All rights reserved.';
+                document.body.appendChild(copyrightDiv);
+            }, 100);
+        });
+    </script>
 </body>

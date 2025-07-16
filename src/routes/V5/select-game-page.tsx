@@ -6,7 +6,9 @@ import games from '../../data/games';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
 import QRCode from '../../components/QRCode';
 import { useServerInteraction } from '../../serverInteractions/useServerInteraction';
+import ServerInteractionService from '../../serverInteractions/ServerInteractionService';
 import { generateWelcomeMessage, getSetting, getBoardHighlightColor, getContrastTextColor } from '../../utils/settings';
+import { getVersionRoute, resolveVersionAlias } from '../../config/versions';
 import { switchToNewGame } from '../../utils/telemetry';
 
 // Import Swiper React components
@@ -290,11 +292,23 @@ const WelcomePanel = ({ isConnected, roomId, connectionError }: {
     }
 
     if (isConnected && roomId) {
+      const currentVersion = getSetting('defaultVersion', 'latest');
+      const resolvedVersion = resolveVersionAlias(currentVersion);
+      const clientRoute = getVersionRoute(resolvedVersion, 'client');
+
+      // Generate base64 parameters
+      const serverUrl = getSetting('serverUrl', '');
+      const base64Params = ServerInteractionService.generateClientParams(roomId, serverUrl);
+
+      // Build the QR code URL using the version-specific client route with base64 params
+      const qrCodeValue = `${window.location.origin}/BingoBoard/${resolvedVersion}${clientRoute.path}?params=${base64Params}`;
+      console.log(`Generated QR Code Value: ${qrCodeValue}`);
+
       return (
         <div className={styles.qrCodeSuccess}>
           <div className={styles.qrCodeContainer}>
             <QRCode
-              value={`${window.location.origin}/BingoBoard/v5/client?roomId=${roomId}&serverUrl=${encodeURIComponent(getSetting('serverUrl', ''))}`}
+              value={qrCodeValue}
               size={200}
               className={styles.gameQrCode}
             />
@@ -737,7 +751,18 @@ const SelectGamePage = () => {
       75 // total numbers
     );
 
-    navigate('/board');
+    // Navigate to board using version-aware routing
+    const currentVersion = getSetting('defaultVersion', 'latest');
+    const resolvedVersion = resolveVersionAlias(currentVersion);
+    const boardRoute = getVersionRoute(resolvedVersion, 'board');
+
+    if (boardRoute.external) {
+      // For external routes, use window.location.href
+      window.location.href = boardRoute.path;
+    } else {
+      // For internal routes, use React Router navigation
+      navigate(boardRoute.path);
+    }
   };
 
   return (

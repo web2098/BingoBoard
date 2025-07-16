@@ -307,13 +307,14 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
   );
 
   return (
-    <div className={styles.telemetryPage}>
-      <SidebarWithMenu
-        currentPage="telemetry"
-        pageButtons={pageButtons}
-      />
+    <>
+      <div className={styles.telemetryPage}>
+        <SidebarWithMenu
+          currentPage="telemetry"
+          pageButtons={pageButtons}
+        />
 
-      <div className={styles.telemetryContent}>
+        <div className={styles.telemetryContent}>
         {/* Tonight's Stats and Games Side by Side */}
         <div className={styles.tonightSection}>
           {/* Left Side - Summary Cards and Tonight's Numbers */}
@@ -643,6 +644,11 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
         </div>
       </div>
     </div>
+
+    <div className={styles.copyright}>
+      <p>© 2025 Eric Gressman. All rights reserved.</p>
+    </div>
+    </>
   );
 };
 

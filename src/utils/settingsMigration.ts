@@ -531,7 +531,98 @@ export function migrateV4ToV5(): {
 }
 
 /**
- * Main migration function - only supports V4 to V5 upward migration
+ * Check if migration is needed from a specific version to V5
+ */
+export function isMigrationNeededFromVersion(fromVersion: string): boolean {
+  if (fromVersion === 'v4') {
+    return isMigrationNeeded();
+  }
+  // For other versions, check if we have any migration mappings for that version
+  const versionMappings = settingsVersionUpdateData.filter(mapping =>
+    mapping.v4_id && mapping.v4_id.startsWith(fromVersion.toLowerCase())
+  );
+  return versionMappings.length > 0 && versionMappings.some(mapping =>
+    localStorage.getItem(mapping.v4_id) !== null
+  );
+}
+
+/**
+ * Generic migration function that attempts to migrate from any version to V5
+ */
+export function migrateVersionToV5(fromVersion: string): {
+  success: boolean;
+  migratedCount: number;
+  errors: string[];
+  migrations: MigrationDetail[];
+  complexMigrations: ComplexMigrationResult[];
+  v4Settings: { [key: string]: any };
+  v5Settings: { [key: string]: any };
+  requiresUserApproval: boolean;
+  skipped: boolean;
+} {
+  console.log(`Attempting migration from ${fromVersion} to V5`);
+
+  // Check if we have V4 migration specifically
+  if (fromVersion === 'v4') {
+    const result = migrateV4ToV5();
+    return {
+      ...result,
+      skipped: false
+    };
+  }
+
+  // For other versions, check if we have migration mappings
+  const versionMappings = settingsVersionUpdateData.filter(mapping =>
+    mapping.v4_id && mapping.v4_id.startsWith(fromVersion.toLowerCase())
+  );
+
+  if (versionMappings.length === 0) {
+    console.log(`No migration mappings found for ${fromVersion} to V5, skipping migration`);
+    return {
+      success: true,
+      migratedCount: 0,
+      errors: [],
+      migrations: [],
+      complexMigrations: [],
+      v4Settings: {},
+      v5Settings: {},
+      requiresUserApproval: false,
+      skipped: true
+    };
+  }
+
+  // Check if any settings actually exist for this version
+  const hasSettings = versionMappings.some(mapping =>
+    localStorage.getItem(mapping.v4_id) !== null
+  );
+
+  if (!hasSettings) {
+    console.log(`No settings found for ${fromVersion}, skipping migration`);
+    return {
+      success: true,
+      migratedCount: 0,
+      errors: [],
+      migrations: [],
+      complexMigrations: [],
+      v4Settings: {},
+      v5Settings: {},
+      requiresUserApproval: false,
+      skipped: true
+    };
+  }
+
+  // For now, fallback to V4 migration logic for other versions
+  // This can be extended in the future to handle version-specific migrations
+  console.log(`Using V4 migration logic for ${fromVersion} (may require updates for full compatibility)`);
+  const result = migrateV4ToV5();
+  return {
+    ...result,
+    skipped: false
+  };
+}
+
+/**
+ * Main migration function - supports V4 to V5 and attempts other versions
  */
 export function migrateSettings(fromVersion: string, toVersion: string): {
   success: boolean;
@@ -543,10 +634,18 @@ export function migrateSettings(fromVersion: string, toVersion: string): {
 } {
   console.log(`Migrating settings from ${fromVersion} to ${toVersion}`);
 
-  if (fromVersion === 'v4' && toVersion === 'v5') {
-    return migrateV4ToV5();
+  if (toVersion === 'v5') {
+    const result = migrateVersionToV5(fromVersion);
+    return {
+      success: result.success,
+      migratedCount: result.migratedCount,
+      errors: result.errors,
+      migrations: result.migrations,
+      v4Settings: result.v4Settings,
+      v5Settings: result.v5Settings
+    };
   } else {
-    const errorMsg = `Unsupported migration path: ${fromVersion} to ${toVersion}. Only V4 to V5 migration is supported.`;
+    const errorMsg = `Unsupported migration target: ${toVersion}. Only migration to V5 is supported.`;
     console.error(errorMsg);
     return {
       success: false,

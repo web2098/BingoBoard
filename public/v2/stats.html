@@ -1,0 +1,105 @@
+<head>
+    <style>
+        /* Ensure body takes full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Main content wrapper */
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Content grows to fill available space */
+        .content-wrapper {
+            flex: 1;
+        }
+
+        /* Copyright footer sticks to bottom */
+        .copyright-footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            background-color: #f8f9fa;
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* Floating button to latest version */
+        .version-upgrade-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .version-upgrade-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .version-upgrade-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="stats.js"></script>
+    <script>
+        function tryLatestVersion() {
+            // Redirect to the migration page which will handle the migration process
+            localStorage.setItem('defaultVersion', 'latest');
+            // Use relative path that works on GitHub Pages
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.includes('/BingoBoard/') ? '/BingoBoard' : '';
+            window.location.href = basePath + '/migration?from=v2';
+        }
+    </script>
+</head>
+<body>
+    <div class="main-content">
+        <div class="content-wrapper">
+            <!-- Floating button to upgrade to latest version -->
+            <button class="version-upgrade-btn" onclick="tryLatestVersion()" title="Upgrade to the latest version">
+                ⬆️ Latest Version
+            </button>
+
+            <h1 id="gamesPlayed">Games Played:</h1>
+            <h2 id="topTenNumbers">Top Ten Numbers:</h2>
+
+            <canvas id="barGraph" height="100"></canvas>
+            <h2 id="notCalledNumbers">The following numbers were never called:</h2>
+
+            <div style="width: 100%; overflow-x: auto; overflow-y: hidden">
+                <div style="width: 4000px; height: 300px">
+                  <canvas id="allGraph" height="300" width="0"></canvas>
+                </div>
+              </div>
+        </div>
+
+        <!-- Copyright Footer -->
+        <div class="copyright-footer">
+            © 2025 Eric Gressman. All rights reserved.
+        </div>
+    </div>
+</body>

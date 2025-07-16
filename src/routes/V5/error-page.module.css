@@ -117,6 +117,22 @@
   line-height: 1.5;
 }
 
+/* Copyright Section */
+.copyright {
+  text-align: center;
+  padding: 24px 0;
+  margin-top: 40px;
+  border-top: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+}
+
+.copyright p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .errorPage {

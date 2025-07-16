@@ -2,11 +2,11 @@
 .migrationPage {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   background-color: #f5f5f5;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* Vertical off-white sidebar space */
@@ -16,7 +16,7 @@
   top: 0;
   left: 0;
   width: 80px;
-  height: 100vh;
+  height: 100%;
   background-color: #f8f9fa;
   z-index: 1;
   border-right: 1px solid #e9ecef;
@@ -25,7 +25,7 @@
 .migrationContainer {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  flex: 1;
   padding-left: 100px; /* Space for sidebar + margin */
   padding-right: 20px;
   padding-top: 20px;
@@ -76,6 +76,10 @@
 
 .migrationActions {
   margin: 30px 0;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .startMigrationBtn {
@@ -94,6 +98,26 @@
 .startMigrationBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.skipMigrationBtn {
+  background: none;
+  color: #6c757d;
+  border: 2px solid #6c757d;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.skipMigrationBtn:hover {
+  background: #6c757d;
+  color: white;
+  transform: translateY(-2px);
 }
 
 .backLink {
@@ -480,6 +504,64 @@
 .backLink:hover {
   border-color: #a0aec0;
   background: #f7fafc;
+}
+
+/* Green circle with checkmark for skip state */
+.checkmarkContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.greenCircle {
+  width: 80px;
+  height: 80px;
+  background-color: #28a745;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  animation: checkmarkAppear 0.6s ease-out;
+}
+
+.checkmark {
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+@keyframes checkmarkAppear {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Copyright Section */
+.copyright {
+  text-align: center;
+  padding: 24px 0;
+  margin-top: 40px;
+  border-top: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+  width: 100%;
+  position: relative;
+}
+
+.copyright p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
 }
 
 /* Responsive Design */

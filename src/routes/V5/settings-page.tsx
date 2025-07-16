@@ -27,7 +27,11 @@ import { migrateV4ToV5, isMigrationNeeded, MigrationDetail } from '../../utils/s
 import { getMappedAsset } from '../../utils/assetMapping';
 
 // Import version configuration
-import { getVersionRoute } from '../../config/versions';
+import {
+  getVersionRoute,
+  getCurrentVersion,
+  shouldNavigateForVersionChange
+} from '../../config/versions';
 
 // Import telemetry utilities
 import {
@@ -989,29 +993,10 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
     if (property.id === 'defaultVersion') {
       const handleVersionChange = (value: string) => {
         onChange(value);
+        const currentDefaultVersion = getSetting('defaultVersion', 'latest');
 
-        // Check if we need to navigate
-        const shouldNavigate = () => {
-          // If we're on V4 and selecting something other than V4, navigate
-          if (window.location.pathname.includes('/v4/') && value !== 'v4') {
-            return true;
-          }
-
-          // If we're on V5 and selecting V4, navigate
-          if (!window.location.pathname.includes('/v4/') && value === 'v4') {
-            return true;
-          }
-
-          // If we're on V5 and selecting latest or v5, no need to navigate (they're the same)
-          if (!window.location.pathname.includes('/v4/') && (value === 'latest' || value === 'v5')) {
-            return false;
-          }
-
-          return false;
-        };
-
-        // Only navigate if necessary
-        if (shouldNavigate()) {
+        // Check if navigation is needed using data-driven logic
+        if (shouldNavigateForVersionChange(window.location.pathname, currentDefaultVersion, value)) {
           const route = getVersionRoute(value, 'root');
           if (window.confirm(`Switch to ${value === 'latest' ? 'Latest' : value.toUpperCase()} version? This will navigate away from the current page.`)) {
             if (route.external) {
@@ -1615,6 +1600,10 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className={styles.copyright}>
+        <p>© 2025 Eric Gressman. All rights reserved.</p>
       </div>
 
       {/* Migration Results Modal */}
