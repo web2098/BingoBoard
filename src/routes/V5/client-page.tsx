@@ -573,6 +573,10 @@ const ClientPage: React.FC<ClientPageProps> = () => {
           {/* Client Log Section */}
           <ClientLog logs={logs} onClearLogs={clearLogs} />
         </div>
+
+        <div className={styles.copyright}>
+          <p>© 2025 Eric Gressman. All rights reserved.</p>
+        </div>
       </AudienceInteractionModalManager>
     );
   }
@@ -590,6 +594,10 @@ const ClientPage: React.FC<ClientPageProps> = () => {
           {/* Client Log Section */}
           <ClientLog logs={logs} onClearLogs={clearLogs} />
         </div>
+
+        <div className={styles.copyright}>
+          <p>© 2025 Eric Gressman. All rights reserved.</p>
+        </div>
       </AudienceInteractionModalManager>
     );
   }
@@ -606,6 +614,10 @@ const ClientPage: React.FC<ClientPageProps> = () => {
           {/* Client Log Section */}
           <ClientLog logs={logs} onClearLogs={clearLogs} />
         </div>
+
+        <div className={styles.copyright}>
+          <p>© 2025 Eric Gressman. All rights reserved.</p>
+        </div>
       </AudienceInteractionModalManager>
     );
   }
@@ -621,6 +633,10 @@ const ClientPage: React.FC<ClientPageProps> = () => {
 
           {/* Client Log Section */}
           <ClientLog logs={logs} onClearLogs={clearLogs} />
+        </div>
+
+        <div className={styles.copyright}>
+          <p>© 2025 Eric Gressman. All rights reserved.</p>
         </div>
       </AudienceInteractionModalManager>
     );
