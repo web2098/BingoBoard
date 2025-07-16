@@ -1,0 +1,206 @@
+<head>
+
+    <style>
+        /* Ensure body takes full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Main content wrapper */
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Content grows to fill available space */
+        .content-wrapper {
+            flex: 1;
+        }
+
+        /* Copyright footer sticks to bottom */
+        .copyright-footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            background-color: #f8f9fa;
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* Floating button to latest version */
+        .version-upgrade-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .version-upgrade-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .version-upgrade-btn:active {
+            transform: translateY(0);
+        }
+
+        #lnpdir {
+            display: flex;
+            justify-content: space-between;
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+        #nhdir {
+            display: flex;
+            justify-content: space-between;
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="index.js"></script>
+    <script>
+
+        window.onload = function() {
+            var colorPickers = [
+                {
+                    id: "Main Background Color",
+                    key: "main-bg-color"
+                },
+                {
+                    id: "Main Text Color",
+                    key: "main-font-color",
+                },
+                {
+                    id: "Selected Number Background Color",
+                    key: 'select-tab-color'
+                },
+                {
+                    id: 'Selected Number Text Color',
+                    key: 'select-tab-text-color'
+                },
+                {
+                    id: "Default Number Background Color",
+                    key: 'unselect-tab-color'
+                },
+                {
+                    id: 'Default Number Text Color',
+                    key: 'unselect-tab-text-color'
+                }
+            ];
+
+            for (var i = 0; i < colorPickers.length; i++) {
+                var colorPickerLabel = document.createElement('label');
+                colorPickerLabel.setAttribute('for', colorPickers[i].key);
+                colorPickerLabel.textContent = colorPickers[i].id;
+
+                var colorPicker = document.createElement('input');
+                colorPicker.setAttribute('type', 'color');
+                colorPicker.setAttribute('id', colorPickers[i].key);
+                colorPicker.setAttribute('name', colorPickers[i].key);
+                colorPicker.setAttribute('value', localStorage.getItem(colorPickers[i].key));
+                //console.log('Creating picker for:', colorPickers[i].key);
+                //console.log('Value:', localStorage.getItem(colorPickers[i].key));
+
+                // Create a new row
+                var newRow = document.createElement('div');
+                newRow.classList.add('row', 'color-picker-row'); // Add 'color-picker-row' class
+                newRow.style.display = 'flex'; // Set this div to be a flex container
+                newRow.style.maxWidth = '300px'; // Set the max width of the row
+                newRow.style.marginBottom = '10px';
+                newRow.style.justifyContent = 'space-between'; // Push the label to the left and the color picker to the right
+
+                // Append label and color picker to the new row
+                newRow.appendChild(colorPickerLabel);
+                newRow.appendChild(colorPicker);
+
+                // Append the new row to the container
+                var container = document.getElementsByClassName('container')[0];
+                container.appendChild(newRow);
+            }
+
+            document.getElementById('applyButton').addEventListener('click', function() {
+                var lastDirection = document.getElementById('last-direction').value;
+                localStorage.setItem('last-number-dir', lastDirection);
+                var lastDirection = document.getElementById('history-direction').value;
+                localStorage.setItem('number-history-dir', lastDirection);
+
+                var colorPickers = document.getElementsByTagName('input');
+
+                for (var i = 0; i < colorPickers.length; i++) {
+                    console.log('Setting', colorPickers[i].id, 'to', colorPickers[i].value);
+                    localStorage.setItem(colorPickers[i].id, colorPickers[i].value);
+                }
+                window.location.href = 'index.html';
+            });
+            document.getElementById('resetButton').addEventListener('click', function() {
+                setDefaultSettings(true)
+                window.location.href = 'index.html';
+            });
+        }
+
+        function tryLatestVersion() {
+            // Redirect to the migration page which will handle the migration process
+            localStorage.setItem('defaultVersion', 'latest');
+            // Use relative path that works on GitHub Pages
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.includes('/BingoBoard/') ? '/BingoBoard' : '';
+            window.location.href = basePath + '/migration?from=v2';
+        }
+    </script>
+</head>
+
+<body>
+    <div class="main-content">
+        <div class="content-wrapper">
+            <!-- Floating button to upgrade to latest version -->
+            <button class="version-upgrade-btn" onclick="tryLatestVersion()" title="Upgrade to the latest version">
+                ⬆️ Latest Version
+            </button>
+
+            <div class="container">
+                <h1>Settings</h1>
+                <p>Change your settings here.</p>
+                <div class="row" id="lnpdir">
+                    <label for="last-direction">Last Number Played Location:</label>
+                    <select id="last-direction">
+                        <option value="top">Top</option>
+                        <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="row" id="nhdir">
+                    <label for="history-direction">Number History Location:</label>
+                    <select id="history-direction">
+                        <option value="right">Right</option>
+                        <option value="left">Left</option>
+                    </select>
+                </div>
+            </div>
+            <button id="applyButton">Apply</button>
+            <button id="resetButton">Reset To Default</button>
+        </div>
+
+        <!-- Copyright Footer -->
+        <div class="copyright-footer">
+            © 2025 Eric Gressman. All rights reserved.
+        </div>
+    </div>
+</body>

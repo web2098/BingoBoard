@@ -1,0 +1,71 @@
+[
+    {
+        "id": "applause",
+        "content":{"text": "Applause"},
+        "icon": {"emoji": "👏"},
+        "description": "Show Audience Applause Modal",
+        "pages": ["select-game", "game-board"],
+        "shortcuts":["a", "1"]
+    },
+    {
+        "id": "boo",
+        "content":{"text": "Booooooo"},
+        "icon": {"emoji": "👻"},
+        "description": "Show Audience Boo Modal",
+        "pages": ["select-game", "game-board"],
+        "shortcuts":["b", "2"]
+    },
+    {
+        "id": "drink",
+        "content":{"text": "Drink"},
+        "icon": {"emoji": "🍺"},
+        "description": "Show Audience Drink Modal",
+        "pages": ["select-game", "game-board"],
+        "shortcuts":["d", "3"]
+    },
+    {
+        "id": "welcomeCard",
+        "content":{"text": "Welcome Card"},
+        "icon": {"emoji": "👋"},
+        "action": {
+            "function": "showWelcomeModal",
+            "args": []
+        },
+        "description": "Show Welcome Card Modal",
+        "pages": ["select-game"],
+        "shortcuts":["h", "0"]
+    },
+    {
+        "id": "winner",
+        "content":{"text": "Winner"},
+        "icon": {"emoji": "🎉"},
+        "description": "Show Winner Applause Modal",
+        "pages": ["game-board"],
+        "shortcuts":["w", "4"]
+    },
+    {
+        "id": "battle",
+        "icon": {"emoji": "⚔️"},
+        "content":{
+            "text": "To The Death!",
+            "img": "/images/audience-interactions/battle.jpg"
+        },
+        "description": "Show Audience Battle Modal",
+        "pages": ["game-board"],
+        "shortcuts":["x", "5"]
+    },
+    {
+        "id": "executeOrder66",
+        "icon":{"img": "/images/audience-interactions/lightsaber.png"},
+        "content":{
+            "img": "/images/audience-interactions/order66.gif",
+            "audio": "/audio/audience-interactions/order66.mp3"
+        },
+        "auto":{
+            "number": 66
+        },
+        "description": "Show Execute Order 66 Modal",
+        "pages": ["game-board"],
+        "shortcuts":["l", "6"]
+    }
+]

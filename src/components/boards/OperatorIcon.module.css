@@ -1,0 +1,17 @@
+/* ==============================================
+   OPERATOR ICON STYLES
+   ============================================== */
+
+.operatorIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7em;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
+}

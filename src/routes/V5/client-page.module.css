@@ -1,0 +1,512 @@
+/* Client Page Styles */
+.clientPage {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-color, #ffffff);
+  color: var(--text-color, #000000);
+
+  box-sizing: border-box;
+  align-items: center;;
+}
+
+/* Header Section - Match Board Page Structure */
+.boardHeader {
+  display: grid;
+  grid-template-columns:  1fr 2fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  width: 98%;
+  align-items: start;
+}
+
+/* Game Preview Section */
+.gamePreviewMini {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.gamePreviewHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.5rem; /* Reduced from 1rem */
+}
+
+.gamePreviewHeader h3 {
+  margin: 0 0 0.25rem 0; /* Reduced from 0.5rem */
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  color: #333;
+}
+
+.freeSpaceStatus {
+  margin: 0 0 0.25rem 0; /* Small margin below free space status */
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+}
+
+.miniBoard {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem; /* Reduced from 1rem */
+}
+
+.numberCount {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Game Board Components */
+.gameBoardsContainer {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.gameBoardsContainer.singleBoard {
+  justify-content: center;
+}
+
+.gameBoardsContainer.dualBoard {
+  justify-content: center;
+}
+
+.gameBoard {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  gap: 1px;
+  background-color: #ccc;
+  border: 1px solid #999;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.boardRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+}
+
+.boardCell {
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #333;
+  font-size: 1.0rem;
+}
+
+.boardCell.highlighted {
+  background-color: var(--board-highlight-color, #1e4d2b);
+  color: var(--highlight-text-color, #ffffff);
+}
+
+.boardCell.freeSpace {
+    font-size: .6rem;
+}
+
+.operatorIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: bold;
+  color: #666;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 0.125rem 0.25rem;
+  min-width: 25px;
+  height: 20px;
+}
+
+/* Fallback mini grid */
+.miniGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background-color: #ccc;
+  border: 2px solid #999;
+  border-radius: 4px;
+  width: 80px;
+  height: 80px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.miniCell {
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Last Number Display */
+.headerCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lastNumberSection {
+  text-align: center;
+}
+
+.lastNumberDisplay {
+  margin-bottom: 1rem;
+}
+
+.bingoCardsGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.lastNumberText {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.bingoLetterCard {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 3px solid rgba(0, 0, 0, 0.1);
+}
+
+.bingoNumberCard {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  border: 4px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Header Right - QR Code */
+.headerRight {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.headerLeft{
+  flex-grow: 1;
+}
+
+.qrCodeHeader {
+  text-align: center;
+}
+
+.qrCodeHeader h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.qrCodeSuccess {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qrCodeContainer {
+  background: white;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 200px;
+  box-sizing: border-box;
+}
+
+.boardQrCode {
+  display: block;
+}
+
+/* Bingo Grid Section */
+.bingoGridSection {
+  margin-bottom: 1rem;
+  width: 90%;
+  min-width: 388px;
+}
+
+.bingoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background-color: #ddd;
+  border-radius: 8px;
+  padding: 4px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.bingoRow {
+  display: flex;
+  gap: 2px;
+}
+
+.rowLetter {
+  flex: 0 0 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 4px;
+  min-width: 40px;
+}
+
+.bingoCell {
+  flex: 1;
+  height: 60px;
+  background-color: #ffffff;
+  border: 2px solid #e0e0e0;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.2s ease;
+  cursor: default; /* Not clickable for clients */
+}
+
+.bingoCell.called {
+  transform: scale(0.95);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Horizontal Number History */
+.numberHistorySection {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e0e0e0;
+  width: 90%;
+}
+
+.numberHistorySection h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  color: #333;
+  text-align: center;
+}
+
+.horizontalHistoryList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.historyNumber {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.noNumbers {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+}
+
+/* Error and Loading States */
+.errorMessage,
+.loadingMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e0e0e0;
+  margin: 2rem auto;
+  max-width: 500px;
+}
+
+.errorMessage h2 {
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+.loadingMessage h2 {
+  color: #0066cc;
+  margin-bottom: 1rem;
+}
+
+.errorMessage p,
+.loadingMessage p {
+  color: #666;
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.specialCalloutSection {
+  height: 10px;
+}
+
+.specialCallout {
+  margin: 0;
+  font-size: 2rem;
+  color: #e74c3c;
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* Copyright Section */
+.copyright {
+  text-align: center;
+  padding: 24px 0;
+  margin-top: 40px;
+  border-top: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+  width: 100%;
+  position: relative;
+}
+
+.copyright p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+}
+
+@media (orientation: portrait) {
+  .boardHeader {
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-around;
+    gap: 1rem;
+  }
+  .headerCenter {
+    order: 3;
+  }
+  .headerRight {
+    order: 1;
+  }
+  .headerLeft{
+    order: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .clientPage {
+    padding: 0.5rem;
+  }
+
+  .bingoCell {
+    height: 50px;
+    font-size: 1rem;
+  }
+
+  .rowLetter {
+    flex: 0 0 50px;
+    height: 50px;
+    font-size: 1.2rem;
+    min-width: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bingoCell {
+    height: 40px;
+    font-size: 0.9rem;
+  }
+
+  .rowLetter {
+    flex: 0 0 40px;
+    height: 40px;
+    font-size: 1rem;
+    min-width: 30px;
+  }
+}
+
+/* Clickable Preview Styles */
+.clickablePreview {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.clickablePreview:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.miniGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  width: 80px;
+  height: 80px;
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 4px;
+  background: white;
+}
+
+.miniCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #666;
+  border-radius: 2px;
+  font-weight: bold;
+  font-size: 0.7em;
+  background: #f8f9fa;
+  color: #333;
+}

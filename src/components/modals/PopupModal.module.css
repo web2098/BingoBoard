@@ -1,0 +1,134 @@
+/* Popup Modal Styles */
+.popupModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.popupModalContent {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+/* Image popup styles - fills entire page */
+.popupModalImg {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Text popup styles */
+.popupModalText {
+  color: #ffffff;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  padding: 40px;
+  max-width: 80vw;
+  word-wrap: break-word;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.popupModalCloseHint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffffff;
+  font-size: 0.9rem;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 8px 16px;
+  border-radius: 20px;
+  opacity: 0.9;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+/* Font size variations for text popup */
+.popupModalText.small {
+  font-size: 2rem;
+}
+
+.popupModalText.medium {
+  font-size: 3rem;
+}
+
+.popupModalText.large {
+  font-size: 4rem;
+}
+
+.popupModalText.xlarge {
+  font-size: 6rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .popupModalText.small {
+    font-size: 1.5rem;
+  }
+
+  .popupModalText.medium {
+    font-size: 2rem;
+  }
+
+  .popupModalText.large {
+    font-size: 2.5rem;
+  }
+
+  .popupModalText.xlarge {
+    font-size: 3.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .popupModalText {
+    padding: 20px;
+    max-width: 90vw;
+  }
+
+  .popupModalText.small {
+    font-size: 1.2rem;
+  }
+
+  .popupModalText.medium {
+    font-size: 1.5rem;
+  }
+
+  .popupModalText.large {
+    font-size: 2rem;
+  }
+
+  .popupModalText.xlarge {
+    font-size: 2.5rem;
+  }
+
+  .popupModalCloseHint {
+    bottom: 15px;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}

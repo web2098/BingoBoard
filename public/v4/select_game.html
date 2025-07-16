@@ -1,0 +1,866 @@
+<head>
+    <style>
+        table {
+            user-select: none;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-rows: auto auto auto auto; /* Creates three rows */
+            grid-template-columns: 1fr 1fr 1fr; /* Creates two columns */
+        }
+        #button_container {
+            display: flex;
+            justify-content: space-between;
+            grid-row:4;
+            grid-column: 1 / span 3;
+        }
+
+        #back_button {
+            margin-left: 10px;
+            font-size: 40px;
+        }
+
+        #next_button {
+            margin-right: 10px;
+            font-size: 40px;
+        }
+
+        #play_game {
+            font-size: 40px;
+        }
+
+        #welcome_view{
+            grid-column: 3; /* Places these divs in the first column */
+            grid-row: 1 / span 2;
+            display: flex; /* Enable Flexbox */
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center; /* Add this line */
+        }
+        #welcome_message{
+            font-size: 3vw; /* Adjust as needed */
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+        #game_rules{
+            font-size: 2.0vw; /* Adjust as needed */
+            margin-top: 2vh;
+        }
+        #free_space_message{
+            grid-column: 2; /* Places these divs in the first column */
+            grid-row: 1 / span 2;
+            font-size: 2vw; /* Adjust as needed */
+            margin-bottom: 0;
+            margin-top: 2vh;
+            user-select: none;
+        }
+        #game_name{
+            grid-column: 1 / span 1; /* Places these divs in the first column */
+            grid-row: 1;
+            display: flex; /* Enable Flexbox */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            font-size: 3vw; /* Adjust as needed */
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+
+        .multi_table_operator{
+            margin-left: 15px;
+        }
+        #full_view{
+            grid-column: 1 / span 2; /* Places these divs in the first column */
+            grid-row: 2;
+            display: flex; /* Enable Flexbox */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            min-height: 68vh;
+            max-height: 68vh;
+            margin-top: -20px;
+        }
+        #full_table td{
+            min-width:  10vw;
+            max-width:  10vw;
+            min-height: 10vw;
+            max-height: 10vw;
+            font-size: 10vh; /* Adjust as needed */
+            border: 1px solid black; /* Adjust as needed */
+        }
+        /* Games require pattern on both boards */
+        .full_table_multi{
+            margin-left: 20px;
+        }
+        .full_table_multi td{
+            font-size: 6vh; /* Adjust as needed */
+            min-width:  5vw;
+            max-width:  5vw;
+            min-height: 5vw;
+            max-height: 5vw;
+            border: 1px solid black; /* Adjust as needed */
+        }
+
+        #preview_table td{
+            border: 1px solid black; /* Adjust as needed */
+
+            min-width:  1vw;
+            max-width:  1vw;
+            min-height: 1vw;
+            max-height: 1vw;
+            font-size: 1.7vh; /* Adjust as needed */
+        }
+        .swiper-container {
+            display: grid;
+            grid-template-rows: auto; /* Creates three rows */
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr; /* Creates two columns */
+            grid-column: 1 / span 3; /* Places these divs in the second column */
+            grid-row: 3;
+        }
+        body {
+            overflow-x: hidden;
+        }
+
+        #emoji_actions{
+            user-select: none;
+            margin-left: -10%;
+        }
+        #clap{
+            user-select: none;
+            font-size: 200%;
+            margin: 0px;
+
+        }
+        #ghost{
+            user-select: none;
+            font-size: 200%;
+            margin: 0px;
+        }
+        #beer{
+            user-select: none;
+            font-size: 200%;
+            margin: 0px;
+        }
+        #party{
+            user-select: none;
+            font-size: 200%;
+            margin: 0px;
+        }
+        #skull{
+            user-select: none;
+            font-size: 200%;
+            margin: 0px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            color: #307743;
+            text-align: center;
+            font-family: 'DotGothic16', sans-serif;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+
+        }
+
+        .blink-text{
+            margin: 0;
+            text-align: center;
+            vertical-align:middle;
+            font-size: 300%;
+        }
+
+        .container {
+            border: 3em solid #307743;
+            position: relative;
+            width: 50%;
+            height: 20%;
+            top: 35%;
+            left: 20%;
+            border-radius: 50px;
+        }
+
+        .rectangle {
+            width: 100%;
+            height: 100%;
+            background-color: #F5F0B9;
+            border-radius: 5px;
+            clip:auto;
+        }
+        #death_msg {
+            color: red;
+            text-align: center;
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            font-size: 1000%;
+            transform: translate(-50%, -50%);
+        }
+        .circle {
+            background-color: yellow;
+            border-radius: 50%;
+            position: absolute;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% {
+                background-color: #F5CE17;
+                box-shadow: none;
+            }
+            50% {
+                background-color: #FFFF00;
+                box-shadow: 0 0 10px #FFFF00;
+            }
+            100% {
+                background-color: #F5CE17;
+                box-shadow: none;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="games.js"></script>
+    <script src="utilities.js"></script>
+    <script>
+        var selected_game = null;
+        var current_game = 0;
+        var room_connection = null;
+        let retryTime = 1000; // Initial retry time in milliseconds
+        //var preview_index = 0;
+
+        function hide_element_by_id(board_name)
+        {
+            var table = document.getElementById(board_name);
+            table.style.display = 'none';
+        }
+        function show_board_by_id(board_name)
+        {
+            var table = document.getElementById(board_name);
+            table.style.display = 'block';
+        }
+        function update_main_board()
+        {
+            //TODO Support multi board game
+            var active_game = selected_game;
+            if( active_game.transitional )
+            {
+                show_board_by_id('transition_arrow');
+                hide_element_by_id('optional_slash');
+            }
+            else if( active_game.optional)
+            {
+                show_board_by_id('optional_slash');
+                hide_element_by_id('transition_arrow');
+            }
+            else
+            {
+                hide_element_by_id('optional_slash');
+                hide_element_by_id('transition_arrow');
+            }
+            if( active_game.board_count == 2 )
+            {
+                console.log(`Double board game`);
+                hide_element_by_id('full_table');
+                show_board_by_id('full_table_0');
+                show_board_by_id('full_table_1');
+                update_main_board_num(active_game, 'full_table_0', 0);
+                update_main_board_num(active_game, 'full_table_1', 1);
+            }
+            else
+            {
+                console.log(`Single board game`);
+                hide_element_by_id('full_table_0');
+                hide_element_by_id('full_table_1');
+                show_board_by_id('full_table');
+                update_main_board_num(active_game, 'full_table', 0);
+            }
+            var free_space_message = document.getElementById('free_space_message');
+            free_space_message.innerHTML = active_game.free_space_on ? 'Free space is ON' : 'Free space is OFF';
+
+            var rules = document.getElementById('game_rules');
+            rules.innerHTML = active_game.rules;
+            var game_name = document.getElementById('game_name');
+            game_name.innerHTML = active_game.name;
+        }
+
+        function find_game(name){
+            var game_s = games();
+            for( var i = 0; i < game_s.length; i++ ){
+                if( game_s[i].name == name ){
+                    return i;
+                }
+            }
+            return current_game;
+        }
+
+        function adjustTableFont( tableId )
+        {
+            var table = document.getElementById(tableId);
+            var cells = table.querySelectorAll('td');
+            console.log(cells.length);
+            var fontSize = adjustFontSizeToCell( cells[0] );
+            cells.forEach(function(cell) {
+                if( cell.innerHTML != 'FREE')
+                    cell.style.fontSize = fontSize + "px";
+            });
+        }
+        function adjustPreviewTables()
+        {
+            var tables = document.getElementsByClassName('preview_table');
+            var cells = tables[0].querySelectorAll('td');
+            var fontSize = adjustFontSizeToCell( cells[0] );
+            for(const element of tables)
+            {
+                var cells = element.querySelectorAll('td');
+                cells.forEach(function(cell) {
+                    if( cell.innerHTML != 'FREE')
+                        cell.style.fontSize = fontSize + "px";
+                });
+            }
+
+        }
+
+        function adjustFontSizeToCell(element) {
+            var fontSize = parseFloat(window.getComputedStyle(element, null).getPropertyValue('font-size'));
+            // While the element's scrollWidth > its visible width or the element's scrollHeight > its visible height
+            while (element.scrollWidth > element.offsetWidth || element.scrollHeight > element.offsetHeight) {
+                fontSize--; // Reduce the font size
+                element.style.fontSize = fontSize + "px"; // Apply the new font size
+            }
+            return fontSize;
+        }
+
+        async function connectToServer()
+        {
+            let element = document.getElementById('qrcode');
+            element.visible = false;
+            console.log("Connecting to server");
+            const auth = await hostRoom();
+            if( auth )
+            {
+                connectToRoom(auth);;
+            }
+        }
+
+        async function hostRoom()
+        {
+            //Make an HTTP Get request to the server
+            const server_url = getItemWithDefault('bingo_server_url');
+            const server_token = getItemWithDefault('bingo_server_auth');
+
+            if( !(server_url && server_token) )
+            {
+                console.log('Server URL or token not set');
+                return null;
+            }
+
+            try {
+                const response = await fetch(`${server_url}/host`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': server_token
+                    },
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                console.log('Success:', data);
+                return data; // Assuming the server returns some auth data
+            } catch (error) {
+                console.error('Error:', error);
+                return null;
+            }
+
+        }
+
+        function connectToRoom( auth )
+        {
+            let element = document.getElementById('qrcode');
+            element.visible = true;
+            const server_url = getItemWithDefault('bingo_server_url');
+            console.log(server_url);
+            const ws_url = `${server_url.replace('http', 'ws')}/start/${auth.room_id}?room_token=${auth.room_token}`;
+            console.log('Connecting to room:', ws_url);
+
+            room_connection = new WebSocket(ws_url);
+            room_connection.onopen = function() {
+                console.log("Connected to room");
+                updateQRCode( auth );
+            }
+            room_connection.onerror = function(error) {
+                console.error('Error:', error);
+                retryConnection();
+            }
+            room_connection.onclose = function() {
+                console.log('Connection closed');
+            }
+        }
+
+        function updateQRCode( auth )
+        {
+            const server_url = getItemWithDefault('bingo_server_url');
+            const client_url = `${server_url}/join/${auth.room_id}`;
+            const client_url_b64 = btoa(client_url);
+            const path = `${window.location.pathname}`;
+            console.log("Path:", path);
+            const data = `${window.location.protocol}//${window.location.hostname}:${window.location.port}${path.replace("select_game", "client_view")}?server_url=${client_url_b64}`;
+            console.log("Connect url:", data);
+            const qrcode = new QRCode(document.getElementById('qrcode'), {
+                text: data,
+                width: 256,
+                height: 256,
+                colorDark : '#000',
+                colorLight : '#fff',
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+        }
+
+        function retryConnection() {
+            let element = document.getElementById('qrcode');
+            element.visible = false;
+            console.log(`Retrying connection in ${retryTime / 1000} seconds...`);
+            setTimeout(() => {
+                retryTime *= 2; // Double the retry time
+                connectToServer();
+            }, retryTime);
+        }
+
+
+
+        function updateRectangleSize()
+        {
+            //remove any existing circles
+            const container = document.querySelector('.container');
+            container.style.display = 'block';
+            //Find all children with className cicle
+            const circles = container.querySelectorAll('.circle');
+            circles.forEach(circle => {
+                circle.remove();
+            });
+
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            // const rectWidth = 960;
+            // const rectHeight = 216;
+            const rect = container.getBoundingClientRect();
+            const styles = window.getComputedStyle(container);
+
+            // Get border sizes
+            const borderTop = parseFloat(styles.borderTopWidth);
+            const borderBottom = parseFloat(styles.borderBottomWidth);
+            const borderLeft = parseFloat(styles.borderLeftWidth);
+            const borderRight = parseFloat(styles.borderRightWidth);
+
+            const rectWidth = rect.width;
+            const rectHeight = rect.height;
+            const circleSize = borderTop * .7; // radius of circles
+            const circleSpacing = circleSize  * 1.1; // Space between circles
+
+            function createCircle(x, y, delay) {
+                const circle = document.createElement('div');
+                circle.classList.add('circle');
+                circle.className = 'circle';
+                circle.style.left = `${x - (borderTop) + (borderTop - circleSize)/2}px`;
+                circle.style.top = `${y - (borderTop) + (borderTop - circleSize)/2}px`;
+                circle.style.width = `${circleSize}px`;
+                circle.style.height = `${circleSize}px`;
+                container.appendChild(circle);
+            }
+
+            let delayCounter = 0;
+            // Top Edge
+            //createCircle(0, 0, delayCounter * 0.1);
+            //createCircle(rectWidth - borderTop, 0, delayCounter * 0.1);
+            const distanceHorizonalBetween = rectWidth - 2 * borderTop;
+            const numHorizonalCircles = Math.floor(distanceHorizonalBetween / circleSpacing);
+            for (let i = 0; i < numHorizonalCircles; i++) {
+                const x = borderTop + i * circleSpacing;
+                createCircle(x, 0, delayCounter * 0.1);
+                delayCounter++;
+            }
+
+
+            //createCircle(0, rectHeight - borderTop, delayCounter * 0.1);
+            //createCircle(rectWidth - borderTop, rectHeight - borderTop, delayCounter * 0.1);
+            for (let i = 0; i < numHorizonalCircles; i++) {
+                const x = borderTop + i * circleSpacing;
+                createCircle(x, rectHeight - borderTop, delayCounter * 0.1);
+                delayCounter++;
+            }
+
+            const distanceVerticalBetween = rectHeight - 2 * borderTop;
+            const numVerticalCircles = Math.floor(distanceVerticalBetween / circleSpacing);
+            for (let i = 0; i < numVerticalCircles; i++) {
+                const y = borderTop + i * circleSpacing;
+                createCircle(0, y, delayCounter * 0.1);
+                delayCounter++;
+            }
+
+            for (let i = 0; i < numVerticalCircles; i++) {
+                const y = borderTop + i * circleSpacing;
+                createCircle(rectWidth - borderTop, y, delayCounter * 0.1);
+                delayCounter++;
+            }
+        }
+
+        function showAudienceInteraction(message)
+        {
+            const paragraph = document.createElement('p');
+            paragraph.className = 'blink-text';
+            paragraph.innerHTML = message;
+            paragraph.style.width = "100%";
+            paragraph.style.height = "100%";
+            //Center text vertical annd horizontally
+            paragraph.style.display = "flex";
+            paragraph.style.justifyContent = "center";
+            paragraph.style.alignItems = "center";
+            paragraph.style.fontSize = "1000%";
+            //Clip
+
+            const death_msg = document.getElementById('death_msg');
+            death_msg.style.display = 'none';
+
+            const rectangle = document.querySelector('.rectangle');
+            //Clip in rectangle
+            //remove any existing paragraphs
+            const paragraphs = rectangle.querySelectorAll('p');
+            paragraphs.forEach(paragraph => {
+                paragraph.remove();
+            });
+
+            //add paragraph to rectangle
+            rectangle.appendChild(paragraph);
+
+            //Show modal and start a 5 second timer to hide it
+            const modal = document.querySelector('.modal');
+            modal.style.display = 'block';
+            // Set background color to rgba(0,0,0,.8)
+            modal.style.backgroundColor = 'rgba(0,0,0,.8)';
+
+            const value = getItemWithDefault('audience-message-timeout');
+            const timeout = parseInt(value);
+
+            updateRectangleSize();
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, timeout);
+
+        }
+
+        function showToTheDeath()
+        {
+            const container = document.querySelector('.container');
+            container.style.display = 'none';
+
+            const modal = document.querySelector('.modal');
+            modal.style.display = 'block';
+
+
+            const isGraphic = getItemWithDefault('to-the-death-graphic');
+            const death_msg = document.getElementById('death_msg');
+            if( isGraphic === 'true' )
+            {
+                modal.style.background = "no-repeat center/cover url('to_the_death.jpg')";
+                death_msg.style.display = 'none';
+            }
+            else
+            {
+                death_msg.style.display = 'block';
+                modal.style.background = 'black';
+            }
+
+
+            //Fully black
+            modal.style.backgroundColor = 'black';
+            function clickHandler(event) {
+                modal.style.display = 'none';
+                console.log("Hide modal");
+                document.removeEventListener('click', clickHandler);
+            }
+            document.addEventListener('click', clickHandler);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === '1' || event.key === 'a') {
+                showAudienceInteraction(getItemWithDefault('clap-message'));
+            } else if (event.key === '2' || event.key === 'b')  {
+                showAudienceInteraction(getItemWithDefault('boo-message'));
+            } else if (event.key === '3' || event.key === 'd') {
+                showAudienceInteraction(getItemWithDefault('beer-message'));
+            } else if (event.key === '4' || event.key === 'w') {
+                showAudienceInteraction(getItemWithDefault('party-message'));
+            } else if (event.key === '5' || event.key === 'x') {
+                showToTheDeath({});
+            }
+        });
+        window.onload = function() {
+            //adjustFontSizeToCell('game_cell');
+            current_game = parseInt(getTemporaryItem('selected_game_index')) || 0;
+            preview_index = parseInt(getTemporaryItem('selected_preview_index')) || 0;
+            console.log(`Preview Game: ${preview_index}`);
+            console.log(`Current Game: ${current_game}`);
+
+            var games_preview = document.getElementById('games_preview');
+
+            var game_s = games();
+
+            var full_table_name = game_s[current_game].board_count == 2 ? 'full_table_0' : 'full_table';
+            var full_view = document.getElementById('full_view');
+            var table = create_table( document, 'full_table', game_s[current_game] );
+            table.addEventListener('click', function(event) {
+                // This function will be called when the table is clicked
+                // event.target refers to the clicked cell
+                //get data-game for selected table
+                if (selected_game.free_space_dynamic){
+                    selected_game.free_space_on=!selected_game.free_space_on;
+                }
+                update_main_board();
+            });
+            // Add the table to the body of the document
+            full_view.appendChild(table);
+
+            //Now add two more tables for double table gamess
+            var table1 = create_table( document, 'full_table_0', game_s[current_game] );
+            table1.addEventListener('click', function(event) {
+                // This function will be called when the table is clicked
+                // event.target refers to the clicked cell
+                //get data-game for selected table
+                if (selected_game.free_space_dynamic){
+                    selected_game.free_space_on=!selected_game.free_space_on;
+                }
+                update_main_board();
+            });
+            table1.classList.add('full_table_multi');
+            full_view.appendChild(table1);
+
+            var arrow = document.createElement('p');
+            arrow.className = "multi_table_operator";
+            arrow.id = 'transition_arrow';
+            arrow.innerHTML = '&#x27A7;';
+            arrow.style.fontSize = '10vh';
+            full_view.appendChild(arrow);
+
+            var slash = document.createElement('p');
+            slash.className = "multi_table_operator";
+            slash.id = 'optional_slash';
+            slash.innerHTML = '&#x2215;';
+            slash.style.fontSize = '6vh';
+            full_view.appendChild(slash);
+
+            //Now add two more tables for double table gamess
+            var table2 = create_table( document, 'full_table_1', game_s[current_game] );
+            table2.addEventListener('click', function(event) {
+                // This function will be called when the table is clicked
+                // event.target refers to the clicked cell
+                //get data-game for selected table
+                if (selected_game.free_space_dynamic){
+                    selected_game.free_space_on=!selected_game.free_space_on;
+                }
+                update_main_board();
+            });
+            table2.classList.add('full_table_multi');
+            full_view.appendChild(table2);
+            if( game_s[current_game].board_count != 2 )
+            {
+                table1.style.display = 'none';
+                table2.style.display = 'none';
+            }
+
+            var game_name = document.getElementById('game_name');
+            var game_name_label = document.createElement('p');
+            game_name_label.id = 'game_name';
+            game_name_label.innerHTML = game_s[current_game].name;
+            game_name.appendChild(game_name_label);
+
+            selected_game = game_s[current_game];
+            update_main_board()
+
+            var play_game = document.getElementById('play_game');
+            play_game.addEventListener('click', function(){
+                console.log(preview_index);
+                setTemporaryItem('selected_game', JSON.stringify(selected_game));
+                setTemporaryItem('selected_game_index', current_game);
+                setTemporaryItem('selected_preview_index', preview_index);
+                window.location.href = 'board.html';
+            });
+
+            adjustTableFont("full_table");
+            adjustTableFont("full_table_0");
+            adjustTableFont("full_table_1")
+            adjustPreviewTables();
+
+            var welcome_message = document.getElementById('welcome_message');
+            welcome_message.innerHTML = getItemWithDefault('welcome-message');
+
+
+            const emoji_actions = document.getElementById('emoji_actions');
+
+            const clap = document.createElement('p');
+            clap.id = 'clap';
+            clap.innerHTML = "&#x1F44F;";
+
+            clap.addEventListener('click', function(event) {
+                event.stopPropagation();
+                showAudienceInteraction(getItemWithDefault('clap-message'));
+            });
+
+            // Add ghost and beer glass cheers
+            const ghost = document.createElement('p');
+            ghost.id = 'ghost';
+            ghost.innerHTML = "&#x1F47B;";
+
+            ghost.addEventListener('click', function(event) {
+                event.stopPropagation();
+                showAudienceInteraction(getItemWithDefault('boo-message'));
+            });
+
+            const beer = document.createElement('p');
+            beer.id = 'beer';
+            beer.innerHTML = "&#x1F37B;";
+            beer.addEventListener('click', function(event) {
+                event.stopPropagation();
+                showAudienceInteraction(getItemWithDefault('beer-message'));
+            });
+
+            emoji_actions.append(clap);
+            emoji_actions.append(ghost);
+            emoji_actions.append(beer);
+
+
+            connectToServer();
+        }
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var swiper = new Swiper('.swiper-container', {
+                slidesPerView: 5,
+                spaceBetween: 10,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                loop: true,
+            });
+
+            function getLength( length )
+            {
+                if( length == 1 )
+                { return "Fast";}
+                else if( length == 2 )
+                { return "Medium";}
+                else if( length == 3 )
+                { return "Long";}
+                else
+                { return "Unknown";}
+            }
+
+            var game_s = games();
+            // Define the word
+            for(const element of game_s){
+                var game = element;
+                var div = document.createElement('div');
+
+                var table = create_table( document, 'preview_table', element, '10px' );
+                div.appendChild(table);
+
+                var game_name_label = document.createElement('p');
+                game_name_label.id = 'game_preview_name';
+                game_name_label.innerHTML = game.name + ' [' + getLength(game.length) + ']';
+                game_name_label.style.display = 'flex';
+                game_name_label.style.justifyContent = 'center';
+                game_name_label.style.alignItems = 'center';
+
+                div.style.display = "flex";
+                div.style.flexDirection = "column";
+                div.appendChild(game_name_label);
+
+                table.setAttribute('data-game', game.name);
+                // Add click event listener to the table
+                table.addEventListener('click', function(event) {
+                    // This function will be called when the table is clicked
+                    // event.target refers to the clicked cell
+                    //get data-game for selected table
+                    var game_name = event.currentTarget.getAttribute('data-game');
+                    current_game = find_game(game_name);
+                    console.log('Table clicked ' + current_game);
+                    selected_game = game_s[current_game];
+
+                    setTemporaryItem('selected_game_index', current_game);
+                    setTemporaryItem('selected_preview_index', preview_index);
+                    update_main_board();
+                });
+                div.className = 'swiper-slide';
+                document.querySelector('.swiper-wrapper').appendChild(div);
+            }
+
+
+            swiper.update();
+
+            var back_button = document.getElementById('back_button');
+            //listen for clicks on back button
+            back_button.addEventListener('click', function(){
+                swiper.slidePrev();
+            });
+            var nexut_button = document.getElementById('next_button');
+            next_button.addEventListener('click', function(){
+                swiper.slideNext();
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <body>
+        <div id="top_bar">
+            <a href="settings.html">Settings</a>
+        </div>
+        <div class="grid-container">
+            <div id="game_name"></div>
+            <p id="free_space_message">Free space is OFF</p>
+             <div id="welcome_view">
+                <p id="welcome_message"></p>
+                <div id="qrcode">
+                </div>
+                <p id="game_rules">Rules of the game....</p>
+            </div>
+            <div id="full_view">
+                <div id="emoji_actions"></div>
+            </div>
+        </div>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                <!-- ... -->
+            </div>
+        </div>
+        <div id="button_container">
+            <button id="back_button">Back</button>
+            <button id="play_game">Play</button>
+            <button id="next_button">Next</button>
+        </div>
+        <div class="modal" id="audience_message_modal">
+            <div class="container">
+                <div class="rectangle"></div>
+            </div>
+            <p id="death_msg" class="death-text">To the Death!</p>
+        </div>
+
+        <!-- Copyright Footer -->
+        <div style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #e9ecef; background-color: #f8f9fa; color: #666; font-size: 14px; font-style: italic;">
+            © 2025 Eric Gressman. All rights reserved.
+        </div>
+    </body>
+</body>

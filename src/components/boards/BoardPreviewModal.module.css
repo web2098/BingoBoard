@@ -1,0 +1,307 @@
+/* ==============================================
+   BOARD PREVIEW MODAL STYLES
+   ============================================== */
+
+.boardPreviewModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.boardPreviewModalContent {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  width: 95%;
+  height: 90%;
+  max-width: 1200px;
+  max-height: 900px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.modalHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.8em;
+}
+
+.modalCloseButton {
+  background: none;
+  border: none;
+  font-size: 2em;
+  cursor: pointer;
+  color: #666;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.modalCloseButton:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.modalPreviewArea {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow: auto;
+}
+
+.modalGameBoardsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  height: 100%;
+}
+
+.modalGameBoardsContainer.singleBoard {
+  justify-content: center;
+}
+
+.modalGameBoardsContainer.dualBoard {
+  justify-content: space-around;
+}
+
+.modalGameBoardsContainer .gameBoard {
+  border: 3px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  flex: 1;
+  max-width: 400px;
+  max-height: 400px;
+}
+
+/* Let the GameBoard's CSS Grid handle sizing naturally */
+
+.modalGameBoardsContainer .operatorIcon {
+  font-size: 1.5em;
+  padding: 20px;
+  background: #007bff;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Removed complex container queries - let CSS Grid handle responsive sizing */
+
+.modalFreeSpaceToggle {
+  display: flex;
+  align-items: center;
+}
+
+.modalFreeSpaceToggle .freeSpaceToggleMini {
+  font-size: 1.1em;
+}
+
+.modalRulesCard {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  margin: 0 20px 20px 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.modalRulesHeader {
+  background: #007bff;
+  color: white;
+  padding: 12px 20px;
+  margin: 0;
+}
+
+.modalRulesHeader h3 {
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  text-align: center;
+}
+
+.modalRulesContent {
+  padding: 15px 20px;
+  font-size: 2.0em;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.modalRulesContent p {
+  margin: 0;
+  font-size: 1em;
+  line-height: 1.5;
+  color: #333;
+}
+
+.modalMiniGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  width: 300px;
+  height: 300px;
+  border: 3px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+  background: white;
+}
+
+.modalMiniCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #666;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1.1em;
+  background: #f8f9fa;
+  color: #333;
+}
+
+/* Free Space Toggle Styles */
+.freeSpaceToggleMini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+}
+
+.toggleLabel {
+  color: #666;
+  font-size: 1em;
+  margin: 0;
+}
+
+.toggleSwitch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.toggleSwitch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.toggleSwitch input:checked + .slider {
+  background-color: #007bff;
+}
+
+.toggleSwitch input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.toggleState {
+  color: #666;
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .boardPreviewModalContent {
+    width: 98%;
+    height: 95%;
+    padding: 20px;
+  }
+
+  .modalHeader h2 {
+    font-size: 1.4em;
+  }
+
+  .modalGameBoardsContainer .gameBoard {
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .modalMiniGrid {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .boardPreviewModalContent {
+    padding: 15px;
+  }
+
+  .modalHeader {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+  }
+
+  .modalHeader h2 {
+    font-size: 1.2em;
+  }
+
+  .modalGameBoardsContainer .gameBoard {
+    max-width: 250px;
+    max-height: 250px;
+  }
+
+  .modalMiniGrid {
+    width: 200px;
+    height: 200px;
+  }
+}

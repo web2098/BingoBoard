@@ -1,0 +1,34 @@
+[
+  {
+    "section": "Popups",
+    "Label": "Enable Popups",
+    "id": "clientEnablePopups",
+    "description": "Whether to enable popups in the application",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Popups",
+    "Label": "Popup Enable Audio",
+    "id": "clientPopupEnableAudio",
+    "description": "Whether to enable audio for popups",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Popups",
+    "Label": "Popup Graphic To The Death",
+    "id": "clientPopupGraphicToTheDeath",
+    "description": "Whether to show a graphic when a popup is displayed",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Display",
+    "Label": "Enable Pattern Rotation",
+    "id": "clientEnablePatternRotation",
+    "description": "Whether to rotate through multiple bingo patterns automatically",
+    "type": "boolean",
+    "default": true
+  }
+]

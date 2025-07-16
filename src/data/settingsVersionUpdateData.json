@@ -1,0 +1,118 @@
+[
+  {
+    "v4_id": "welcome-message",
+    "v5_id": ["welcomeMessage", "numberOfCards", "timeMessage", "bingoWord"],
+    "v4_to_v5": "welcomeMessageV4ToV5",
+    "migration_type": "complex"
+  },
+  {
+    "v4_id": "game-order",
+    "v5_id": "gameDisplayOrder",
+    "v4_to_v5": "gameOrderV4ToV5"
+  },
+  {
+    "v4_id": "last-number-on",
+    "v5_id": "showLastNumberPlayed",
+    "v4_to_v5": "booleanStringToBoolean"
+  },
+  {
+    "v4_id": "number-history-on",
+    "v5_id": "showNumberHistory",
+    "v4_to_v5": "booleanStringToBoolean"
+  },
+  {
+    "v4_id": "select-tab-color",
+    "v5_id": "boardHighlightColor"
+  },
+  {
+    "v4_id": "bingo_server_url",
+    "v5_id": "serverUrl"
+  },
+  {
+    "v4_id": "bingo_server_auth",
+    "v5_id": "serverAuthToken",
+    "private": true
+  },
+  {
+    "v4_id": "audience-message-timeout",
+    "v5_id": "flashMessageTimeout",
+    "v4_to_v5": "audienceTimeoutV4ToV5"
+  },
+  {
+    "v4_id": "main-bg-color",
+    "v5_id": null
+  },
+  {
+    "v4_id": "main-font-color",
+    "v5_id": null
+  },
+  {
+    "v4_id": "select-tab-text-color",
+    "v5_id": null
+  },
+  {
+    "v4_id": "unselect-tab-color",
+    "v5_id": null
+  },
+  {
+    "v4_id": "unselect-tab-text-color",
+    "v5_id": null
+  },
+  {
+    "v4_id": "last-number-dir",
+    "v5_id": null
+  },
+  {
+    "v4_id": "number-history-dir",
+    "v5_id": null
+  },
+  {
+    "v4_id": "to-the-death-graphic",
+    "v5_id": "battle_enableImage"
+  },
+  {
+    "v4_id": "auto-lightsaber",
+    "v5_id": "executeOrder66_enableAutoPlay"
+  },
+  {
+    "v4_id": "hot-fix-22-enabled",
+    "v5_id": null
+  },
+  {
+    "v4_id": "home-page",
+    "v5_id": null
+  },
+  {
+    "v4_id": "special-numbers",
+    "v5_id": "specialNumbers",
+    "v4_to_v5": "specialNumbersV4ToV5"
+  },
+  {
+    "v4_id": "clap-message",
+    "v5_id": "applause_text"
+  },
+  {
+    "v4_id": "boo-message",
+    "v5_id": "boo_text"
+  },
+  {
+    "v4_id": "beer-message",
+    "v5_id": "drink_text"
+  },
+  {
+    "v4_id": "party-message",
+    "v5_id": "winner_text"
+  },
+  {
+    "v4_id": "client_enable_popup_audio",
+    "v5_id": null
+  },
+  {
+    "v4_id": "client_enable_popups",
+    "v5_id": null
+  },
+  {
+    "v4_id": "client_hide_graphic_to_the_death",
+    "v5_id": null
+  }
+]

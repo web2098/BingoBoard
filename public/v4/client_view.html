@@ -1,0 +1,67 @@
+
+<head>
+    <link rel="stylesheet" type="text/css" href="common/ui.css">
+    <link rel="stylesheet" type="text/css" href="client/view.css">
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <script src="utilities.js"></script>
+    <script src="games.js"></script>
+    <script src="common/utilities.js"></script>
+    <script src="common/ui.js"></script>
+    <script src="client/ui.js"></script>
+    <script src="client/view.js"></script>
+    <script src="board/board_audience_interactions.js"></script>
+    <script src="client/client_audience_interaction.js"></script>
+    <script src="client/server_interaction.js"></script>
+    <script>
+        window.onload = function() {
+            init_view();
+        };
+</script>
+</head>
+<body>
+    <div id="status">
+        <p id="server_status">Not Connected to remote server</p>
+    </div>
+    <div id="game_board_view"></div>
+    <div id="error_view">
+        <p id="error_message"></p>
+    </div>
+    <div id="large_preview_div"></div>
+    <!-- Add Check boxes for the following -->
+    <!--   Enable Audio Playback -->
+    <!--   Enable Popups -->
+    <!--   Show Logs -->
+    <div id="settings_view">
+        <label>
+            <input type="checkbox" id="enable_audio">
+            Enable Audio Playback
+        </label>
+        <label>
+            <input type="checkbox" id="enable_popups" checked>
+            Enable Popups
+        </label>
+        <label>
+            <input type="checkbox" id="hide_graphic_to_the_death">
+            Hide Graphic for "To the Death"
+        </label>
+        <label>
+            <input type="checkbox" id="show_logs">
+            Show Logs
+        </label>
+    </div>
+    <!-- Add a mult-line text box for log lines -->
+    <div id="log_view">
+        <textarea id="log_textarea" readonly></textarea>
+    </div>
+    <div class="modal" id="audience_message_modal">
+        <div class="container">
+            <div class="rectangle"></div>
+        </div>
+        <p id="death_msg" class="death-text">To the Death!</p>
+    </div>
+
+    <!-- Copyright Footer -->
+    <div style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #e9ecef; background-color: #f8f9fa; color: #666; font-size: 14px; font-style: italic;">
+        © 2025 Eric Gressman. All rights reserved.
+    </div>
+</body>

@@ -1,0 +1,626 @@
+/* Telemetry Page Styles */
+.telemetryPage {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.telemetryPage .telemetryContent {
+  flex: 1;
+  padding: 2rem;
+  padding-top: .3rem;
+  margin-left: 80px; /* Account for sidebar */
+  max-width: calc(100vw - 80px);
+  overflow-x: auto;
+}
+
+/* Section Headers */
+.telemetryPage .sectionHeader {
+  margin-bottom: 2rem;
+}
+
+.telemetryPage .sectionHeader h2 {
+  color: #333;
+  margin-bottom: 0;
+  font-size: 2rem;
+  border-bottom: 2px solid #42a5f5;
+  padding-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Summary Cards */
+.telemetryPage .summarySection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Embedded Summary Cards - 2x2 Grid */
+.telemetryPage .summarySectionEmbedded {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.telemetryPage .summaryCard {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  border-left: 4px solid #42a5f5;
+  padding: 1rem;
+}
+
+.telemetryPage .summaryCard h3 {
+  color: #666;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.telemetryPage .statNumber {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #42a5f5;
+}
+
+/* Number Statistics */
+.telemetryPage .numbersSection {
+  margin-bottom: 3rem;
+}
+
+.telemetryPage .numbersSection h2 {
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  border-bottom: 2px solid #42a5f5;
+  padding-bottom: 0.5rem;
+}
+
+.telemetryPage .statsGroup {
+  margin-bottom: 0.5rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.telemetryPage .statsGroup h3 {
+  color: #333;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.telemetryPage .statsRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.telemetryPage .numberList h4 {
+  color: #42a5f5;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+.telemetryPage .numberTextList {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+  word-wrap: break-word;
+}
+
+/* Games Table */
+.telemetryPage .gamesSection {
+  margin-bottom: 3rem;
+}
+
+.telemetryPage .gamesSection h2 {
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  border-bottom: 2px solid #42a5f5;
+  padding-bottom: 0.5rem;
+}
+
+.telemetryPage .gamesTableContainer {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.telemetryPage .gamesTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+}
+
+.telemetryPage .gamesTable th {
+  background: #42a5f5;
+  color: white;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.telemetryPage .gamesTable td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: top;
+}
+
+/* N/A value styling */
+.telemetryPage .gamesTable td:hasText("n/a") {
+  color: #999;
+  font-style: italic;
+}
+
+/* Alternative approach for N/A styling */
+.telemetryPage .naValue {
+  color: #999;
+  font-style: italic;
+}
+
+.telemetryPage .gamesTable tr:hover {
+  background: #f8f9fa;
+}
+
+/* Expandable row styles */
+.telemetryPage .gameRow.expandable {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.telemetryPage .gameRow.expandable:hover {
+  background: #e3f2fd !important;
+}
+
+.telemetryPage .expandIcon {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  color: #42a5f5;
+  font-size: 0.8rem;
+  user-select: none;
+}
+
+.telemetryPage .expandIcon.expanded {
+  transform: rotate(90deg);
+}
+
+.telemetryPage .gameName {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.telemetryPage .variantRow {
+  background: #f8f9fa;
+  border-left: 3px solid #42a5f5;
+}
+
+.telemetryPage .variantRow:hover {
+  background: #f0f0f0 !important;
+}
+
+.telemetryPage .variantName {
+  font-size: 0.9rem;
+  color: #555;
+  padding-left: 1rem;
+  font-style: italic;
+}
+
+/* Heat Maps */
+.telemetryPage .heatmapsSection h2 {
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  border-bottom: 2px solid #42a5f5;
+  padding-bottom: 0.5rem;
+}
+
+.telemetryPage .heatmapsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.telemetryPage .heatmapContainer {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.telemetryPage .heatmapContainer h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+/* Row-based heatmap styles */
+.telemetryPage .heatmapGridRows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.telemetryPage .heatmapRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  width: 100%;
+}
+
+.telemetryPage .heatmapLetterRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  height: 50px;
+  color: white;
+  font-weight: bold;
+  font-size: 1.3rem;
+  border-radius: 6px;
+  flex-shrink: 0;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.telemetryPage .heatmapNumbersRow {
+  display: flex;
+  gap: 3px;
+  flex-wrap: nowrap;
+}
+
+/* Original column-based styles (kept for backwards compatibility) */
+.telemetryPage .heatmapGrid {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+}
+
+.telemetryPage .heatmapColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.telemetryPage .heatmapLetter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  background: #42a5f5;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-radius: 4px;
+}
+
+.telemetryPage .heatmapCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.telemetryPage .heatmapCell:hover {
+  transform: scale(1.05);
+  z-index: 1;
+  border-color: #333;
+}
+
+.telemetryPage .heatmapFill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: height 0.3s ease;
+  border-radius: 0 0 4px 4px;
+}
+
+.telemetryPage .heatmapContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.telemetryPage .heatmapNumber {
+  font-weight: bold;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: black;
+}
+
+.telemetryPage .heatmapCount {
+  font-size: 1rem;
+  line-height: 1;
+  margin-top: 2px;
+  color: black;
+}
+
+.telemetryPage .heatmapTextOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.telemetryPage .heatmapNumberWhite {
+  font-weight: bold;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: white;
+}
+
+.telemetryPage .heatmapCountWhite {
+  font-size: 1rem;
+  line-height: 1;
+  margin-top: 2px;
+  color: white;
+}
+
+/* Tonight's Section - Side by Side Layout */
+.telemetryPage .tonightSection {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  align-items: flex-start;
+}
+
+.telemetryPage .tonightNumbers {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.telemetryPage .tonightGames {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure equal height for both sides */
+.telemetryPage .tonightNumbers,
+.telemetryPage .tonightGames {
+  min-height: 400px;
+}
+
+/* All Time Section - Updated Layout */
+.telemetryPage .alltimeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* Top section - Numbers and Heatmap side by side */
+.telemetryPage .alltimeNumberssection {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.telemetryPage .alltimeNumbers {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.telemetryPage .alltimeHeatmap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bottom section - Games table full width */
+.telemetryPage .alltimeGamesFull {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.telemetryPage .alltimeGames h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+/* Remove old styles that are no longer needed */
+.telemetryPage .alltimeGames {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Session time styling for all games table */
+.telemetryPage .sessionTime {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .telemetryPage .telemetryContent {
+    margin-left: 60px;
+    max-width: calc(100vw - 60px);
+    padding: 1rem;
+  }
+
+  .telemetryPage .telemetryHeader h1 {
+    font-size: 2rem;
+  }
+
+  .telemetryPage .summarySection {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .telemetryPage .summarySectionEmbedded {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .telemetryPage .statNumber {
+    font-size: 2rem;
+  }
+
+  .telemetryPage .statsRow {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .telemetryPage .gamesTableContainer {
+    overflow-x: auto;
+  }
+
+  .telemetryPage .heatmapsContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .telemetryPage .heatmapLetterRow {
+    min-width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+
+  /* Stack tonight's section vertically on mobile */
+  .telemetryPage .tonightSection {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .telemetryPage .tonightNumbers,
+  .telemetryPage .tonightGames {
+    min-height: auto;
+  }
+
+  /* Stack all-time section vertically on mobile */
+  .telemetryPage .alltimeNumberssection {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .telemetryPage .alltimeNumbers,
+  .telemetryPage .alltimeHeatmap {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .telemetryPage .telemetryContent {
+    margin-left: 50px;
+    max-width: calc(100vw - 50px);
+    padding: 0.5rem;
+  }
+
+  .telemetryPage .summarySection {
+    grid-template-columns: 1fr;
+  }
+
+  .telemetryPage .summarySectionEmbedded {
+    grid-template-columns: 1fr;
+  }
+
+  .telemetryPage .heatmapLetterRow {
+    min-width: 25px;
+    height: 25px;
+    font-size: 0.9rem;
+  }
+
+  .telemetryPage .heatmapLetter {
+    height: 25px;
+    font-size: 1rem;
+  }
+
+  /* Ensure tonight's section stays stacked on small screens */
+  .telemetryPage .tonightSection {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Ensure all-time numbers and heatmap stay stacked on small screens */
+  .telemetryPage .alltimeNumberssection {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Back button styling */
+.telemetryPage .backButton {
+  background: #42a5f5 !important;
+  color: white !important;
+}
+
+.telemetryPage .backButton:hover {
+  background: #1976d2 !important;
+}
+
+/* Sample Data Button Styles */
+.telemetryPage .sampleDataButton {
+  background: #ff9800 !important;
+  color: white !important;
+}
+
+.telemetryPage .sampleDataButton:hover {
+  background: #f57c00 !important;
+}
+
+.telemetryPage .sampleDataButton.active {
+  background: #4caf50 !important;
+}
+
+.telemetryPage .sampleDataButton.active:hover {
+  background: #388e3c !important;
+}
+
+/* Copyright Section */
+.copyright {
+  text-align: center;
+  padding: 24px 0;
+  border-top: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+  width: 100%;
+  position: relative;
+}
+
+.copyright p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+}

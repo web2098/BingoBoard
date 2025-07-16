@@ -1,0 +1,505 @@
+<head>
+
+    <style>
+        /* Ensure body takes full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Main content wrapper */
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Content grows to fill available space */
+        .content-wrapper {
+            flex: 1;
+        }
+
+        /* Copyright footer sticks to bottom */
+        .copyright-footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            background-color: #f8f9fa;
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        #body_div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #quick_settings, #customizations {
+            width: 50%;
+        }
+        #lnpdir {
+            display: flex;
+            justify-content: space-between;
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+        #nhdir {
+            display: flex;
+            justify-content: space-between;
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+
+        .spinner {
+            display: flex;
+            align-items: center;
+        }
+
+        .spinner button {
+            width: 3%;
+            height: 5%;
+            font-size: 100%;
+            background: #ddd;
+            border: none;
+            cursor: pointer;
+        }
+
+        .spinner input {
+            width: 10%;
+            text-align: center;
+            font-size: 100%;
+        }
+        .version-upgrade-header {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .version-upgrade-header:hover {
+            background: linear-gradient(135deg, #0056b3, #004085);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .version-upgrade-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .version-upgrade-header:hover::before {
+            left: 100%;
+        }
+    </style>
+    <script src="utilities.js"></script>
+    <script>
+
+
+
+        function increase() {
+            const input = document.getElementById("audience_interaction_timeout");
+            input.stepUp();
+        }
+
+        function decrease() {
+            const input = document.getElementById("audience_interaction_timeout");
+            input.stepDown();
+        }
+        window.onload = function() {
+
+            const selectElement = document.getElementById('special_numbers');
+            selectElement.onchange = function() {
+                const specialNumbers = JSON.parse(getItemWithDefault('special-numbers'));
+                console.log(specialNumbers);
+                if ( specialNumbers && `${selectElement.value}` in specialNumbers ) {
+                    document.getElementById('special_number_text').value = specialNumbers[`${selectElement.value}`];
+                }
+            }
+            const bingoLetters = ['B', 'I', 'N', 'G', 'O'];
+            for (let i = 1; i <= 75; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                //divide i by 15 and convert to int to get the bingo letter
+                letterIndex = Math.floor((i-1)/15);
+                option.textContent = bingoLetters[letterIndex] + i;
+                selectElement.appendChild(option);
+            }
+            const specialNumbers = JSON.parse(getItemWithDefault('special-numbers'));
+            console.log(specialNumbers);
+            if ( specialNumbers && '1' in specialNumbers ) {
+                document.getElementById('special_number_text').value = specialNumbers['1'];
+            }
+            const selectElementText = document.getElementById('special_number_text');
+            selectElementText.onchange = function() {
+                const specialNumbers = JSON.parse(getItemWithDefault('special-numbers'));
+                console.log(selectElement.value);
+                if ( specialNumbers ) {
+                    if (document.getElementById('special_number_text').value.length === 0)
+                    {
+                        delete specialNumbers[`${selectElement.value}`];
+                    }
+                    else
+                    {
+                        specialNumbers[`${selectElement.value}`] = document.getElementById('special_number_text').value;
+                    }
+                }
+                console.log(`Updating special numbers ${specialNumbers}`)
+                console.log(specialNumbers);
+                localStorage.setItem('special-numbers', JSON.stringify(specialNumbers));
+            }
+
+            var colorPickers = [
+                {
+                    id: "Main Background Color",
+                    key: "main-bg-color"
+                },
+                {
+                    id: "Main Text Color",
+                    key: "main-font-color",
+                },
+                {
+                    id: "Selected Number Background Color",
+                    key: 'select-tab-color'
+                },
+                {
+                    id: 'Selected Number Text Color',
+                    key: 'select-tab-text-color'
+                },
+                {
+                    id: "Default Number Background Color",
+                    key: 'unselect-tab-color'
+                },
+                {
+                    id: 'Default Number Text Color',
+                    key: 'unselect-tab-text-color'
+                }
+            ];
+
+            document.getElementById('audience_interaction_text').value = getItemWithDefault('clap-message');
+
+            const audience_interaction = document.getElementById('audience_interaction');
+            audience_interaction.onchange = function() {
+                let id = "clap-message";
+                if (document.getElementById('audience_interaction').value === "ghost") {
+                    id = "boo-message";
+                }
+                else if (document.getElementById('audience_interaction').value === "beer") {
+                    id = "beer-message";
+                }
+                else if (document.getElementById('audience_interaction').value === "party") {
+                    id = "party-message";
+                }
+                console.log("Changing audience interaction to: " + id);
+                document.getElementById('audience_interaction_text').value = getItemWithDefault(id);
+            }
+
+            //Monitor for any text changes in the audience interaction text box
+            document.getElementById('audience_interaction_text').addEventListener('input', function() {
+                let id = "clap-message";
+                if (document.getElementById('audience_interaction').value === "ghost") {
+                    id = "boo-message";
+                }
+                else if (document.getElementById('audience_interaction').value === "beer") {
+                    id = "beer-message";
+                }
+                else if (document.getElementById('audience_interaction').value === "party") {
+                    id = "party-message";
+                }
+                console.log("Changing audience interaction to: " + id);
+                localStorage.setItem(id, document.getElementById('audience_interaction_text').value);
+            });
+
+            document.getElementById('audience_interaction_timeout').value = getItemWithDefault('audience-message-timeout');
+            document.getElementById('audience_interaction_timeout').addEventListener('input', function() {
+                localStorage.setItem('audience-message-timeout', document.getElementById('audience_interaction_timeout').value);
+            });
+
+            if( localStorage.getItem('last-number-on') === "true" ){
+                document.getElementById('last-number-enabled').checked = true;
+            }
+            else
+            {
+                document.getElementById('last-number-enabled').checked = false;
+            }
+            var lastDir = localStorage.getItem('last-number-dir');
+            document.getElementById('last-direction').value = lastDir;
+
+            if( localStorage.getItem('to-the-death-graphic') === "true" ){
+                document.getElementById('ttd-enabled').checked = true;
+            }
+            else
+            {
+                document.getElementById('ttd-enabled').checked = false;
+            }
+
+            if( localStorage.getItem('number-history-on') === "true" ){
+                document.getElementById('history-enabled').checked = true;
+            }
+            else
+            {
+                document.getElementById('history-enabled').checked = false;
+            }
+
+            console.log('hot-fix-22: ' + localStorage.getItem('hot-fix-22-enabled'));
+            if( localStorage.getItem('hot-fix-22-enabled') === "true" ){
+                document.getElementById('hot-fix-22').checked = true;
+            }
+            else
+            {
+                document.getElementById('hot-fix-22').checked = false;
+            }
+
+            console.log('enable-auto-saber: ' + localStorage.getItem('auto-lightsaber'));
+            if( localStorage.getItem('auto-lightsaber') === "true" ){
+                document.getElementById('enable-auto-saber').checked = true;
+            }
+            else
+            {
+                document.getElementById('enable-auto-saber').checked = false;
+            }
+
+            var historyDir = localStorage.getItem('number-history-dir');
+            document.getElementById('history-direction').value = historyDir;
+
+            var defaultPage = localStorage.getItem('home-page');
+            document.getElementById('default-page').value = defaultPage;
+
+            var gameOrder = localStorage.getItem('game-order');
+            document.getElementById('game-order').value = gameOrder;
+
+            var welcomeMesg = localStorage.getItem('welcome-message');
+            document.getElementById('welcome_message_edit').value = welcomeMesg;
+
+            var bingo_server_url = localStorage.getItem('bingo_server_url');
+            document.getElementById('bingo_server_url').value = bingo_server_url;
+
+            var bingo_server_auth = localStorage.getItem('bingo_server_auth');
+            document.getElementById('bingo_server_auth').value = bingo_server_auth;
+
+            for (const element of colorPickers) {
+                var colorPickerLabel = document.createElement('label');
+                colorPickerLabel.setAttribute('for', element.key);
+                colorPickerLabel.textContent = element.id;
+
+                var colorPicker = document.createElement('input');
+                colorPicker.setAttribute('type', 'color');
+                colorPicker.setAttribute('id', element.key);
+                colorPicker.setAttribute('name', element.key);
+                colorPicker.setAttribute('value', localStorage.getItem(element.key));
+                //console.log('Creating picker for:', element.key);
+                //console.log('Value:', localStorage.getItem(element.key));
+
+                // Create a new row
+                var newRow = document.createElement('div');
+                newRow.classList.add('row', 'color-picker-row'); // Add 'color-picker-row' class
+                newRow.style.display = 'flex'; // Set this div to be a flex container
+                newRow.style.maxWidth = '300px'; // Set the max width of the row
+                newRow.style.marginBottom = '10px';
+                newRow.style.justifyContent = 'space-between'; // Push the label to the left and the color picker to the right
+
+                // Append label and color picker to the new row
+                newRow.appendChild(colorPickerLabel);
+                newRow.appendChild(colorPicker);
+
+                // Append the new row to the container
+                var container = document.getElementsByClassName('container')[0];
+                container.appendChild(newRow);
+            }
+
+            document.getElementById('applyButton').addEventListener('click', function() {
+                var lastDirection = document.getElementById('last-direction').value;
+                localStorage.setItem('last-number-dir', lastDirection);
+                var lastDirection = document.getElementById('history-direction').value;
+                localStorage.setItem('number-history-dir', lastDirection);
+
+                var lastEnabled = document.getElementById('hot-fix-22').checked;
+                console.log('Hotfix 22:', lastEnabled);
+                localStorage.setItem('hot-fix-22-enabled', lastEnabled);
+
+                var lastEnabled = document.getElementById('enable-auto-saber').checked;
+                console.log('enable-auto-saber:', lastEnabled);
+                localStorage.setItem('auto-lightsaber', lastEnabled);
+
+                var lastEnabled = document.getElementById('last-number-enabled').checked;
+                localStorage.setItem('last-number-on', lastEnabled);
+                var lastEnabled = document.getElementById('history-enabled').checked;
+                localStorage.setItem('number-history-on', lastEnabled);
+
+                var ttdEnabled = document.getElementById('ttd-enabled').checked;
+                localStorage.setItem('to-the-death-graphic', ttdEnabled);
+
+                var defaultPage = document.getElementById('default-page').value;
+                localStorage.setItem('home-page', defaultPage);
+
+                var gameOrder = document.getElementById('game-order').value;
+                localStorage.setItem('game-order', gameOrder);
+
+                var welcomeMesg = document.getElementById('welcome_message_edit').value;
+                localStorage.setItem('welcome-message', welcomeMesg);
+                var bingo_server_url = document.getElementById('bingo_server_url').value;
+                localStorage.setItem('bingo_server_url', bingo_server_url);
+                var bingo_server_auth = document.getElementById('bingo_server_auth').value;
+                localStorage.setItem('bingo_server_auth', bingo_server_auth);
+
+                var colorPickers = document.getElementsByTagName('input');
+
+                for (const element of colorPickers) {
+                    console.log('Setting', element.id, 'to', element.value);
+                    localStorage.setItem(element.id, element.value);
+                }
+                window.location.href = `${localStorage.getItem('home-page')}.html`
+            });
+            document.getElementById('resetButton').addEventListener('click', function() {
+                setDefaultSettings(true)
+                window.location.href = `${localStorage.getItem('home-page')}.html`
+            });
+            document.getElementById('resetFameButton').addEventListener('click', function() {
+                localStorage.removeItem('hallOfFame');
+                localStorage.removeItem('full_game_history');
+            });
+        }
+
+        function tryLatestVersion() {
+            // Redirect to the migration page which will handle the migration process
+            localStorage.setItem('defaultVersion', 'latest');
+            // Use relative path that works on GitHub Pages
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.includes('/BingoBoard/') ? '/BingoBoard' : '';
+            window.location.href = basePath + '/migration';
+        }
+    </script>
+</head>
+
+<body>
+    <div class="main-content">
+        <div class="content-wrapper">
+            <div class="version-upgrade-header" onclick="tryLatestVersion()">
+                <p class="upgrade-text">
+                    <span class="upgrade-icon">✨</span>
+                    Try Latest Version - Enhanced Features & Modern Interface
+                    <span class="upgrade-icon">→</span>
+                </p>
+            </div>
+            <div id="body_div">
+                <div class="container" id="quick_settings">
+                    <h1>Settings</h1>
+                    <p>Change your settings here.</p>
+                    <div class="row" id="lnpdir">
+                        <label for="default-page">Default Page:</label>
+                        <select id="default-page">
+                            <option value="select_game">Select Game</option>
+                            <option value="board">Board</option>
+                        </select>
+                    </div>
+                    <div class="row" id="lnpdir">
+                        <label for="game-order">Game Order:</label>
+                        <select id="game-order">
+                            <option value="default">Default</option>
+                            <option value="length">Length</option>
+                            <option value="alphabetical">Alphabetical</option>
+                            <option value="random">Random</option>
+                        </select>
+                    </div>
+                    <div class="row" id="lnpdir">
+                        <label for="hot-fix-22">Enable 22 HotFix:</label>
+                        <input type="checkbox" id="hot-fix-22" checked="true">
+                    </div>
+                    <div class="row" id="lnpdir">
+                        <label for="enable-auto-saber">Enable Order 66 Auto Activation:</label>
+                        <input type="checkbox" id="enable-auto-saber" checked="true">
+                    </div>
+                    <div class="row" id="lnpdir">
+                        <input type="checkbox" id="last-number-enabled" checked="true">
+                        <label for="last-direction">Last Number Played Location:</label>
+                        <select id="last-direction">
+                            <option value="top">Top</option>
+                            <option value="bottom">Bottom</option>
+                        </select>
+                    </div>
+                    <div class="row" id="nhdir">
+                        <input type="checkbox" id="history-enabled" checked="true">
+                        <label for="history-direction">Number History Location:</label>
+                        <select id="history-direction">
+                            <option value="right">Right</option>
+                            <option value="left">Left</option>
+                        </select>
+                    </div>
+                    <div class="row" id="ttddir">
+                        <input type="checkbox" id="ttd-enabled" checked="true">
+                        <label for="ttd-enabled">Enable Graph Battle Image</label>
+                    </div>
+                </div>
+                <div id="customizations">
+                    <div style="display: flex; flex-direction: column;">
+                        <label for="welcome_message_edit">Welcome Message (HTML)</label>
+                        <textarea id="welcome_message_edit" rows="4" cols="50"></textarea>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column;">
+                        <h2>Special Numbers</h2>
+                        <select id="special_numbers">
+                        </select>
+                        <textarea id="special_number_text" rows="4" cols="50"></textarea>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <h2>Audience Interaction</h2>
+                        <select id="audience_interaction">
+                            <option value="clap" id="clap_option" className="emoji-option">&#x1F44F;</option>
+                            <option value="ghost" id="ghost_option" className="emoji-option">&#x1F47B;</option>
+                            <option value="beer" id="beer_option" className="emoji-option">&#x1F37B;</option>
+                            <option value="party" id="party_option" className="emoji-option">&#x1F973;</option>
+                        </select>
+                        <textarea id="audience_interaction_text" rows="1" cols="50"></textarea>
+                    </div>
+                    <div>
+                        <h2>Audience Interaction Timeout</h2>
+                        <div class="spinner">
+                            <button onclick="decrease()">−</button>
+                            <input id="audience_interaction_timeout" type="number" min="1000" max="15000" step="1" value="10">
+                            <button onclick="increase()">+</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <h4>Bingo Server URL</h4>
+                        <input id="bingo_server_url" rows="1" cols="50"></input>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <h4>Bingo Server Auth Token</h4>
+                        <input id="bingo_server_auth" rows="1" cols="50" type="password"></input>
+                    </div>
+                </div>
+            </div>
+
+            <button id="applyButton">Apply</button>
+            <button id="resetButton">Reset To Default</button>
+            <button id="resetFameButton">Reset Hall of Fame</button>
+        </div>
+
+        <!-- Copyright Footer -->
+        <div class="copyright-footer">
+            © 2025 Eric Gressman. All rights reserved.
+        </div>
+    </div>
+</body>

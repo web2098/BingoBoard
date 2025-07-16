@@ -1,0 +1,80 @@
+{
+  "headers": {
+    "about": {
+      "title": "About This Application",
+      "subtitle": "A modern, interactive bingo game application"
+    },
+    "changelog": {
+      "title": "Change Log",
+      "subtitle": "Version history and new features"
+    }
+  },
+  "sections": [
+    {
+      "title": "Features",
+      "type": "list",
+      "items": [
+        "🎯 Multiple game variants and patterns",
+        "🎨 Customizable settings and preferences",
+        "📱 QR code room joining",
+        "🎮 Interactive bingo boards",
+        "📱 Responsive design for all devices"
+      ]
+    },
+    {
+      "title": "📈 Version Information",
+      "type": "details",
+      "items": [
+        {
+          "label": "Version",
+          "value": "V5",
+          "note": "Current version"
+        },
+        {
+          "label": "Last Updated",
+          "value": "July 2025"
+        },
+        {
+          "label": "License",
+          "value": "MIT",
+          "link": "https://opensource.org/licenses/MIT"
+        },
+        {
+          "label": "Build",
+          "value": "Production"
+        },
+        {
+          "label": "Architecture",
+          "value": "React 18 + TypeScript"
+        }
+      ]
+    },
+    {
+      "title": "👨‍💻 About Me",
+      "type": "profile",
+      "items": [
+        {
+          "name": "web2098",
+          "avatar": "https://avatars.githubusercontent.com/u/7141138?s=64&v=4",
+          "link": "https://github.com/web2098",
+          "description": "Developer and creator of BingoBoard"
+        }
+      ]
+    },
+    {
+      "title": "Technology Stack",
+      "type": "list",
+      "items": [
+        "⚛️ React 18 with TypeScript",
+        "🛣️ React Router for navigation",
+        "🎨 CSS3 with responsive design",
+        "💾 Local storage for settings",
+        "🤖 GitHub Copilot AI assistance (Claude 4)",
+        {
+          "text": "🔧 Bingo Server (Rust backend)",
+          "link": "https://github.com/web2098/bingoserver"
+        }
+      ]
+    }
+  ]
+}

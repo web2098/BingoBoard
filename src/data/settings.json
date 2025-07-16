@@ -1,0 +1,217 @@
+[
+  {
+    "section": "Website Version",
+    "Label": "Default Version",
+    "id": "defaultVersion",
+    "description": "The default version to use when accessing the application",
+    "type": "select",
+    "options": "getAvailableVersionIds",
+    "default": "v4"
+  },
+  {
+    "section": "Welcome Customizations",
+    "Label": "Welcome Message",
+    "id": "welcomeMessage",
+    "description": "Custom message displayed on the welcome screen",
+    "type": "textarea",
+    "default": "BINGO FREE TO PLAY!"
+  },
+  {
+    "section": "Welcome Customizations",
+    "Label": "Number of Cards Per Person",
+    "id": "numberOfCards",
+    "description": "Number of bingo cards each player receives",
+    "type": "number",
+    "default": 2
+  },
+  {
+    "section": "Welcome Customizations",
+    "Label": "Time",
+    "id": "timeMessage",
+    "description": "The time when the bingo game starts, and optionally ends",
+    "type": "textarea",
+    "default": "6:30 PM"
+  },
+  {
+    "section": "Welcome Customizations",
+    "Label": "Bingo Word",
+    "id": "bingoWord",
+    "description": "Custom word displayed on the welcome screen for what a person should call out at bingo",
+    "type": "textarea",
+    "default": "BAHHH!"
+  },
+  {
+    "section": "Welcome Customizations",
+    "Label": "Pattern Rotation Interval (seconds)",
+    "id": "patternRotationInterval",
+    "description": "Time in seconds between pattern rotations in the game preview",
+    "type": "number",
+    "default": 1
+  },
+  {
+    "section": "Welcome Customizations",
+    "Label": "Enable Pattern Rotation",
+    "id": "enablePatternRotation",
+    "description": "Enable automatic rotation of game patterns in select-game and board-page previews",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Welcome Customizations",
+    "Label": "Game Display Order",
+    "id": "gameDisplayOrder",
+    "description": "Order in which games are displayed in the game selection",
+    "type": "select",
+    "options": [
+      "Default",
+      "Length",
+      "Alphabetical",
+      "Random"
+    ],
+    "default": "Default"
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "Show Last Number Played",
+    "id": "showLastNumberPlayed",
+    "description": "Display the last number played on the bingo board",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "Show Number History Section",
+    "id": "showNumberHistory",
+    "description": "Display the number history section on the bingo board",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "Sound Effects",
+    "id": "soundEffects",
+    "description": "Enable sound effects for game events",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "B Letter Card Color",
+    "id": "bLetterColor",
+    "description": "Background color for the B letter cards",
+    "type": "colorpicker",
+    "default": "#000000"
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "I Letter Card Color",
+    "id": "iLetterColor",
+    "description": "Background color for the I letter cards",
+    "type": "colorpicker",
+    "default": "#000000"
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "N Letter Card Color",
+    "id": "nLetterColor",
+    "description": "Background color for the N letter cards",
+    "type": "colorpicker",
+    "default": "#000000"
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "G Letter Card Color",
+    "id": "gLetterColor",
+    "description": "Background color for the G letter cards",
+    "type": "colorpicker",
+    "default": "#000000"
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "O Letter Card Color",
+    "id": "oLetterColor",
+    "description": "Background color for the O letter cards",
+    "type": "colorpicker",
+    "default": "#000000"
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "Board Highlight Color",
+    "id": "boardHighlightColor",
+    "description": "Background color for highlighted/called numbers on the bingo board",
+    "type": "colorpicker",
+    "default": "#1e4d2b"
+  },
+  {
+    "section": "Bingo Server Settings",
+    "Label": "Bingo Server URL",
+    "id": "serverUrl",
+    "description": "URL of the bingo server for multiplayer games",
+    "type": "text",
+    "default": "localhost:8080"
+  },
+  {
+    "section": "Bingo Server Settings",
+    "Label": "Bingo Server Auth Token",
+    "id": "serverAuthToken",
+    "description": "Token for authenticating with the bingo server",
+    "type": "password",
+    "default": ""
+  },
+  {
+    "section": "Bingo Server Settings",
+    "Label": "Connection Retry Interval (seconds)",
+    "id": "connectionTimeout",
+    "description": "How often to retry server connections (auto-reconnect every 10 seconds)",
+    "type": "number",
+    "default": 10
+  },
+  {
+    "section": "Audience Interactions",
+    "Label": "Flash Message Timeout (seconds)",
+    "id": "flashMessageTimeout",
+    "description": "How long flash messages are displayed before automatically closing",
+    "type": "number",
+    "default": 3
+  },
+  {
+    "section": "Audience Interactions",
+    "Label": "Flash Message Background Color",
+    "id": "flashMessageBackgroundColor",
+    "description": "Background color for the flash message rectangle",
+    "type": "colorpicker",
+    "default": "#F5F0B9"
+  },
+  {
+    "section": "Audience Interactions",
+    "Label": "Flash Message Border Color",
+    "id": "flashMessageBorderColor",
+    "description": "Border color for the flash message rectangle",
+    "type": "colorpicker",
+    "default": "#307743"
+  },
+  {
+    "section": "Audience Interactions",
+    "Label": "Flash Message Unlit Color",
+    "id": "flashMessageAnimationColor1",
+    "description": "Unlit color for the flashing border animation",
+    "type": "colorpicker",
+    "default": "#F5CE17"
+  },
+  {
+    "section": "Audience Interactions",
+    "Label": "Flash Message Lit Color",
+    "id": "flashMessageAnimationColor2",
+    "description": "Lit color for the flashing border animation",
+    "type": "colorpicker",
+    "default": "#FFFF00"
+  },
+  {
+    "section": "Debug Settings",
+    "Label": "Developer Mode",
+    "id": "developerMode",
+    "description": "Enable developer features including sample data generation and debugging tools",
+    "type": "boolean",
+    "default": false
+  }
+]

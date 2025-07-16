@@ -1,0 +1,1068 @@
+/* Select Game Page Styles - Requirements Implementation */
+
+.selectGamePage {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Main Layout Container */
+.mainLayout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-left: 80px; /* Space for hamburger menu */
+  padding-bottom: 10.25vh; /* Space for bottom section */
+}
+
+/* Top Section - 3/4 height */
+.topSection {
+  display: flex;
+  min-height: 30vh;
+  max-height: 90vh;
+  gap: 20px;
+  padding: 20px;
+  flex: 1;
+}
+
+/* Section 1: Game Preview Area - 2/3 width */
+.gamePreviewArea {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: hidden;
+}
+
+/* Section 2: Welcome Area - 1/3 width */
+.welcomeArea {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Section 3: Bottom Section - 1/4 height */
+.bottomSection {
+  height: 10.25vh;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: 2px solid #e9ecef;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  z-index: 5;
+  background: #f8f9fa;
+}
+
+/* On hover, expand upward to show full content */
+.bottomSection:hover {
+  height: 36vh;
+  bottom: 0;
+  z-index: 999;
+  background: #f8f9fa;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+}
+
+.bottomSection:hover .swiperContainer {
+  padding-bottom: 25px;
+}
+
+.bottomSection:hover .gameSwiper {
+  padding: 5px 0;
+}
+
+.bottomSection:hover .swiperNavigation {
+  bottom: 20px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.bottomSection::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #dee2e6, transparent);
+}
+
+.bottomSection:hover::after {
+  display: none;
+}
+
+/* ==============================================
+   GAME PREVIEW SECTION STYLES
+   ============================================== */
+
+.gamePreviewSection {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 5px;
+}
+
+/* Game Info Card */
+.gameInfoCard {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+  flex-shrink: 0;
+}
+
+.gameInfoHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.gameTitle {
+  margin: 0;
+  font-size: 4rem;
+  color: #333;
+  text-align: center;
+  user-select: none;
+  font-weight: bold;
+  flex: 1;
+}
+
+.freeSpaceToggle {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.gameRules h4 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 1.9rem;
+  user-select: none;
+  text-align: center;
+}
+
+/* Free Space Toggle styles are now defined above in .gameInfoHeader section */
+
+.toggleLabel {
+  font-size: 1.0em;
+  font-weight: bold;
+  color: #333;
+  user-select: none;
+}
+
+.toggleState {
+  font-size: 0.9em;
+  color: #666;
+  font-weight: bold;
+  user-select: none;
+}
+
+/* Variant controlled indicator */
+.variantControlledIndicator {
+  font-size: 0.8em;
+  color: #666;
+  font-style: italic;
+  font-weight: normal;
+  user-select: none;
+}
+
+/* Disabled toggle switch */
+.toggleSwitch.disabled {
+  opacity: 0.6;
+}
+
+.toggleSwitch.disabled .slider {
+  cursor: not-allowed;
+}
+
+/* Game Display Area */
+.gameDisplayArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  gap: 15px;
+}
+
+/* Game Boards Wrapper */
+.gameBoardsWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Progress Circle */
+.progressCircleContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.progressCircle {
+  transform: scale(0.8);
+  filter: drop-shadow(0 2px 4px rgba(0, 123, 255, 0.2));
+}
+
+/* Game Boards Container */
+.gameBoardsContainer {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.gameBoardsContainer.dualBoard {
+  display: grid;
+  grid-template-columns: 1fr 10px 1fr;
+  gap: 10px;
+  align-items: center;
+  justify-items: center;
+}
+
+/* Operator Icon */
+.operatorIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  width: 30px;
+  height: 30px;
+  user-select: none;
+}
+
+/* Variant Controls Wrapper */
+.variantControlsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Progress Circle Inline */
+.progressCircleInline {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Variant Controls */
+.variantControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.variantArrow {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.variantArrow:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.variantArrow:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.variantIndicator {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #333;
+  min-width: 60px;
+  text-align: center;
+  user-select: none;
+}
+
+/* ==============================================
+   GAME BOARD STYLES
+   ============================================== */
+
+.gameBoard {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  border: 2px solid #333;
+  cursor: pointer;
+  transition: transform 0.2s;
+  user-select: none;
+}
+
+.gameBoard.selected {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
+
+.boardRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.boardCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #333;
+  background-color: #fff;
+  font-weight: bold;
+  font-size: clamp(1.2rem, 3vw, 2.75rem);
+  color: #333;
+  aspect-ratio: 1;
+  user-select: none;
+}
+
+.boardCell.freeSpace {
+  background-color: #fff;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Free space cell when disabled (dynamic free space games only) */
+.boardCell.freeSpace.disabled {
+  background-color: #fff;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Single Board Layout */
+.gameBoardsContainer:not(.dualBoard) .boardCell {
+  font-size: clamp(2.2rem, 5vw, 4.75rem);
+  aspect-ratio: 2/1;
+}
+
+/* Dual Board Layout */
+.gameBoardsContainer.dualBoard .boardCell {
+  font-size: clamp(4.12rem, 5vw, 4.75rem);
+  aspect-ratio: 1;
+}
+
+/* Double Bingo Dual Board Layout - Smaller font for better readability */
+.gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
+  font-size: clamp(1.2rem, 3vw, 2.75rem);
+}
+
+/* ==============================================
+   WELCOME PANEL STYLES
+   ============================================== */
+
+.welcomePanel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 20px;
+}
+
+.welcomeMessageCard,
+.qrCodeCard {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+  text-align: center;
+}
+
+.welcomeMessageCard {
+  flex: 1;
+}
+
+.welcomeMessageCard h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 3.5rem;
+  user-select: none;
+}
+
+.welcomeTemplate {
+  font-family: 'Courier New', monospace;
+  font-size: 2.2rem;
+  font-weight: bold;
+  line-height: 1.6;
+  color: #2c3e50;
+  margin: 0;
+  white-space: pre-line;
+  user-select: none;
+}
+
+.qrCodeCard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.qrCodeCard h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 2.2rem;
+  user-select: none;
+}
+
+.qrCodeContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.gameQrCode {
+  max-width: 100%;
+  height: auto;
+}
+
+.roomIdDisplay {
+  margin-top: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #007bff;
+  background: rgba(0, 123, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 123, 255, 0.2);
+}
+
+/* QR Code Card Message States */
+.qrCodeMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 20px;
+  text-align: center;
+}
+
+.qrCodeMessage .statusIcon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.qrCodeMessage p {
+  margin: 5px 0;
+  color: #333;
+}
+
+.qrCodeMessage p:firstOfType {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.qrCodeMessage .statusDetail {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.qrCodeMessage .statusHint {
+  font-size: 1.1rem;
+  color: #888;
+  font-style: italic;
+}
+
+/* Error state styling */
+.qrCodeMessage.error {
+  border-left-color: #dc3545;
+}
+
+.qrCodeMessage.error .statusIcon {
+  color: #dc3545;
+}
+
+.qrCodeMessage.error p:firstOfType {
+  color: #dc3545;
+}
+
+/* Connecting state styling */
+.qrCodeMessage.connecting .statusIcon {
+  color: #ffc107;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Settings link styling */
+.settingsLink {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: background-color 0.3s ease;
+}
+
+.settingsLink:hover {
+  background: #0056b3;
+  color: white;
+  text-decoration: none;
+}
+
+/* QR Code Success State */
+.qrCodeSuccess {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.qrCodeInstruction {
+  margin-top: 5px;
+  font-size: 1.1rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Toggle Switch Styles */
+.toggleSwitch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggleSwitch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+input:disabled + .slider {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+/* ==============================================
+   GAME SELECTION SECTION STYLES
+   ============================================== */
+
+.gameSelectionSection {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.swiperContainer {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.gameSwiper {
+  height: 100%;
+  padding: 10px 0;
+}
+
+.gameSlide {
+  width: calc(25% - 12px) !important;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Responsive slide widths */
+@media (max-width: 767px) {
+  .gameSlide {
+    width: calc(33.333% - 10px) !important;
+  }
+}
+
+@media (max-width: 639px) {
+  .gameSlide {
+    width: calc(50% - 8px) !important;
+  }
+}
+
+/* Small Game Preview */
+.smallGamePreview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  justify-content: flex-start;
+  background: transparent;
+  user-select: none;
+}
+
+.smallGamePreview:hover {
+  transform: scale(1.02);
+}
+
+.smallGameBoard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: transparent;
+  margin-bottom: 4px;
+  flex-shrink: 0;
+}
+
+.smallGameBoard .gameBoard {
+  width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  background: transparent;
+  aspect-ratio: 2 / 1;
+}
+
+.smallGameBoard .boardCell{
+  aspect-ratio: 2/1;
+}
+
+/* Responsive board sizing */
+@media (max-width: 767px) {
+  .smallGameBoard .gameBoard {
+    max-width: 110px;
+    max-height: 55px;
+  }
+}
+
+@media (max-width: 639px) {
+  .smallGameBoard .gameBoard {
+    max-width: 100px;
+    max-height: 50px;
+  }
+}
+
+.smallGameBoard .boardCell {
+  font-size: 1.65rem;
+  line-height: 1.1;
+  padding: 2px;
+  background-color: #fff;
+  user-select: none;
+}
+
+.smallGameBoard .boardCell.freeSpace {
+  background-color: #fff;
+  color: #333;
+}
+
+/* Double Bingo small boards need smaller font */
+.smallGameBoard.doubleBingoDual .boardCell {
+  font-size: 1.2rem;
+}
+
+/* Responsive board cell sizing */
+@media (max-width: 767px) {
+  .smallGameBoard .boardCell {
+    font-size: 0.6rem;
+  }
+
+  /* Double Bingo small boards need even smaller font at tablet size */
+  .smallGameBoard.doubleBingoDual .boardCell {
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .smallGameBoard .boardCell {
+    font-size: 0.55rem;
+  }
+
+  /* Double Bingo small boards need even smaller font at mobile size */
+  .smallGameBoard.doubleBingoDual .boardCell {
+    font-size: 0.45rem;
+  }
+}
+
+.gamePreviewLabel {
+  font-size: 1.2rem;
+  text-align: center;
+  color: #333;
+  font-weight: bold;
+  line-height: 1.1;
+  width: 100%;
+  word-wrap: break-word;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  user-select: none;
+  margin-bottom: 8px;
+}
+
+/* Responsive label sizing */
+@media (max-width: 767px) {
+  .gamePreviewLabel {
+    font-size: 0.75rem;
+    height: 26px;
+  }
+}
+
+@media (max-width: 639px) {
+  .gamePreviewLabel {
+    font-size: 0.7rem;
+    height: 24px;
+  }
+}
+
+/* Swiper Navigation */
+.swiperNavigation {
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  z-index: 10;
+  height: 45px;
+  transition: all 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.swiperButtonPrev,
+.swiperButtonNext {
+  position: static !important;
+  margin: 0 !important;
+  width: 40px !important;
+  height: 40px !important;
+  color: #007bff !important;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.swiperButtonPrev:hover,
+.swiperButtonNext:hover {
+  background: #007bff;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.swiperButtonPrev::after {
+  content: '‹' !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
+}
+
+.swiperButtonNext::after {
+  content: '›' !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
+}
+
+.swiperPagination {
+  position: static !important;
+  width: auto !important;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 0 10px;
+}
+
+.swiperPaginationBullet {
+  background: #666 !important;
+  width: 10px !important;
+  height: 10px !important;
+  border: 2px solid #333 !important;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0.8 !important;
+}
+
+.swiperPaginationBulletActive {
+  background: #007bff !important;
+  border-color: #0056b3 !important;
+  transform: scale(1.2);
+  opacity: 1 !important;
+}
+
+/* ==============================================
+   START GAME BUTTON
+/* Play Icon for Start Game Button */
+.playIcon {
+  width: 0;
+  height: 0;
+  border-left: 14px solid white;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  margin-left: 3px;
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN
+   ============================================== */
+
+@media (max-width: 768px) {
+  .mainLayout {
+    padding-left: 60px;
+    padding-bottom: 26.5vh; /* Space for mobile bottom section */
+  }
+
+  .topSection {
+    flex-direction: column;
+    min-height: auto;
+    height: calc(100vh - 26.5vh); /* Fixed height to prevent growing into bottom section */
+    flex: none;
+  }
+
+  .gamePreviewArea {
+    order: 2;
+    flex: none;
+    min-height: 40vh;
+  }
+
+  .welcomeArea {
+    order: 1;
+    flex: none;
+    min-height: 25vh;
+  }
+
+  .bottomSection {
+    height: 26.5vh;
+    overflow: hidden;
+  }
+
+  .gameTitle {
+    font-size: 1.5rem;
+  }
+
+  .welcomeTemplate {
+    font-size: 1rem;
+  }
+
+  .progressCircle {
+    transform: scale(0.7);
+  }
+
+  /* Dual board layout adjustments */
+  .gameBoardsContainer.dualBoard {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 10px 1fr;
+    gap: 10px;
+    justify-items: center;
+  }
+
+  /* Tablet Dual Board Layout */
+  .gameBoardsContainer.dualBoard .boardCell {
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    aspect-ratio: 1;
+  }
+
+  /* Tablet Double Bingo Dual Board Layout - Smaller font for better readability */
+  .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
+    font-size: clamp(1.0rem, 2.5vw, 1.8rem);
+  }
+
+  .operatorIcon {
+    width: 25px;
+    height: 25px;
+    font-size: 1.2rem;
+  }
+
+  .gameInfoHeader {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    position: static;
+  }
+
+  .freeSpaceToggle {
+    position: static;
+    gap: 8px;
+  }
+
+  .gameTitle {
+    font-size: 1.5rem;
+  }
+
+  .toggleLabel {
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainLayout {
+    padding-left: 50px;
+    padding-bottom: 22.25vh; /* Space for mobile bottom section */
+  }
+
+  .topSection {
+    padding: 10px;
+    gap: 15px;
+    min-height: auto;
+    height: calc(100vh - 22.25vh); /* Fixed height to prevent growing into bottom section */
+    flex: none;
+  }
+
+  .bottomSection {
+    padding: 0 10px 10px;
+    height: 22.25vh;
+    overflow: hidden;
+  }
+
+  .gameTitle {
+    font-size: 1.3rem;
+  }
+
+  .welcomeTemplate {
+    font-size: 0.9rem;
+  }
+
+  .progressCircle {
+    transform: scale(0.6);
+  }
+
+  /* Mobile Single Board Layout */
+  .gameBoardsContainer:not(.dualBoard) .boardCell {
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    aspect-ratio: 2/1;
+  }
+
+  /* Mobile Dual Board Layout */
+  .gameBoardsContainer.dualBoard .boardCell {
+    font-size: clamp(0.9rem, 2.25vw, 1.5rem);
+    aspect-ratio: 1;
+  }
+
+  /* Mobile Double Bingo Dual Board Layout - Even smaller font for mobile */
+  .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
+    font-size: clamp(0.7rem, 1.8vw, 1.2rem);
+  }
+
+  .smallGamePreview {
+    width: 100px;
+  }
+
+  .smallGameBoard {
+    width: 80px;
+    height: 40px;
+  }
+
+  .smallGameBoard .gameBoard {
+    max-width: 80px;
+    max-height: 40px;
+  }
+
+  /* Mobile Play Icon */
+  .playIcon {
+    border-left: 12px solid white;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    margin-left: 2px;
+  }
+
+  .gameInfoHeader {
+    gap: 8px;
+    position: static;
+  }
+
+  .freeSpaceToggle {
+    position: static;
+    gap: 6px;
+  }
+
+  .gameTitle {
+    font-size: 1.3rem;
+  }
+
+  .toggleLabel {
+    font-size: 0.8em;
+  }
+
+  .toggleState {
+    font-size: 0.8em;
+  }
+}

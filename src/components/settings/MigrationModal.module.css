@@ -1,0 +1,993 @@
+/* Migration Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modalContent {
+  background: white;
+  border-radius: 8px;
+  width: 75vw;
+  max-width: none;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e9ecef;
+  flex-shrink: 0;
+}
+
+.modalTitle {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: #e0e0e0;
+}
+
+.modalBody {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.migrationSummary {
+  margin: 0;
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+  border-radius: 0;
+  border-left: 4px solid #007acc;
+  border-bottom: 1px solid #e9ecef;
+  flex-shrink: 0;
+}
+
+/* Dynamic styling based on migration status */
+.migrationSummaryPending {
+  border-left-color: #ffc107;
+  background-color: #fff8e1;
+}
+
+.migrationSummarySuccess {
+  border-left-color: #28a745;
+  background-color: #f8fff9;
+}
+
+.migrationSummaryFailed {
+  border-left-color: #dc3545;
+  background-color: #fff8f8;
+}
+
+.migrationSummary p {
+  margin: 5px 0;
+}
+
+.migrationErrors {
+  margin-top: 10px;
+  color: #dc3545;
+}
+
+.migrationErrors ul {
+  margin: 5px 0 0 20px;
+}
+
+.migrationDetails {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  height: 100%;
+}
+
+@media (max-width: 1200px) {
+  .migrationDetails {
+    grid-template-columns: 1fr;
+  }
+
+  .migrationValues {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Enhanced Migration Details Styles */
+.migrationList {
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  flex: 1;
+}
+
+.migrationItem {
+  padding: 15px;
+  border-bottom: 1px solid #e9ecef;
+  background-color: white;
+  margin: 5px;
+  border-radius: 4px;
+}
+
+.migrationItem:last-child {
+  border-bottom: none;
+}
+
+.migrationSuccess {
+  border-left: 4px solid #28a745;
+}
+
+.migrationError {
+  border-left: 4px solid #dc3545;
+}
+
+.migrationHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.migrationStatus {
+  font-size: 16px;
+}
+
+.migrationDescription {
+  color: #666;
+  font-style: italic;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.migrationValues {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.migrationValue {
+  background-color: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+.migrationValueLabel {
+  font-weight: bold;
+  font-size: 12px;
+  color: #495057;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.migrationValue code {
+  background-color: transparent;
+  padding: 0;
+  font-size: 12px;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.migrationConversion {
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 8px;
+}
+
+.migrationConversionLabel {
+  font-weight: bold;
+}
+
+/* Migration action buttons */
+.migrationActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.migrationButton {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.migrationButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.migrationButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.migrationButton.export {
+  background: #007bff;
+  color: white;
+}
+
+.migrationButton.export:hover {
+  background: #0056b3;
+}
+
+.migrationButton.clear {
+  background: #dc3545;
+  color: white;
+}
+
+.migrationButton.clear:hover {
+  background: #c82333;
+}
+
+/* Migration Modal Tabs */
+.migrationTabs {
+  display: flex;
+  border-bottom: 2px solid #e9ecef;
+  background-color: #f8f9fa;
+  flex-shrink: 0;
+}
+
+.migrationTab {
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6c757d;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.migrationTab:hover {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.migrationTab.active {
+  color: #007acc;
+  border-bottom-color: #007acc;
+  background-color: white;
+}
+
+.migrationTabContent {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.migrationTabPane {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  display: none;
+  min-height: 0;
+}
+
+.migrationTabPane.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Migration Details Container (replaces tab system) */
+.migrationDetailsContainer {
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.migrationDetailsSection {
+  height: 100%;
+}
+
+.migrationDetailsSection h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+/* Enhanced Migration Details Layout */
+.migrationDetailsContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.migrationSettingsSection {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}
+
+.migrationSettingsTextarea {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: white;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  padding: 15px;
+  resize: none;
+  outline: none;
+}
+
+/* Migration Details Always Visible Section */
+.migrationDetailsAlwaysVisible {
+  border-top: 2px solid #e9ecef;
+  padding: 20px;
+  background-color: #f8f9fa;
+  flex-shrink: 0;
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
+.migrationDetailsAlwaysVisible h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Mobile responsive styles for migration modal */
+@media (max-width: 768px) {
+  .modalContent {
+    width: 95vw;
+    height: 95vh;
+  }
+
+  .migrationTabs {
+    flex-wrap: wrap;
+  }
+
+  .migrationTab {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .migrationDetailsAlwaysVisible {
+    max-height: 35vh;
+  }
+}
+
+/* Complex Migration Styles */
+.complexMigrationsSection {
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.complexMigrationsSection h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+.complexMigrationItem {
+  border: 2px solid #ff9800;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background-color: #fff3e0;
+}
+
+.complexMigrationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+
+.complexMigrationTitle {
+  flex: 1;
+}
+
+.complexMigrationTitle h4 {
+  margin: 0 0 8px 0;
+  color: #e65100;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.complexMigrationTitle p {
+  margin: 0;
+  color: #666;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.complexMigrationHeader p {
+  margin: 0;
+  color: #666;
+  font-style: italic;
+}
+
+.complexMigrationOriginal {
+  margin-bottom: 16px;
+}
+
+.complexMigrationOriginal h5 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.originalValue {
+  background-color: #f5f5f5;
+  padding: 12px;
+  border-radius: 4px;
+  border-left: 4px solid #2196f3;
+  font-family: 'Courier New', monospace;
+  word-break: break-word;
+}
+
+.proposedMigrations h5 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.proposedMigrationItem {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.proposedMigrationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.proposedMigrationField {
+  font-family: 'Courier New', monospace;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.confidenceLevel {
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.confidenceHigh {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.confidenceMedium {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.confidenceLow {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.proposedMigrationReasoning {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+.approvalCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.approvalCheckbox label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #333;
+}
+
+.approvalCheckbox input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+/* Individual Proposal Actions */
+.proposalActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.approveButton, .rejectButton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
+}
+
+.approveButton {
+  background-color: #28a745;
+  color: white;
+}
+
+.approveButton:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.rejectButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+.rejectButton:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.complexMigrationActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.approveAllButton, .rejectAllButton {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.approveAllButton {
+  background-color: #4caf50;
+  color: white;
+}
+
+.approveAllButton:hover {
+  background-color: #45a049;
+}
+
+.rejectAllButton {
+  background-color: #f44336;
+  color: white;
+}
+
+.rejectAllButton:hover {
+  background-color: #da190b;
+}
+
+.complexMigrationFinalActions {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.applyComplexMigrationsButton {
+  background-color: #1976d2;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.applyComplexMigrationsButton:hover {
+  background-color: #1565c0;
+}
+
+/* Migration tab styling update for warning */
+.migrationTab:has-text("⚠️") {
+  background-color: #fff3e0;
+  border-color: #ff9800;
+  color: #e65100;
+}
+
+.migrationTab.active:has-text("⚠️") {
+  background-color: #ff9800;
+  color: white;
+}
+
+.proposedValue {
+  background-color: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border-left: 3px solid #28a745;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 8px;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.migrationValueInput {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  background-color: white;
+  transition: border-color 0.2s ease;
+}
+
+.migrationValueInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Complex V5 Values Styles */
+.complexV5Values {
+  width: 100%;
+}
+
+.complexProposedValues {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.complexProposedValue {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border-left: 3px solid #dee2e6;
+  margin-bottom: 6px;
+}
+
+.complexProposedValue:last-child {
+  margin-bottom: 0;
+}
+
+.complexProposedValue strong {
+  color: #495057;
+  font-size: 12px;
+  min-width: 100px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.complexProposedValue code {
+  flex: 1;
+  background-color: transparent;
+  padding: 0;
+  font-size: 11px;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.complexConfidence {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.complexConfidence.confidenceHigh {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.complexConfidence.confidenceMedium {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.complexConfidence.confidenceLow {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.migrationConversion {
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 8px;
+}
+
+.migrationConversionLabel {
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.migrationDetailsAlwaysVisible {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 2px solid #e9ecef;
+}
+
+.migrationList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.migrationItem {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #ffffff;
+}
+
+.migrationItem.migrationSuccess {
+  border-left: 4px solid #28a745;
+  background-color: #f8fff9;
+}
+
+.migrationItem.migrationError {
+  border-left: 4px solid #dc3545;
+  background-color: #fff8f8;
+}
+
+.migrationHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.migrationStatus {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.migrationDescription {
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.migrationValues {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.migrationValue {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.migrationValueLabel {
+  font-weight: 600;
+  min-width: 30px;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+.migrationValue code {
+  background-color: transparent;
+  padding: 0;
+  font-size: 12px;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.migrationError {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #f8d7da;
+  border-radius: 4px;
+}
+
+/* Pending Migrations Notice */
+.pendingMigrationsNotice {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-left: 4px solid #f39c12;
+  border-radius: 6px;
+  padding: 20px;
+  margin: 0 0 24px 0;
+  color: #856404;
+}
+
+.pendingMigrationsNotice h4 {
+  margin: 0 0 12px 0;
+  color: #e67e22;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.pendingMigrationsNotice p {
+  margin: 8px 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.pendingMigrationsNotice p:last-child {
+  margin-bottom: 0;
+}
+
+.pendingMigrationsNotice strong {
+  color: #d35400;
+  font-weight: 600;
+}
+
+.migrationProgress {
+  margin-top: 12px !important;
+  padding: 8px 12px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  border: 1px solid #f39c12;
+  font-size: 0.9rem !important;
+}
+
+.migrationProgress strong {
+  color: #e67e22 !important;
+}
+
+/* All Proposals Handled Notice */
+.allProposalsHandledNotice {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-left: 4px solid #28a745;
+  border-radius: 6px;
+  padding: 20px;
+  margin: 0 0 24px 0;
+  color: #155724;
+  text-align: center;
+}
+
+.allProposalsHandledNotice h4 {
+  margin: 0 0 12px 0;
+  color: #155724;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.allProposalsHandledNotice p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Complex Migration Complete Styling */
+.migrationComplexComplete {
+  border-left-color: #28a745 !important;
+  background-color: #f8fff9 !important;
+}
+
+/* Enhanced Complex Migration Details Display */
+.complexProposalStatus {
+  font-size: 1.2rem;
+  margin-right: 8px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.complexProposedValueApproved {
+  background-color: #f8fff9 !important;
+  border-left-color: #28a745 !important;
+}
+
+.complexProposedValueRejected {
+  background-color: #fff8f8 !important;
+  border-left-color: #dc3545 !important;
+}
+
+.complexValueContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.complexProposedValueText,
+.complexCurrentValueText {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.complexValueLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #495057;
+  min-width: 60px;
+}
+
+.complexProposedValueText .complexValueLabel {
+  color: #6c757d;
+}
+
+.complexCurrentValueText .complexValueLabel {
+  color: #28a745;
+}
+
+.complexValueContainer code {
+  flex: 1;
+  background-color: transparent;
+  padding: 2px 4px;
+  font-size: 11px;
+  word-break: break-all;
+  white-space: pre-wrap;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Enhanced Migration Details Layout */

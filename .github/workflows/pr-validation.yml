@@ -1,0 +1,102 @@
+name: PR Validation
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+      fail-fast: false
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run linting
+      run: npm run lint --if-present
+
+    - name: Run type checking
+      run: npm run type-check --if-present
+
+    - name: Run tests
+      run: npm test -- --coverage --watchAll=false --passWithNoTests
+      env:
+        CI: true
+
+    - name: Build application
+      run: npm run build
+
+    - name: Upload coverage reports
+      if: matrix.node-version == '20.x'
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: Upload build artifacts
+      if: matrix.node-version == '20.x'
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-files
+        path: build/
+        retention-days: 7
+
+  lighthouse-audit:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.event.pull_request.draft == false && always()
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Set homepage for local testing
+      run: node scripts/updateHomepage.js local
+
+    - name: Build application
+      run: npm run build
+
+    - name: Run postBuild script
+      run: node scripts/postBuild.js
+
+    - name: Serve build and run Lighthouse
+      run: |
+        npm install -g serve
+        serve -s build -p 3000 &
+        sleep 5
+        npx lighthouse http://localhost:3000/BingoBoard/ --output json --output-path lighthouse-report.json --chrome-flags="--headless --no-sandbox"
+
+    - name: Upload Lighthouse report
+      uses: actions/upload-artifact@v4
+      with:
+        name: lighthouse-report
+        path: lighthouse-report.json
+        retention-days: 7
