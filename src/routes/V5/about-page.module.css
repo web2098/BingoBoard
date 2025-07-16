@@ -24,12 +24,22 @@
 
 .aboutContent {
   flex: 1;
-  max-width: 800px;
+  max-width: 1200px; /* Increased width to accommodate columns */
   margin: 0 auto;
   padding: 20px;
   padding-left: 100px; /* Space for hamburger menu and vertical bar (80px + 20px) */
   width: 100%;
   box-sizing: border-box;
+}
+
+.aboutHeaders {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.aboutHeaders .aboutHeader {
+  flex: 1;
 }
 
 .aboutHeader {
@@ -96,6 +106,73 @@
 
 .aboutSection strong {
   color: #333;
+}
+
+.aboutColumns {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.leftColumn {
+  flex: 1;
+  min-width: 0; /* Allows flex item to shrink below its content size */
+}
+
+.rightColumn {
+  flex: 1;
+  min-width: 0; /* Allows flex item to shrink below its content size */
+}
+
+.changeLogItem {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #28a745;
+}
+
+.changeLogItem h2 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.changeLogItem h2:hover {
+  color: #007bff;
+}
+
+.changeLogContent {
+  margin-top: 12px;
+}
+
+.changeLogContent p {
+  margin: 0 0 12px 0;
+  color: #666;
+  font-style: italic;
+}
+
+.changeLogContent ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.changeLogContent li {
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.columnTitle {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #007bff;
 }
 
 /* Responsive Design */
