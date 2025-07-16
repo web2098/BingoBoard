@@ -368,7 +368,7 @@ function largeX(){
                     (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]]]
                 ],
                 rules: "Must match exact pattern on one board",
-                length: "Not Set"
+                length: "Average"
             },
             {
                 boards: [
@@ -377,7 +377,7 @@ function largeX(){
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
-                length: "Not Set"
+                length: "Average"
             }
         ]
     }
@@ -391,7 +391,7 @@ function corners(){
                 name: "4 Corners",
                 length: "Fast",
                 boards: [
-                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[4,4],[0,4],[4,0]]]
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[4,0],[4,4]]]
                 ],
                 rules: 'Must match all 4 corners on ONE boards',
             },
@@ -399,8 +399,8 @@ function corners(){
                 name: "8 Corners",
                 length: "Fast",
                 boards: [
-                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[4,4],[0,4],[4,0]]],
-                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[4,4],[0,4],[4,0]]]
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[4,0],[4,4]]],
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[4,0],[4,4]]]
                 ],
                 op: "and",
                 rules: 'Must match all 4 corners on ONE boards'
@@ -465,7 +465,7 @@ function insideCircle(){
                 rules: "Must match exact pattern",
                 dynamicFreeSpace: true,
                 freeSpace: false,
-                length: "Not Set"
+                length: "Average"
             }
         ]
     }
@@ -485,7 +485,7 @@ function outsideCircle(){
                     ]]
                 ],
                 rules: "Must match exact pattern",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -504,7 +504,7 @@ function postageStamp(){
                     ]]
                 ],
                 rules: "Must match exact pattern",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -530,7 +530,7 @@ function theGoat(){
                     ]]
                 ],
                 rules: "Must make the GOAT pattern on one board aligned in the first or second column",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -550,7 +550,7 @@ function xmas(){
                     ]]
                 ],
                 rules: "Must match exact pattern",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -565,7 +565,7 @@ function candyCane(){
                 ],
                 dynamicFreeSpace: true,
                 rules: "Must match exact pattern on one board",
-                length: "Not Set"
+                length: "Slow"
             },
             {
                 boards: [
@@ -574,7 +574,7 @@ function candyCane(){
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -594,7 +594,7 @@ function ticTacToe(){
                     ]]
                 ],
                 rules: "Must match exact pattern on one board",
-                length: "Not Set"
+                length: "Slow"
             },
             {
                 boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
@@ -615,7 +615,7 @@ function ticTacToe(){
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -635,7 +635,7 @@ function blackout(){
                     ]]
                 ],
                 rules: "Fill out the entire board!",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -649,7 +649,7 @@ function survivor(){
                     [[]]
                 ],
                 rules: "Stand up with both boards up. If a number on a board gets called flip the board. If both boards are flipped sit down. Last person standing wins!",
-                length: "Not Set"
+                length: "Fast"
             },
             {
                 name: "Blackout Survivor",
@@ -665,7 +665,7 @@ function survivor(){
                 ],
                 op:"transition",
                 rules: "Be the last person standing, or fill out the entire board!",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -685,7 +685,7 @@ function arrow(){
                     ]]
                 ],
                 rules: "Must match exact pattern on one board",
-                length: "Not Set"
+                length: "Slow"
             },
             {
                 boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
@@ -706,7 +706,7 @@ function arrow(){
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -721,7 +721,7 @@ function diamond(){
                         [[[0,2],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[2,4],[3,1],[3,2],[3,3],[4,2]]]
                 ],
                 rules: "Must match exact pattern on one board",
-                length: "Not Set",
+                length: "Average",
             },
             {
                 boards: [
@@ -732,7 +732,7 @@ function diamond(){
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
-                length: "Not Set",
+                length: "Average",
             }
         ]
     }
@@ -752,7 +752,7 @@ function theT(){
                     ]]
                 ],
                 rules: "Must match exact pattern on one board",
-                length: "Not Set"
+                length: "Slow"
             },
             {
                 boards: [
@@ -772,7 +772,7 @@ function theT(){
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -792,7 +792,7 @@ function theZ(){
                     ]]
                 ],
                 rules: "Must match exact pattern on one board",
-                length: "Not Set"
+                length: "Slow"
             },
             {
                 boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
@@ -813,7 +813,7 @@ function theZ(){
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -833,7 +833,7 @@ function lucky7(){
                     ]]
                 ],
                 rules: "Must match exact pattern on one board",
-                length: "Not Set"
+                length: "Slow"
             },
             {
                 boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
@@ -854,7 +854,7 @@ function lucky7(){
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
-                length: "Not Set"
+                length: "Slow"
             }
         ]
     }
@@ -874,7 +874,7 @@ function valentinesDay(){
                     ]]
                 ],
                 rules: "Must match exact pattern on one board",
-                length: "Not Set"
+                length: "Slow"
             },
             {
                 boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
@@ -895,7 +895,181 @@ function valentinesDay(){
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
-                length: "Not Set"
+                length: "Slow"
+            }
+        ]
+    }
+}
+
+function theM(){
+    return {
+        name: "The M",
+        variants:[
+            {
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,4],
+                        [1,0],[1,1],[1,3],[1,4],
+                        [2,0],[2,2],[2,4],
+                        [3,0],[3,4],
+                        [4,0],[4,4]
+                    ]]
+                ],
+                rules: "Must match exact pattern on one board",
+                length: "Slow",
+                freeSpace: true
+            },
+            {
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,4],
+                        [1,0],[1,1],[1,3],[1,4],
+                        [2,0],[2,2],[2,4],
+                        [3,0],[3,4],
+                        [4,0],[4,4]
+                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,4],
+                        [1,0],[1,1],[1,3],[1,4],
+                        [2,0],[2,2],[2,4],
+                        [3,0],[3,4],
+                        [4,0],[4,4]
+                    ]]
+                ],
+                op: "and",
+                rules: "Must match exact pattern on both boards",
+                length: "Slow",
+                freeSpace: true
+            }
+        ]
+    }
+}
+
+function sailboat(){
+    return {
+        name: "Sailboat",
+        variants:[
+            {
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,2],
+                        [1,2],[1,3],
+                        [2,2],
+                        [3,0],[3,1],[3,2],[3,3],[3,4],
+                        [4,1],[4,2],[4,3]
+                    ]]
+                ],
+                rules: "Must match exact pattern on one board",
+                length: "Slow",
+                freeSpace: true
+            },
+            {
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,2],
+                        [1,2],[1,3],
+                        [2,2],
+                        [3,0],[3,1],[3,2],[3,3],[3,4],
+                        [4,1],[4,2],[4,3]
+                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,2],
+                        [1,2],[1,3],
+                        [2,2],
+                        [3,0],[3,1],[3,2],[3,3],[3,4],
+                        [4,1],[4,2],[4,3]
+                    ]]
+                ],
+                op: "and",
+                rules: "Must match exact pattern on both boards",
+                length: "Slow",
+                freeSpace: true
+            }
+        ]
+    }
+}
+
+function turtle(){
+    return {
+        name: "Turtle",
+        variants:[
+            {
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,4],
+                        [1,1],[1,2],[1,3],[1,4],
+                        [2,1],[2,3],
+                        [3,1],[3,2],[3,3],
+                        [4,0],[4,1],[4,4]
+                    ]]
+                ],
+                rules: "Must match exact pattern on one board",
+                length: "Slow"
+            },
+            {
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,4],
+                        [1,1],[1,2],[1,3],[1,4],
+                        [2,1],[2,3],
+                        [3,1],[3,2],[3,3],
+                        [4,0],[4,1],[4,4]
+                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,4],
+                        [1,1],[1,2],[1,3],[1,4],
+                        [2,1],[2,3],
+                        [3,1],[3,2],[3,3],
+                        [4,0],[4,1],[4,4]
+                    ]]
+                ],
+                op: "and",
+                rules: "Must match exact pattern on both boards",
+                length: "Slow"
+            }
+        ]
+    }
+}
+
+function twistedTs(){
+    return {
+        name: "Twisted Ts",
+        variants:[
+            {
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,1],[0,2],[0,3],
+                        [1,1],
+                        [2,1],[2,2],[2,3],
+                        [3,3],
+                        [4,1],[4,2],[4,3],[4,4]
+                    ]]
+                ],
+                rules: "Must match exact pattern on one board",
+                length: "Slow",
+                freeSpace: true
+            },
+            {
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,1],[0,2],[0,3],
+                        [1,1],
+                        [2,1],[2,2],[2,3],
+                        [3,3],
+                        [4,1],[4,2],[4,3],[4,4]
+                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,1],[0,2],[0,3],
+                        [1,1],
+                        [2,1],[2,2],[2,3],
+                        [3,3],
+                        [4,1],[4,2],[4,3],[4,4]
+                    ]]
+                ],
+                op: "and",
+                rules: "Must match exact pattern on both boards",
+                length: "Slow",
+                freeSpace: true
             }
         ]
     }
@@ -923,7 +1097,11 @@ function gameList(){
         theT(),
         theZ(),
         lucky7(),
-        valentinesDay()
+        valentinesDay(),
+        theM(),
+        sailboat(),
+        turtle(),
+        twistedTs()
     ]
 }
 

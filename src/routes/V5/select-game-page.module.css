@@ -378,6 +378,16 @@
   font-size: clamp(1.2rem, 3vw, 2.75rem);
 }
 
+/* Dual Board Layout with Free Space - Reduce size to prevent overflow */
+.gameBoardsContainer.dualBoard .boardCell.freeSpace {
+  font-size: clamp(0.8rem, 2vw, 1.5rem);
+}
+
+/* Double Bingo Dual Board with Free Space - Even smaller */
+.gameBoardsContainer.dualBoard.doubleBingoDual .boardCell.freeSpace {
+  font-size: clamp(1.2rem, 3vw, 2.75rem);
+}
+
 /* ==============================================
    WELCOME PANEL STYLES
    ============================================== */
