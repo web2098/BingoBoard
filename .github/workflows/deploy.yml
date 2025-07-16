@@ -7,7 +7,6 @@ on:
       - '**.md'
       - 'LICENSE'
       - '.gitignore'
-      - '.github/**'
 
 permissions:
   contents: write
