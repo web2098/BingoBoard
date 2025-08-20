@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding-left: 80px; /* Space for hamburger menu */
+  padding-left: clamp(60px, 4.2vw, 80px); /* Space for hamburger menu - responsive */
   padding-bottom: 10.25vh; /* Space for bottom section */
 }
 
@@ -24,8 +24,8 @@
   display: flex;
   min-height: 30vh;
   max-height: 90vh;
-  gap: 20px;
-  padding: 20px;
+  gap: clamp(15px, 1.5vw, 25px); /* Responsive gap */
+  padding: clamp(15px, 1.5vw, 25px); /* Responsive padding */
   flex: 1;
 }
 
@@ -34,7 +34,7 @@
   flex: 2;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: clamp(15px, 1.5vw, 25px); /* Responsive gap */
   overflow: hidden;
 }
 
@@ -103,15 +103,15 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  gap: 5px;
+  gap: clamp(3px, 0.4vh, 8px); /* Responsive gap based on viewport height */
 }
 
 /* Game Info Card */
 .gameInfoCard {
   background: #f8f9fa;
-  padding: 10px;
+  padding: clamp(8px, 1vw, 15px); /* Responsive padding */
   border-radius: 8px;
-  border-left: 4px solid #007bff;
+  border-left: clamp(3px, 0.3vw, 6px) solid #007bff; /* Responsive border */
   flex-shrink: 0;
 }
 
@@ -119,13 +119,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 15px;
+  margin-bottom: clamp(10px, 1.2vh, 20px); /* Responsive margin */
   position: relative;
 }
 
 .gameTitle {
   margin: 0;
-  font-size: 4rem;
+  font-size: clamp(1.0rem, 3.5vw, 4.0rem); /* Reduced minimum font size from 2.5rem to 2rem */
   color: #333;
   text-align: center;
   user-select: none;
@@ -138,15 +138,15 @@
   right: 0;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: clamp(6px, 0.8vw, 12px); /* Responsive gap */
   flex-shrink: 0;
   white-space: nowrap;
 }
 
 .gameRules h4 {
-  margin: 0 0 10px 0;
+  margin: 0 0 clamp(8px, 1vh, 15px) 0; /* Responsive margin */
   color: #333;
-  font-size: 1.9rem;
+  font-size: clamp(1.1rem, 2.2vw, 2.4rem); /* Reduced minimum font size from 1.4rem to 1.1rem */
   user-select: none;
   text-align: center;
 }
@@ -154,14 +154,14 @@
 /* Free Space Toggle styles are now defined above in .gameInfoHeader section */
 
 .toggleLabel {
-  font-size: 1.0em;
+  font-size: clamp(0.9rem, 1.2vw, 1.2rem); /* Responsive font size */
   font-weight: bold;
   color: #333;
   user-select: none;
 }
 
 .toggleState {
-  font-size: 0.9em;
+  font-size: clamp(0.8rem, 1.1vw, 1.1rem); /* Responsive font size */
   color: #666;
   font-weight: bold;
   user-select: none;
@@ -169,7 +169,7 @@
 
 /* Variant controlled indicator */
 .variantControlledIndicator {
-  font-size: 0.8em;
+  font-size: clamp(0.7rem, 1vw, 1rem); /* Responsive font size */
   color: #666;
   font-style: italic;
   font-weight: normal;
@@ -193,7 +193,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  gap: 15px;
+  gap: clamp(10px, 1.2vh, 20px); /* Responsive gap */
 }
 
 /* Game Boards Wrapper */
@@ -226,13 +226,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: clamp(15px, 1.8vw, 25px); /* Responsive gap */
 }
 
 .gameBoardsContainer.dualBoard {
   display: grid;
-  grid-template-columns: 1fr 10px 1fr;
-  gap: 10px;
+  grid-template-columns: 1fr clamp(8px, 1vw, 15px) 1fr; /* Responsive operator spacing */
+  gap: clamp(8px, 1vw, 15px);
   align-items: center;
   justify-items: center;
 }
@@ -242,11 +242,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 1.8vw, 2rem); /* Responsive font size */
   font-weight: bold;
   color: #333;
-  width: 30px;
-  height: 30px;
+  width: clamp(25px, 3vw, 40px); /* Responsive width */
+  height: clamp(25px, 3vw, 40px); /* Responsive height */
   user-select: none;
 }
 
@@ -275,7 +275,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: clamp(15px, 2vw, 25px); /* Responsive gap */
   flex-shrink: 0;
 }
 
@@ -284,10 +284,10 @@
   color: white;
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: clamp(35px, 4vw, 50px); /* Responsive button size */
+  height: clamp(35px, 4vw, 50px); /* Responsive button size */
   cursor: pointer;
-  font-size: 1.2em;
+  font-size: clamp(1rem, 1.4vw, 1.6rem); /* Responsive font size */
   transition: background-color 0.3s;
   display: flex;
   align-items: center;
@@ -304,10 +304,10 @@
 }
 
 .variantIndicator {
-  font-size: 1.1em;
+  font-size: clamp(1rem, 1.3vw, 1.4rem); /* Responsive font size */
   font-weight: bold;
   color: #333;
-  min-width: 60px;
+  min-width: clamp(50px, 6vw, 80px); /* Responsive min-width */
   text-align: center;
   user-select: none;
 }
@@ -363,29 +363,29 @@
 
 /* Single Board Layout */
 .gameBoardsContainer:not(.dualBoard) .boardCell {
-  font-size: clamp(2.2rem, 5vw, 4.75rem);
+  font-size: clamp(1.8rem, 4.2vw, 5.5rem); /* Better scaling for different resolutions */
   aspect-ratio: 2/1;
 }
 
 /* Dual Board Layout */
 .gameBoardsContainer.dualBoard .boardCell {
-  font-size: clamp(4.12rem, 5vw, 4.75rem);
+  font-size: clamp(2.8rem, 4.5vw, 5.2rem); /* Better scaling for dual board layouts */
   aspect-ratio: 1;
 }
 
 /* Double Bingo Dual Board Layout - Smaller font for better readability */
 .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
-  font-size: clamp(1.2rem, 3vw, 2.75rem);
+  font-size: clamp(1rem, 2.8vw, 3.2rem); /* Better scaling for double bingo */
 }
 
 /* Dual Board Layout with Free Space - Reduce size to prevent overflow */
 .gameBoardsContainer.dualBoard .boardCell.freeSpace {
-  font-size: clamp(0.8rem, 2vw, 1.5rem);
+  font-size: clamp(0.7rem, 1.8vw, 2rem); /* Better scaling for free space cells */
 }
 
 /* Double Bingo Dual Board with Free Space - Even smaller */
 .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell.freeSpace {
-  font-size: clamp(1.2rem, 3vw, 2.75rem);
+  font-size: clamp(1rem, 2.8vw, 3.2rem); /* Consistent with regular double bingo cells */
 }
 
 /* ==============================================
@@ -396,15 +396,15 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  gap: 20px;
+  gap: clamp(15px, 2vh, 25px); /* Responsive gap based on viewport height */
 }
 
 .welcomeMessageCard,
 .qrCodeCard {
   background: #f8f9fa;
-  padding: 10px;
+  padding: clamp(8px, 1vw, 15px); /* Responsive padding */
   border-radius: 8px;
-  border-left: 4px solid #007bff;
+  border-left: clamp(3px, 0.3vw, 6px) solid #007bff; /* Responsive border */
   text-align: center;
 }
 
@@ -413,15 +413,15 @@
 }
 
 .welcomeMessageCard h3 {
-  margin: 0 0 15px 0;
+  margin: 0 0 clamp(10px, 1.5vh, 20px) 0; /* Responsive margin */
   color: #333;
-  font-size: 3.5rem;
+  font-size: clamp(1.8rem, 3.8vw, 4.5rem); /* Reduced minimum font size from 2.2rem to 1.8rem */
   user-select: none;
 }
 
 .welcomeTemplate {
   font-family: 'Courier New', monospace;
-  font-size: 2.2rem;
+  font-size: clamp(1.1rem, 2.4vw, 2.8rem); /* Reduced minimum font size from 1.4rem to 1.1rem */
   font-weight: bold;
   line-height: 1.6;
   color: #2c3e50;
@@ -438,9 +438,9 @@
 }
 
 .qrCodeCard h4 {
-  margin: 0 0 15px 0;
+  margin: 0 0 clamp(10px, 1.5vh, 20px) 0; /* Responsive margin */
   color: #333;
-  font-size: 2.2rem;
+  font-size: clamp(1.3rem, 2.4vw, 2.8rem); /* Reduced minimum font size from 1.6rem to 1.3rem */
   user-select: none;
 }
 
@@ -454,16 +454,17 @@
 .gameQrCode {
   max-width: 100%;
   height: auto;
+  width: clamp(150px, 15vw, 250px); /* Responsive QR code size */
 }
 
 .roomIdDisplay {
-  margin-top: 10px;
+  margin-top: clamp(8px, 1vh, 15px); /* Responsive margin */
   font-family: 'Courier New', monospace;
-  font-size: 1.4rem;
+  font-size: clamp(1rem, 1.5vw, 1.8rem); /* Responsive font size */
   font-weight: bold;
   color: #007bff;
   background: rgba(0, 123, 255, 0.1);
-  padding: 8px 12px;
+  padding: clamp(6px, 0.8vw, 12px) clamp(8px, 1vw, 15px); /* Responsive padding */
   border-radius: 6px;
   border: 1px solid rgba(0, 123, 255, 0.2);
 }
@@ -474,35 +475,35 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 200px;
-  padding: 20px;
+  min-height: clamp(150px, 20vh, 250px); /* Responsive min-height */
+  padding: clamp(15px, 2vw, 25px); /* Responsive padding */
   text-align: center;
 }
 
 .qrCodeMessage .statusIcon {
-  font-size: 3rem;
-  margin-bottom: 15px;
+  font-size: clamp(1.8rem, 3.5vw, 4rem); /* Reduced minimum font size from 2.2rem to 1.8rem */
+  margin-bottom: clamp(10px, 1.5vh, 20px); /* Responsive margin */
 }
 
 .qrCodeMessage p {
-  margin: 5px 0;
+  margin: clamp(3px, 0.5vh, 8px) 0; /* Responsive margin */
   color: #333;
 }
 
 .qrCodeMessage p:firstOfType {
-  font-size: 1.6rem;
+  font-size: clamp(1rem, 1.8vw, 2rem); /* Reduced minimum font size from 1.2rem to 1rem */
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: clamp(8px, 1vh, 15px); /* Responsive margin */
 }
 
 .qrCodeMessage .statusDetail {
-  font-size: 1.2rem;
+  font-size: clamp(0.8rem, 1.4vw, 1.6rem); /* Reduced minimum font size from 1rem to 0.8rem */
   color: #666;
-  margin-bottom: 15px;
+  margin-bottom: clamp(10px, 1.5vh, 20px); /* Responsive margin */
 }
 
 .qrCodeMessage .statusHint {
-  font-size: 1.1rem;
+  font-size: clamp(0.7rem, 1.2vw, 1.4rem); /* Reduced minimum font size from 0.9rem to 0.7rem */
   color: #888;
   font-style: italic;
 }
@@ -535,13 +536,13 @@
 /* Settings link styling */
 .settingsLink {
   display: inline-block;
-  padding: 10px 20px;
+  padding: clamp(8px, 1.2vw, 15px) clamp(15px, 2vw, 25px); /* Responsive padding */
   background: #007bff;
   color: white;
   text-decoration: none;
   border-radius: 6px;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 1.4vw, 1.6rem); /* Responsive font size */
   transition: background-color 0.3s ease;
 }
 
@@ -570,8 +571,8 @@
 .toggleSwitch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: clamp(50px, 6vw, 70px); /* Responsive width */
+  height: clamp(28px, 3.5vw, 40px); /* Responsive height */
 }
 
 .toggleSwitch input {
@@ -589,16 +590,16 @@
   bottom: 0;
   background-color: #ccc;
   transition: .4s;
-  border-radius: 34px;
+  border-radius: clamp(25px, 3.5vw, 40px); /* Responsive border radius */
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
+  height: clamp(22px, 2.8vw, 32px); /* Responsive height */
+  width: clamp(22px, 2.8vw, 32px); /* Responsive width */
+  left: clamp(3px, 0.4vw, 4px); /* Responsive left position */
+  bottom: clamp(3px, 0.4vw, 4px); /* Responsive bottom position */
   background-color: white;
   transition: .4s;
   border-radius: 50%;
@@ -613,7 +614,7 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translateX(clamp(22px, 2.8vw, 30px)); /* Responsive translation */
 }
 
 input:disabled + .slider {
@@ -710,22 +711,22 @@ input:disabled + .slider {
 /* Responsive board sizing */
 @media (max-width: 767px) {
   .smallGameBoard .gameBoard {
-    max-width: 110px;
-    max-height: 55px;
+    max-width: 85px; /* Reduced from 110px */
+    max-height: 42px; /* Reduced from 55px */
   }
 }
 
 @media (max-width: 639px) {
   .smallGameBoard .gameBoard {
-    max-width: 100px;
-    max-height: 50px;
+    max-width: 80px; /* Reduced from 100px */
+    max-height: 40px; /* Reduced from 50px */
   }
 }
 
 .smallGameBoard .boardCell {
-  font-size: 1.65rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.6rem); /* Reduced minimum from 1.2rem to 0.9rem and maximum from 2rem to 1.6rem */
   line-height: 1.1;
-  padding: 2px;
+  padding: clamp(1px, 0.3vw, 3px); /* Responsive padding */
   background-color: #fff;
   user-select: none;
 }
@@ -737,34 +738,34 @@ input:disabled + .slider {
 
 /* Double Bingo small boards need smaller font */
 .smallGameBoard.doubleBingoDual .boardCell {
-  font-size: 1.2rem;
+  font-size: clamp(0.7rem, 1.2vw, 1.3rem); /* Reduced minimum from 0.9rem to 0.7rem and maximum from 1.6rem to 1.3rem */
 }
 
 /* Responsive board cell sizing */
 @media (max-width: 767px) {
   .smallGameBoard .boardCell {
-    font-size: 0.6rem;
+    font-size: 0.5rem; /* Reduced from 0.6rem */
   }
 
   /* Double Bingo small boards need even smaller font at tablet size */
   .smallGameBoard.doubleBingoDual .boardCell {
-    font-size: 0.5rem;
+    font-size: 0.4rem; /* Reduced from 0.5rem */
   }
 }
 
 @media (max-width: 639px) {
   .smallGameBoard .boardCell {
-    font-size: 0.55rem;
+    font-size: 0.45rem; /* Reduced from 0.55rem */
   }
 
   /* Double Bingo small boards need even smaller font at mobile size */
   .smallGameBoard.doubleBingoDual .boardCell {
-    font-size: 0.45rem;
+    font-size: 0.35rem; /* Reduced from 0.45rem */
   }
 }
 
 .gamePreviewLabel {
-  font-size: 1.2rem;
+  font-size: clamp(0.8rem, 1.2vw, 1.2rem); /* Reduced minimum from 1rem to 0.8rem and maximum from 1.5rem to 1.2rem */
   text-align: center;
   color: #333;
   font-weight: bold;
@@ -773,42 +774,42 @@ input:disabled + .slider {
   word-wrap: break-word;
   hyphens: auto;
   overflow-wrap: break-word;
-  height: 28px;
+  height: clamp(20px, 3vh, 30px); /* Reduced minimum from 24px to 20px and maximum from 35px to 30px */
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   user-select: none;
-  margin-bottom: 8px;
+  margin-bottom: clamp(4px, 0.8vh, 8px); /* Reduced margin */
 }
 
 /* Responsive label sizing */
 @media (max-width: 767px) {
   .gamePreviewLabel {
-    font-size: 0.75rem;
-    height: 26px;
+    font-size: 0.65rem; /* Reduced from 0.75rem */
+    height: 22px; /* Reduced from 26px */
   }
 }
 
 @media (max-width: 639px) {
   .gamePreviewLabel {
-    font-size: 0.7rem;
-    height: 24px;
+    font-size: 0.6rem; /* Reduced from 0.7rem */
+    height: 20px; /* Reduced from 24px */
   }
 }
 
 /* Swiper Navigation */
 .swiperNavigation {
   position: absolute;
-  bottom: 5px;
+  bottom: clamp(3px, 0.8vh, 8px); /* Responsive bottom position */
   left: 0;
   right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 15px;
+  padding: 0 clamp(10px, 1.5vw, 20px); /* Responsive padding */
   z-index: 10;
-  height: 45px;
+  height: clamp(35px, 5vh, 50px); /* Responsive height */
   transition: all 0.3s ease;
   opacity: 0;
   visibility: hidden;
@@ -818,8 +819,8 @@ input:disabled + .slider {
 .swiperButtonNext {
   position: static !important;
   margin: 0 !important;
-  width: 40px !important;
-  height: 40px !important;
+  width: clamp(35px, 4vw, 45px) !important; /* Responsive width */
+  height: clamp(35px, 4vw, 45px) !important; /* Responsive height */
   color: #007bff !important;
   background: rgba(255, 255, 255, 0.9);
   border: 2px solid #007bff;
@@ -842,13 +843,13 @@ input:disabled + .slider {
 
 .swiperButtonPrev::after {
   content: '‹' !important;
-  font-size: 20px !important;
+  font-size: clamp(16px, 2vw, 24px) !important; /* Responsive font size */
   font-weight: bold !important;
 }
 
 .swiperButtonNext::after {
   content: '›' !important;
-  font-size: 20px !important;
+  font-size: clamp(16px, 2vw, 24px) !important; /* Responsive font size */
   font-weight: bold !important;
 }
 
@@ -857,14 +858,14 @@ input:disabled + .slider {
   width: auto !important;
   display: flex;
   justify-content: center;
-  gap: 5px;
-  margin: 0 10px;
+  gap: clamp(3px, 0.6vw, 8px); /* Responsive gap */
+  margin: 0 clamp(8px, 1.2vw, 15px); /* Responsive margin */
 }
 
 .swiperPaginationBullet {
   background: #666 !important;
-  width: 10px !important;
-  height: 10px !important;
+  width: clamp(8px, 1vw, 12px) !important; /* Responsive width */
+  height: clamp(8px, 1vw, 12px) !important; /* Responsive height */
   border: 2px solid #333 !important;
   border-radius: 50%;
   cursor: pointer;
@@ -895,9 +896,176 @@ input:disabled + .slider {
    RESPONSIVE DESIGN
    ============================================== */
 
+/* Large Desktop - 1920x1080, 1920x1200 */
+@media (min-width: 1920px) {
+  .gameTitle {
+    font-size: clamp(3.0rem, 2vw, 4rem);
+  }
+
+  .welcomeTemplate {
+    font-size: clamp(1.4rem, 1.8vw, 2.2rem);
+  }
+
+  .gameRules h4 {
+    font-size: clamp(1rem, 1.5vw, 1.8rem);
+  }
+
+  .welcomeMessageCard h3 {
+    font-size: clamp(3.5rem, 4.2vw, 5rem);
+  }
+
+  .qrCodeCard h4 {
+    font-size: clamp(1.2rem, 1.6vw, 2rem);
+  }
+
+  /* Optimize board cells for standard desktop resolutions */
+  .gameBoardsContainer:not(.dualBoard) .boardCell {
+    font-size: clamp(2.5rem, 4.0vw, 4.5rem);
+  }
+
+  .gameBoardsContainer.dualBoard .boardCell {
+    font-size: clamp(2.2rem, 3.5vw, 3.8rem);
+  }
+
+  .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
+    font-size: clamp(3.0rem, 3.5vw, 3.5rem);
+  }
+  .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell.freeSpace {
+    font-size: clamp(2rem, 2.5vw, 2.5rem); /* Consistent with regular double bingo cells */
+  }
+  /* Enhanced hover behavior for small desktop/large tablet - expand moderately */
+  .bottomSection:hover {
+    height: 38vh; /* Increased from default 36vh to 38vh for tablet range */
+  }
+}
+
+/* Standard Desktop - 1536x960, 1366x768 */
+@media (min-width: 1366px) and (max-width: 1919px) {
+  .gameTitle {
+    font-size: clamp(1.5rem, 3.5vw, 3.0rem); /* Reduced maximum from 4.8rem to 4.2rem */
+  }
+
+  .welcomeTemplate {
+    font-size: clamp(1.2rem, 1.8vw, 1.8rem); /* Reduced minimum from 2rem and maximum from 2.6rem */
+  }
+
+  .gameRules h4 {
+    font-size: clamp(1.0rem, 1.9vw, 1.5rem); /* Reduced minimum from 1.6rem and maximum from 2.4rem */
+  }
+
+  .welcomeMessageCard h3 {
+    font-size: clamp(2.4rem, 3.8vw, 3.6rem); /* Reduced minimum from 3rem and maximum from 4.2rem */
+  }
+
+  .qrCodeCard h4 {
+    font-size: clamp(1.5rem, 2.4vw, 2.2rem); /* Reduced minimum from 1.8rem and maximum from 2.6rem */
+  }
+
+  /* Optimize board cells for standard desktop resolutions */
+  .gameBoardsContainer:not(.dualBoard) .boardCell {
+    font-size: clamp(1.5rem, 3.0vw, 3.5rem);
+  }
+
+  .gameBoardsContainer.dualBoard .boardCell {
+    font-size: clamp(1.2rem, 2.5vw, 2.8rem);
+  }
+
+  .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
+    font-size: clamp(1.0rem, 1.5vw, 1.5rem);
+  }
+  .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell.freeSpace {
+    font-size: clamp(1rem, 1.5vw, 1.5rem); /* Consistent with regular double bingo cells */
+  }
+
+  /* Enhanced hover behavior for small desktop/large tablet - expand moderately */
+  .bottomSection:hover {
+    height: 46vh; /* Increased from default 36vh to 46vh for tablet range */
+  }
+}
+
+/* Medium Desktop - optimized for 1366x768 specifically */
+@media (min-width: 1200px) and (max-width: 1365px) {
+  .mainLayout {
+    padding-left: clamp(70px, 5vw, 80px);
+  }
+
+  .topSection {
+    gap: clamp(12px, 1.2vw, 18px);
+    padding: clamp(12px, 1.2vw, 18px);
+  }
+
+  .gameTitle {
+    font-size: clamp(2.2rem, 4.2vw, 3.2rem); /* Reduced minimum from 2.8rem and maximum from 3.8rem */
+  }
+
+  .welcomeTemplate {
+    font-size: clamp(1.3rem, 2vw, 1.8rem); /* Reduced minimum and maximum */
+  }
+
+  .gameRules h4 {
+    font-size: clamp(1.1rem, 1.8vw, 1.6rem); /* Reduced minimum and maximum */
+  }
+
+  .welcomeMessageCard h3 {
+    font-size: clamp(2rem, 3.2vw, 3rem); /* Reduced minimum and maximum */
+  }
+
+  .qrCodeCard h4 {
+    font-size: clamp(1.3rem, 2vw, 1.8rem); /* Reduced minimum and maximum */
+  }
+
+  .gameBoardsContainer:not(.dualBoard) .boardCell {
+    font-size: clamp(2.2rem, 3.8vw, 3.8rem);
+  }
+
+  .gameBoardsContainer.dualBoard .boardCell {
+    font-size: clamp(2.8rem, 4.2vw, 3.8rem);
+  }
+
+
+}
+
+/* Tablet and Small Desktop */
+@media (max-width: 1199px) and (min-width: 769px) {
+  .mainLayout {
+    padding-left: clamp(65px, 6vw, 75px);
+    padding-bottom: 12vh;
+  }
+
+  .topSection {
+    gap: clamp(12px, 1.5vw, 20px);
+    padding: clamp(12px, 1.5vw, 20px);
+  }
+
+  .gameTitle {
+    font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+  }
+
+  .welcomeTemplate {
+    font-size: clamp(1.4rem, 2vw, 2rem);
+  }
+
+  .gameRules h4 {
+    font-size: clamp(1.4rem, 2vw, 1.8rem);
+  }
+
+  /* Adjust board sizes for tablet */
+  .gameBoardsContainer:not(.dualBoard) .boardCell {
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+  }
+
+  .gameBoardsContainer.dualBoard .boardCell {
+    font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+  }
+
+  .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+  }
+}
+
 @media (max-width: 768px) {
   .mainLayout {
-    padding-left: 60px;
+    padding-left: clamp(50px, 8vw, 65px); /* More responsive sidebar space */
     padding-bottom: 26.5vh; /* Space for mobile bottom section */
   }
 
@@ -906,6 +1074,8 @@ input:disabled + .slider {
     min-height: auto;
     height: calc(100vh - 26.5vh); /* Fixed height to prevent growing into bottom section */
     flex: none;
+    gap: clamp(10px, 2vw, 15px); /* Responsive gap */
+    padding: clamp(10px, 2vw, 15px); /* Responsive padding */
   }
 
   .gamePreviewArea {
@@ -926,153 +1096,175 @@ input:disabled + .slider {
   }
 
   .gameTitle {
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 4vw, 1.8rem); /* More responsive scaling */
   }
 
   .welcomeTemplate {
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem); /* More responsive scaling */
+  }
+
+  .gameRules h4 {
+    font-size: clamp(1.1rem, 3vw, 1.4rem); /* More responsive scaling */
+  }
+
+  .welcomeMessageCard h3 {
+    font-size: clamp(1.8rem, 4.5vw, 2.4rem); /* More responsive scaling */
+  }
+
+  .qrCodeCard h4 {
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem); /* More responsive scaling */
   }
 
   .progressCircle {
-    transform: scale(0.7);
+    transform: scale(clamp(0.6, 1.2vw, 0.8)); /* More responsive scaling */
   }
 
   /* Dual board layout adjustments */
   .gameBoardsContainer.dualBoard {
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 10px 1fr;
-    gap: 10px;
+    grid-template-rows: 1fr clamp(8px, 1.5vw, 12px) 1fr; /* Responsive operator spacing */
+    gap: clamp(8px, 1.5vw, 12px);
     justify-items: center;
   }
 
   /* Tablet Dual Board Layout */
   .gameBoardsContainer.dualBoard .boardCell {
-    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    font-size: clamp(1.2rem, 3.2vw, 2rem); /* Better tablet scaling */
     aspect-ratio: 1;
   }
 
   /* Tablet Double Bingo Dual Board Layout - Smaller font for better readability */
   .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
-    font-size: clamp(1.0rem, 2.5vw, 1.8rem);
+    font-size: clamp(0.9rem, 2.2vw, 1.4rem); /* Better tablet scaling */
   }
 
   .operatorIcon {
-    width: 25px;
-    height: 25px;
-    font-size: 1.2rem;
+    width: clamp(20px, 4vw, 30px); /* Responsive width */
+    height: clamp(20px, 4vw, 30px); /* Responsive height */
+    font-size: clamp(1rem, 2.5vw, 1.4rem); /* Responsive font size */
   }
 
   .gameInfoHeader {
     flex-direction: column;
-    gap: 10px;
+    gap: clamp(8px, 2vw, 12px); /* Responsive gap */
     align-items: center;
     position: static;
   }
 
   .freeSpaceToggle {
     position: static;
-    gap: 8px;
-  }
-
-  .gameTitle {
-    font-size: 1.5rem;
+    gap: clamp(6px, 1.5vw, 10px); /* Responsive gap */
   }
 
   .toggleLabel {
-    font-size: 0.9em;
+    font-size: clamp(0.8rem, 2vw, 1rem); /* Responsive font size */
   }
 }
 
 @media (max-width: 480px) {
   .mainLayout {
-    padding-left: 50px;
+    padding-left: clamp(45px, 10vw, 55px); /* More responsive sidebar space */
     padding-bottom: 22.25vh; /* Space for mobile bottom section */
   }
 
   .topSection {
-    padding: 10px;
-    gap: 15px;
+    padding: clamp(8px, 2vw, 12px); /* Responsive padding */
+    gap: clamp(8px, 2vw, 12px); /* Responsive gap */
     min-height: auto;
     height: calc(100vh - 22.25vh); /* Fixed height to prevent growing into bottom section */
     flex: none;
   }
 
   .bottomSection {
-    padding: 0 10px 10px;
+    padding: 0 clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px); /* Responsive padding */
     height: 22.25vh;
     overflow: hidden;
   }
 
   .gameTitle {
-    font-size: 1.3rem;
+    font-size: clamp(1rem, 4.5vw, 1.5rem); /* Better mobile scaling */
   }
 
   .welcomeTemplate {
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 3vw, 1rem); /* Better mobile scaling */
+  }
+
+  .gameRules h4 {
+    font-size: clamp(0.9rem, 3.5vw, 1.2rem); /* Better mobile scaling */
+  }
+
+  .welcomeMessageCard h3 {
+    font-size: clamp(1.4rem, 5vw, 2rem); /* Better mobile scaling */
+  }
+
+  .qrCodeCard h4 {
+    font-size: clamp(1.1rem, 4vw, 1.5rem); /* Better mobile scaling */
   }
 
   .progressCircle {
-    transform: scale(0.6);
+    transform: scale(clamp(0.5, 1.5vw, 0.7)); /* More responsive scaling */
   }
 
   /* Mobile Single Board Layout */
   .gameBoardsContainer:not(.dualBoard) .boardCell {
-    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    font-size: clamp(1.2rem, 4vw, 2rem); /* Better mobile scaling */
     aspect-ratio: 2/1;
   }
 
   /* Mobile Dual Board Layout */
   .gameBoardsContainer.dualBoard .boardCell {
-    font-size: clamp(0.9rem, 2.25vw, 1.5rem);
+    font-size: clamp(0.8rem, 3vw, 1.4rem); /* Better mobile scaling */
     aspect-ratio: 1;
   }
 
   /* Mobile Double Bingo Dual Board Layout - Even smaller font for mobile */
   .gameBoardsContainer.dualBoard.doubleBingoDual .boardCell {
-    font-size: clamp(0.7rem, 1.8vw, 1.2rem);
+    font-size: clamp(0.6rem, 2.5vw, 1.1rem); /* Better mobile scaling */
   }
 
   .smallGamePreview {
-    width: 100px;
+    width: clamp(60px, 18vw, 100px); /* Reduced minimum from 80px to 60px and maximum from 120px to 100px */
   }
 
   .smallGameBoard {
-    width: 80px;
-    height: 40px;
+    width: clamp(55px, 16vw, 85px); /* Reduced minimum from 70px to 55px and maximum from 100px to 85px */
+    height: clamp(28px, 8vw, 42px); /* Reduced minimum from 35px to 28px and maximum from 50px to 42px */
   }
 
   .smallGameBoard .gameBoard {
-    max-width: 80px;
-    max-height: 40px;
+    max-width: clamp(55px, 16vw, 85px); /* Reduced to match smallGameBoard width */
+    max-height: clamp(28px, 8vw, 42px); /* Reduced to match smallGameBoard height */
   }
 
   /* Mobile Play Icon */
   .playIcon {
-    border-left: 12px solid white;
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    margin-left: 2px;
+    border-left: clamp(10px, 3vw, 14px) solid white; /* Responsive border */
+    border-top: clamp(6px, 1.8vw, 8px) solid transparent; /* Responsive border */
+    border-bottom: clamp(6px, 1.8vw, 8px) solid transparent; /* Responsive border */
+    margin-left: clamp(1px, 0.5vw, 3px); /* Responsive margin */
   }
 
   .gameInfoHeader {
-    gap: 8px;
+    gap: clamp(6px, 2vw, 10px); /* Responsive gap */
     position: static;
   }
 
   .freeSpaceToggle {
     position: static;
-    gap: 6px;
-  }
-
-  .gameTitle {
-    font-size: 1.3rem;
+    gap: clamp(4px, 1.5vw, 8px); /* Responsive gap */
   }
 
   .toggleLabel {
-    font-size: 0.8em;
+    font-size: clamp(0.7rem, 2.5vw, 0.9rem); /* Responsive font size */
   }
 
   .toggleState {
-    font-size: 0.8em;
+    font-size: clamp(0.7rem, 2.5vw, 0.9rem); /* Responsive font size */
+  }
+
+  .operatorIcon {
+    width: clamp(18px, 5vw, 25px); /* Responsive width */
+    height: clamp(18px, 5vw, 25px); /* Responsive height */
+    font-size: clamp(0.9rem, 3vw, 1.2rem); /* Responsive font size */
   }
 }
