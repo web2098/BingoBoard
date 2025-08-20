@@ -321,7 +321,7 @@ function doubleBingo(){
                 dynamicFreeSpace: true
             },
             {
-                rules: 'Must get a one bingo on both boards',
+                rules: 'Must get a single bingo on both boards',
                 op: "and",
                 boards: [
                     (freeSpace: boolean, previewMode: boolean = false) => generateSingleBoardRotations(freeSpace, true, previewMode),
