@@ -11,17 +11,19 @@ const QRCode: React.FC<QRCodeProps> = ({
   size = 128,
   className = ""
 }) => {
-  // For now, we'll create a placeholder QR code
-  // In a real app, you'd use a QR code library like qrcode.js
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(value)}`;
+  // Use QR code API with settings optimized for long-distance scanning:
+  // - ecc=L (Low error correction) = larger modules, easier to scan from distance
+  // - qzone=1 (minimal quiet zone)
+  // - Higher resolution for cleaner scaling
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size * 2}x${size * 2}&ecc=L&qzone=1&data=${encodeURIComponent(value)}`;
 
   return (
-    <div className={`qr-code ${className}`}>
+    <div className={`qr-code ${className}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', width: 'auto' }}>
       <img
         src={qrCodeUrl}
         alt={`QR Code for ${value}`}
         className="qr-code-image"
-        style={{ border: '1px solid #ccc', borderRadius: '4px' }}
+        style={{ border: '1px solid #ccc', borderRadius: '4px', height: '100%', width: 'auto', objectFit: 'contain' }}
       />
     </div>
   );

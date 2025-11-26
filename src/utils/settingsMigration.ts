@@ -81,7 +81,46 @@ const migrationFunctions: { [key: string]: (value: any) => any } = {
    */
   welcomeMessageV4ToV5: (v4Value: any): ComplexMigrationResult => {
     const v4Message = String(v4Value);
-    const proposedMigrations = [];
+    const proposedMigrations: { v5_id: string; v5_value: any; confidence: 'high' | 'medium' | 'low'; description: string; }[] = [];
+
+
+    //if v4Message equals: BINGO FREE TO PLAY! 2 CARDS PER PERSON START TIME - 6:30<br> Bingo Word: BAHHH!
+    if (v4Message.trim().toUpperCase() === 'BINGO FREE TO PLAY! 2 CARDS PER PERSON START TIME - 6:30<BR> BINGO WORD: BAHHH!') {
+
+
+      proposedMigrations.push({
+        v5_id: 'welcomeMessage',
+        v5_value: "BINGO FREE TO PLAY!",
+        confidence: 'high',
+        description: 'Standard welcome message from V4 default'
+      });
+      proposedMigrations.push({
+        v5_id: 'numberOfCards',
+        v5_value: 2,
+        confidence: 'high',
+        description: 'Default number of cards from standard V4 welcome message'
+      });
+      proposedMigrations.push({
+        v5_id: 'timeMessage',
+        v5_value: '6:30 PM',
+        confidence: 'high',
+        description: 'Standard welcome message from V4 default'
+      });
+      proposedMigrations.push({
+        v5_id: 'bingoWord',
+        v5_value: "BAHHH!",
+        confidence: 'high',
+        description: 'Standard welcome message from V4 default'
+      });
+
+      return {
+        v4_id: 'welcome-message',
+        v4_value: v4Value,
+        proposedMigrations,
+        requiresApproval: false,
+        autoConversionAttempted: true
+      };
+    }
 
     // First, extract all the specific components from the message
     let extractedComponents = [];
@@ -384,7 +423,10 @@ export function migrateV4ToV5(): {
           // Add privacy information to complex migration result
           complexResult.private = mapping.private || false;
           complexMigrations.push(complexResult);
-          requiresUserApproval = true;
+          // Only require user approval if the complex migration itself requires it
+          if (complexResult.requiresApproval) {
+            requiresUserApproval = true;
+          }
         }
 
         const migrationDetail: MigrationDetail = {

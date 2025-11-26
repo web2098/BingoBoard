@@ -55,6 +55,9 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   const getCalledNumbers = () => getLastCalledNumbers();
   const getLastNumber = () => getLastCalledNumber();
 
+  // Developer mode state
+  const [developerMode] = useState(() => getSetting('developerMode', false));
+
   // Force component re-render when telemetry data changes
   const [refreshKey, setRefreshKey] = useState(0);
   const forceRefresh = () => setRefreshKey(prev => prev + 1);
@@ -98,40 +101,6 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   const handleModalClose = () => {
     setIsModalVisible(false);
   };
-  // Game options handlers with telemetry integration
-  const handleResetBoard = () => {
-    resetGameSession();
-    forceRefresh(); // Trigger re-render after reset
-    // State is now managed by telemetry - no local state to clear
-
-    // Reset tracking to ensure game setup is sent after reset
-    initialSetupSent.current = false;
-    lastSentGameConfig.current = null;
-
-    // Send updated game state to clients if connected as host
-    if (isConnected && isHost && gameData) {
-      const gameState: GameState = {
-        name: gameData.name,
-        freeSpaceOn: gameData.freeSpace,
-        calledNumbers: getCalledNumbers(), // Get current state from telemetry
-        lastNumber: getLastNumber() || undefined // Get current state from telemetry
-      };
-
-      const styleConfig: StyleConfig = {
-        selectedColor: getSetting('boardHighlightColor', '#1e4d2b'),
-        selectedTextColor: getSetting('highlightTextColor', '#ffffff'),
-        unselectedColor: getSetting('backgroundColor', '#ffffff'),
-        unselectedTextColor: getSetting('textColor', '#000000')
-      };
-
-      const sessionConfig: SessionConfig = {
-        specialNumbers: JSON.parse(localStorage.getItem('specialNumbers') || '{}')
-      };
-
-      console.log("Sending game setup after reset");
-      sendGameSetup(gameState, styleConfig, sessionConfig);
-    }
-  };
 
   const handleSelectNewGame = () => {
     endCurrentSession();
@@ -145,20 +114,6 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
   // Define page buttons for the sidebar
   const pageButtons = [
-    {
-      id: 'reset-board',
-      label: 'Reset Board',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <polyline points="23,4 23,10 17,10"/>
-          <polyline points="1,20 1,14 7,14"/>
-          <path d="M20.49,9A9,9,0,0,0,5.64,5.64L1,10"/>
-          <path d="M3.51,15a9,9,0,0,0,14.85,3.36L23,14"/>
-        </svg>
-      ),
-      onClick: handleResetBoard,
-      className: 'reset-settings-button'
-    },
     {
       id: 'new-game',
       label: 'New Game',
@@ -715,33 +670,37 @@ const BoardPage: React.FC<BoardPageProps> = () => {
             <div className={styles.miniBoard}>
               {renderBoardPreview()}
             </div>
-            <p className={styles.numberCount}>
-              {getCalledNumbers().length}/{gameData.totalNumbers} ({gameData.totalNumbers - getCalledNumbers().length} Left)
-            </p>
           </div>
         </div>
 
         <div className={styles.headerCenter}>
           <div className={styles.lastNumberSection}>
             <div className={styles.lastNumberDisplay}>
-              <div className={styles.bingoCardsGroup}>
-                {getLastNumber() ? (
-                  <>
-                    <span className={styles.lastNumberText}>The Last Number Was</span>
+              <div className={styles.lastNumberLeftColumn}>
+                <div className={styles.lastNumberTextRow}>
+                  <span className={styles.lastNumberText}>
+                    {getLastNumber() ? 'The Last Number Was' : 'Waiting For First Number'}
+                  </span>
+                </div>
+                <p className={styles.numberCount}>
+                  {getCalledNumbers().length}/{gameData.totalNumbers} ({gameData.totalNumbers - getCalledNumbers().length} Left)
+                </p>
+                <div className={styles.specialCalloutSection}>
+                  <p className={styles.specialCallout}>{getSpecialCallout(getLastNumber())}</p>
+                </div>
+              </div>
+              {getLastNumber() && (
+                <div className={styles.lastNumberRightColumn}>
+                  <div className={styles.bingoCardsGroup}>
                     <div className={styles.bingoLetterCard} style={getLetterStyle(getLastNumber()!)}>
                       {getBingoLetter(getLastNumber()!)}
                     </div>
                     <div className={styles.bingoNumberCard}>
                       {getLastNumber()}
                     </div>
-                  </>
-                ) : (
-                  <span className={styles.lastNumberText}>Waiting For First Number</span>
-                )}
-              </div>
-            </div>
-            <div className={styles.specialCalloutSection}>
-                <p className={styles.specialCallout}>{getSpecialCallout(getLastNumber())}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -769,6 +728,31 @@ const BoardPage: React.FC<BoardPageProps> = () => {
             }
 
             if (connectionError) {
+              // In developer mode, show QR code even when connection fails
+              if (developerMode) {
+                const serverUrl = getSetting('serverUrl', '');
+                const currentVersion = getSetting('defaultVersion', 'latest');
+                const resolvedVersion = resolveVersionAlias(currentVersion);
+                const clientRoute = getVersionRoute(resolvedVersion, 'client');
+                const base64Params = ServerInteractionService.generateClientParams('dev-mode', serverUrl);
+                const qrCodeValue = `${window.location.origin}/BingoBoard/${resolvedVersion}${clientRoute.path}?params=${base64Params}`;
+
+                return (
+                  <div className={styles.qrCodeHeader}>
+                    <h4>View On Your Device</h4>
+                    <div className={styles.qrCodeSuccess}>
+                      <div className={styles.qrCodeContainer}>
+                        <QRCode
+                          value={qrCodeValue}
+                          size={200}
+                          className={styles.boardQrCode}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
               return (
                 <div className={styles.qrCodeHeader}>
                   <h4>View On Your Device</h4>
@@ -811,7 +795,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
                     <div className={styles.qrCodeContainer}>
                       <QRCode
                         value={qrCodeValue}
-                        size={170}
+                        size={200}
                         className={styles.boardQrCode}
                       />
                     </div>
