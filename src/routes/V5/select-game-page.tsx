@@ -246,10 +246,11 @@ const VariantControls = ({
 };
 
 // Welcome Panel Component
-const WelcomePanel = ({ isConnected, roomId, connectionError }: {
+const WelcomePanel = ({ isConnected, roomId, connectionError, developerMode }: {
   isConnected: boolean;
   roomId: string | null;
   connectionError: string | null;
+  developerMode: boolean;
 }) => {
   const welcomeText = generateWelcomeMessage();
   // Check server settings
@@ -257,6 +258,32 @@ const WelcomePanel = ({ isConnected, roomId, connectionError }: {
   const authToken = getSetting('serverAuthToken', '');
 
   const hasServerSettings = serverUrl.trim() !== '' && authToken.trim() !== '';
+
+  // Helper function to generate QR code content
+  const generateQRCode = (overrideRoomId?: string) => {
+    const currentVersion = getSetting('defaultVersion', 'latest');
+    const resolvedVersion = resolveVersionAlias(currentVersion);
+    const clientRoute = getVersionRoute(resolvedVersion, 'client');
+
+    // Generate base64 parameters
+    const serverUrl = getSetting('serverUrl', '');
+    const effectiveRoomId = overrideRoomId || roomId || 'dev-room';
+    const base64Params = ServerInteractionService.generateClientParams(effectiveRoomId, serverUrl);
+
+    // Build the QR code URL using the version-specific client route with base64 params
+    const qrCodeValue = `${window.location.origin}/BingoBoard/${resolvedVersion}${clientRoute.path}?params=${base64Params}`;
+    console.log(`Generated QR Code Value: ${qrCodeValue}`);
+
+    return (
+      <div className={styles.qrCodeContainer}>
+        <QRCode
+          value={qrCodeValue}
+          size={200}
+          className={styles.gameQrCode}
+        />
+      </div>
+    );
+  };
 
   const renderQRCodeContent = () => {
     if (!hasServerSettings) {
@@ -271,6 +298,14 @@ const WelcomePanel = ({ isConnected, roomId, connectionError }: {
     }
 
     if (connectionError) {
+      // In developer mode, show QR code even if connection failed
+      if (developerMode) {
+        return (
+          <div className={styles.qrCodeSuccess}>
+            {generateQRCode('dev-preview-room')}
+          </div>
+        );
+      }
       return (
         <div className={`${styles.qrCodeMessage} ${styles.error}`}>
           <div className={styles.statusIcon}>❌</div>
@@ -292,27 +327,9 @@ const WelcomePanel = ({ isConnected, roomId, connectionError }: {
     }
 
     if (isConnected && roomId) {
-      const currentVersion = getSetting('defaultVersion', 'latest');
-      const resolvedVersion = resolveVersionAlias(currentVersion);
-      const clientRoute = getVersionRoute(resolvedVersion, 'client');
-
-      // Generate base64 parameters
-      const serverUrl = getSetting('serverUrl', '');
-      const base64Params = ServerInteractionService.generateClientParams(roomId, serverUrl);
-
-      // Build the QR code URL using the version-specific client route with base64 params
-      const qrCodeValue = `${window.location.origin}/BingoBoard/${resolvedVersion}${clientRoute.path}?params=${base64Params}`;
-      console.log(`Generated QR Code Value: ${qrCodeValue}`);
-
       return (
         <div className={styles.qrCodeSuccess}>
-          <div className={styles.qrCodeContainer}>
-            <QRCode
-              value={qrCodeValue}
-              size={200}
-              className={styles.gameQrCode}
-            />
-          </div>
+          {generateQRCode()}
         </div>
       );
     }
@@ -658,6 +675,7 @@ const SelectGamePage = () => {
   const [gameList, setGameList] = useState(games());
   const [settingsUpdateTrigger, setSettingsUpdateTrigger] = useState(0);
   const [highlightColorVersion, setHighlightColorVersion] = useState(0);
+  const [developerMode] = useState(() => getSetting('developerMode', false));
 
   // Server interaction for audience interactions and connection
   const { isConnected, roomId, connectionError, sendAudienceInteraction } = useServerInteraction({
@@ -797,6 +815,7 @@ const SelectGamePage = () => {
               isConnected={isConnected}
               roomId={roomId}
               connectionError={connectionError}
+              developerMode={developerMode}
             />
           </div>
         </div>

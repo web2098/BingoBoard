@@ -30,9 +30,10 @@ const MigrationPage: React.FC<MigrationPageProps> = () => {
   });
 
   useEffect(() => {
-    // Don't automatically redirect - let user click "Start Migration" for consistent UX
-    // Analysis will happen when user clicks the button
-  }, [navigate, sourceVersion]);
+    startMigration();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sourceVersion]);
+
   const startMigration = () => {
     setMigrationState(prev => ({ ...prev, status: 'progress' }));
 
@@ -64,6 +65,19 @@ const MigrationPage: React.FC<MigrationPageProps> = () => {
             setSetting('defaultVersion', 'latest');
             navigate(getPostMigrationRoute());
           }, 3000); // Show skip message for 3 seconds
+          return;
+        }
+
+        // If no user approval is needed, skip directly to success
+        if (!result.requiresUserApproval) {
+          console.log(`Migration completed automatically (no user approval needed)`);
+          setSetting('defaultVersion', 'latest');
+          setMigrationState(prev => ({ ...prev, status: 'success', migrationResult: result }));
+
+          // Navigate to select-game after showing success message
+          setTimeout(() => {
+            navigate(getPostMigrationRoute());
+          }, 2000);
           return;
         }
 
