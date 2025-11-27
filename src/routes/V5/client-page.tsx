@@ -706,7 +706,7 @@ const ClientPage: React.FC<ClientPageProps> = () => {
                 <div className={styles.qrCodeContainer}>
                   <QRCode
                     value={window.location.href}
-                    size={200}
+                    size={window.innerHeight <= 500 ? 100 : 140}
                     className={styles.boardQrCode}
                   />
                 </div>
