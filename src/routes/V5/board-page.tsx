@@ -10,6 +10,7 @@ import { GameState, StyleConfig, SessionConfig, AudienceInteractionType, Audienc
 import { getNumberMessage, getSetting, getLetterColor, getContrastTextColor, getBoardHighlightColor } from '../../utils/settings';
 import { getVersionRoute, resolveVersionAlias } from '../../config/versions';
 import games from '../../data/games';
+import audienceInteractionsData from '../../data/audienceInteractions.json';
 import {
   startGameSession,
   recordNumberCall,
@@ -51,6 +52,44 @@ const BoardPage: React.FC<BoardPageProps> = () => {
       console.error('Board page - sendAudienceInteraction is not available');
     }
   }, [sendAudienceInteraction]);
+
+  // Check for auto-trigger audience interactions
+  const checkAutoTriggerInteractions = useCallback((number: number) => {
+    // Find all interactions that have auto-trigger for this number
+    const autoInteractions = audienceInteractionsData.filter(
+      (interaction: any) => interaction.auto?.number === number
+    );
+
+    autoInteractions.forEach((interaction: any) => {
+      // Check if auto-play is enabled for this interaction
+      const autoKey = `${interaction.id}_enableAutoPlay`;
+      const isAutoEnabled = getSetting(autoKey, false);
+
+      if (isAutoEnabled) {
+        // Get other settings for this interaction
+        const imageKey = `${interaction.id}_enableImage`;
+        const audioKey = `${interaction.id}_enableAudio`;
+        
+        const options: AudienceInteractionOptions = {
+          enable_image: getSetting(imageKey, true),
+          enable_audio: getSetting(audioKey, true)
+        };
+
+        console.log(`Auto-triggering ${interaction.id} for number ${number}`, options);
+
+        // Send audience interaction to server (for clients)
+        handleAudienceInteraction(interaction.id as AudienceInteractionType, options);
+
+        // Use the global showAudienceInteraction function (for local display)
+        if ((window as any).showAudienceInteraction) {
+          (window as any).showAudienceInteraction(interaction, options);
+        } else {
+          console.warn('AudienceInteractionModalManager not available for auto-trigger');
+        }
+      }
+    });
+  }, [handleAudienceInteraction]);
+
   // Helper functions to get current state from telemetry
   const getCalledNumbers = () => getLastCalledNumbers();
   const getLastNumber = () => getLastCalledNumber();
@@ -430,6 +469,11 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         // Number was called
         sendNumberActivated(number, totalSpots);
       }
+    }
+
+    // Check for auto-trigger audience interactions when number is activated (not deactivated)
+    if (!wasAlreadyCalled) {
+      checkAutoTriggerInteractions(number);
     }
   };
 
