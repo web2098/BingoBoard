@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/BingoBoard/static/css/main.3d016729.css",
-    "main.js": "/BingoBoard/static/js/main.bcf0f90e.js",
+    "main.js": "/BingoBoard/static/js/main.abeb46d2.js",
     "static/media/order66.gif": "/BingoBoard/static/media/order66.7e373a39a1a3dbb53b66.gif",
     "static/media/battle.jpg": "/BingoBoard/static/media/battle.f6f81fd0b81121a883ba.jpg",
     "static/media/order66.mp3": "/BingoBoard/static/media/order66.62a0508d6e04d2dd64df.mp3",
     "index.html": "/BingoBoard/index.html",
     "main.3d016729.css.map": "/BingoBoard/static/css/main.3d016729.css.map",
-    "main.bcf0f90e.js.map": "/BingoBoard/static/js/main.bcf0f90e.js.map"
+    "main.abeb46d2.js.map": "/BingoBoard/static/js/main.abeb46d2.js.map"
   },
   "entrypoints": [
     "static/css/main.3d016729.css",
-    "static/js/main.bcf0f90e.js"
+    "static/js/main.abeb46d2.js"
   ]
 }
