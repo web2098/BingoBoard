@@ -252,9 +252,21 @@ const ClientPage: React.FC<ClientPageProps> = () => {
         totalNumbers: 75
       };
       setGameData(newGameData);
+
+      // Handle potential reverse order from server (legacy compatibility)
+      // If the first number in the active list is the last called number, the list is reversed (Newest -> Oldest)
+      // We want to store it Chronologically (Oldest -> Newest)
+      let activeNumbers = lastSetupMessage.data.active || [];
+      const lastNum = lastSetupMessage.data.lastNumber;
+
+      if (activeNumbers.length > 1 && lastNum && activeNumbers[0] === lastNum) {
+        console.log('Last number is not the end of the active list, reversing to Ensure chronological order');
+        activeNumbers = [...activeNumbers].reverse();
+      }
+
       // Use the setup message's called numbers and last number directly
-      setCalledNumbers(lastSetupMessage.data.active || []);
-      setLastNumber(lastSetupMessage.data.lastNumber || null);
+      setCalledNumbers(activeNumbers);
+      setLastNumber(lastNum || null);
     }
   }, [lastSetupMessage]);
 
@@ -774,12 +786,13 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             {calledNumbers.length === 0 ? (
               <div className={styles.noNumbers}>No numbers called yet</div>
             ) : (
+              // Display numbers Newest -> Oldest (Left to Right)
               calledNumbers.slice().reverse().map((number, index) => {
                 // Get board colors for gradient effect
                 const boardHighlightColor = getBoardHighlightColor();
                 const unHighlightedColor = '#f0f0f0'; // Default cell background
 
-                // Create gradient colors for first 3 numbers
+                // Create gradient colors for first 3 numbers (Newest 3)
                 let backgroundColor = unHighlightedColor;
                 let textColor = '#333';
 
