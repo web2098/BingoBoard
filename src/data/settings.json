@@ -72,6 +72,30 @@
   },
   {
     "section": "Board Customizations",
+    "Label": "Auto Hide Nativation Bar",
+    "id": "autoHideNavigationBar",
+    "description": "Automatically hide the navigation bar after a few seconds of inactivity",
+    "type": "boolean",
+    "default": false
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "Show Header Row",
+    "id": "showHeaderRow",
+    "description": "Display the header row on the bingo board",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Board Customizations",
+    "Label": "Show Header Section",
+    "id": "showBoardHeader",
+    "description": "Display the entire header section on the bingo board",
+    "type": "boolean",
+    "default": true
+  },
+  {
+    "section": "Board Customizations",
     "Label": "Show Last Number Played",
     "id": "showLastNumberPlayed",
     "description": "Display the last number played on the bingo board",

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import AudienceInteractionButtons from './AudienceInteractionButtons';
 import { getSetting, setSetting } from '../utils/settings';
@@ -29,6 +29,8 @@ interface SidebarWithMenuProps {
   pageButtons?: SidebarButton[];
   children?: React.ReactNode;
   onAudienceInteraction?: (eventType: AudienceInteractionType, options: AudienceInteractionOptions) => void;
+  autoHide?: boolean;
+  onHiddenChange?: (hidden: boolean) => void;
 }
 
 const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
@@ -38,10 +40,58 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
   onReset,
   pageButtons = [],
   children,
-  onAudienceInteraction
+  onAudienceInteraction,
+  autoHide = false,
+  onHiddenChange
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!autoHide) {
+      setIsHidden(false);
+      return;
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (e.clientX <= 10) {
+        if (hideTimerRef.current) {
+          clearTimeout(hideTimerRef.current);
+          hideTimerRef.current = null;
+        }
+        setHidden(false);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    };
+  }, [autoHide]);
+
+  const setHidden = (value: boolean) => {
+    setIsHidden(value);
+    onHiddenChange?.(value);
+  };
+
+  const handleSidebarMouseLeave = () => {
+    if (!autoHide) return;
+    hideTimerRef.current = setTimeout(() => {
+      setHidden(true);
+    }, 500);
+  };
+
+  const handleSidebarMouseEnter = () => {
+    if (!autoHide) return;
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+    setHidden(false);
+  };
 
   // Available versions with their corresponding URLs
   const availableVersions = getVersionLabels();
@@ -165,7 +215,11 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
   return (
     <>
       {/* Sidebar */}
-      <div className={styles.sidebar}>
+      <div
+        className={`${styles.sidebar} ${autoHide && isHidden ? styles.sidebarHidden : ''}`}
+        onMouseLeave={handleSidebarMouseLeave}
+        onMouseEnter={handleSidebarMouseEnter}
+      >
         {/* Hamburger Menu Button */}
         <button
           className={styles.hamburgerButton}

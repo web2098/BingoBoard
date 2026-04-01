@@ -163,7 +163,7 @@ const GameInfoCard = ({
   return (
     <div className={styles.gameInfoCard}>
       <div className={styles.gameInfoHeader}>
-        <h2 className={styles.gameTitle}>{game.name}</h2>
+        <h2 className={styles.gameTitle}>{variant.name || game.name}</h2>
         <FreeSpaceToggle
           freeSpace={freeSpace}
           onChange={onFreeSpaceChange}
@@ -189,9 +189,11 @@ const FreeSpaceToggle = ({
   disabled?: boolean,
   variant?: any
 }) => {
-  // Toggle should only be disabled if dynamicFreeSpace is not available
   const hasDynamicFreeSpace = variant && variant.hasOwnProperty('dynamicFreeSpace') && variant.dynamicFreeSpace;
-  const isDisabled = disabled || (!hasDynamicFreeSpace);
+
+  if (!hasDynamicFreeSpace) return null;
+
+  const isDisabled = disabled;
 
   return (
     <div className={styles.freeSpaceToggle}>
@@ -519,7 +521,7 @@ const GamePreviewSection = ({
                 hasDynamicFreeSpace={currentVariant.hasOwnProperty('dynamicFreeSpace') && currentVariant.dynamicFreeSpace}
               />
               {index < cachedPatterns.length - 1 && currentVariant.op && (
-                <OperatorIcon operator={currentVariant.op} />
+                <OperatorIcon operator={Array.isArray(currentVariant.op) ? currentVariant.op[rotationIndex % currentVariant.op.length] : currentVariant.op} />
               )}
             </React.Fragment>
           );

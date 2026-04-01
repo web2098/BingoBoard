@@ -393,7 +393,7 @@ function corners(){
                 boards: [
                     (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[4,0],[4,4]]]
                 ],
-                rules: 'Must match all 4 corners on ONE boards',
+                rules: 'Must match all 4 corners on one board',
             },
             {
                 name: "8 Corners",
@@ -403,7 +403,169 @@ function corners(){
                     (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[4,0],[4,4]]]
                 ],
                 op: "and",
-                rules: 'Must match all 4 corners on ONE boards'
+                rules: 'Must match all 8 corners',
+            },
+            {
+                name: "Expanding Corners",
+                length: "Fast",
+                boards: [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => {
+                        if (previewMode) return [[[0,0],[0,4],[4,0],[4,4]]];
+                        return [
+                            [[0,0],[0,4],[4,0],[4,4]], // scenario 1: all 4 on board 1
+                            [],                         // scenario 2: no requirement (board 2 gets all 4)
+                            [[0,0],[4,0]],              // scenario 3: B column corners
+                        ];
+                    },
+                    (freeSpace: boolean = true, previewMode: boolean = false) => {
+                        if (previewMode) return [[]];
+                        return [
+                            [],                         // scenario 1: no requirement (board 1 gets all 4)
+                            [[0,0],[0,4],[4,0],[4,4]], // scenario 2: all 4 on board 2
+                            [[0,4],[4,4]],              // scenario 3: O column corners
+                        ];
+                    }
+                ],
+                op: ["or", "or", "and"],
+                rules: 'Must match all 4 corners on the left board, OR all 4 corners on the right board, OR the B corners on board 1 and O corners on board 2',
+            },
+            {
+                name: "1 Corner Either Board",
+                length: "Fast",
+                boards: [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => {
+                        if (previewMode) return [[[0,0]]];
+                        return [[[0,0]], [[0,4]], [[4,0]], [[4,4]], [], [], [], []];
+                    },
+                    (freeSpace: boolean = true, previewMode: boolean = false) => {
+                        if (previewMode) return [[]];
+                        return [[], [], [], [], [[0,0]], [[0,4]], [[4,0]], [[4,4]]];
+                    }
+                ],
+                op: "or",
+                rules: 'Must match any 1 corner on either board',
+            },
+            {
+                name: "1 Corner Each Board",
+                length: "Fast",
+                boards: [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0]], [[0,4]], [[4,0]], [[4,4]]],
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0]], [[0,4]], [[4,0]], [[4,4]]]
+                ],
+                op: "and",
+                rules: 'Must match any 1 corner on both boards',
+            },
+            {
+                name: "2 Corners Either Board",
+                length: "Fast",
+                boards: [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => {
+                        if (previewMode) return [[[0,0],[0,4]]];
+                        const c = [[0,0],[0,4],[4,0],[4,4]];
+                        const combos: number[][][] = [
+                            [c[0],c[1]], [c[0],c[2]], [c[0],c[3]],
+                            [c[1],c[2]], [c[1],c[3]], [c[2],c[3]]
+                        ];
+                        const splits_b1: number[][][] = [];
+                        for (let i = 0; i < 4; i++)
+                            for (let j = i + 1; j < 4; j++)
+                                splits_b1.push([c[i]]);
+                        return [...combos, [], [], [], [], [], [], ...splits_b1];
+                    },
+                    (freeSpace: boolean = true, previewMode: boolean = false) => {
+                        if (previewMode) return [[]];
+                        const c = [[0,0],[0,4],[4,0],[4,4]];
+                        const combos: number[][][] = [
+                            [c[0],c[1]], [c[0],c[2]], [c[0],c[3]],
+                            [c[1],c[2]], [c[1],c[3]], [c[2],c[3]]
+                        ];
+                        const splits_b2: number[][][] = [];
+                        for (let i = 0; i < 4; i++)
+                            for (let j = i + 1; j < 4; j++)
+                                splits_b2.push([c[j]]);
+                        return [[], [], [], [], [], [], ...combos, ...splits_b2];
+                    }
+                ],
+                op: [...Array(12).fill("or"), ...Array(6).fill("and")],
+                rules: 'Must match any 2 corners total, on either board or split 1 corner each board',
+            },
+            {
+                name: "2 Corners Each Board",
+                length: "Fast",
+                boards: [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4]], [[0,0],[4,0]], [[0,0],[4,4]], [[0,4],[4,0]], [[0,4],[4,4]], [[4,0],[4,4]]],
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4]], [[0,0],[4,0]], [[0,0],[4,4]], [[0,4],[4,0]], [[0,4],[4,4]], [[4,0],[4,4]]]
+                ],
+                op: "and",
+                rules: 'Must match any 2 corners on both boards',
+            },
+            {
+                name: "3 Corners Either Board",
+                length: "Fast",
+                boards: [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => {
+                        if (previewMode) return [[[0,0],[0,4],[4,0]]];
+                        const c = [[0,0],[0,4],[4,0],[4,4]];
+                        const single: number[][][] = [
+                            [c[0],c[1],c[2]], [c[0],c[1],c[3]],
+                            [c[0],c[2],c[3]], [c[1],c[2],c[3]]
+                        ];
+                        // 1+2 splits: board 1 has 1 corner, board 2 will have 2
+                        const split12_b1: number[][][] = [];
+                        for (let i = 0; i < 4; i++) {
+                            const rem = c.filter((_,k) => k !== i);
+                            for (let j = 0; j < rem.length - 1; j++)
+                                for (let l = j + 1; l < rem.length; l++)
+                                    split12_b1.push([c[i]]);
+                        }
+                        // 2+1 splits: board 1 has 2 corners, board 2 will have 1
+                        const split21_b1: number[][][] = [];
+                        for (let i = 0; i < 4; i++)
+                            for (let j = i + 1; j < 4; j++) {
+                                const rem = c.filter((_,k) => k !== i && k !== j);
+                                for (const r of rem)
+                                    split21_b1.push([c[i], c[j]]);
+                            }
+                        return [...single, [], [], [], [], ...split12_b1, ...split21_b1];
+                    },
+                    (freeSpace: boolean = true, previewMode: boolean = false) => {
+                        if (previewMode) return [[]];
+                        const c = [[0,0],[0,4],[4,0],[4,4]];
+                        const single: number[][][] = [
+                            [c[0],c[1],c[2]], [c[0],c[1],c[3]],
+                            [c[0],c[2],c[3]], [c[1],c[2],c[3]]
+                        ];
+                        // 1+2 splits: board 2 has 2 corners
+                        const split12_b2: number[][][] = [];
+                        for (let i = 0; i < 4; i++) {
+                            const rem = c.filter((_,k) => k !== i);
+                            for (let j = 0; j < rem.length - 1; j++)
+                                for (let l = j + 1; l < rem.length; l++)
+                                    split12_b2.push([rem[j], rem[l]]);
+                        }
+                        // 2+1 splits: board 2 has 1 corner
+                        const split21_b2: number[][][] = [];
+                        for (let i = 0; i < 4; i++)
+                            for (let j = i + 1; j < 4; j++) {
+                                const rem = c.filter((_,k) => k !== i && k !== j);
+                                for (const r of rem)
+                                    split21_b2.push([r]);
+                            }
+                        return [[], [], [], [], ...single, ...split12_b2, ...split21_b2];
+                    }
+                ],
+                op: [...Array(8).fill("or"), ...Array(24).fill("and")],
+                rules: 'Must match any 3 corners total, on either board or split between boards',
+            },
+            {
+                name: "3 Corners Each Board",
+                length: "Fast",
+                boards: [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[4,0]], [[0,0],[0,4],[4,4]], [[0,0],[4,0],[4,4]], [[0,4],[4,0],[4,4]]],
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[4,0]], [[0,0],[0,4],[4,4]], [[0,0],[4,0],[4,4]], [[0,4],[4,0],[4,4]]]
+                ],
+                op: "and",
+                rules: 'Must match any 3 corners on both boards',
             }
         ]
     }
@@ -954,6 +1116,125 @@ function theM(){
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
+                length: "Slow",
+                freeSpace: true
+            },
+            {
+                name:"The E",
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,1],[0,2],[0,3],[0,4],
+                        [1,0],
+                        [2,0],[2,1],[2,2],[2,3],
+                        [3,0],
+                        [4,0],[4,1],[4,2],[4,3],[4,4]
+                    ]]
+                ],
+                rules: "Must match exact E pattern on one board",
+                length: "Slow",
+                freeSpace: true
+            },
+            {
+                name:"The EE",
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,1],[0,2],[0,3],[0,4],
+                        [1,0],
+                        [2,0],[2,1],[2,2],[2,3],
+                        [3,0],
+                        [4,0],[4,1],[4,2],[4,3],[4,4]
+                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,0],[0,1],[0,2],[0,3],[0,4],
+                        [1,0],
+                        [2,0],[2,1],[2,2],[2,3],
+                        [3,0],
+                        [4,0],[4,1],[4,2],[4,3],[4,4]
+                    ]]
+                ],
+                op: "and",
+                rules: "Must match exact E pattern on both boards",
+                length: "Slow",
+                freeSpace: true
+            },
+            {
+                name:"The J",
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,2],
+                        [1,2],
+                        [2,2],
+                        [3,0],[3,2],
+                        [4,0],[4,1],[4,2]
+                    ],
+                    [
+                        [0,3],
+                        [1,3],
+                        [2,3],
+                        [3,1],[3,3],
+                        [4,1],[4,2],[4,3]
+                    ],
+                    [
+                        [0,4],
+                        [1,4],
+                        [2,4],
+                        [3,2],[3,4],
+                        [4,2],[4,3],[4,4]
+                    ]
+                ]
+                ],
+                rules: "Must match exact J pattern on one board",
+                length: "Slow",
+                freeSpace: true
+            },
+            {
+                name:"The JJ",
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,2],
+                        [1,2],
+                        [2,2],
+                        [3,0],[3,2],
+                        [4,0],[4,1],[4,2]
+                    ],
+                    [
+                        [0,3],
+                        [1,3],
+                        [2,3],
+                        [3,1],[3,3],
+                        [4,1],[4,2],[4,3]
+                    ],
+                    [
+                        [0,4],
+                        [1,4],
+                        [2,4],
+                        [3,2],[3,4],
+                        [4,2],[4,3],[4,4]
+                    ]],(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    [[
+                        [0,2],
+                        [1,2],
+                        [2,2],
+                        [3,0],[3,2],
+                        [4,0],[4,1],[4,2]
+                    ],
+                    [
+                        [0,3],
+                        [1,3],
+                        [2,3],
+                        [3,1],[3,3],
+                        [4,1],[4,2],[4,3]
+                    ],
+                    [
+                        [0,4],
+                        [1,4],
+                        [2,4],
+                        [3,2],[3,4],
+                        [4,2],[4,3],[4,4]
+                    ]]
+                ],
+                op: "and",
+                rules: "Must match exact J pattern on both boards",
                 length: "Slow",
                 freeSpace: true
             }

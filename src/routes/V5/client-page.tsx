@@ -551,7 +551,7 @@ const ClientPage: React.FC<ClientPageProps> = () => {
                 freeSpace={gameData.freeSpace}
               />
               {index < filteredPatterns.length - 1 && currentVariant.op && (
-                <OperatorIcon operator={currentVariant.op} />
+                <OperatorIcon operator={Array.isArray(currentVariant.op) ? currentVariant.op[rotationIndex % currentVariant.op.length] : currentVariant.op} />
               )}
             </React.Fragment>
           ))}
