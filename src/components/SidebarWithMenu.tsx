@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import AudienceInteractionButtons from './AudienceInteractionButtons';
 import { getSetting, setSetting } from '../utils/settings';
