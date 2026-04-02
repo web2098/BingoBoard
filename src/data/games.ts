@@ -523,7 +523,7 @@ function corners(){
                         for (let i = 0; i < 4; i++)
                             for (let j = i + 1; j < 4; j++) {
                                 const rem = c.filter((_,k) => k !== i && k !== j);
-                                for (const _r of rem)
+                                for (let ri = 0; ri < rem.length; ri++)
                                     split21_b1.push([c[i], c[j]]);
                             }
                         return [...single, [], [], [], [], ...split12_b1, ...split21_b1];
