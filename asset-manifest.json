@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/BingoBoard/static/css/main.e81b0dcd.css",
-    "main.js": "/BingoBoard/static/js/main.b6281c9c.js",
+    "main.css": "/BingoBoard/static/css/main.3d016729.css",
+    "main.js": "/BingoBoard/static/js/main.44a59ffb.js",
     "static/media/order66.gif": "/BingoBoard/static/media/order66.7e373a39a1a3dbb53b66.gif",
     "static/media/battle.jpg": "/BingoBoard/static/media/battle.f6f81fd0b81121a883ba.jpg",
     "static/media/order66.mp3": "/BingoBoard/static/media/order66.62a0508d6e04d2dd64df.mp3",
     "index.html": "/BingoBoard/index.html",
-    "main.e81b0dcd.css.map": "/BingoBoard/static/css/main.e81b0dcd.css.map",
-    "main.b6281c9c.js.map": "/BingoBoard/static/js/main.b6281c9c.js.map"
+    "main.3d016729.css.map": "/BingoBoard/static/css/main.3d016729.css.map",
+    "main.44a59ffb.js.map": "/BingoBoard/static/js/main.44a59ffb.js.map"
   },
   "entrypoints": [
-    "static/css/main.e81b0dcd.css",
-    "static/js/main.b6281c9c.js"
+    "static/css/main.3d016729.css",
+    "static/js/main.44a59ffb.js"
   ]
 }
