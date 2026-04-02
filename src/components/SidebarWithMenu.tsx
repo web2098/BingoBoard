@@ -49,6 +49,11 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
   const [isHidden, setIsHidden] = useState(false);
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const setHidden = useCallback((value: boolean) => {
+    setIsHidden(value);
+    onHiddenChange?.(value);
+  }, [onHiddenChange]);
+
   useEffect(() => {
     if (!autoHide) {
       setIsHidden(false);
@@ -70,12 +75,7 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
       window.removeEventListener('mousemove', handleMouseMove);
       if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
     };
-  }, [autoHide]);
-
-  const setHidden = (value: boolean) => {
-    setIsHidden(value);
-    onHiddenChange?.(value);
-  };
+  }, [autoHide, setHidden]);
 
   const handleSidebarMouseLeave = () => {
     if (!autoHide) return;
