@@ -65,6 +65,18 @@ export interface TelemetryData {
 const TELEMETRY_KEY = 'bingoTelemetry';
 const CURRENT_SESSION_KEY = 'bingoCurrentSession';
 
+// Active room ID and token (set by ServerInteractionService when a room is established)
+let activeRoomId: string | null = null;
+let activeRoomToken: string | null = null;
+
+/**
+ * Set the current active room ID and token. Called by ServerInteractionService.
+ */
+export const setActiveRoomId = (roomId: string | null, roomToken: string | null = null): void => {
+  activeRoomId = roomId;
+  activeRoomToken = roomToken;
+};
+
 // Event system for telemetry updates
 const TELEMETRY_UPDATE_EVENT = 'telemetryUpdate';
 
@@ -332,6 +344,54 @@ export const resetGameSession = (): void => {
 };
 
 /**
+ * Send a completed game session to the bingo server's /host/save_game endpoint.
+ * Fire-and-forget: errors are logged but never thrown.
+ */
+const saveGameToServer = (session: GameSession): void => {
+  try {
+    const bingoSettings = JSON.parse(localStorage.getItem('bingoSettings') || '{}');
+    const rawServerUrl: string = bingoSettings.serverUrl || '';
+
+    if (!rawServerUrl.trim() || !activeRoomId || !activeRoomToken) {
+      return; // Server not configured or no active room
+    }
+
+    // Normalise to an HTTP(S) base URL (mirrors HostConnection logic)
+    let httpUrl = rawServerUrl.replace(/\/$/, '');
+    if (
+      !httpUrl.startsWith('ws://') && !httpUrl.startsWith('wss://') &&
+      !httpUrl.startsWith('http://') && !httpUrl.startsWith('https://')
+    ) {
+      httpUrl = `https://${httpUrl}`;
+    }
+    httpUrl = httpUrl.replace('ws://', 'http://').replace('wss://', 'https://');
+
+    console.info('Session Data: ', JSON.stringify(session));
+    const endpoint = `${httpUrl}/room/${activeRoomId}/save_game`;
+
+    fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': activeRoomToken
+      },
+      credentials: 'include',
+      body: JSON.stringify(session)
+    }).then(response => {
+      if (response.ok) {
+        console.log('Game session saved to server successfully');
+      } else {
+        console.warn(`save_game: server responded with HTTP ${response.status}`);
+      }
+    }).catch(error => {
+      console.warn('save_game: request failed:', error);
+    });
+  } catch (error) {
+    console.warn('save_game: unexpected error:', error);
+  }
+};
+
+/**
  * End the current session and move it to history
  */
 export const endCurrentSession = (): void => {
@@ -384,6 +444,9 @@ export const endCurrentSession = (): void => {
     telemetryData.sessionHistory.push(currentSession);
     telemetryData.lastSessionId = currentSession.sessionId;
     saveTelemetryData(telemetryData);
+
+    // Send a copy of the session report to the bingo server if configured
+    saveGameToServer(currentSession);
 
     console.log('Ended game session and saved to history:', {
       game: currentSession.gameName,

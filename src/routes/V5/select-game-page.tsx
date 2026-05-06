@@ -276,7 +276,7 @@ const WelcomePanel = ({ isConnected, roomId, connectionError, developerMode }: {
     const qrCodeValue = `${window.location.origin}/BingoBoard/${resolvedVersion}${clientRoute.path}?params=${base64Params}`;
     console.log(`Generated QR Code Value: ${qrCodeValue}`);
 
-    return (
+    const qrContainer = (
       <div className={styles.qrCodeContainer}>
         <QRCode
           value={qrCodeValue}
@@ -285,6 +285,16 @@ const WelcomePanel = ({ isConnected, roomId, connectionError, developerMode }: {
         />
       </div>
     );
+
+    if (developerMode) {
+      return (
+        <a href={qrCodeValue} target="_blank" rel="noopener noreferrer" style={{ display: 'contents' }}>
+          {qrContainer}
+        </a>
+      );
+    }
+
+    return qrContainer;
   };
 
   const renderQRCodeContent = () => {
