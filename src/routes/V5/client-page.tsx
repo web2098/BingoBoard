@@ -667,24 +667,6 @@ const ClientPage: React.FC<ClientPageProps> = () => {
       <div className={styles.clientPage}>
         {/* Header */}
         <div className={styles.boardHeader}>
-          <div className={styles.headerLeft}>
-            {/* Game Preview */}
-            <div className={styles.gamePreviewMini}>
-              <div className={styles.gamePreviewHeader}>
-                <h3>{gameData.name}</h3>
-                <p className={styles.freeSpaceStatus}>
-                  Free Space: {gameData.freeSpace ? 'ON' : 'OFF'}
-                </p>
-              </div>
-              <div className={styles.miniBoard}>
-                {renderBoardPreview()}
-              </div>
-              <p className={styles.numberCount}>
-                {calledNumbers.length}/{gameData.totalNumbers} ({gameData.totalNumbers - calledNumbers.length} Left)
-              </p>
-            </div>
-          </div>
-
           <div className={styles.headerCenter}>
             <div className={styles.lastNumberSection}>
               <div className={styles.lastNumberDisplay}>
@@ -821,6 +803,24 @@ const ClientPage: React.FC<ClientPageProps> = () => {
               })
             )}
             </div>
+          </div>
+        </div>
+
+        {/* Game Board Preview + Share */}
+        <div className={styles.previewWithShare}>
+          <div className={styles.gamePreviewMini}>
+          <div className={styles.gamePreviewHeader}>
+            <h3>{gameData.name}</h3>
+            <p className={styles.freeSpaceStatus}>
+              Free Space: {gameData.freeSpace ? 'ON' : 'OFF'}
+            </p>
+          </div>
+          <div className={styles.miniBoard}>
+            {renderBoardPreview()}
+          </div>
+          <p className={styles.numberCount}>
+            {calledNumbers.length}/{gameData.totalNumbers} ({gameData.totalNumbers - calledNumbers.length} Left)
+          </p>
           </div>
           <button
             className={styles.shareBar}

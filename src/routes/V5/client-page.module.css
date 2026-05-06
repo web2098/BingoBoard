@@ -12,9 +12,8 @@
 
 /* Header Section - Match Board Page Structure */
 .boardHeader {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 2rem;
+  display: flex;
+  justify-content: center;
   margin-bottom: 2rem;
   width: 98%;
   align-items: start;
@@ -223,6 +222,15 @@
 }
 
 /* Share Bar Button */
+.previewWithShare {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 98%;
+}
+
 .shareBar {
   display: flex;
   flex-direction: column;
