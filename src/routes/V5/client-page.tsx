@@ -151,6 +151,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
   // Modal state for board preview
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  // Modal state for share QR code
+  const [isShareModalVisible, setIsShareModalVisible] = useState(false);
+
   // Ref to store the rotation interval so we can clear it
   const rotationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -622,6 +625,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             <p>Connecting to room {roomId}</p>
           </div>
 
+          {/* Client Settings Section */}
+          <ClientSettings />
+
           {/* Client Log Section */}
           <ClientLog logs={logs} onClearLogs={clearLogs} />
         </div>
@@ -641,6 +647,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             <h2>Waiting for Game Data...</h2>
             <p>Connected to room. Waiting for game setup.</p>
           </div>
+
+          {/* Client Settings Section */}
+          <ClientSettings />
 
           {/* Client Log Section */}
           <ClientLog logs={logs} onClearLogs={clearLogs} />
@@ -711,20 +720,6 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             </div>
           </div>
 
-          <div className={styles.headerRight}>
-            <div className={styles.qrCodeHeader}>
-              <h4>Share This View</h4>
-              <div className={styles.qrCodeSuccess}>
-                <div className={styles.qrCodeContainer}>
-                  <QRCode
-                    value={window.location.href}
-                    size={window.innerHeight <= 500 ? 100 : 140}
-                    className={styles.boardQrCode}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Bingo Numbers Grid */}
@@ -780,9 +775,10 @@ const ClientPage: React.FC<ClientPageProps> = () => {
         </div>
 
         {/* Horizontal Number History */}
-        <div className={styles.numberHistorySection}>
-          <h4>Recently Called Numbers</h4>
-          <div className={styles.horizontalHistoryList}>
+        <div className={styles.numberHistorySectionWrapper}>
+          <div className={styles.numberHistorySection}>
+            <h4>Recently Called Numbers</h4>
+            <div className={styles.horizontalHistoryList}>
             {calledNumbers.length === 0 ? (
               <div className={styles.noNumbers}>No numbers called yet</div>
             ) : (
@@ -824,7 +820,16 @@ const ClientPage: React.FC<ClientPageProps> = () => {
                 );
               })
             )}
+            </div>
           </div>
+          <button
+            className={styles.shareBar}
+            onClick={() => setIsShareModalVisible(true)}
+            aria-label="Share this view"
+          >
+            <span className={styles.shareBarIcon}>📤</span>
+            <span className={styles.shareBarText}>Share This View</span>
+          </button>
         </div>
 
         {/* Client Settings Section */}
@@ -832,6 +837,25 @@ const ClientPage: React.FC<ClientPageProps> = () => {
 
         {/* Client Log Section */}
         <ClientLog logs={logs} onClearLogs={clearLogs} />
+
+        {/* Share Modal */}
+        {isShareModalVisible && (
+          <div className={styles.shareModalOverlay} onClick={() => setIsShareModalVisible(false)}>
+            <div className={styles.shareModal} onClick={e => e.stopPropagation()}>
+              <button className={styles.shareModalClose} onClick={() => setIsShareModalVisible(false)} aria-label="Close">✕</button>
+              <h3 className={styles.shareModalTitle}>Share This View</h3>
+              <p className={styles.shareModalSubtitle}>Scan to open on another device</p>
+              <div className={styles.shareModalQr}>
+                <QRCode
+                  value={window.location.href}
+                  size={160}
+                  className={styles.boardQrCode}
+                />
+              </div>
+              <p className={styles.shareModalUrl}>{window.location.href}</p>
+            </div>
+          </div>
+        )}
 
         {/* Board Preview Modal */}
         {gameData && (

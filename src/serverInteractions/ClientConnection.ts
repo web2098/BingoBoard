@@ -71,6 +71,13 @@ export class ClientConnection extends ServerConnection {
     this.sendMessage(message);
   }
 
+  public sendFeedback(message: string): void {
+    if (!this.clientId) {
+      return; // Not connected yet, skip silently
+    }
+    this.sendMessage({ type: "client_feedback", message });
+  }
+
   public setRoomId(roomId: string): void {
     this.roomId = roomId;
     this.clientConfig.roomId = roomId;
