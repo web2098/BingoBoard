@@ -101,7 +101,7 @@ export class ServerConnection {
         }
 
         if (this.shouldReconnect && event.code !== 1000) { // 1000 = normal closure
-          console.log('Retrying connection after close');
+          console.log('Retrying connection after close with code:', event.code, 'and reason:', event.reason );
           this.retryConnection();
         }
       };
