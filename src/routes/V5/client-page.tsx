@@ -250,7 +250,7 @@ const ClientPage: React.FC<ClientPageProps> = () => {
       const newGameData = {
         id: 0, // We don't have game ID from server, use default
         name: lastSetupMessage.data.game,
-        variant: 0, // We don't have variant from server, use default
+        variant: lastSetupMessage.data.variant,
         freeSpace: lastSetupMessage.data.free,
         totalNumbers: 75
       };

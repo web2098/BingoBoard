@@ -130,6 +130,7 @@ class ServerInteractionService {
 
     return {
       name: currentSession.gameName,
+      variant: currentSession.variant,
       freeSpaceOn: currentSession.freeSpace,
       calledNumbers: getLastCalledNumbersReversed(),
       lastNumber: getLastCalledNumber() || undefined

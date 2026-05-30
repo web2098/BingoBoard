@@ -121,6 +121,7 @@ export class HostConnection extends ServerConnection {
       type: "setup",
       data: {
         game: gameState.name,
+        variant: gameState.variant,
         free: gameState.freeSpaceOn,
         active: gameState.calledNumbers,
         lastNumber: gameState.lastNumber
@@ -145,6 +146,7 @@ export class HostConnection extends ServerConnection {
       client_id: clientId,
       data: {
         game: gameState.name,
+        variant: gameState.variant,
         free: gameState.freeSpaceOn,
         active: gameState.calledNumbers,
         lastNumber: gameState.lastNumber
