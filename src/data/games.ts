@@ -406,6 +406,38 @@ function corners(){
                 rules: 'Must match all 8 corners',
             },
             {
+                name: "4 Your Way",
+                length: "Fast",
+                boards: [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => {
+                        const c = [[0,0], [0,4], [4,0], [4,4]];
+                        const scenarios: number[][][] = [];
+                        for (let mask = 0; mask < 16; mask++) {
+                            const pattern: number[][] = [];
+                            for (let i = 0; i < 4; i++) {
+                                if (mask & (1 << i)) pattern.push(c[i]);
+                            }
+                            scenarios.push(pattern);
+                        }
+                        return scenarios;
+                    },
+                    (freeSpace: boolean = true, previewMode: boolean = false) => {
+                        const c = [[0,0], [0,4], [4,0], [4,4]];
+                        const scenarios: number[][][] = [];
+                        for (let mask = 0; mask < 16; mask++) {
+                            const pattern: number[][] = [];
+                            for (let i = 0; i < 4; i++) {
+                                if (!(mask & (1 << i))) pattern.push(c[i]);
+                            }
+                            scenarios.push(pattern);
+                        }
+                        return scenarios;
+                    }
+                ],
+                op: "and",
+                rules: 'Any 4 corners, just get 4!',
+            },
+            {
                 name: "Expanding Corners",
                 length: "Fast",
                 boards: [
@@ -666,6 +698,115 @@ function postageStamp(){
                     ]]
                 ],
                 rules: "Must match exact pattern",
+                length: "Slow"
+            },
+            {
+                name: "3 Corners Large",
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    {
+                        let topLeftLargeCorner = [[0,0],[0,1],[1,0],[1,1]];
+                        let topRightLargeCorner = [[0,3],[0,4],[1,3],[1,4]];
+                        let bottomLeftLargeCorner = [[3,0],[3,1],[4,0],[4,1]];
+                        let bottomRightLargeCorner = [[3,3],[3,4],[4,3],[4,4]];
+
+                        let all = [];
+
+                        for( let index of [0,1,2,3])
+                        {
+                            let combined = [];
+                            if (index == 0 )
+                            {
+                                combined.push(...topRightLargeCorner);
+                                combined.push(...bottomLeftLargeCorner);
+                                combined.push(...bottomRightLargeCorner);
+                            }
+                            else if (index == 1 )
+                            {
+                                combined.push(...topLeftLargeCorner);
+                                combined.push(...topRightLargeCorner);
+                                combined.push(...bottomLeftLargeCorner);
+                            }
+                            else if (index == 2 )
+                            {
+                                combined.push(...topLeftLargeCorner);
+                                combined.push(...topRightLargeCorner);
+                                combined.push(...bottomRightLargeCorner);
+                            }
+                            else if (index == 3 )
+                            {
+                                combined.push(...topLeftLargeCorner);
+                                combined.push(...bottomLeftLargeCorner);
+                                combined.push(...bottomRightLargeCorner);
+                            }
+                            all.push(combined);
+                        }
+
+                        return shuffleArray(all);
+                    }
+                ],
+                rules: "Must match 3 large corners (2x2) on the board",
+                length: "Slow"
+            },
+            {
+                name: "2 Corners Large",
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    {
+                        let topLeftLargeCorner = [[0,0],[0,1],[1,0],[1,1]];
+                        let topRightLargeCorner = [[0,3],[0,4],[1,3],[1,4]];
+                        let bottomLeftLargeCorner = [[3,0],[3,1],[4,0],[4,1]];
+                        let bottomRightLargeCorner = [[3,3],[3,4],[4,3],[4,4]];
+
+                        const corners = [topLeftLargeCorner, topRightLargeCorner, bottomLeftLargeCorner, bottomRightLargeCorner];
+                        let all = [];
+                        for (let i = 0; i < corners.length; i++) {
+                            for (let j = i + 1; j < corners.length; j++) {
+                                all.push([...corners[i], ...corners[j]]);
+                            }
+                        }
+
+                        return shuffleArray(all);
+                    }
+                ],
+                rules: "Must match 2 large corners (2x2) on the board",
+                length: "Slow"
+            },
+            {
+                name: "1 Corners Large",
+                boards: [(freeSpace: boolean = true, previewMode: boolean = false) =>
+                    {
+                        let topLeftLargeCorner = [[0,0],[0,1],[1,0],[1,1]];
+                        let topRightLargeCorner = [[0,3],[0,4],[1,3],[1,4]];
+                        let bottomLeftLargeCorner = [[3,0],[3,1],[4,0],[4,1]];
+                        let bottomRightLargeCorner = [[3,3],[3,4],[4,3],[4,4]];
+
+                        let all = [];
+
+                        for( let index of [0,1,2,3])
+                        {
+                            let combined = [];
+                            if (index == 0 )
+                            {
+                                combined.push(...topRightLargeCorner);
+                            }
+                            else if (index == 1 )
+                            {
+                                combined.push(...topLeftLargeCorner);
+                            }
+                            else if (index == 2 )
+                            {
+                                combined.push(...bottomRightLargeCorner);
+                            }
+                            else if (index == 3 )
+                            {
+                                combined.push(...bottomLeftLargeCorner);
+                            }
+                            all.push(combined);
+                        }
+
+                        return shuffleArray(all);
+                    }
+                ],
+                rules: "Must match 1 large corner (2x2) on the board",
                 length: "Slow"
             }
         ]
@@ -1293,6 +1434,12 @@ function sailboat(){
                     [[
                         [0,2],
                         [1,2],[1,3],
+                        [2,2],
+                        [3,0],[3,1],[3,2],[3,3],[3,4],
+                        [4,1],[4,2],[4,3]
+                    ],[
+                        [0,2],
+                        [1,1],[1,2],
                         [2,2],
                         [3,0],[3,1],[3,2],[3,3],[3,4],
                         [4,1],[4,2],[4,3]
