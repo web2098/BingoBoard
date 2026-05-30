@@ -714,25 +714,25 @@ function postageStamp(){
                         for( let index of [0,1,2,3])
                         {
                             let combined = [];
-                            if (index == 0 )
+                            if (index === 0 )
                             {
                                 combined.push(...topRightLargeCorner);
                                 combined.push(...bottomLeftLargeCorner);
                                 combined.push(...bottomRightLargeCorner);
                             }
-                            else if (index == 1 )
+                            else if (index === 1 )
                             {
                                 combined.push(...topLeftLargeCorner);
                                 combined.push(...topRightLargeCorner);
                                 combined.push(...bottomLeftLargeCorner);
                             }
-                            else if (index == 2 )
+                            else if (index === 2 )
                             {
                                 combined.push(...topLeftLargeCorner);
                                 combined.push(...topRightLargeCorner);
                                 combined.push(...bottomRightLargeCorner);
                             }
-                            else if (index == 3 )
+                            else if (index === 3 )
                             {
                                 combined.push(...topLeftLargeCorner);
                                 combined.push(...bottomLeftLargeCorner);
@@ -784,19 +784,19 @@ function postageStamp(){
                         for( let index of [0,1,2,3])
                         {
                             let combined = [];
-                            if (index == 0 )
+                            if (index === 0 )
                             {
                                 combined.push(...topRightLargeCorner);
                             }
-                            else if (index == 1 )
+                            else if (index === 1 )
                             {
                                 combined.push(...topLeftLargeCorner);
                             }
-                            else if (index == 2 )
+                            else if (index === 2 )
                             {
                                 combined.push(...bottomRightLargeCorner);
                             }
-                            else if (index == 3 )
+                            else if (index === 3 )
                             {
                                 combined.push(...bottomLeftLargeCorner);
                             }
