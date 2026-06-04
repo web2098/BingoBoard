@@ -245,6 +245,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         // Send current game state to all clients
         const gameState: GameState = {
           name: gameData.name,
+          variant: gameData.variant,
           freeSpaceOn: gameData.freeSpace,
           calledNumbers: currentCalledNumbers,
           lastNumber: currentLastNumber || undefined
@@ -496,6 +497,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     if (isConnected && isHost && gameData) {
       const gameState: GameState = {
         name: gameData.name,
+        variant: gameData.variant,
         freeSpaceOn: gameData.freeSpace,
         calledNumbers: getCalledNumbers(), // Get current state from telemetry
         lastNumber: getLastNumber() || undefined // Get current state from telemetry

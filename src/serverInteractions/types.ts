@@ -143,6 +143,7 @@ export interface ClientConnectionConfig extends ServerConnectionConfig {
 // Game state interfaces
 export interface GameState {
   name: string;
+  variant: number;
   freeSpaceOn: boolean;
   calledNumbers: number[];
   lastNumber?: number;
