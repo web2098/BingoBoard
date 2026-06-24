@@ -21,6 +21,11 @@
   background-color: #f8f9fa;
   z-index: 1;
   border-right: 1px solid #e9ecef;
+  transition: transform 0.3s ease;
+}
+
+.boardPage.sidebarHidden::before {
+  transform: translateX(-80px);
 }
 
 /* Header Section */
@@ -34,6 +39,11 @@
   height: 17.5vh; /* Reduced by 30% from 25vh */
   flex-shrink: 0;
   overflow: auto;
+  transition: padding-left 0.3s ease;
+}
+
+.boardPage.sidebarHidden .boardHeader {
+  padding-left: 10px;
 }
 
 .headerLeft {
@@ -359,6 +369,11 @@
   flex-shrink: 0;
   overflow: auto;
   min-width: 388px;
+  transition: padding-left 0.3s ease;
+}
+
+.boardPage.sidebarHidden .bingoGridSection {
+  padding-left: 20px;
 }
 
 .bingoRow {
@@ -560,6 +575,36 @@
   height: 100%;
   aspect-ratio: 1;
   overflow: hidden;
+}
+
+.qrCodeClickable {
+  cursor: pointer;
+  border-radius: 4px;
+  transition: opacity 0.15s ease, box-shadow 0.15s ease;
+}
+
+.qrCodeClickable:hover {
+  opacity: 0.85;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.4);
+}
+
+.qrModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.qrModalContent {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  cursor: default;
 }
 
 .qrCodeContainer svg,

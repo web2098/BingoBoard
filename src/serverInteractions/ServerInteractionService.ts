@@ -6,7 +6,8 @@ import {
   getCurrentSession,
   getLastCalledNumbers,
   getLastCalledNumbersReversed,
-  getLastCalledNumber
+  getLastCalledNumber,
+  setActiveRoomId
 } from '../utils/telemetry';
 
 interface ServerInteractionState {
@@ -32,20 +33,30 @@ interface ServerInteractionState {
 type StateChangeCallback = (state: ServerInteractionState) => void;
 
 class ServerInteractionService {
-  private static instance: ServerInteractionService | null = null;
   private state: ServerInteractionState;
   private callbacks: Set<StateChangeCallback> = new Set();
-
-  // Auto-connect tracking
-  private autoConnectInterval: NodeJS.Timeout | null = null;
+  private autoConnectInProgress: boolean = false;
   private isAutoConnectRunning: boolean = false;
+  private autoConnectInterval: NodeJS.Timeout | null = null;
 
-  // Callback props
   private onNumberActivated?: (number: number, totalSpots: number) => void;
   private onNumberDeactivated?: (number: number, totalSpots: number) => void;
   private onFreeSpaceUpdate?: (freeSpaceEnabled: boolean) => void;
-  private onAudienceInteraction?: (eventType: string, options: any) => void;
+  private onAudienceInteraction?: (eventType: AudienceInteractionType, options: AudienceInteractionOptions) => void;
   private onModalDeactivate?: () => void;
+
+  private static instance: ServerInteractionService | null = null;
+
+  public static getInstance(): ServerInteractionService {
+    // @ts-ignore
+    if (!window.serverInteractionService) {
+      const instance = new ServerInteractionService();
+      // @ts-ignore
+      window.serverInteractionService = instance;
+    }
+    // @ts-ignore
+    return window.serverInteractionService;
+  }
 
   private constructor() {
     this.state = {
@@ -62,13 +73,6 @@ class ServerInteractionService {
       lastDeactivateMessage: null,
       lastFreeSpaceMessage: null
     };
-  }
-
-  public static getInstance(): ServerInteractionService {
-    if (!ServerInteractionService.instance) {
-      ServerInteractionService.instance = new ServerInteractionService();
-    }
-    return ServerInteractionService.instance;
   }
 
   public static reset(): void {
@@ -126,6 +130,7 @@ class ServerInteractionService {
 
     return {
       name: currentSession.gameName,
+      variant: currentSession.variant,
       freeSpaceOn: currentSession.freeSpace,
       calledNumbers: getLastCalledNumbersReversed(),
       lastNumber: getLastCalledNumber() || undefined
@@ -305,12 +310,13 @@ class ServerInteractionService {
 
   private handleError = (error: Error): void => {
     console.error('Server interaction error:', error);
+    // Only update error and connected flags - keep hostConnection/clientConnection
+    // intact so that ServerConnection can self-retry without the service creating
+    // a duplicate parallel connection.
     this.setState({
       connectionError: error.message,
       isConnecting: false,
-      isConnected: false,
-      hostConnection: null,
-      clientConnection: null
+      isConnected: false
     });
   };
 
@@ -323,16 +329,25 @@ class ServerInteractionService {
   };
 
   private handleClose = (): void => {
+    // Only update the connected flags - keep hostConnection/clientConnection intact
+    // so that ServerConnection can self-retry without the service starting a second
+    // parallel connection attempt.
     this.setState({
       isConnecting: false,
-      isConnected: false,
-      hostConnection: null,
-      clientConnection: null
+      isConnected: false
     });
   };
 
   // Public API methods
   public async hostRoom(serverUrl: string, authToken: string): Promise<boolean> {
+    // Disconnect any existing connection to prevent stale retry loops
+    if (this.state.hostConnection) {
+      this.state.hostConnection.disconnect();
+    }
+    if (this.state.clientConnection) {
+      this.state.clientConnection.disconnect();
+    }
+
     try {
       const connection = new HostConnection({
         serverUrl,
@@ -352,6 +367,8 @@ class ServerInteractionService {
         roomId: connection.getRoomId(),
         connectionError: null
       });
+
+      setActiveRoomId(connection.getRoomId(), connection.getRoomToken());
 
       return true;
     } catch (error) {
@@ -430,6 +447,12 @@ class ServerInteractionService {
     }
   }
 
+  public sendClientFeedback(message: string): void {
+    if (this.state.clientConnection) {
+      this.state.clientConnection.sendFeedback(message);
+    }
+  }
+
   public disconnect(): void {
     if (this.state.hostConnection) {
       this.state.hostConnection.disconnect();
@@ -450,6 +473,8 @@ class ServerInteractionService {
       lastDeactivateMessage: null,
       lastFreeSpaceMessage: null
     });
+
+    setActiveRoomId(null);
   }
 
   public clearError(): void {
@@ -458,13 +483,13 @@ class ServerInteractionService {
 
   // Auto-connection functionality
   public async autoConnect(): Promise<void> {
-    // Don't auto-connect if already connected
-    if (this.state.isConnecting){
-        return;
-    }
-    this.state.isConnecting = true;
-
-    if (this.state.isConnected || this.state.hostConnection || this.state.clientConnection) {
+    // Bail out if a connection is already established or being retried by ServerConnection
+    if (
+      this.autoConnectInProgress ||
+      this.state.isConnected ||
+      this.state.hostConnection ||
+      this.state.clientConnection
+    ) {
       return;
     }
 
@@ -488,35 +513,39 @@ class ServerInteractionService {
       // This would be a client connection, but we're not on client page
       console.log('Room ID detected but not on client page, skipping auto-connect');
       return;
-    } else if (!roomId && !isClientPage) {
+    }
+
+    if (!roomId && !isClientPage) {
       // This is a host connection
-      if (authToken.trim()) {
-        console.log('Auto-connecting as host to server:', serverUrl);
-        try {
-          await this.hostRoom(serverUrl, authToken);
-          console.log('Auto-connect as host successful');
-        } catch (error) {
-          console.error('Auto-connect as host failed:', error);
-        }
-      } else {
+      if (!authToken.trim()) {
         console.log('No auth token configured, skipping host auto-connect');
+        return;
+      }
+
+      // Set flag synchronously before the first await to block any concurrent calls
+      this.autoConnectInProgress = true;
+      console.log('Auto-connecting as host to server:', serverUrl);
+      try {
+        await this.hostRoom(serverUrl, authToken);
+        console.log('Auto-connect as host successful');
+      } catch (error) {
+        console.error('Auto-connect as host failed:', error);
+      } finally {
+        this.autoConnectInProgress = false;
       }
     }
   }
 
   // Start auto-connection with retry logic
   public startAutoConnect(retryIntervalSeconds: number = 10): () => void {
-    // Stop any existing auto-connect process first
-    this.stopAutoConnect();
-
-    if( this.isAutoConnectRunning) {
-      return () => {};
+    // Guard must be checked BEFORE stopAutoConnect, which resets the flag
+    if (this.isAutoConnectRunning) {
+      return () => { this.stopAutoConnect(); };
     }
     this.isAutoConnectRunning = true;
 
     // Initial connection attempt
     this.autoConnect();
-
 
     // Return cleanup function
     return () => {

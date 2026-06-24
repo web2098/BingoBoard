@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ClientSettings.module.css';
 import clientSettingsData from '../data/clientSettings.json';
+import { getServerInteractionService } from '../serverInteractions/ServerInteractionService';
 
 interface ClientSetting {
   section: string;
@@ -19,6 +20,17 @@ interface ClientSettingsProps {
 const ClientSettings: React.FC<ClientSettingsProps> = ({ className }) => {
   const [settings, setSettings] = useState<Record<string, any>>({});
   const [collapsed, setCollapsed] = useState(true);
+  const [feedbackCollapsed, setFeedbackCollapsed] = useState(true);
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackStatus, setFeedbackStatus] = useState<'idle' | 'submitted'>('idle');
+
+  const handleFeedbackSubmit = () => {
+    if (!feedbackText.trim()) return;
+    getServerInteractionService().sendClientFeedback(feedbackText);
+    setFeedbackStatus('submitted');
+    setFeedbackText('');
+    setTimeout(() => setFeedbackStatus('idle'), 3000);
+  };
 
   // Load settings from localStorage on component mount
   useEffect(() => {
@@ -151,6 +163,44 @@ const ClientSettings: React.FC<ClientSettingsProps> = ({ className }) => {
                   ))}
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+      </div>
+      <div className={styles.settingsSection}>
+        <div
+          className={styles.sectionHeader}
+          onClick={() => setFeedbackCollapsed(!feedbackCollapsed)}
+        >
+          <h3>Feedback</h3>
+          <span className={`${styles.collapseArrow} ${feedbackCollapsed ? styles.collapsed : ''}`}>
+            ▼
+          </span>
+        </div>
+
+        {!feedbackCollapsed && (
+          <div className={styles.feedbackContent}>
+            <p className={styles.feedbackDisclaimer}>
+              Feedback is for the primary BingoBoard or this client view only. This service is not directly affiliated with the company currently using it. All feedback intended for that company should be directed through their appropriate channels.
+            </p>
+            <textarea
+              className={styles.feedbackTextarea}
+              placeholder="Enter your feedback here..."
+              value={feedbackText}
+              onChange={(e) => setFeedbackText(e.target.value)}
+              rows={5}
+            />
+            <div className={styles.feedbackActions}>
+              {feedbackStatus === 'submitted' && (
+                <span className={styles.feedbackSuccess}>Thanks for your feedback!</span>
+              )}
+              <button
+                className={styles.feedbackSubmit}
+                onClick={handleFeedbackSubmit}
+                disabled={!feedbackText.trim()}
+              >
+                Submit
+              </button>
             </div>
           </div>
         )}

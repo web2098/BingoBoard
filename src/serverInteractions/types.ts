@@ -77,6 +77,11 @@ export interface ClientUpdateMessage extends BaseMessage {
   client_id: string;
 }
 
+export interface ClientFeedbackMessage extends BaseMessage {
+  type: "client_feedback";
+  message: string;
+}
+
 // Client incoming messages (same as host outgoing for most)
 export type ClientSetupMessage = SetupMessage;
 export type ClientActivateMessage = ActivateMessage;
@@ -99,7 +104,8 @@ export type HostIncomingMessage =
   | UpdateRequestMessage;
 
 export type ClientOutgoingMessage =
-  | ClientUpdateMessage;
+  | ClientUpdateMessage
+  | ClientFeedbackMessage;
 
 export type ClientIncomingMessage =
   | ClientIdMessage
@@ -137,6 +143,7 @@ export interface ClientConnectionConfig extends ServerConnectionConfig {
 // Game state interfaces
 export interface GameState {
   name: string;
+  variant: number;
   freeSpaceOn: boolean;
   calledNumbers: number[];
   lastNumber?: number;
