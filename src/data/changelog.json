@@ -1,4 +1,29 @@
 {
+  "V5.1": {
+    "description": "A quality-of-life release focused on smoother navigation, richer game choices, and a more polished connected-player experience.",
+    "changes": [
+      {
+        "feature": "Auto-Hide Navigation",
+        "details": "Optionally hide the navigation bar to create more room for the game, then reveal it by moving the pointer to the left edge."
+      },
+      {
+        "feature": "More Game Patterns",
+        "details": "Added new pattern options, expanded corner-game choices, and refined The E and The EE boards."
+      },
+      {
+        "feature": "Improved Game Variants",
+        "details": "Game titles, free-space controls, rotating pattern previews, and multi-board operators now present variants more clearly."
+      },
+      {
+        "feature": "Enhanced Player View",
+        "details": "Updated the client experience with refreshed board presentation, sharing improvements, and configurable feedback controls."
+      },
+      {
+        "feature": "More Reliable Multiplayer",
+        "details": "The selected game variant now stays synchronized more consistently between host and connected player views."
+      }
+    ]
+  },
   "V5": {
     "description": "Modern React + TypeScript implementation with enhanced architecture, comprehensive telemetry, and seamless migration support.",
     "ai_opinion": "V5 represents a complete architectural transformation, showcasing excellent engineering practices with React + TypeScript, comprehensive telemetry, and thoughtful migration tools. The singleton server architecture and advanced pattern engine demonstrate mature software design. This version successfully bridges legacy compatibility with modern development standards.",

@@ -72,6 +72,14 @@
   },
   {
     "section": "Board Customizations",
+    "Label": "Auto Call Numbers On Click",
+    "id": "autoCallNumbersOnClick",
+    "description": "Automatically call numbers when clicking on the bingo board",
+    "type": "boolean",
+    "default": false
+  },
+  {
+    "section": "Board Customizations",
     "Label": "Auto Hide Nativation Bar",
     "id": "autoHideNavigationBar",
     "description": "Automatically hide the navigation bar after a few seconds of inactivity",

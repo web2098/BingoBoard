@@ -27,6 +27,26 @@ import {
 
 interface BoardPageProps {}
 
+const getCryptographicallyRandomUncalledNumber = (): number | null => {
+  const uncalledNumbers = Array.from({ length: 75 }, (_, index) => index + 1)
+    .filter((number) => !isNumberCalled(number));
+
+  if (uncalledNumbers.length === 0) {
+    return null;
+  }
+
+  // Reject values outside the largest evenly divisible range to avoid modulo bias.
+  const range = 0x1_0000_0000;
+  const unbiasedLimit = range - (range % uncalledNumbers.length);
+  const randomValue = new Uint32Array(1);
+
+  do {
+    crypto.getRandomValues(randomValue);
+  } while (randomValue[0] >= unbiasedLimit);
+
+  return uncalledNumbers[randomValue[0] % uncalledNumbers.length];
+};
+
 const BoardPage: React.FC<BoardPageProps> = () => {
   const navigate = useNavigate();
   const {
@@ -446,17 +466,35 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     return <div className={styles.boardPage}>Loading...</div>;
   }
 
+  // A game or its selected variant can opt into auto-call mode, but neither can opt out
+  // when it is enabled globally.
+  const selectedGame = games()[gameData.id];
+  const gameAutoCallNumbersOnClick = (selectedGame as { auto?: boolean } | undefined)?.auto === true;
+  const variantAutoCallNumbersOnClick = (selectedGame?.variants[gameData.variant] as { auto?: boolean } | undefined)?.auto === true;
+  const autoCallNumbersOnClick = getSetting('autoCallNumbersOnClick', false)
+    || gameAutoCallNumbersOnClick
+    || variantAutoCallNumbersOnClick;
+
   const handleNumberClick = (number: number) => {
     // Only hosts can click numbers when connected to server
     if (isConnected && !isHost) {
       return; // Clients cannot click numbers
     }
 
+    const numberToCall = autoCallNumbersOnClick
+      ? getCryptographicallyRandomUncalledNumber()
+      : number;
+
+    // Auto-call mode has no remaining numbers to activate.
+    if (numberToCall === null) {
+      return;
+    }
+
     // Check if number was already called before the action
-    const wasAlreadyCalled = isNumberCalled(number);
+    const wasAlreadyCalled = isNumberCalled(numberToCall);
 
     // Record in telemetry (handles both adding and removing)
-    recordNumberCall(number);
+    recordNumberCall(numberToCall);
     forceRefresh(); // Trigger re-render after number change
 
     // No need to update local state - telemetry is the source of truth
@@ -469,16 +507,16 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
       if (wasAlreadyCalled) {
         // Number was uncalled
-        sendNumberDeactivated(number, totalSpots);
+        sendNumberDeactivated(numberToCall, totalSpots);
       } else {
         // Number was called
-        sendNumberActivated(number, totalSpots);
+        sendNumberActivated(numberToCall, totalSpots);
       }
     }
 
     // Check for auto-trigger audience interactions when number is activated (not deactivated)
     if (!wasAlreadyCalled) {
-      checkAutoTriggerInteractions(number);
+      checkAutoTriggerInteractions(numberToCall);
     }
   };
 
@@ -682,6 +720,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     }
   };
 
+  const lastNumber = getLastNumber();
+
   return (
     <div className={`${styles.boardPage} ${isSidebarHidden ? styles.sidebarHidden : ''}`}>
       <SidebarWithMenu
@@ -730,31 +770,27 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         <div className={styles.headerCenter}>
           <div className={styles.lastNumberSection}>
             <div className={styles.lastNumberDisplay}>
-              <div className={styles.lastNumberLeftColumn}>
-                <div className={styles.lastNumberTextRow}>
-                  <span className={styles.lastNumberText}>
-                    {getLastNumber() ? 'The Last Number Was' : 'Waiting For First Number'}
-                  </span>
+              <div className={styles.lastNumberRightColumn}>
+                <div className={styles.bingoCardsGroup}>
+                  <div
+                    className={styles.bingoLetterCard}
+                    style={lastNumber ? getLetterStyle(lastNumber) : { backgroundColor: '#6c757d', color: '#ffffff' }}
+                  >
+                    {lastNumber ? getBingoLetter(lastNumber) : '?'}
+                  </div>
+                  <div className={styles.bingoNumberCard}>
+                    {lastNumber ?? '?'}
+                  </div>
+                </div>
+              </div>
+              <div className={styles.lastNumberDetails}>
+                <div className={styles.specialCalloutSection}>
+                  <p className={styles.specialCallout}>{getSpecialCallout(lastNumber)}</p>
                 </div>
                 <p className={styles.numberCount}>
                   {getCalledNumbers().length}/{gameData.totalNumbers} ({gameData.totalNumbers - getCalledNumbers().length} Left)
                 </p>
-                <div className={styles.specialCalloutSection}>
-                  <p className={styles.specialCallout}>{getSpecialCallout(getLastNumber())}</p>
-                </div>
               </div>
-              {getLastNumber() && (
-                <div className={styles.lastNumberRightColumn}>
-                  <div className={styles.bingoCardsGroup}>
-                    <div className={styles.bingoLetterCard} style={getLetterStyle(getLastNumber()!)}>
-                      {getBingoLetter(getLastNumber()!)}
-                    </div>
-                    <div className={styles.bingoNumberCard}>
-                      {getLastNumber()}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -922,7 +958,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
                     return (
                       <div
                         key={cell.number}
-                        className={`${styles.bingoCell} ${cell.called ? styles.called : ''}`}
+                        className={`${styles.bingoCell} ${cell.called ? styles.called : ''} ${autoCallNumbersOnClick ? styles.autoCallCell : ''}`}
                         style={cellStyle}
                         onClick={() => handleNumberClick(cell.number)}
                       >
