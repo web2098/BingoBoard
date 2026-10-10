@@ -120,6 +120,35 @@ function generateTinyXBingoRotations(freeSpace: boolean = true, shuffle: boolean
     return result;
 }
 
+// Places a 3x3 shape (offsets relative to its top left) at every position on the 5x5 board
+function generateTinyShapePlacements(offsets: number[][], freeSpace: boolean, shuffle: boolean, previewMode: boolean) {
+    const patterns: number[][][] = [];
+
+    for (let y = 0; y < 3; y++) {
+        for (let x = 0; x < 3; x++) {
+            patterns.push(offsets.map(([dy, dx]) => [y + dy, x + dx]));
+        }
+    }
+
+    if (previewMode) {
+        return [patterns[0]];
+    }
+
+    const result = freeSpace
+        ? patterns
+        : patterns.filter(pattern => !pattern.some(coord => coord[0] === 2 && coord[1] === 2));
+
+    return shuffle ? shuffleArray(result) : result;
+}
+
+function generateTinyTBingoRotations(freeSpace: boolean = true, shuffle: boolean = true, previewMode: boolean = false) {
+    return generateTinyShapePlacements([[0,0],[0,1],[0,2],[1,1],[2,1]], freeSpace, shuffle, previewMode);
+}
+
+function generateTinyDiamondBingoRotations(freeSpace: boolean = true, shuffle: boolean = true, previewMode: boolean = false) {
+    return generateTinyShapePlacements([[0,1],[1,0],[1,2],[2,1]], freeSpace, shuffle, previewMode);
+}
+
 function generateSmallSquarePattern(freeSpace: boolean = true, shuffle: boolean = true,previewMode: boolean = false) {
     let patterns = [
     ];
@@ -354,6 +383,44 @@ function tinyX(){
                 length: "Fast",
                 op : "and",
                 rules: 'Must get the tiny x pattern on both boards'
+            },
+            {
+                name: "Tiny T",
+                boards: [
+                    (freeSpace: boolean, previewMode: boolean = false) => generateTinyTBingoRotations(freeSpace, true, previewMode)
+                ],
+                dynamicFreeSpace: true,
+                length: "Fast",
+                rules: 'Must get the tiny T pattern any where on either board'
+            },
+            {
+                name: "Tiny T Both Boards",
+                boards: [
+                    (freeSpace: boolean, previewMode: boolean = false) => generateTinyTBingoRotations(freeSpace, true, previewMode),
+                    (freeSpace: boolean, previewMode: boolean = false) => generateTinyTBingoRotations(freeSpace, true, previewMode)
+                ],
+                length: "Fast",
+                op : "and",
+                rules: 'Must get the tiny T pattern on both boards'
+            },
+            {
+                name: "Tiny Diamond",
+                boards: [
+                    (freeSpace: boolean, previewMode: boolean = false) => generateTinyDiamondBingoRotations(freeSpace, true, previewMode)
+                ],
+                dynamicFreeSpace: true,
+                length: "Fast",
+                rules: 'Must get the tiny diamond pattern any where on either board'
+            },
+            {
+                name: "Tiny Diamond Both Boards",
+                boards: [
+                    (freeSpace: boolean, previewMode: boolean = false) => generateTinyDiamondBingoRotations(freeSpace, true, previewMode),
+                    (freeSpace: boolean, previewMode: boolean = false) => generateTinyDiamondBingoRotations(freeSpace, true, previewMode)
+                ],
+                length: "Fast",
+                op : "and",
+                rules: 'Must get the tiny diamond pattern on both boards'
             }
         ]
     }
@@ -377,6 +444,16 @@ function largeX(){
                 ],
                 op: "and",
                 rules: "Must match exact pattern on both boards",
+                length: "Average"
+            },
+            {
+                name: "Growing X",
+                boards: [
+                    (freeSpace: boolean = true, previewMode: boolean = false) => generateTinyXBingoRotations(freeSpace, true, previewMode),
+                    (freeSpace: boolean = true, previewMode: boolean = false) => [[[0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]]]
+                ],
+                op: "transition",
+                rules: "Get the tiny X on the first board, then get a large X on either board",
                 length: "Average"
             }
         ]

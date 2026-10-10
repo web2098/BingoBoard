@@ -566,6 +566,8 @@
   min-height: 0;
   height: 100%;
   overflow: hidden;
+  padding: 4px; /* room so the clickable QR shadow isn't clipped */
+  box-sizing: border-box;
 }
 
 .qrCodeContainer {
@@ -580,12 +582,13 @@
 .qrCodeClickable {
   cursor: pointer;
   border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   transition: opacity 0.15s ease, box-shadow 0.15s ease;
 }
 
 .qrCodeClickable:hover {
   opacity: 0.85;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.4), 0 4px 12px rgba(0,0,0,0.4);
 }
 
 .qrModalOverlay {
@@ -1166,11 +1169,14 @@
 /* Clickable Preview Styles */
 .clickablePreview {
   cursor: pointer;
-  transition: box-shadow 0.2s ease, opacity 0.2s ease;
+  padding: 6px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  transition: box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 
 .clickablePreview:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
   transform: scale(1.05);
 }
 
