@@ -1,5 +1,5 @@
 // Select Game Page
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './select-game-page.module.css';
 import games from '../../data/games';
@@ -27,6 +27,7 @@ interface GameSettings {
   name: string,
   variant: number,
   freeSpace: boolean,
+  doubleBoardRequirement: boolean,
 }
 
 // Progress Circle Component for rotation timing
@@ -153,22 +154,36 @@ const GameInfoCard = ({
   game,
   variant,
   freeSpace,
-  onFreeSpaceChange
+  onFreeSpaceChange,
+  doubleBoardRequirement,
+  onDoubleBoardRequirementChange,
+  canRequireDoubleBoard
 }: {
   game: any,
   variant: any,
   freeSpace: boolean,
-  onFreeSpaceChange: (value: boolean) => void
+  onFreeSpaceChange: (value: boolean) => void,
+  doubleBoardRequirement: boolean,
+  onDoubleBoardRequirementChange: (value: boolean) => void,
+  canRequireDoubleBoard: boolean
 }) => {
   return (
     <div className={styles.gameInfoCard}>
       <div className={styles.gameInfoHeader}>
         <h2 className={styles.gameTitle}>{variant.name || game.name}</h2>
-        <FreeSpaceToggle
-          freeSpace={freeSpace}
-          onChange={onFreeSpaceChange}
-          variant={variant}
-        />
+        <div className={styles.gameOptionToggles}>
+          <FreeSpaceToggle
+            freeSpace={freeSpace}
+            onChange={onFreeSpaceChange}
+            variant={variant}
+          />
+          {canRequireDoubleBoard && (
+            <DoubleBoardToggle
+              enabled={doubleBoardRequirement}
+              onChange={onDoubleBoardRequirementChange}
+            />
+          )}
+        </div>
       </div>
       <div className={styles.gameRules}>
         <h4>{variant.rules}</h4>
@@ -176,6 +191,21 @@ const GameInfoCard = ({
     </div>
   );
 };
+
+const DoubleBoardToggle = ({ enabled, onChange }: { enabled: boolean, onChange: (value: boolean) => void }) => (
+  <div className={styles.freeSpaceToggle}>
+    <span className={styles.toggleLabel}>Double Board:</span>
+    <label className={styles.toggleSwitch}>
+      <input
+        type="checkbox"
+        checked={enabled}
+        onChange={(event) => onChange(event.target.checked)}
+      />
+      <span className={styles.slider}></span>
+    </label>
+    <span className={styles.toggleState}>{enabled ? 'ON' : 'OFF'}</span>
+  </div>
+);
 
 // Toggle Component for Free Space
 const FreeSpaceToggle = ({
@@ -383,7 +413,16 @@ const GamePreviewSection = ({
   colorVersion?: number
 }) => {
   const currentGame = games[settings.id];
-  const currentVariant = currentGame.variants[settings.variant];
+  const selectedVariant = currentGame.variants[settings.variant];
+  const canRequireDoubleBoard = !['Double Bingo', 'Normal Bingo'].includes(currentGame.name) && selectedVariant.boards.length === 1;
+  const currentVariant = React.useMemo(() => settings.doubleBoardRequirement && canRequireDoubleBoard
+    ? {
+        ...selectedVariant,
+        boards: [selectedVariant.boards[0], selectedVariant.boards[0]],
+        op: 'and',
+        rules: `${selectedVariant.rules} on both boards`
+      }
+    : selectedVariant, [selectedVariant, settings.doubleBoardRequirement, canRequireDoubleBoard]);
 
   // State for rotation functionality
   const [rotationIndex, setRotationIndex] = useState(0);
@@ -493,7 +532,8 @@ const GamePreviewSection = ({
     onSettingsChange({
       ...settings,
       variant: newVariant,
-      freeSpace: getDefaultFreeSpace(currentGame, newVariant)
+      freeSpace: getDefaultFreeSpace(currentGame, newVariant),
+      doubleBoardRequirement: false
     });
   };
 
@@ -549,6 +589,9 @@ const GamePreviewSection = ({
         variant={currentVariant}
         freeSpace={settings.freeSpace}
         onFreeSpaceChange={handleFreeSpaceToggle}
+        doubleBoardRequirement={settings.doubleBoardRequirement}
+        onDoubleBoardRequirementChange={(doubleBoardRequirement) => onSettingsChange({ ...settings, doubleBoardRequirement })}
+        canRequireDoubleBoard={canRequireDoubleBoard}
       />
 
       <div className={styles.variantControlsWrapper}>
@@ -579,31 +622,40 @@ const SmallGamePreview = ({
   game,
   gameIndex,
   onClick,
-  colorVersion = 0
+  colorVersion = 0,
+  variantIndex = 0,
+  label,
+  animationStep
 }: {
   game: any,
   gameIndex: number,
   onClick: () => void,
-  colorVersion?: number
+  colorVersion?: number,
+  variantIndex?: number,
+  label?: string,
+  animationStep?: number
 }) => {
-  const firstVariant = game.variants[0];
-  const firstBoardFunction = firstVariant.boards[0];
-  const isDualBoard = firstVariant.boards.length > 1;
+  const variant = game.variants[variantIndex];
+  const firstBoardFunction = variant.boards[0];
+  const isDualBoard = variant.boards.length > 1;
   const isDoubleBingo = game.name === "Double Bingo";
 
-  // Call the board function to get the first pattern using preview mode for consistency
-  const firstPattern = typeof firstBoardFunction === 'function'
-    ? firstBoardFunction(true, true)[0] || []  // Get first pattern with free space enabled and preview mode on
-    : firstBoardFunction; // Fallback for any remaining non-function boards
+  // Finder previews receive every possible pattern; carousel previews retain a stable first pattern.
+  const possiblePatterns = typeof firstBoardFunction === 'function'
+    ? firstBoardFunction(true, animationStep === undefined)
+    : [firstBoardFunction];
+  const selectedPattern = possiblePatterns.length > 0
+    ? possiblePatterns[(animationStep || 0) % possiblePatterns.length] || []
+    : [];
 
   return (
     <div className={styles.smallGamePreview} onClick={onClick}>
       <div className={styles.gamePreviewLabel}>
-        {game.name} [{firstVariant.length || 'Standard'}]
+        {label || variant.name || game.name} [{variant.length || 'Standard'}]
       </div>
       <div className={`${styles.smallGameBoard} ${isDualBoard && isDoubleBingo ? styles.doubleBingoDual : ''}`}>
         <GameBoard
-          board={firstPattern}
+          board={selectedPattern}
           freeSpace={true}
           colorVersion={colorVersion}
           hasDynamicFreeSpace={false}
@@ -683,6 +735,102 @@ const GameSelectionSection = ({
   );
 };
 
+const GameFinderModal = ({
+  games,
+  onClose,
+  onGameSelect,
+  colorVersion = 0
+}: {
+  games: any[],
+  onClose: () => void,
+  onGameSelect: (gameId: number, variantIndex: number) => void,
+  colorVersion?: number
+}) => {
+  const [query, setQuery] = useState('');
+  const [previewStep, setPreviewStep] = useState(0);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const normalizedQuery = query.trim().toLowerCase();
+  const matchingVariants = games
+    .flatMap((game, gameIndex) => game.variants.map((variant: any, variantIndex: number) => ({
+      game,
+      gameIndex,
+      variant,
+      variantIndex
+    })))
+    .filter(({ game, variant }) => {
+      const searchableText = [game.name, ...(game.tags || []), variant.name || '', ...(variant.tags || [])]
+        .join(' ')
+        .toLowerCase();
+      return searchableText.includes(normalizedQuery);
+    });
+
+  useEffect(() => {
+    searchInputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (!getSetting('enablePatternRotation', true)) {
+      return;
+    }
+
+    const intervalMilliseconds = Math.max(1, getSetting('patternRotationInterval', 3)) * 1000 * 1.5;
+    const interval = window.setInterval(() => setPreviewStep((step) => step + 1), intervalMilliseconds);
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return (
+    <div className={styles.gameFinderOverlay} role="presentation" onMouseDown={onClose}>
+      <section
+        className={styles.gameFinderModal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="game-finder-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <div className={styles.gameFinderHeader}>
+          <h2 id="game-finder-title">Find a game</h2>
+          <button className={styles.gameFinderClose} type="button" onClick={onClose} aria-label="Close game finder">×</button>
+        </div>
+        <input
+          ref={searchInputRef}
+          className={styles.gameFinderSearch}
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Search game names or tags"
+          aria-label="Search game names or tags"
+        />
+        <div className={styles.gameFinderResults}>
+          {matchingVariants.map(({ game, gameIndex, variant, variantIndex }) => (
+            <button
+              key={`${gameIndex}-${variantIndex}`}
+              className={styles.gameFinderResult}
+              type="button"
+              onClick={() => onGameSelect(gameIndex, variantIndex)}
+            >
+              <SmallGamePreview
+                game={game}
+                gameIndex={gameIndex}
+                onClick={() => undefined}
+                colorVersion={colorVersion}
+                variantIndex={variantIndex}
+                label={`${game.name} — ${variant.name || `Variant ${variantIndex + 1}`}`}
+                animationStep={previewStep}
+              />
+              {[...(game.tags || []), ...(variant.tags || [])].length > 0 && (
+                <span className={styles.gameFinderTags}>{[...(game.tags || []), ...(variant.tags || [])].join(' · ')}</span>
+              )}
+            </button>
+          ))}
+          {matchingVariants.length === 0 && (
+            <p className={styles.gameFinderEmpty}>No games match “{query}”.</p>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+};
+
 // Main Component
 const SelectGamePage = () => {
   const navigate = useNavigate();
@@ -690,6 +838,7 @@ const SelectGamePage = () => {
   const [settingsUpdateTrigger, setSettingsUpdateTrigger] = useState(0);
   const [highlightColorVersion, setHighlightColorVersion] = useState(0);
   const [developerMode] = useState(() => getSetting('developerMode', false));
+  const [isGameFinderOpen, setIsGameFinderOpen] = useState(false);
 
   // Server interaction for audience interactions and connection
   const { isConnected, roomId, connectionError, sendAudienceInteraction } = useServerInteraction({
@@ -737,6 +886,21 @@ const SelectGamePage = () => {
     };
   }, []);
 
+  // Replace the browser find action with a game finder while this page is active.
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'f') {
+        event.preventDefault();
+        setIsGameFinderOpen(true);
+      } else if (event.key === 'Escape') {
+        setIsGameFinderOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   // Helper function to determine default freeSpace value for a variant
   const getDefaultFreeSpace = (game: any, variantIndex: number): boolean => {
     const variant = game.variants[variantIndex];
@@ -755,18 +919,19 @@ const SelectGamePage = () => {
     id: 0,
     name: gameList[0].name,
     variant: 0,
-    freeSpace: getDefaultFreeSpace(gameList[0], 0)
+    freeSpace: getDefaultFreeSpace(gameList[0], 0),
+    doubleBoardRequirement: false
   });
 
-  const handleGameSelect = (gameId: number) => {
+  const handleGameSelect = (gameId: number, variantIndex = 0) => {
     const newGame = gameList[gameId];
-    const newVariant = 0; // Reset to first variant when selecting new game
 
     setGameSettings({
       id: gameId,
       name: newGame.name,
-      variant: newVariant,
-      freeSpace: getDefaultFreeSpace(newGame, newVariant)
+      variant: variantIndex,
+      freeSpace: getDefaultFreeSpace(newGame, variantIndex),
+      doubleBoardRequirement: false
     });
   };
 
@@ -811,6 +976,7 @@ const SelectGamePage = () => {
           }
         ]}
         onAudienceInteraction={sendAudienceInteraction}
+        disableAudienceInteractions={isGameFinderOpen}
       />
 
       <div className={styles.mainLayout}>
@@ -843,6 +1009,18 @@ const SelectGamePage = () => {
           />
         </div>
       </div>
+
+      {isGameFinderOpen && (
+        <GameFinderModal
+          games={gameList}
+          onClose={() => setIsGameFinderOpen(false)}
+          onGameSelect={(gameId, variantIndex) => {
+            handleGameSelect(gameId, variantIndex);
+            setIsGameFinderOpen(false);
+          }}
+          colorVersion={highlightColorVersion}
+        />
+      )}
     </div>
   );
 };

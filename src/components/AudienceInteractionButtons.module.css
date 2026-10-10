@@ -50,6 +50,11 @@
     inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.audienceInteractionBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
 .interactionEmoji {
   font-size: 24px;
   line-height: 1;
