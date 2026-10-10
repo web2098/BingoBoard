@@ -26,6 +26,24 @@ import {
 
 interface BoardPageProps {}
 
+const getPreviewVariant = (game: any, variantIndex: number, doubleBoardRequirement: boolean) => {
+  const selectedVariant = game?.variants?.[variantIndex];
+
+  if (!selectedVariant) {
+    return undefined;
+  }
+
+  const canRequireDoubleBoard = !['Double Bingo', 'Normal Bingo'].includes(game.name) && selectedVariant.boards.length === 1;
+  return doubleBoardRequirement && canRequireDoubleBoard
+    ? {
+        ...selectedVariant,
+        boards: [selectedVariant.boards[0], selectedVariant.boards[0]],
+        op: 'and',
+        rules: `${selectedVariant.rules} on both boards`
+      }
+    : selectedVariant;
+};
+
 const BoardPage: React.FC<BoardPageProps> = () => {
   const navigate = useNavigate();
   const {
@@ -105,6 +123,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     name: string;
     variant: number;
     freeSpace: boolean;
+    doubleBoardRequirement: boolean;
     totalNumbers: number;
   } | null>(null);
 
@@ -188,6 +207,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         name: settings.name || "Traditional Bingo",
         variant: settings.variant || 0,
         freeSpace: settings.freeSpace,
+        doubleBoardRequirement: settings.doubleBoardRequirement === true,
         totalNumbers: 75
       };
     } else {
@@ -197,6 +217,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         name: "Traditional Bingo",
         variant: 0,
         freeSpace: true,
+        doubleBoardRequirement: false,
         totalNumbers: 75
       };
     }
@@ -356,7 +377,12 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         return;
       }
 
-      const currentVariant = currentGame.variants[gameData.variant];
+      const currentVariant = getPreviewVariant(currentGame, gameData.variant, gameData.doubleBoardRequirement);
+      if (!currentVariant) {
+        setCachedPatterns(null);
+        setHasMultiplePatterns(false);
+        return;
+      }
       let allPatterns: number[][][][] = [];
       let hasMultiple = false;
 
@@ -591,7 +617,10 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         );
       }
 
-      const currentVariant = currentGame.variants[gameData.variant];
+      const currentVariant = getPreviewVariant(currentGame, gameData.variant, gameData.doubleBoardRequirement);
+      if (!currentVariant) {
+        return null;
+      }
 
       // Use cached patterns if available, otherwise generate patterns for preview
       let filteredPatterns: number[][][];

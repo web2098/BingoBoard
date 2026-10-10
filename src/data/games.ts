@@ -1755,7 +1755,21 @@ function applyOrder( gameList: any[] )
 
 function games()
 {
-    return applyOrder(gameList());
+    const gamesWithoutRedundantDoubleBoardVariants = gameList().map((game: any) => {
+        // Double Bingo and specialized multi-board games retain their dedicated variants.
+        if (game.name === 'Double Bingo') {
+            return game;
+        }
+
+        return {
+            ...game,
+            variants: game.variants.filter((variant: any) =>
+                !(variant.op === 'and' && /both boards/i.test(variant.rules || ''))
+            )
+        };
+    });
+
+    return applyOrder(gamesWithoutRedundantDoubleBoardVariants);
 }
 
 export default games;

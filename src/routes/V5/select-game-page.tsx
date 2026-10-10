@@ -27,6 +27,7 @@ interface GameSettings {
   name: string,
   variant: number,
   freeSpace: boolean,
+  doubleBoardRequirement: boolean,
 }
 
 // Progress Circle Component for rotation timing
@@ -153,22 +154,36 @@ const GameInfoCard = ({
   game,
   variant,
   freeSpace,
-  onFreeSpaceChange
+  onFreeSpaceChange,
+  doubleBoardRequirement,
+  onDoubleBoardRequirementChange,
+  canRequireDoubleBoard
 }: {
   game: any,
   variant: any,
   freeSpace: boolean,
-  onFreeSpaceChange: (value: boolean) => void
+  onFreeSpaceChange: (value: boolean) => void,
+  doubleBoardRequirement: boolean,
+  onDoubleBoardRequirementChange: (value: boolean) => void,
+  canRequireDoubleBoard: boolean
 }) => {
   return (
     <div className={styles.gameInfoCard}>
       <div className={styles.gameInfoHeader}>
         <h2 className={styles.gameTitle}>{variant.name || game.name}</h2>
-        <FreeSpaceToggle
-          freeSpace={freeSpace}
-          onChange={onFreeSpaceChange}
-          variant={variant}
-        />
+        <div className={styles.gameOptionToggles}>
+          <FreeSpaceToggle
+            freeSpace={freeSpace}
+            onChange={onFreeSpaceChange}
+            variant={variant}
+          />
+          {canRequireDoubleBoard && (
+            <DoubleBoardToggle
+              enabled={doubleBoardRequirement}
+              onChange={onDoubleBoardRequirementChange}
+            />
+          )}
+        </div>
       </div>
       <div className={styles.gameRules}>
         <h4>{variant.rules}</h4>
@@ -176,6 +191,21 @@ const GameInfoCard = ({
     </div>
   );
 };
+
+const DoubleBoardToggle = ({ enabled, onChange }: { enabled: boolean, onChange: (value: boolean) => void }) => (
+  <div className={styles.freeSpaceToggle}>
+    <span className={styles.toggleLabel}>Double Board:</span>
+    <label className={styles.toggleSwitch}>
+      <input
+        type="checkbox"
+        checked={enabled}
+        onChange={(event) => onChange(event.target.checked)}
+      />
+      <span className={styles.slider}></span>
+    </label>
+    <span className={styles.toggleState}>{enabled ? 'ON' : 'OFF'}</span>
+  </div>
+);
 
 // Toggle Component for Free Space
 const FreeSpaceToggle = ({
@@ -383,7 +413,16 @@ const GamePreviewSection = ({
   colorVersion?: number
 }) => {
   const currentGame = games[settings.id];
-  const currentVariant = currentGame.variants[settings.variant];
+  const selectedVariant = currentGame.variants[settings.variant];
+  const canRequireDoubleBoard = !['Double Bingo', 'Normal Bingo'].includes(currentGame.name) && selectedVariant.boards.length === 1;
+  const currentVariant = settings.doubleBoardRequirement && canRequireDoubleBoard
+    ? {
+        ...selectedVariant,
+        boards: [selectedVariant.boards[0], selectedVariant.boards[0]],
+        op: 'and',
+        rules: `${selectedVariant.rules} on both boards`
+      }
+    : selectedVariant;
 
   // State for rotation functionality
   const [rotationIndex, setRotationIndex] = useState(0);
@@ -459,7 +498,7 @@ const GamePreviewSection = ({
         clearInterval(progressInterval);
       };
     }
-  }, [currentVariant, settings.freeSpace]);
+  }, [selectedVariant, settings.freeSpace, settings.doubleBoardRequirement]);
 
   const handleFreeSpaceToggle = (freeSpace: boolean) => {
     onSettingsChange({ ...settings, freeSpace });
@@ -493,7 +532,8 @@ const GamePreviewSection = ({
     onSettingsChange({
       ...settings,
       variant: newVariant,
-      freeSpace: getDefaultFreeSpace(currentGame, newVariant)
+      freeSpace: getDefaultFreeSpace(currentGame, newVariant),
+      doubleBoardRequirement: false
     });
   };
 
@@ -547,6 +587,9 @@ const GamePreviewSection = ({
         variant={currentVariant}
         freeSpace={settings.freeSpace}
         onFreeSpaceChange={handleFreeSpaceToggle}
+        doubleBoardRequirement={settings.doubleBoardRequirement}
+        onDoubleBoardRequirementChange={(doubleBoardRequirement) => onSettingsChange({ ...settings, doubleBoardRequirement })}
+        canRequireDoubleBoard={canRequireDoubleBoard}
       />
 
       <div className={styles.variantControlsWrapper}>
@@ -872,7 +915,8 @@ const SelectGamePage = () => {
     id: 0,
     name: gameList[0].name,
     variant: 0,
-    freeSpace: getDefaultFreeSpace(gameList[0], 0)
+    freeSpace: getDefaultFreeSpace(gameList[0], 0),
+    doubleBoardRequirement: false
   });
 
   const handleGameSelect = (gameId: number, variantIndex = 0) => {
@@ -882,7 +926,8 @@ const SelectGamePage = () => {
       id: gameId,
       name: newGame.name,
       variant: variantIndex,
-      freeSpace: getDefaultFreeSpace(newGame, variantIndex)
+      freeSpace: getDefaultFreeSpace(newGame, variantIndex),
+      doubleBoardRequirement: false
     });
   };
 

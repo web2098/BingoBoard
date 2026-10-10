@@ -10,5 +10,6 @@ export interface GameData {
   name: string;
   variant: number;
   freeSpace: boolean;
+  doubleBoardRequirement?: boolean;
   totalNumbers?: number;
 }
