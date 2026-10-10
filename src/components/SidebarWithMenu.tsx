@@ -29,6 +29,7 @@ interface SidebarWithMenuProps {
   pageButtons?: SidebarButton[];
   children?: React.ReactNode;
   onAudienceInteraction?: (eventType: AudienceInteractionType, options: AudienceInteractionOptions) => void;
+  disableAudienceInteractions?: boolean;
   autoHide?: boolean;
   onHiddenChange?: (hidden: boolean) => void;
 }
@@ -41,6 +42,7 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
   pageButtons = [],
   children,
   onAudienceInteraction,
+  disableAudienceInteractions = false,
   autoHide = false,
   onHiddenChange
 }) => {
@@ -281,6 +283,7 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
           <AudienceInteractionButtons
             currentPage={currentPage}
             onAudienceInteraction={onAudienceInteraction}
+            disabled={disableAudienceInteractions}
           />
         </div>
       </div>

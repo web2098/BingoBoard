@@ -10,8 +10,23 @@ interface GameData {
   name: string;
   variant: number;
   freeSpace: boolean;
+  doubleBoardRequirement?: boolean;
   totalNumbers?: number;
 }
+
+const getPreviewVariant = (game: any, variantIndex: number, doubleBoardRequirement = false) => {
+  const selectedVariant = game.variants[variantIndex];
+  const canRequireDoubleBoard = !['Double Bingo', 'Normal Bingo'].includes(game.name) && selectedVariant.boards.length === 1;
+
+  return doubleBoardRequirement && canRequireDoubleBoard
+    ? {
+        ...selectedVariant,
+        boards: [selectedVariant.boards[0], selectedVariant.boards[0]],
+        op: 'and',
+        rules: `${selectedVariant.rules} on both boards`
+      }
+    : selectedVariant;
+};
 
 interface BoardPreviewModalProps {
   isVisible: boolean;
@@ -66,7 +81,7 @@ const BoardPreviewModal: React.FC<BoardPreviewModalProps> = ({
         );
       }
 
-      const currentVariant = currentGame.variants[gameData.variant];
+      const currentVariant = getPreviewVariant(currentGame, gameData.variant, gameData.doubleBoardRequirement);
 
       // Use cached patterns if available, otherwise generate patterns for preview
       let filteredPatterns: number[][][];
@@ -131,7 +146,7 @@ const BoardPreviewModal: React.FC<BoardPreviewModalProps> = ({
       const gamesList = games();
       const currentGame = gamesList[gameData.id];
       if (currentGame && currentGame.variants && currentGame.variants[gameData.variant]) {
-        const currentVariant = currentGame.variants[gameData.variant];
+        const currentVariant = getPreviewVariant(currentGame, gameData.variant, gameData.doubleBoardRequirement);
         const hasDynamicFreeSpace = currentVariant && currentVariant.hasOwnProperty('dynamicFreeSpace') && currentVariant.dynamicFreeSpace;
 
         if (hasDynamicFreeSpace) {
@@ -165,7 +180,7 @@ const BoardPreviewModal: React.FC<BoardPreviewModalProps> = ({
         return null;
       }
 
-      const currentVariant = currentGame.variants[gameData.variant];
+      const currentVariant = getPreviewVariant(currentGame, gameData.variant, gameData.doubleBoardRequirement);
       const rules = currentVariant.rules;
 
       if (!rules) {
