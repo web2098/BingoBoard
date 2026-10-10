@@ -64,7 +64,8 @@
 
 .numberCount{
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 2.25rem;
+  font-weight: bold;
 }
 
 /* Game Preview Mini */
@@ -231,6 +232,15 @@
   flex-shrink: 0;
 }
 
+.lastNumberDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+}
+
 .lastNumberText {
   font-size: 2.5rem;
   color: #333;
@@ -250,9 +260,9 @@
 
 .specialCalloutSection {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  flex-shrink: 0;
+  min-width: 0;
 }
 
 .bingoLetterCard {
@@ -288,10 +298,11 @@
 
 .specialCallout {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: clamp(2rem, 3vw, 3.5rem);
   color: #e74c3c;
   font-weight: bold;
   font-style: italic;
+  overflow-wrap: anywhere;
 }
 
 /* QR Code Header */
@@ -678,7 +689,7 @@
   }
 
   .numberCount {
-    font-size: 1rem;
+    font-size: 1.5rem;
   }
 
   .specialCallout {
