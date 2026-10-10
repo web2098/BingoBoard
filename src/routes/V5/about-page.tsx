@@ -129,6 +129,16 @@ const About = () => {
       }
     });
 
+    const v51ChangeLog = (changelogData as any)['V5.1'];
+    if (v51ChangeLog) {
+      logs['V5.1'] = {
+        description: v51ChangeLog.description,
+        changes: v51ChangeLog.changes,
+        ai_opinion: v51ChangeLog.ai_opinion
+      };
+      setCurrentVersion('V5.1');
+    }
+
     setChangeLogs(logs);
   }, []);
 
@@ -232,7 +242,9 @@ const About = () => {
 
           <div className={styles.rightColumn}>
             {/* Changelog sections first */}
-            {Object.entries(changeLogs).map(([version, log]) => (
+            {Object.entries(changeLogs).sort(([firstVersion], [secondVersion]) =>
+              parseFloat(secondVersion.substring(1)) - parseFloat(firstVersion.substring(1))
+            ).map(([version, log]) => (
               <ChangeLogSection
                 key={version}
                 version={version}
