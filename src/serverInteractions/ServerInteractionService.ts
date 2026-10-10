@@ -9,6 +9,7 @@ import {
   getLastCalledNumber,
   setActiveRoomId
 } from '../utils/telemetry';
+import { getCustomGames } from '../utils/customGames';
 
 interface ServerInteractionState {
   // Connection state
@@ -133,7 +134,8 @@ class ServerInteractionService {
       variant: currentSession.variant,
       freeSpaceOn: currentSession.freeSpace,
       calledNumbers: getLastCalledNumbersReversed(),
-      lastNumber: getLastCalledNumber() || undefined
+      lastNumber: getLastCalledNumber() || undefined,
+      customGame: getCustomGames().find(game => game.name === currentSession.gameName)
     };
   }
 

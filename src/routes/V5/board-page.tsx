@@ -11,6 +11,7 @@ import { getNumberMessage, getSetting, getLetterColor, getContrastTextColor, get
 import { getVersionRoute, resolveVersionAlias } from '../../config/versions';
 import games from '../../data/games';
 import audienceInteractionsData from '../../data/audienceInteractions.json';
+import { getCustomGames } from '../../utils/customGames';
 import {
   startGameSession,
   recordNumberCall,
@@ -248,7 +249,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
           variant: gameData.variant,
           freeSpaceOn: gameData.freeSpace,
           calledNumbers: currentCalledNumbers,
-          lastNumber: currentLastNumber || undefined
+          lastNumber: currentLastNumber || undefined,
+          customGame: getCustomGames().find(game => game.name === gameData.name)
         };
 
         const styleConfig: StyleConfig = {
@@ -500,7 +502,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         variant: gameData.variant,
         freeSpaceOn: gameData.freeSpace,
         calledNumbers: getCalledNumbers(), // Get current state from telemetry
-        lastNumber: getLastNumber() || undefined // Get current state from telemetry
+        lastNumber: getLastNumber() || undefined, // Get current state from telemetry
+        customGame: getCustomGames().find(game => game.name === gameData.name)
       };
 
       const styleConfig: StyleConfig = {

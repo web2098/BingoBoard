@@ -93,7 +93,7 @@ const GameBoard = ({
 
   // Create a 5x5 grid and mark highlighted cells
   const isHighlighted = (row: number, col: number): boolean => {
-    return board.some(coord => coord[0] === row && coord[1] === col);
+    return (board || []).some(coord => coord[0] === row && coord[1] === col);
   };
 
   const boardHighlightColor = getBoardHighlightColor();
@@ -519,7 +519,9 @@ const GamePreviewSection = ({
       <div className={`${styles.gameBoardsContainer} ${isDualBoard ? styles.dualBoard : styles.singleBoard} ${isDoubleBingo && isDualBoard ? styles.doubleBingoDual : ''}`}>
         {cachedPatterns.map((possiblePatterns: number[][][], index: number) => {
           // Use rotation index to pick which pattern to display (with wrap-around)
-          const selectedPattern = possiblePatterns[rotationIndex % possiblePatterns.length];
+          const selectedPattern = possiblePatterns.length > 0
+            ? possiblePatterns[rotationIndex % possiblePatterns.length]
+            : [];
 
           return (
             <React.Fragment key={index}>
@@ -591,7 +593,7 @@ const SmallGamePreview = ({
 
   // Call the board function to get the first pattern using preview mode for consistency
   const firstPattern = typeof firstBoardFunction === 'function'
-    ? firstBoardFunction(true, true)[0]  // Get first pattern with free space enabled and preview mode on
+    ? firstBoardFunction(true, true)[0] || []  // Get first pattern with free space enabled and preview mode on
     : firstBoardFunction; // Fallback for any remaining non-function boards
 
   return (

@@ -124,7 +124,8 @@ export class HostConnection extends ServerConnection {
         variant: gameState.variant,
         free: gameState.freeSpaceOn,
         active: gameState.calledNumbers,
-        lastNumber: gameState.lastNumber
+        lastNumber: gameState.lastNumber,
+        customGame: gameState.customGame
       },
       style: {
         selectedColor: styleConfig.selectedColor,
@@ -149,7 +150,8 @@ export class HostConnection extends ServerConnection {
         variant: gameState.variant,
         free: gameState.freeSpaceOn,
         active: gameState.calledNumbers,
-        lastNumber: gameState.lastNumber
+        lastNumber: gameState.lastNumber,
+        customGame: gameState.customGame
       },
       style: {
         selectedColor: styleConfig.selectedColor,

@@ -30,7 +30,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
 
   // Create a 5x5 grid and mark highlighted cells
   const isHighlighted = (row: number, col: number): boolean => {
-    return board.some(coord => coord[0] === row && coord[1] === col);
+    return (board || []).some(coord => coord[0] === row && coord[1] === col);
   };
 
   const boardHighlightColor = getBoardHighlightColor();

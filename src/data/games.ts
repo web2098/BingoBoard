@@ -1,3 +1,5 @@
+import { asGameDefinition, getCustomGames } from '../utils/customGames';
+
 // Reusable Fisher-Yates shuffle function for randomizing arrays
 function shuffleArray<T>(array: T[]): T[] {
     // Create a copy to avoid mutating the original array
@@ -1755,7 +1757,7 @@ function applyOrder( gameList: any[] )
 
 function games()
 {
-    return applyOrder(gameList());
+    return applyOrder([...gameList(), ...getCustomGames().map(asGameDefinition)]);
 }
 
 export default games;
