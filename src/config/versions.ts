@@ -150,7 +150,7 @@ export function getVersionConfig(versionId: string): VersionConfig {
 }
 
 export function getVersionRoute(versionId: string, routeKey: keyof VersionConfig['routes']): VersionRoute {
-  console.log(`Getting route for version ${versionId}, key: ${routeKey}`);
+  //console.log(`Getting route for version ${versionId}, key: ${routeKey}`);
   const config = getVersionConfig(versionId);
   return config.routes[routeKey];
 }

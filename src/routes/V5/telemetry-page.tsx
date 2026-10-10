@@ -118,6 +118,7 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
 
     const top10 = sortedNumbers.slice(0, 10);
     const bottom10 = sortedNumbers.slice(-10).reverse();
+    console.log('[TelemetryPage] calculateNumberStats - sortedNumbers:', sortedNumbers);
     const notCalled = sortedNumbers.filter((item: { number: number; count: number }) => item.count === 0);
 
     return { top10, bottom10, notCalled, numberCounts };
@@ -129,12 +130,22 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
     [activeTonightStats]
   );
 
-  const tonightWithoutBlackout = useMemo(() =>
-    tonightSessions.filter((session: any) =>
-      !session.gameName.toLowerCase().includes('blackout')
-    ),
-    [tonightSessions]
-  );
+  const tonightWithoutBlackout = useMemo(() => {
+    const allGames = games();
+    const filtered = tonightSessions.filter((session: any) => {
+      const game = allGames.find((g: any) => g.name === session.gameName);
+      const variantName = game?.variants?.[session.variant]?.name;
+      const effectiveName = variantName ?? session.gameName;
+      return !effectiveName.toLowerCase().includes('blackout');
+    });
+    console.log('[TelemetryPage] tonightWithoutBlackout (pre-filter):', tonightSessions.map((s: any) => {
+      const game = allGames.find((g: any) => g.name === s.gameName);
+      const variantName = game?.variants?.[s.variant]?.name;
+      return { gameName: s.gameName, variant: s.variant, effectiveName: variantName ?? s.gameName };
+    }));
+    console.log('[TelemetryPage] tonightWithoutBlackout (post-filter):', filtered);
+    return filtered;
+  }, [tonightSessions]);
 
   const allTimeSessions = useMemo(() =>
     activeSessionHistory,
@@ -338,7 +349,7 @@ const TelemetryPage: React.FC<TelemetryPageProps> = () => {
 
           {/* Row 2: Tonight's Heatmap */}
           <div className={styles.heatmapCard}>
-            <NumberHeatMap numberCounts={tonightStats_calc.numberCounts} />
+            <NumberHeatMap numberCounts={tonightWithoutBlackoutStats.numberCounts} />
           </div>
 
           {/* Row 3: Tonight's Numbers */}

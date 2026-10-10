@@ -47,6 +47,11 @@
   box-sizing: border-box;
   overflow-y: auto;
   overflow-x: hidden;
+  transition: transform 0.3s ease;
+}
+
+.sidebarHidden {
+  transform: translateX(-80px);
 }
 
 /* Hamburger Menu Button */

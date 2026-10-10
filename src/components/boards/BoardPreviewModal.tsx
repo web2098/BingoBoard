@@ -102,7 +102,7 @@ const BoardPreviewModal: React.FC<BoardPreviewModalProps> = ({
                 size="large"
               />
               {index < filteredPatterns.length - 1 && currentVariant.op && (
-                <OperatorIcon operator={currentVariant.op} />
+                <OperatorIcon operator={Array.isArray(currentVariant.op) ? currentVariant.op[rotationIndex % currentVariant.op.length] : currentVariant.op} />
               )}
             </React.Fragment>
           ))}

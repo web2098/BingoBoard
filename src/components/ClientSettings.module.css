@@ -2,6 +2,9 @@
 .clientSettings {
   margin-top: 2rem;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .settingsSection {
@@ -225,4 +228,75 @@
   .sectionHeader h3 {
     font-size: 16px;
   }
+}
+
+/* Feedback Section */
+.feedbackContent {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.feedbackDisclaimer {
+  margin: 0;
+  padding: 10px 14px;
+  background: #fff8e1;
+  border-left: 4px solid #ffc107;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.feedbackTextarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.feedbackTextarea:focus {
+  outline: none;
+  border-color: #6c757d;
+  box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.15);
+}
+
+.feedbackActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+
+.feedbackSuccess {
+  font-size: 0.9rem;
+  color: #28a745;
+  font-weight: 500;
+}
+
+.feedbackSubmit {
+  padding: 8px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.feedbackSubmit:hover:not(:disabled) {
+  background: #5a6268;
+}
+
+.feedbackSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

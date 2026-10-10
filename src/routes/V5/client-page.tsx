@@ -151,6 +151,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
   // Modal state for board preview
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  // Modal state for share QR code
+  const [isShareModalVisible, setIsShareModalVisible] = useState(false);
+
   // Ref to store the rotation interval so we can clear it
   const rotationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -247,7 +250,7 @@ const ClientPage: React.FC<ClientPageProps> = () => {
       const newGameData = {
         id: 0, // We don't have game ID from server, use default
         name: lastSetupMessage.data.game,
-        variant: 0, // We don't have variant from server, use default
+        variant: lastSetupMessage.data.variant,
         freeSpace: lastSetupMessage.data.free,
         totalNumbers: 75
       };
@@ -551,7 +554,7 @@ const ClientPage: React.FC<ClientPageProps> = () => {
                 freeSpace={gameData.freeSpace}
               />
               {index < filteredPatterns.length - 1 && currentVariant.op && (
-                <OperatorIcon operator={currentVariant.op} />
+                <OperatorIcon operator={Array.isArray(currentVariant.op) ? currentVariant.op[rotationIndex % currentVariant.op.length] : currentVariant.op} />
               )}
             </React.Fragment>
           ))}
@@ -622,6 +625,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             <p>Connecting to room {roomId}</p>
           </div>
 
+          {/* Client Settings Section */}
+          <ClientSettings />
+
           {/* Client Log Section */}
           <ClientLog logs={logs} onClearLogs={clearLogs} />
         </div>
@@ -642,6 +648,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             <p>Connected to room. Waiting for game setup.</p>
           </div>
 
+          {/* Client Settings Section */}
+          <ClientSettings />
+
           {/* Client Log Section */}
           <ClientLog logs={logs} onClearLogs={clearLogs} />
         </div>
@@ -658,24 +667,6 @@ const ClientPage: React.FC<ClientPageProps> = () => {
       <div className={styles.clientPage}>
         {/* Header */}
         <div className={styles.boardHeader}>
-          <div className={styles.headerLeft}>
-            {/* Game Preview */}
-            <div className={styles.gamePreviewMini}>
-              <div className={styles.gamePreviewHeader}>
-                <h3>{gameData.name}</h3>
-                <p className={styles.freeSpaceStatus}>
-                  Free Space: {gameData.freeSpace ? 'ON' : 'OFF'}
-                </p>
-              </div>
-              <div className={styles.miniBoard}>
-                {renderBoardPreview()}
-              </div>
-              <p className={styles.numberCount}>
-                {calledNumbers.length}/{gameData.totalNumbers} ({gameData.totalNumbers - calledNumbers.length} Left)
-              </p>
-            </div>
-          </div>
-
           <div className={styles.headerCenter}>
             <div className={styles.lastNumberSection}>
               <div className={styles.lastNumberDisplay}>
@@ -711,20 +702,6 @@ const ClientPage: React.FC<ClientPageProps> = () => {
             </div>
           </div>
 
-          <div className={styles.headerRight}>
-            <div className={styles.qrCodeHeader}>
-              <h4>Share This View</h4>
-              <div className={styles.qrCodeSuccess}>
-                <div className={styles.qrCodeContainer}>
-                  <QRCode
-                    value={window.location.href}
-                    size={window.innerHeight <= 500 ? 100 : 140}
-                    className={styles.boardQrCode}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Bingo Numbers Grid */}
@@ -780,9 +757,10 @@ const ClientPage: React.FC<ClientPageProps> = () => {
         </div>
 
         {/* Horizontal Number History */}
-        <div className={styles.numberHistorySection}>
-          <h4>Recently Called Numbers</h4>
-          <div className={styles.horizontalHistoryList}>
+        <div className={styles.numberHistorySectionWrapper}>
+          <div className={styles.numberHistorySection}>
+            <h4>Recently Called Numbers</h4>
+            <div className={styles.horizontalHistoryList}>
             {calledNumbers.length === 0 ? (
               <div className={styles.noNumbers}>No numbers called yet</div>
             ) : (
@@ -824,7 +802,34 @@ const ClientPage: React.FC<ClientPageProps> = () => {
                 );
               })
             )}
+            </div>
           </div>
+        </div>
+
+        {/* Game Board Preview + Share */}
+        <div className={styles.previewWithShare}>
+          <div className={styles.gamePreviewMini}>
+          <div className={styles.gamePreviewHeader}>
+            <h3>{gameData.name}</h3>
+            <p className={styles.freeSpaceStatus}>
+              Free Space: {gameData.freeSpace ? 'ON' : 'OFF'}
+            </p>
+          </div>
+          <div className={styles.miniBoard}>
+            {renderBoardPreview()}
+          </div>
+          <p className={styles.numberCount}>
+            {calledNumbers.length}/{gameData.totalNumbers} ({gameData.totalNumbers - calledNumbers.length} Left)
+          </p>
+          </div>
+          <button
+            className={styles.shareBar}
+            onClick={() => setIsShareModalVisible(true)}
+            aria-label="Share this view"
+          >
+            <span className={styles.shareBarIcon}>📤</span>
+            <span className={styles.shareBarText}>Share This View</span>
+          </button>
         </div>
 
         {/* Client Settings Section */}
@@ -832,6 +837,25 @@ const ClientPage: React.FC<ClientPageProps> = () => {
 
         {/* Client Log Section */}
         <ClientLog logs={logs} onClearLogs={clearLogs} />
+
+        {/* Share Modal */}
+        {isShareModalVisible && (
+          <div className={styles.shareModalOverlay} onClick={() => setIsShareModalVisible(false)}>
+            <div className={styles.shareModal} onClick={e => e.stopPropagation()}>
+              <button className={styles.shareModalClose} onClick={() => setIsShareModalVisible(false)} aria-label="Close">✕</button>
+              <h3 className={styles.shareModalTitle}>Share This View</h3>
+              <p className={styles.shareModalSubtitle}>Scan to open on another device</p>
+              <div className={styles.shareModalQr}>
+                <QRCode
+                  value={window.location.href}
+                  size={160}
+                  className={styles.boardQrCode}
+                />
+              </div>
+              <p className={styles.shareModalUrl}>{window.location.href}</p>
+            </div>
+          </div>
+        )}
 
         {/* Board Preview Modal */}
         {gameData && (

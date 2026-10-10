@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './settings-page.module.css';
 import SidebarWithMenu from '../../components/SidebarWithMenu';
 import MigrationModal from '../../components/settings/MigrationModal';
@@ -763,6 +764,7 @@ const SpecialNumbersGrid: React.FC<SpecialNumbersGridProps> = ({ property, onCha
 interface SettingsPageProps {}
 
 const SettingsPage: React.FC<SettingsPageProps> = () => {
+  const navigate = useNavigate();
   const [settingsSections, setSettingsSections] = useState<SettingsSection[]>([]);
   const [debugCollapsed, setDebugCollapsed] = useState<boolean>(true); // Debug section collapsed by default
   const [telemetryCollapsed, setTelemetryCollapsed] = useState<boolean>(true); // Telemetry section collapsed by default
@@ -1460,6 +1462,17 @@ const SettingsPage: React.FC<SettingsPageProps> = () => {
         currentPage="settings"
         onReset={handleReset}
         pageButtons={[
+          {
+            id: 'back',
+            label: 'Back',
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="15,18 9,12 15,6"/>
+              </svg>
+            ),
+            onClick: () => navigate(-1),
+            className: 'back-button'
+          },
           {
             id: 'reset-settings',
             label: 'Reset',

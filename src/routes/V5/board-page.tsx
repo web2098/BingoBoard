@@ -115,6 +115,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
 
   // Modal state
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isSidebarHidden, setIsSidebarHidden] = useState(false);
+  const [qrModalValue, setQrModalValue] = useState<string | null>(null);
 
   // State for letter colors (will update when settings change)
   const [letterColors, setLetterColors] = useState({
@@ -243,6 +245,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         // Send current game state to all clients
         const gameState: GameState = {
           name: gameData.name,
+          variant: gameData.variant,
           freeSpaceOn: gameData.freeSpace,
           calledNumbers: currentCalledNumbers,
           lastNumber: currentLastNumber || undefined
@@ -494,6 +497,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     if (isConnected && isHost && gameData) {
       const gameState: GameState = {
         name: gameData.name,
+        variant: gameData.variant,
         freeSpaceOn: gameData.freeSpace,
         calledNumbers: getCalledNumbers(), // Get current state from telemetry
         lastNumber: getLastNumber() || undefined // Get current state from telemetry
@@ -654,7 +658,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
                 isDualBoard={isDualBoard}
               />
               {index < filteredPatterns.length - 1 && currentVariant.op && (
-                <OperatorIcon operator={currentVariant.op} />
+                <OperatorIcon operator={Array.isArray(currentVariant.op) ? currentVariant.op[rotationIndex % currentVariant.op.length] : currentVariant.op} />
               )}
             </React.Fragment>
           ))}
@@ -676,16 +680,18 @@ const BoardPage: React.FC<BoardPageProps> = () => {
   };
 
   return (
-    <div className={styles.boardPage}>
+    <div className={`${styles.boardPage} ${isSidebarHidden ? styles.sidebarHidden : ''}`}>
       <SidebarWithMenu
         currentPage="game-board"
         onReset={resetGame}
         pageButtons={pageButtons}
         onAudienceInteraction={handleAudienceInteraction}
+        autoHide={getSetting('autoHideNavigationBar', false)}
+        onHiddenChange={setIsSidebarHidden}
       />
 
       {/* Section 1: Header */}
-      <div className={styles.boardHeader}>
+      {getSetting('showBoardHeader', true) && <div className={styles.boardHeader}>
         <div className={styles.headerLeft}>
           {/* Game Preview */}
           <div className={styles.gamePreviewMini}>
@@ -717,6 +723,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
           </div>
         </div>
 
+        {getSetting('showLastNumberPlayed', true) && (
         <div className={styles.headerCenter}>
           <div className={styles.lastNumberSection}>
             <div className={styles.lastNumberDisplay}>
@@ -748,6 +755,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
             </div>
           </div>
         </div>
+        )}
 
         <div className={styles.headerRight}>
           {/* QR Code section with server status logic */}
@@ -785,7 +793,11 @@ const BoardPage: React.FC<BoardPageProps> = () => {
                   <div className={styles.qrCodeHeader}>
                     <h4>View On Your Device</h4>
                     <div className={styles.qrCodeSuccess}>
-                      <div className={styles.qrCodeContainer}>
+                      <div
+                        className={`${styles.qrCodeContainer} ${styles.qrCodeClickable}`}
+                        onClick={() => setQrModalValue(qrCodeValue)}
+                        title="Click to enlarge"
+                      >
                         <QRCode
                           value={qrCodeValue}
                           size={200}
@@ -836,7 +848,11 @@ const BoardPage: React.FC<BoardPageProps> = () => {
                 <div className={styles.qrCodeHeader}>
                   <h4>View On Your Device</h4>
                   <div className={styles.qrCodeSuccess}>
-                    <div className={styles.qrCodeContainer}>
+                    <div
+                      className={`${styles.qrCodeContainer} ${styles.qrCodeClickable}`}
+                      onClick={() => setQrModalValue(qrCodeValue)}
+                      title="Click to enlarge"
+                    >
                       <QRCode
                         value={qrCodeValue}
                         size={200}
@@ -861,7 +877,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
             );
           })()}
         </div>
-      </div>
+      </div>}
 
       {/* Section 2: Bingo Numbers Grid */}
       <div className={styles.bingoGridSection}>
@@ -916,6 +932,7 @@ const BoardPage: React.FC<BoardPageProps> = () => {
             })}
           </div>
 
+          {getSetting('showNumberHistory', true) && (
           <div className={styles.numberHistory}>
             <h4>Last Numbers Called</h4>
             <div className={styles.historyList}>
@@ -932,12 +949,22 @@ const BoardPage: React.FC<BoardPageProps> = () => {
               )}
             </div>
           </div>
+          )}
         </div>
       </div>
 
       <div className={styles.copyright}>
         <p>© 2025 Eric Gressman. All rights reserved.</p>
       </div>
+
+      {/* QR Code Enlarge Modal */}
+      {qrModalValue && (
+        <div className={styles.qrModalOverlay} onClick={() => setQrModalValue(null)}>
+          <div className={styles.qrModalContent} onClick={(e) => e.stopPropagation()}>
+            <QRCode value={qrModalValue} size={400} />
+          </div>
+        </div>
+      )}
 
       {/* Board Preview Modal - Controlled by BoardPage state */}
       <BoardPreviewModal
