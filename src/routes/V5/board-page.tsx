@@ -679,6 +679,8 @@ const BoardPage: React.FC<BoardPageProps> = () => {
     }
   };
 
+  const lastNumber = getLastNumber();
+
   return (
     <div className={`${styles.boardPage} ${isSidebarHidden ? styles.sidebarHidden : ''}`}>
       <SidebarWithMenu
@@ -727,31 +729,27 @@ const BoardPage: React.FC<BoardPageProps> = () => {
         <div className={styles.headerCenter}>
           <div className={styles.lastNumberSection}>
             <div className={styles.lastNumberDisplay}>
-              <div className={styles.lastNumberLeftColumn}>
-                <div className={styles.lastNumberTextRow}>
-                  <span className={styles.lastNumberText}>
-                    {getLastNumber() ? 'The Last Number Was' : 'Waiting For First Number'}
-                  </span>
+              <div className={styles.lastNumberRightColumn}>
+                <div className={styles.bingoCardsGroup}>
+                  <div
+                    className={styles.bingoLetterCard}
+                    style={lastNumber ? getLetterStyle(lastNumber) : { backgroundColor: '#6c757d', color: '#ffffff' }}
+                  >
+                    {lastNumber ? getBingoLetter(lastNumber) : '?'}
+                  </div>
+                  <div className={styles.bingoNumberCard}>
+                    {lastNumber ?? '?'}
+                  </div>
+                </div>
+              </div>
+              <div className={styles.lastNumberDetails}>
+                <div className={styles.specialCalloutSection}>
+                  <p className={styles.specialCallout}>{getSpecialCallout(lastNumber)}</p>
                 </div>
                 <p className={styles.numberCount}>
                   {getCalledNumbers().length}/{gameData.totalNumbers} ({gameData.totalNumbers - getCalledNumbers().length} Left)
                 </p>
-                <div className={styles.specialCalloutSection}>
-                  <p className={styles.specialCallout}>{getSpecialCallout(getLastNumber())}</p>
-                </div>
               </div>
-              {getLastNumber() && (
-                <div className={styles.lastNumberRightColumn}>
-                  <div className={styles.bingoCardsGroup}>
-                    <div className={styles.bingoLetterCard} style={getLetterStyle(getLastNumber()!)}>
-                      {getBingoLetter(getLastNumber()!)}
-                    </div>
-                    <div className={styles.bingoNumberCard}>
-                      {getLastNumber()}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>

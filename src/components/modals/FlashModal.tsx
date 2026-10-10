@@ -78,7 +78,7 @@ const FlashModal: React.FC<FlashModalProps> = ({
     const container = contentRef.current;
 
     // Remove any existing circles
-    const existingCircles = container.querySelectorAll(`.${cssStyles.flashCircle}`);
+    const existingCircles = container.querySelectorAll('[data-flash-circle="true"]');
     existingCircles.forEach(circle => circle.remove());
 
     const rect = container.getBoundingClientRect();
@@ -95,6 +95,7 @@ const FlashModal: React.FC<FlashModalProps> = ({
     function createCircle(x: number, y: number, colorIndex: number) {
       const circle = document.createElement('div');
       circle.className = cssStyles.flashCircle;
+      circle.dataset.flashCircle = 'true';
       circle.style.position = 'absolute';
       // Position relative to the border area
       circle.style.left = `${x - borderWidth/2 - circleRadius}px`;
@@ -145,7 +146,7 @@ const FlashModal: React.FC<FlashModalProps> = ({
     } else {
       // Clean up circles when modal closes
       if (contentRef.current) {
-        const existingCircles = contentRef.current.querySelectorAll(`.${cssStyles.flashCircle}`);
+        const existingCircles = contentRef.current.querySelectorAll('[data-flash-circle="true"]');
         existingCircles.forEach(circle => circle.remove());
       }
       if (circleAnimationRef.current) {
