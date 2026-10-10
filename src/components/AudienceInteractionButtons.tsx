@@ -29,12 +29,14 @@ interface AudienceInteractionButtonsProps {
   currentPage: string;
   className?: string;
   onAudienceInteraction?: (eventType: AudienceInteractionType, options: AudienceInteractionOptions) => void;
+  disabled?: boolean;
 }
 
 const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
   currentPage,
   className = "",
-  onAudienceInteraction
+  onAudienceInteraction,
+  disabled = false
 }) => {
   const [interactions, setInteractions] = useState<AudienceInteraction[]>([]);
 
@@ -47,6 +49,10 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
   }, [currentPage]);
 
   const handleInteractionClick = React.useCallback((interaction: AudienceInteraction) => {
+    if (disabled) {
+      return;
+    }
+
     // Record winner if this is a winner interaction
     if (interaction.id === 'winner') {
       recordAudienceWinner();
@@ -76,6 +82,10 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
   }, [onAudienceInteraction]);
 
   useEffect(() => {
+    if (disabled) {
+      return;
+    }
+
     // Set up keyboard shortcuts
     const handleKeyPress = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase();
@@ -93,7 +103,7 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
 
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [interactions, handleInteractionClick]);
+  }, [disabled, interactions, handleInteractionClick]);
 
   const renderInteractionIcon = (interaction: AudienceInteraction) => {
     if (interaction.icon.emoji) {
@@ -122,6 +132,7 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
             key={interaction.id}
             className={styles.audienceInteractionBtn}
             onClick={() => handleInteractionClick(interaction)}
+            disabled={disabled}
             title={`${interaction.description} (${interaction.shortcuts.join(', ')})`}
             style={{ '--btn-index': index } as React.CSSProperties}
           >

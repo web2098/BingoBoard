@@ -1,5 +1,5 @@
 // Select Game Page
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './select-game-page.module.css';
 import games from '../../data/games';
@@ -577,16 +577,20 @@ const SmallGamePreview = ({
   game,
   gameIndex,
   onClick,
-  colorVersion = 0
+  colorVersion = 0,
+  variantIndex = 0,
+  label
 }: {
   game: any,
   gameIndex: number,
   onClick: () => void,
-  colorVersion?: number
+  colorVersion?: number,
+  variantIndex?: number,
+  label?: string
 }) => {
-  const firstVariant = game.variants[0];
-  const firstBoardFunction = firstVariant.boards[0];
-  const isDualBoard = firstVariant.boards.length > 1;
+  const variant = game.variants[variantIndex];
+  const firstBoardFunction = variant.boards[0];
+  const isDualBoard = variant.boards.length > 1;
   const isDoubleBingo = game.name === "Double Bingo";
 
   // Call the board function to get the first pattern using preview mode for consistency
@@ -597,7 +601,7 @@ const SmallGamePreview = ({
   return (
     <div className={styles.smallGamePreview} onClick={onClick}>
       <div className={styles.gamePreviewLabel}>
-        {game.name} [{firstVariant.length || 'Standard'}]
+        {label || variant.name || game.name} [{variant.length || 'Standard'}]
       </div>
       <div className={`${styles.smallGameBoard} ${isDualBoard && isDoubleBingo ? styles.doubleBingoDual : ''}`}>
         <GameBoard
@@ -681,6 +685,90 @@ const GameSelectionSection = ({
   );
 };
 
+const GameFinderModal = ({
+  games,
+  onClose,
+  onGameSelect,
+  colorVersion = 0
+}: {
+  games: any[],
+  onClose: () => void,
+  onGameSelect: (gameId: number, variantIndex: number) => void,
+  colorVersion?: number
+}) => {
+  const [query, setQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const normalizedQuery = query.trim().toLowerCase();
+  const matchingVariants = games
+    .flatMap((game, gameIndex) => game.variants.map((variant: any, variantIndex: number) => ({
+      game,
+      gameIndex,
+      variant,
+      variantIndex
+    })))
+    .filter(({ game, variant }) => {
+      const searchableText = [game.name, ...(game.tags || []), variant.name || '', ...(variant.tags || [])]
+        .join(' ')
+        .toLowerCase();
+      return searchableText.includes(normalizedQuery);
+    });
+
+  useEffect(() => {
+    searchInputRef.current?.focus();
+  }, []);
+
+  return (
+    <div className={styles.gameFinderOverlay} role="presentation" onMouseDown={onClose}>
+      <section
+        className={styles.gameFinderModal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="game-finder-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <div className={styles.gameFinderHeader}>
+          <h2 id="game-finder-title">Find a game</h2>
+          <button className={styles.gameFinderClose} type="button" onClick={onClose} aria-label="Close game finder">×</button>
+        </div>
+        <input
+          ref={searchInputRef}
+          className={styles.gameFinderSearch}
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Search game names or tags"
+          aria-label="Search game names or tags"
+        />
+        <div className={styles.gameFinderResults}>
+          {matchingVariants.map(({ game, gameIndex, variant, variantIndex }) => (
+            <button
+              key={`${gameIndex}-${variantIndex}`}
+              className={styles.gameFinderResult}
+              type="button"
+              onClick={() => onGameSelect(gameIndex, variantIndex)}
+            >
+              <SmallGamePreview
+                game={game}
+                gameIndex={gameIndex}
+                onClick={() => undefined}
+                colorVersion={colorVersion}
+                variantIndex={variantIndex}
+                label={`${game.name} — ${variant.name || `Variant ${variantIndex + 1}`}`}
+              />
+              {[...(game.tags || []), ...(variant.tags || [])].length > 0 && (
+                <span className={styles.gameFinderTags}>{[...(game.tags || []), ...(variant.tags || [])].join(' · ')}</span>
+              )}
+            </button>
+          ))}
+          {matchingVariants.length === 0 && (
+            <p className={styles.gameFinderEmpty}>No games match “{query}”.</p>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+};
+
 // Main Component
 const SelectGamePage = () => {
   const navigate = useNavigate();
@@ -688,6 +776,7 @@ const SelectGamePage = () => {
   const [settingsUpdateTrigger, setSettingsUpdateTrigger] = useState(0);
   const [highlightColorVersion, setHighlightColorVersion] = useState(0);
   const [developerMode] = useState(() => getSetting('developerMode', false));
+  const [isGameFinderOpen, setIsGameFinderOpen] = useState(false);
 
   // Server interaction for audience interactions and connection
   const { isConnected, roomId, connectionError, sendAudienceInteraction } = useServerInteraction({
@@ -735,6 +824,21 @@ const SelectGamePage = () => {
     };
   }, []);
 
+  // Replace the browser find action with a game finder while this page is active.
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'f') {
+        event.preventDefault();
+        setIsGameFinderOpen(true);
+      } else if (event.key === 'Escape') {
+        setIsGameFinderOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   // Helper function to determine default freeSpace value for a variant
   const getDefaultFreeSpace = (game: any, variantIndex: number): boolean => {
     const variant = game.variants[variantIndex];
@@ -756,15 +860,14 @@ const SelectGamePage = () => {
     freeSpace: getDefaultFreeSpace(gameList[0], 0)
   });
 
-  const handleGameSelect = (gameId: number) => {
+  const handleGameSelect = (gameId: number, variantIndex = 0) => {
     const newGame = gameList[gameId];
-    const newVariant = 0; // Reset to first variant when selecting new game
 
     setGameSettings({
       id: gameId,
       name: newGame.name,
-      variant: newVariant,
-      freeSpace: getDefaultFreeSpace(newGame, newVariant)
+      variant: variantIndex,
+      freeSpace: getDefaultFreeSpace(newGame, variantIndex)
     });
   };
 
@@ -809,6 +912,7 @@ const SelectGamePage = () => {
           }
         ]}
         onAudienceInteraction={sendAudienceInteraction}
+        disableAudienceInteractions={isGameFinderOpen}
       />
 
       <div className={styles.mainLayout}>
@@ -841,6 +945,18 @@ const SelectGamePage = () => {
           />
         </div>
       </div>
+
+      {isGameFinderOpen && (
+        <GameFinderModal
+          games={gameList}
+          onClose={() => setIsGameFinderOpen(false)}
+          onGameSelect={(gameId, variantIndex) => {
+            handleGameSelect(gameId, variantIndex);
+            setIsGameFinderOpen(false);
+          }}
+          colorVersion={highlightColorVersion}
+        />
+      )}
     </div>
   );
 };
