@@ -415,14 +415,14 @@ const GamePreviewSection = ({
   const currentGame = games[settings.id];
   const selectedVariant = currentGame.variants[settings.variant];
   const canRequireDoubleBoard = !['Double Bingo', 'Normal Bingo'].includes(currentGame.name) && selectedVariant.boards.length === 1;
-  const currentVariant = settings.doubleBoardRequirement && canRequireDoubleBoard
+  const currentVariant = React.useMemo(() => settings.doubleBoardRequirement && canRequireDoubleBoard
     ? {
         ...selectedVariant,
         boards: [selectedVariant.boards[0], selectedVariant.boards[0]],
         op: 'and',
         rules: `${selectedVariant.rules} on both boards`
       }
-    : selectedVariant;
+    : selectedVariant, [selectedVariant, settings.doubleBoardRequirement, canRequireDoubleBoard]);
 
   // State for rotation functionality
   const [rotationIndex, setRotationIndex] = useState(0);
@@ -498,7 +498,7 @@ const GamePreviewSection = ({
         clearInterval(progressInterval);
       };
     }
-  }, [selectedVariant, settings.freeSpace, settings.doubleBoardRequirement]);
+  }, [currentVariant, settings.freeSpace]);
 
   const handleFreeSpaceToggle = (freeSpace: boolean) => {
     onSettingsChange({ ...settings, freeSpace });

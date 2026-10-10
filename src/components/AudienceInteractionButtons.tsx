@@ -79,7 +79,7 @@ const AudienceInteractionButtons: React.FC<AudienceInteractionButtonsProps> = ({
     } else {
       console.warn('AudienceInteractionModalManager not available');
     }
-  }, [onAudienceInteraction]);
+  }, [disabled, onAudienceInteraction]);
 
   useEffect(() => {
     if (disabled) {
