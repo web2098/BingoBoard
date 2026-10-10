@@ -579,24 +579,27 @@ const SmallGamePreview = ({
   onClick,
   colorVersion = 0,
   variantIndex = 0,
-  label
+  label,
+  animationStep
 }: {
   game: any,
   gameIndex: number,
   onClick: () => void,
   colorVersion?: number,
   variantIndex?: number,
-  label?: string
+  label?: string,
+  animationStep?: number
 }) => {
   const variant = game.variants[variantIndex];
   const firstBoardFunction = variant.boards[0];
   const isDualBoard = variant.boards.length > 1;
   const isDoubleBingo = game.name === "Double Bingo";
 
-  // Call the board function to get the first pattern using preview mode for consistency
-  const firstPattern = typeof firstBoardFunction === 'function'
-    ? firstBoardFunction(true, true)[0]  // Get first pattern with free space enabled and preview mode on
-    : firstBoardFunction; // Fallback for any remaining non-function boards
+  // Finder previews receive every possible pattern; carousel previews retain a stable first pattern.
+  const possiblePatterns = typeof firstBoardFunction === 'function'
+    ? firstBoardFunction(true, animationStep === undefined)
+    : [firstBoardFunction];
+  const selectedPattern = possiblePatterns[(animationStep || 0) % possiblePatterns.length] || [];
 
   return (
     <div className={styles.smallGamePreview} onClick={onClick}>
@@ -605,7 +608,7 @@ const SmallGamePreview = ({
       </div>
       <div className={`${styles.smallGameBoard} ${isDualBoard && isDoubleBingo ? styles.doubleBingoDual : ''}`}>
         <GameBoard
-          board={firstPattern}
+          board={selectedPattern}
           freeSpace={true}
           colorVersion={colorVersion}
           hasDynamicFreeSpace={false}
@@ -697,6 +700,7 @@ const GameFinderModal = ({
   colorVersion?: number
 }) => {
   const [query, setQuery] = useState('');
+  const [previewStep, setPreviewStep] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const normalizedQuery = query.trim().toLowerCase();
   const matchingVariants = games
@@ -715,6 +719,16 @@ const GameFinderModal = ({
 
   useEffect(() => {
     searchInputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (!getSetting('enablePatternRotation', true)) {
+      return;
+    }
+
+    const intervalMilliseconds = Math.max(1, getSetting('patternRotationInterval', 3)) * 1000 * 1.5;
+    const interval = window.setInterval(() => setPreviewStep((step) => step + 1), intervalMilliseconds);
+    return () => window.clearInterval(interval);
   }, []);
 
   return (
@@ -754,6 +768,7 @@ const GameFinderModal = ({
                 colorVersion={colorVersion}
                 variantIndex={variantIndex}
                 label={`${game.name} — ${variant.name || `Variant ${variantIndex + 1}`}`}
+                animationStep={previewStep}
               />
               {[...(game.tags || []), ...(variant.tags || [])].length > 0 && (
                 <span className={styles.gameFinderTags}>{[...(game.tags || []), ...(variant.tags || [])].join(' · ')}</span>
