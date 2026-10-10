@@ -27,12 +27,12 @@
       "items": [
         {
           "label": "Version",
-          "value": "V5",
+          "value": "V5.1",
           "note": "Current version"
         },
         {
           "label": "Last Updated",
-          "value": "July 2025"
+          "value": "October 2026"
         },
         {
           "label": "License",
@@ -69,7 +69,8 @@
         "🛣️ React Router for navigation",
         "🎨 CSS3 with responsive design",
         "💾 Local storage for settings",
-        "🤖 GitHub Copilot AI assistance (Claude 4)",
+        "🤖 GitHub Copilot AI assistance",
+        "🤖 OpenAI Codex AI assistance",
         {
           "text": "🔧 Bingo Server (Rust backend)",
           "link": "https://github.com/web2098/bingoserver"
