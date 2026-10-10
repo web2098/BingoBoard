@@ -413,7 +413,7 @@
   user-select: none;
 }
 
-.bingoCell:hover {
+.bingoCell:not(.autoCallCell):hover {
   background: #e9ecef;
   border-color: #adb5bd;
   transform: translateY(-2px);
@@ -425,7 +425,7 @@
   transform: scale(0.95);
 }
 
-.bingoCell.called:hover {
+.bingoCell.called:not(.autoCallCell):hover {
   /* Background color handled dynamically, keep hover transform */
   transform: scale(0.95);
 }

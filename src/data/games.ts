@@ -261,6 +261,16 @@ function bingo(){
                 rules: 'Must get 5 in a row, column, or diagonal or 4 corners + free space',
                 length: "Fast",
                 freeSpace: true
+            },
+            {
+                name: "Speed Bingo",
+                boards: [
+                    (freeSpace: boolean, previewMode: boolean = false) => generateSingleBoardRotations(freeSpace, true, previewMode)
+                ],
+                rules: 'Must get 5 in a row, column, or diagonal',
+                length: "Fast",
+                dynamicFreeSpace: true,
+                auto: true
             }
         ]
     }
