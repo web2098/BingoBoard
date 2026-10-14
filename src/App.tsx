@@ -11,6 +11,7 @@ import SettingsPage from './routes/V5/settings-page';
 import About from './routes/V5/about-page';
 import TelemetryPage from './routes/V5/telemetry-page';
 import MigrationPage from './routes/V5/migration-page';
+import CreateGamePage from './routes/V5/create-game-page';
 import ErrorPage from "./routes/error-page";
 import { getSetting } from './utils/settings';
 import { getVersionRoute, getVersionConfig, getAvailableVersions } from './config/versions';
@@ -109,6 +110,11 @@ function AppWithServerInteraction() {
       errorElement: <ErrorPage />,
     },
   ];
+
+  routes.push(
+    { path: '/create-game', element: <CreateGamePage />, errorElement: <ErrorPage /> },
+    { path: '/v5/create-game', element: <CreateGamePage />, errorElement: <ErrorPage /> }
+  );
 
   // Add default version-aware routes
   Object.entries(pageComponents).forEach(([routeKey, Component]) => {

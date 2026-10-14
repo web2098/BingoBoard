@@ -1,0 +1,29 @@
+.page { min-height: 100vh; background: #f5f5f5; }
+.content { min-height: 100vh; max-width: none; margin: 0; padding: 32px 48px 48px 110px; box-sizing: border-box; }
+.content h1 { margin-bottom: 4px; }
+.workspace { display: grid; grid-template-columns: minmax(620px, 1.3fr) minmax(320px, .7fr); gap: 28px; margin-top: 28px; align-items: start; }
+.editor { display: grid; grid-template-columns: minmax(280px, .75fr) minmax(330px, 1.25fr); gap: 36px; padding: 36px; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.12); }
+.form { display: flex; flex-direction: column; gap: 16px; }
+.form label { display: flex; flex-direction: column; gap: 6px; font-weight: bold; }
+.form input, .form textarea, .form select { padding: 10px; border: 1px solid #aaa; border-radius: 6px; font: inherit; }
+.form textarea { min-height: 100px; resize: vertical; }
+.form .toggle { flex-direction: row; align-items: center; font-weight: normal; }
+.patternPanel { display: flex; flex-direction: column; align-items: center; }
+.patternPanel h2 { align-self: flex-start; }
+.grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 3px solid #333; width: min(100%, 620px); box-sizing: border-box; }
+.grid button { min-width: 0; aspect-ratio: 1; border: 1px solid #333; background: white; cursor: pointer; font-size: clamp(1.5rem, 3vw, 2.75rem); font-weight: bold; overflow: hidden; }
+.grid button.freeCell { font-size: clamp(1rem, 2vw, 2rem); }
+.grid button.selected { background: #1e4d2b; color: white; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.actions button { padding: 10px 14px; border: 0; border-radius: 6px; background: #1e4d2b; color: white; cursor: pointer; font-weight: bold; }
+.actions button:first-child { background: #666; }.actions button:last-child { background: #1877a8; }
+.status { margin: 0; color: #1e4d2b; font-weight: bold; }
+.rotationSection { padding: 28px 36px; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.12); }
+.rotationSection h2, .rotationSection p { margin: 0 0 8px; }
+.rotationList { display: flex; margin-top: 18px; }
+.rotationCard { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; text-align: center; }
+.rotationGrid { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 10px; border: 2px solid #333; }
+.rotationGrid span { display: flex; aspect-ratio: 1; align-items: center; justify-content: center; border: 1px solid #333; font-size: clamp(.9rem, 1.4vw, 1.25rem); font-weight: bold; }
+.rotationGrid .previewSelected { background: #1e4d2b; color: white; }
+@media (max-width: 1000px) { .workspace { grid-template-columns: 1fr; }.rotationList { justify-content: center; } }
+@media (max-width: 700px) { .content { padding: 24px 16px 24px 70px; }.editor { grid-template-columns: 1fr; padding: 18px; gap: 24px; }.rotationSection { padding: 18px; } }

@@ -17,6 +17,7 @@ export interface SetupMessage extends BaseMessage {
     free: boolean;
     active: number[];
     lastNumber?: number;
+    customGame?: any;
   };
   style: {
     selectedColor: string;
@@ -147,6 +148,7 @@ export interface GameState {
   freeSpaceOn: boolean;
   calledNumbers: number[];
   lastNumber?: number;
+  customGame?: any;
 }
 
 export interface StyleConfig {

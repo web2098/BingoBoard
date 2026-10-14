@@ -9,6 +9,7 @@ import { useServerInteraction } from '../../serverInteractions/useServerInteract
 import ServerInteractionService from '../../serverInteractions/ServerInteractionService';
 import { getNumberMessage, getLetterColor, getContrastTextColor, getBoardHighlightColor, getSetting } from '../../utils/settings';
 import games from '../../data/games';
+import { mergeCustomGames } from '../../utils/customGames';
 import { AudienceInteractionModalManager } from '../../components/modals';
 import audienceInteractionsData from '../../data/audienceInteractions.json';
 import { useConsoleLog } from '../../hooks/useConsoleLog';
@@ -247,6 +248,9 @@ const ClientPage: React.FC<ClientPageProps> = () => {
   useEffect(() => {
     if (lastSetupMessage && lastSetupMessage.type === 'setup') {
       console.log('Client processing setup message:', lastSetupMessage);
+      if (lastSetupMessage.data.customGame) {
+        mergeCustomGames([lastSetupMessage.data.customGame]);
+      }
       const newGameData = {
         id: 0, // We don't have game ID from server, use default
         name: lastSetupMessage.data.game,

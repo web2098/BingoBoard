@@ -94,7 +94,7 @@ const GameBoard = ({
 
   // Create a 5x5 grid and mark highlighted cells
   const isHighlighted = (row: number, col: number): boolean => {
-    return board.some(coord => coord[0] === row && coord[1] === col);
+    return (board || []).some(coord => coord[0] === row && coord[1] === col);
   };
 
   const boardHighlightColor = getBoardHighlightColor();
@@ -559,7 +559,9 @@ const GamePreviewSection = ({
       <div className={`${styles.gameBoardsContainer} ${isDualBoard ? styles.dualBoard : styles.singleBoard} ${isDoubleBingo && isDualBoard ? styles.doubleBingoDual : ''}`}>
         {cachedPatterns.map((possiblePatterns: number[][][], index: number) => {
           // Use rotation index to pick which pattern to display (with wrap-around)
-          const selectedPattern = possiblePatterns[rotationIndex % possiblePatterns.length];
+          const selectedPattern = possiblePatterns.length > 0
+            ? possiblePatterns[rotationIndex % possiblePatterns.length]
+            : [];
 
           return (
             <React.Fragment key={index}>
@@ -642,7 +644,9 @@ const SmallGamePreview = ({
   const possiblePatterns = typeof firstBoardFunction === 'function'
     ? firstBoardFunction(true, animationStep === undefined)
     : [firstBoardFunction];
-  const selectedPattern = possiblePatterns[(animationStep || 0) % possiblePatterns.length] || [];
+  const selectedPattern = possiblePatterns.length > 0
+    ? possiblePatterns[(animationStep || 0) % possiblePatterns.length] || []
+    : [];
 
   return (
     <div className={styles.smallGamePreview} onClick={onClick}>

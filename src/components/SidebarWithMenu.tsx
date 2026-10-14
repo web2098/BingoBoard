@@ -165,6 +165,7 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
       case 'select-game':
         return [
           { label: 'Start Game', href: '/board' },
+          { label: 'Create Game', href: '/create-game' },
           { label: 'Telemetry', href: '/telemetry' },
           { label: 'divider', href: '#' },
           { label: 'About', href: '/about' },
@@ -174,10 +175,17 @@ const SidebarWithMenu: React.FC<SidebarWithMenuProps> = ({
       case 'game-board':
         return [
           { label: 'Back to Game Selection', href: '/select-game' },
+          { label: 'Create Game', href: '/create-game' },
           { label: 'Reset Game', href: '#reset' },
           { label: 'New Game', href: '/select-game' },
           { label: 'divider', href: '#' },
           { label: 'About', href: '/about' },
+          { label: 'Settings', href: '/settings' },
+          { label: 'Report an Issue', href: 'https://github.com/web2098/BingoBoard/issues/new', external: true }
+        ];
+      case 'create-game':
+        return [
+          { label: 'Back to Game Selection', href: '/select-game' },
           { label: 'Settings', href: '/settings' },
           { label: 'Report an Issue', href: 'https://github.com/web2098/BingoBoard/issues/new', external: true }
         ];
